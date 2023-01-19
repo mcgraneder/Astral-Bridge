@@ -1,0 +1,19 @@
+{
+  "metamask/notFound": "MetaMask extension not found",
+  "metamask/switchToMainnet": "Please connect to Mainnet",
+  "metamask/switchToRenChain": "Please connect to RenChain",
+  "tx/onlyWithdrawToYourAccount": "You can only withdraw non-native tokens to your linked wallet address",
+  "tx/increaseTxAmount": "Amount is too low to be processed",
+  "tx/txFailed": "An unexpected error occurred, please try again later",
+  "api/invalidBody": "Invalid body",
+  "catId/invalidCatId": "Invalid Account Name",
+  "catId/catIdNotFound": "CatId not found",
+  "catId/alreadyTaken": "Account Name has already been taken",
+  "catId/length": "Account name should contain at least 7 characters",
+  "email/alreadyTaken": "Email has already been taken",
+  "email/invalidEmail": "Invalid Email",
+  "api/requestFailed": "An unexpected error occurred, please try again later",
+  "input/invalidAddress": "Invalid Address",
+  "input/insufficientFunds": "Insufficient Funds",
+  "input/invalidInput": "Invalid Input"
+}

@@ -1,0 +1,8 @@
+.layout {
+  background: radial-gradient(
+    50% 50% at top,
+    rgb(21, 111, 81) 10%,
+    rgb(25, 82, 63) 30%,
+    rgba(17, 19, 24) 100%
+  );
+}
