@@ -55,11 +55,11 @@ const ChainAssetRotator = () => {
     }, [Ai]);
 
     return (
-        <div className='mx-auto my-12 flex h-[150px] w-[150px] items-center justify-center'>
+       
             <div className="transition-opacity ease-in duration-700 opacity-100">
-                <Icon className={"h-[150px] w-[150px]"} />
+                <Icon className={"h-[200px] w-[200px]"} />
             </div>
-        </div>
+       
     );
 };
 

@@ -1,38 +1,55 @@
-import styled, { keyframes } from "styled-components"
+import styled from "styled-components";
 
-const fadein = keyframes `
-    0% {
-    // margin-top: 2000px;
-    opacity:0;
-    }
-    100% {
-    // margin-top: 0;
-    opacity:1;
-    }
-`
+export const colours = {
+    primary: "#fff",
+    theme: "#BE185D",
+    light1: "#F3F4F6",
+    light2: "#E5E7EB",
+    dark1: "#1f2937",
+    dark2: "#9CA3AF",
+    red: "#DC2626",
+};
 
-const fadeout = keyframes `
-    0% {
-    // margin-top: 1500px;
-    }
-    100% {
-    // margin-bottom: 0;
-    }
-`
 
-export const LoginStyledContainer = styled.div`
+export const StyledTitle = styled.div`
+    font-size: ${(props) => props.size}px;
+    text-align: ${(props) => props.align};
 
-    padding-top: 75px;
-    padding-bottom: 100px;
-    
+    padding: 5px;
+    margin-bottom: ${(props) => props.margin}px;
+    font-weight: ${(props) => props.weight};
+    font-style: ${(props) => props.styleds};
 
-`
+    max-width: 800px;
+    margin: 0 auto;
+    background: rgb(109, 150, 254);
+    background: linear-gradient(5deg, rgba(109, 150, 254, 1) 0%, rgba(210, 223, 255, 1) 44%, rgba(236, 242, 255, 1) 100%);
+    /* background-image: linear-gradient(43deg, #4158d0 0%, #c850c0 46%, #ffcc70 100%); */
+    -webkit-background-clip: text;
+    color: transparent;
+`;
+export const StyledSubTitle = styled.div`
+    font-size: ${(props) => props.size}px;
+    text-align: center;
+    color: ${(props) => (props.color ? props.color : colours.primary)};
+    padding: 5px;
+    margin-bottom: 20px;
+    background-color: transparent;
+`;
+export const Wrapper = styled.div`
 
-export const TopeSectionWrapper = styled.div`
-    animation: ${fadein} 1.25s; 
-    
-    
-`
-export const BottomSectionWrapper = styled.div`
-    animation:  ${fadeout} 2.2s; ; 
-`
+    height ${(props) => props.space}px;
+`;
+
+
+export const StyledContainer = styled.div`
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    // background: rgb(0,47,65);
+    // background: radial-gradient(circle, rgba(0,47,65,1) 0%, rgba(10,28,61,1) 46%, rgba(0,7,31,1) 89%);
+    background: transparent;
+`;
