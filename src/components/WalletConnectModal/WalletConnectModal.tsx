@@ -16,11 +16,12 @@ export const Backdrop = styled.div`
     z-index: 1000;
     pointer-events: none;
     transition: opacity 0.15s ease-in-out !important;
-    position: relative;
+ 
     ${(props: any) =>
         props.visible &&
         css`
             opacity: 1;
+    
             pointer-events: all;
         `}
 `;
@@ -68,14 +69,14 @@ interface WalletModalProps {
 }
 
 function WalletConnect({ toggleWalletModal }: WalletModalProps) {
-    const { openWalletModal, pendingWallet, toggleErrorModal, connecting, toggleConecting, error, setConnecting, connectOn, setPendingWallet, reset, errorMessage } = useAuth();
+    const { openWalletModal, pendingWallet, toggleErrorModal, connecting, toggleConecting, error, setConnecting, connectOn, setPendingWallet, errorMessage } = useAuth();
 
     return (
         <>
             <Backdrop visible={openWalletModal || connecting || error}>
                 {openWalletModal && <WalletSelectModal setPendingWallet={setPendingWallet} toggleWalletModal={toggleWalletModal} setConnecting={setConnecting} connectOn={connectOn} />}
                 {error && <ConnectionErrorModal  close={toggleErrorModal} pendingWallet={pendingWallet} toggleWalletModal={toggleWalletModal} setConnecting={setConnecting} connectOn={connectOn} message={errorMessage} />}
-                {!error && connecting && <ConnectingModal open={!error && connecting} close={toggleConecting} />}
+                {!error && connecting && <ConnectingModal open={!error && connecting}  close={toggleConecting} />}
             </Backdrop>
         </>
     );

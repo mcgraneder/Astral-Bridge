@@ -35,7 +35,7 @@ const TokenSelectDropdown = () => {
     const [activeChain, setActiveChain] = useState<ChainType | undefined>(undefined);
     const { chainId } = useWeb3React();
     const { width } = useViewport();
-    const { needToSwitchChain, switchNetwork, pendingChain } = useAuth();
+    const { needToSwitchChain, switchNetwork } = useAuth();
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -70,17 +70,17 @@ const TokenSelectDropdown = () => {
                             {getChainOptions()
                                 .filter((chain: ChainType) => chain.isTestnet)
                                 .map((chain: ChainType) => {
-                                    return <ChainSelector chain={chain} currentChain={chainId} pendingChain={pendingChain} switchNetwork={switchNetwork} />;
+                                    return <ChainSelector chain={chain} currentChain={chainId} switchNetwork={switchNetwork} />;
                                 })}
-                        </FormWrapper>)
-                        :
-                        (<BottomSheetOptions hideCloseIcon open={true} setOpen={() => null} title={"Chain selection"}>
-                            {getChainOptions()
-                                .filter((chain: ChainType) => chain.isTestnet)
-                                .map((chain: ChainType) => {
-                                    return <ChainSelector chain={chain} currentChain={chainId} pendingChain={pendingChain} switchNetwork={switchNetwork} />;
-                                })}
-                        </BottomSheetOptions>)
+                    </FormWrapper>)
+                    :
+                    (<BottomSheetOptions hideCloseIcon open={true} setOpen={() => null} title={"Chain selection"}>
+                        {getChainOptions()
+                            .filter((chain: ChainType) => chain.isTestnet)
+                            .map((chain: ChainType) => {
+                                return <ChainSelector chain={chain} currentChain={chainId}  switchNetwork={switchNetwork} />;
+                            })}
+                    </BottomSheetOptions>)
                 )}
             </div>
         </>
@@ -101,7 +101,7 @@ const ChainSelectorButton = ({ setIsMenuOpen, activeChain }: { setIsMenuOpen: Re
         </div>
     );
 };
-const ChainSelector = ({ chain, currentChain, pendingChain, switchNetwork }: { chain: ChainType; currentChain: number | undefined; pendingChain: number | undefined; switchNetwork: (id: number) => Promise<void> }) => {
+const ChainSelector = ({ chain, currentChain, switchNetwork }: { chain: ChainType; currentChain: number | undefined;  switchNetwork: (id: number) => Promise<void> }) => {
     return (
         <div className='flex flex-row items-center gap-3 rounded-lg px-2 py-2 hover:cursor-pointer hover:bg-tertiary' onClick={() => switchNetwork(chain.id)}>
             <div className='flex h-full'>
@@ -109,13 +109,6 @@ const ChainSelector = ({ chain, currentChain, pendingChain, switchNetwork }: { c
             </div>
             <span className='text-[15px]'>{chain.chainName}</span>
             {currentChain && currentChain == chain.id && <GreenDot/>}
-            {pendingChain && pendingChain == chain.id && (
-                <span className='flex flex-1 items-center justify-end'>
-                    <div className='animate-spin'>
-                        <UilSpinner className={"h-4 w-4"} />
-                    </div>
-                </span>
-            )}
         </div>
     );
 };

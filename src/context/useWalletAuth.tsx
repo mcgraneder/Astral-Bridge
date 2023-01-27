@@ -5,8 +5,6 @@ import { NoEthereumProviderError, UserRejectedRequestError as UserRejectedReques
 import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from "@web3-react/walletconnect-connector";
 import { WalletInfo } from "../connection/wallets";
 import { AbstractConnector } from "@web3-react/abstract-connector";
-// import _switchNetwork from "src/utils/switchNetwork";
-import { isProduction } from "../utils/misc";
 import { CHAINS, ChainType } from '../connection/chains';
 
 const Networks = {
@@ -43,16 +41,20 @@ type AuthContextType = {
     toggleErrorModal: () => void;
     toggleConecting: () => void;
     toggleWalletModal: () => void;
-    reset: () => void
+    reset: () => void;
     errorMessage: string;
     needToSwitchChain: (id: number) => boolean;
     switchNetwork: (id: number) => Promise<void>;
     pendingChain: number | undefined;
+    isSwitchingChain: boolean;
+    hasSigned: boolean;
+    setHasSigned: Dispatch<SetStateAction<boolean>>;
 };
 
 const AuthContext = createContext({} as AuthContextType);
 
 export const ERROR_MESSSAGES: { [x: string]: string } = {
+    ["NETWORK_SWITCH"]: "User deined the prompt to switch chains. Please try again",
     ["USER_REJECTED"]: "User rejected the request. Please click try again and follow the steps to connect in your wallet.",
     ["REQUEST_PENDING"]: "Metamask is already open in the background. Please open MetaMask via your extensions and accept the connection.",
     ["NO_PROVIDER"]: "You dont have Metamask installed. Please install Metamask to continue using this application",
@@ -60,22 +62,32 @@ export const ERROR_MESSSAGES: { [x: string]: string } = {
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
-    const { library, activate, deactivate, active: connected, active } = useWeb3React();
+    const { library, activate, deactivate, active: connected, active, chainId, account } = useWeb3React();
 
     const [error, setWalletError] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>(ERROR_MESSSAGES["USER_REJECTED"] as string)
     const [openWalletModal, setOpenWalletModal] = useState<boolean>(false);
     const [connecting, setConnecting] = useState<boolean>(false);
     const [pendingWallet, setPendingWallet] = useState<AbstractConnector | undefined>();
-    const [pendingChain, setPendingChain] = useState< number | undefined>(undefined)
+    const [pendingChain, setPendingChain] = useState< number | undefined>(undefined);
+    const [isSwitchingChain, setIsSwitchingChain] = useState<boolean>(false)
+    const [hasSigned, setHasSigned] = useState<boolean>(true)
+    const [activeSession, setActiveSession] = useState<boolean>(false)
 
     const toggleErrorModal = useCallback(() => setWalletError(false), [setWalletError]);
     const toggleConecting = useCallback(() => setConnecting((c) => !c), [setConnecting]);
     const toggleWalletModal = useCallback(() => setOpenWalletModal((w) => !w), [setOpenWalletModal]);
 
     useEffect(() => {
-        if (active) setWalletError(false)
-    }, [active])
+        if (active && errorMessage == ERROR_MESSSAGES["NETWORK_SWITCH"]) setWalletError(false)
+        if (error) setConnecting(false);
+         if (typeof window !== undefined) {
+             if (
+                activeSession && account && 
+                active && localStorage.getItem("authToken")
+            ) setHasSigned(false);
+         }
+    }, [active, error, account])
 
     useEffect(() => {
         setTimeout(() => {
@@ -83,19 +95,10 @@ function AuthProvider({ children }: AuthProviderProps) {
         }, 1000);
     }, [connected]);
 
-    useEffect(() => {
-        if (error) setConnecting(false);
-    }, [error]);
-
-    const onCorrectNetwork = (chainId: number, requestedNetwork?: number) => {
-        const network = requestedNetwork ?? getCorrectNetwork();
-        return +chainId === +network;
-    };
-
-    const getCorrectNetwork = () => (isProduction() ? Networks.mainnet : Networks.goerli);
-
+    useEffect(() => { setTimeout(() => setActiveSession(true), 4000) },[])
+    
     const getConnector = (provider: string): AbstractConnector => {
-        let connector;
+        let connector: AbstractConnector | null;
         if (provider === "injected") connector = injected;
         if (provider === "walletconnect") connector = walletconnect;
         else connector = injected;
@@ -105,10 +108,11 @@ function AuthProvider({ children }: AuthProviderProps) {
     const disconnect = useCallback(() => {
         deactivate();
         localStorage.removeItem("provider");
+        localStorage.removeItem("authToken")
     }, [deactivate]);
 
     const activateWallet = useCallback(
-        (wallet: AbstractConnector) => {
+        (wallet: AbstractConnector, manualLogin: boolean) => {
             if (wallet == undefined) return; //default to injected
             activate(wallet, async (err: any) => {
                 if (
@@ -130,6 +134,7 @@ function AuthProvider({ children }: AuthProviderProps) {
                     setErrorMessage(ERROR_MESSSAGES["UNKNOWN"]!)
                 }
             });
+            if (manualLogin) setHasSigned(false);
         },
         [activate]
     );
@@ -137,10 +142,10 @@ function AuthProvider({ children }: AuthProviderProps) {
     const connectOnLoad = useCallback(
         (WalletConnector: AbstractConnector) => {
             if (WalletConnector === injected) {
-                activateWallet(WalletConnector);
+                activateWallet(WalletConnector, false);
             } else {
                 setTimeout(async () => {
-                    activateWallet(WalletConnector);
+                    activateWallet(WalletConnector, false);
                 }, 2000);
             }
         },
@@ -167,7 +172,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     function connectOn(wallet: WalletInfo) {
         localStorage.setItem("provider", wallet.provider);
-        activateWallet(wallet.connector);
+        activateWallet(wallet.connector, true);
     }
 
     const _switchNetwork = useCallback(async (network: number) => {
@@ -182,7 +187,8 @@ function AuthProvider({ children }: AuthProviderProps) {
             method: "wallet_switchEthereumChain",
             params: [{ chainId: hexChainId }],
           });
-          setPendingChain(undefined)
+          setWalletError(false)
+     
           return { switched: true };
         } catch (error: any) {
           if (error.code === 4902) {
@@ -204,18 +210,20 @@ function AuthProvider({ children }: AuthProviderProps) {
                       },
                 ],
               });
-              setPendingChain(undefined)
+              setWalletError(false)
+
               return { switched: true };
             } catch (addError: any) {
               // handle "add" error
-              setPendingChain(undefined)
+              setConnecting(false)
+    
               return { switched: false, errorCode: addError.code };
             }
-          } else if (error.code === 4001) {
-            setPendingChain(undefined)
-            // user rejected the switch
+          } else if (error.code == -32002) {
+            setWalletError(true)
+            setErrorMessage(ERROR_MESSSAGES["REQUEST_PENDING"]!)
           }
-          setPendingChain(undefined)
+          
           return { switched: false, errorCode: error.code };
         }
       }, [pendingChain]);
@@ -253,7 +261,10 @@ function AuthProvider({ children }: AuthProviderProps) {
                 errorMessage,
                 needToSwitchChain,
                 switchNetwork,
-                pendingChain
+                pendingChain,
+                isSwitchingChain,
+                hasSigned,
+                setHasSigned	
             }}>
             {children}
         </AuthContext.Provider>

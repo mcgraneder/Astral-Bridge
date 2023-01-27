@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SetStateAction } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { useViewport } from "../../hooks/useViewport";
 import { FormWrapper } from "./WalletConnectModal";
@@ -8,6 +8,7 @@ import BottomSheetOptions from "../BottomSheet/BottomSheetOptions";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import { WalletInfo, WALLETS } from "../../connection/wallets";
 import GreenDot from "../Icons/GreenDot";
+import { Dispatch } from 'react';
 
 const getWalletOptions = () => {
     return Object.values(WALLETS);

@@ -14,16 +14,18 @@ interface ConnectingModalProps {
 
 interface IconProps {
     active: boolean;
+
 }
 export const GetIcon = ({ active }: IconProps) => {
+
     return (
         <>
-            {!active ? (
+            {active ? (
                 <div>
-                    <UilSpinner size={20} className={" h-20 w-20 animate-spin text-blue-500"} />
+                    <UilCheckCircle color={"rgb(59 130 246)"} size={"80px"} />
                 </div>
             ) : (
-                <UilCheckCircle color={"rgb(59 130 246)"} size={"80px"} />
+                <UilSpinner size={20} className={" h-20 w-20 animate-spin text-blue-500"} />
             )}
         </>
     );
@@ -52,7 +54,7 @@ function ConnectingModal({ close, open }: ConnectingModalProps) {
         <>
             {width > 0 && width >= Breakpoints.sm1 ? (
                 <FormWrapper>
-                    <ConnectingModalInner active={active} close={close} />
+                    <ConnectingModalInner active={active} close={close}  />
                 </FormWrapper>
             ) : (
                 <BottomSheetOptions hideCloseIcon open={open} setOpen={() => null} title={"Connecting"}>

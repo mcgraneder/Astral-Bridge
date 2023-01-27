@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import styled from "styled-components";
 import LogoIcon from "../../../public/svgs/chains/renvm.svg";
 import EthereumIcon from "../../../public/svgs/chains/ethereum.svg";
@@ -10,6 +10,7 @@ import { walletIcon } from "../../connection/wallets";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import TokenSelectDropdown from "./ChainSelector";
 import { useViewport } from '../../hooks/useViewport';
+import { useRouter } from 'next/router';
 
 export const Wrapper = styled.div`
     display: flex;
@@ -75,9 +76,11 @@ const NavLinks = ({ routes }: { routes: string[] }) => {
 };
 export const Navbar = ({ toggleWalletModal }: INavbar) => {
     const [provider, setProvider] = useState<any>(undefined);
+    const router = useRouter()
     const [searchTerm, setSearchTerm] = useState<string>("");
     const { account, active } = useWeb3React();
     const { width } = useViewport()
+    const activePath = router.pathname
 
     useEffect(() => {
         if (typeof window == "undefined" || !active) return;
@@ -94,18 +97,18 @@ export const Navbar = ({ toggleWalletModal }: INavbar) => {
                         <div className='mr-5 flex h-full'>
                             <LogoIcon />
                         </div>
-                        <NavLinks routes={ROUTES} />
+                        {activePath !== "/home" && <NavLinks routes={ROUTES} />}
                     </BoxItemContainer>
-                    <BoxItemContainer allignment={"flex-end"}>
+                    { activePath !== "/home" && (<BoxItemContainer allignment={"flex-end"}>
                         <div className='flex h-[45px] w-fit lg:w-full max-w-[90%] items-center justify-center rounded-lg border border-transparent lg:border-gray-500 bg-black bg-opacity-10 px-2 mr-4'>
                             <UilSearch className='text-grey-400 mr-2 h-6 w-6' />
                             {width >= 1000 && <input value={searchTerm} onChange={(e: React.ChangeEvent<HTMLInputElement>) => () => setSearchTerm(e.target.value)} className='placeholder:text-grey-400 flex-1 bg-transparent  text-[15px] font-medium tracking-wide outline-none' placeholder={"Search for tokens or transactions"} />}
                         </div>
-                    </BoxItemContainer>
+                    </BoxItemContainer>)}
                     <BoxItemContainer allignment={"flex-end"}>
-                        <div className='mr-5 flex  h-full'>
+                        { activePath !== "/home" && (<div className='mr-5 flex  h-full'>
                             <TokenSelectDropdown/>
-                        </div>
+                        </div>)}
                         <div className='mr-5 flex  h-full items-center'>
                             <PrimaryButton className='mt-[2px] bg-blue-500 hover:bg-blue-600' onClick={toggleWalletModal}>
                                 <span className='mr-2 hidden xs:block'>{active ? shortenAddress(account) : "Connect"}</span>
