@@ -1,66 +1,89 @@
-import React, { useState, useEffect } from "react";
-import EthereumIcon from "../../../public/svgs/assets/renETHHome.svg";
-import BitcoinIcon from "../../../public/svgs/assets/renBTCHome.svg";
-import DogeIcon from "../../../public/svgs/assets/renDOGEHome.svg";
-import ZecIcon from "../../../public/svgs/assets/renZECHome.svg";
-import SolIcon from "../../../public/svgs/assets/renSOLHome.svg";
-import BNBIcon from "../../../public/svgs/assets/renBNBHome.svg";
-import BCHIcon from "../../../public/svgs/assets/renBCHHome.svg";
+import React, { useState, useEffect, FunctionComponent } from "react";
+import { Asset } from "@renproject/chains";
+import { Icon } from "../Icons/AssetLogs/Icon";
+import { Fade } from "@material-ui/core"
 
 
 
 type ChainAssetRotatorProps = {
     className?: string;
-    children: any;
 };
 
-const timeout = 3000;
-const offset = timeout / 3;
-const ASSETS = [EthereumIcon, BitcoinIcon, DogeIcon, ZecIcon, SolIcon, BCHIcon, BNBIcon]
-let Icon = EthereumIcon;
+export const supportedAssets =
+     [
+              Asset.BTC,
+              Asset.BCH,
+              Asset.DGB,
+              Asset.DOGE,
+              Asset.FIL,
+              Asset.LUNA,
+              Asset.ZEC,
+              Asset.ETH,
+              Asset.BNB,
+              Asset.AVAX,
+              Asset.FTM,
+              Asset.ArbETH,
+              Asset.MATIC,
+             
+             
+              Asset.SOL, 
+              Asset.REN,
+              Asset.DAI,
+              Asset.USDC,
+              Asset.USDT,
+              Asset.EURT,
+              Asset.BUSD,
+              Asset.MIM,
+              Asset.CRV,
+              Asset.LINK,
+              Asset.UNI,
+              Asset.SUSHI,
+              Asset.FTT,
+              Asset.ROOK,
+              Asset.BADGER,
+              Asset.KNC,
+          ]
+        
 
-const ChainAssetRotator = () => {
 
-    // const [ci, setCi] = useState(0);
-    const [Ai, setAi] = useState<SVGElement>(EthereumIcon);
+export const AssetRotator: FunctionComponent<ChainAssetRotatorProps> = ({ className, children }) => {
+    const timeout = 3000;
+    const offset = timeout / 3;
+    const [ai, setAi] = useState(0);
     const [show, setShow] = useState(false);
-    // const chainsCount = supportedContractChains.length;
- 
-    useEffect(() => {
-        setShow(true);
-        // const switchCiTick = setInterval(() => {
-        //   setCi((i) => (i === chainsCount - 1 ? 0 : i + 1));
-        // }, timeout);
+    const [hover, setHover] = useState<boolean>(false)
+    const assetsCount = supportedAssets.length;
 
+    const toggleRotaator = () => setHover(!hover)
+
+    useEffect(() => {
+        if (hover) return
+        setShow(true);
         const hideTick = setTimeout(() => {
             setShow(false);
-            Icon = ASSETS[Math.floor(Math.random() * 3) + 1]
         }, timeout - offset);
 
         const switchAiTick = setTimeout(() => {
-            console.log(Math.round(Math.random()))
-            setAi(ASSETS[Math.floor(Math.random() * 4) + 1]);
+            setAi(ai === assetsCount - 1 ? 0 : ai + 1);
         }, timeout);
 
-        // const showTick = setTimeout(() => {
-        //   setShow(true);
-        // }, timeout * chainsCount + offset);
-
+         console.log(ai);
         return () => {
-            // clearInterval(switchCiTick);
             clearTimeout(switchAiTick);
             clearTimeout(hideTick);
-            // clearTimeout(showTick);
         };
-    }, [Ai]);
+       
+    }, [assetsCount, ai, hover]);
 
+    const asset = supportedAssets[ai];
     return (
-       
-            <div className="transition-opacity ease-in duration-700 opacity-100">
-                <Icon className={"h-[200px] w-[200px]"} />
-            </div>
-       
+        <div className={className}>
+            <Fade in={show} timeout={{ enter: 500, exit: 100 }}>
+                { asset && <Icon chainName={asset} className={"h-[180px] w-[180px] hover:h-[200px] hover:w-[200px] hover:cursor-pointer"} onMouseEnter={toggleRotaator} onMouseLeave={toggleRotaator} /> }
+            </Fade>
+            {children}
+        </div>
     );
 };
 
-export default ChainAssetRotator
+export default AssetRotator

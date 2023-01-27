@@ -2,13 +2,13 @@ import React from "react";
 import { StyledTitle, StyledSubTitle } from "../CSS/HomePage.styles";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import Logo from "../../../public/svgs/assets/renBTCHome.svg"
-import ChainAssetRotator from "../AssetRotator/AssetRotator";
+import AssetRotator from "../AssetRotator/AssetRotator";
 
 const Home = () => {
     return (
         <div className="backdrop-blur-lg">
             <div className='my-0 mx-auto mb-8 mt-20 flex items-center justify-center'>
-                <ChainAssetRotator/>>
+                <AssetRotator/>
             </div>
             <div>
                 <StyledTitle size={65} margin={0} weight={800} align={"center"}>

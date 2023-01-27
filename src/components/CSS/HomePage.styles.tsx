@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { BREAKPOINTS } from '../theme/index';
 
 export const colours = {
     primary: "#fff",
@@ -27,6 +28,16 @@ export const StyledTitle = styled.div`
     /* background-image: linear-gradient(43deg, #4158d0 0%, #c850c0 46%, #ffcc70 100%); */
     -webkit-background-clip: text;
     color: transparent;
+
+    @media screen and (max-width: ${BREAKPOINTS.lg}px) {
+        font-size: 45px;
+        max-width: 600px;
+    }
+
+    @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+        font-size: 30px;
+        max-width: 600px;
+    }
 `;
 export const StyledSubTitle = styled.div`
     font-size: ${(props) => props.size}px;
@@ -35,6 +46,16 @@ export const StyledSubTitle = styled.div`
     padding: 5px;
     margin-bottom: 20px;
     background-color: transparent;
+    margin: 0 auto;
+
+    @media screen and (max-width: ${BREAKPOINTS.lg}px) {
+        font-size: 19px;
+    }
+
+    @media screen and (max-width: ${BREAKPOINTS.sm}px) {
+        font-size: 16px;
+        max-width: 200px
+    }
 `;
 export const Wrapper = styled.div`
 
@@ -49,7 +70,5 @@ export const StyledContainer = styled.div`
     justify-content: center;
     align-items: center;
     color: white;
-    // background: rgb(0,47,65);
-    // background: radial-gradient(circle, rgba(0,47,65,1) 0%, rgba(10,28,61,1) 46%, rgba(0,7,31,1) 89%);
     background: transparent;
 `;
