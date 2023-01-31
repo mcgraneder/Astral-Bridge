@@ -9,6 +9,7 @@ import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import { WalletInfo, WALLETS } from "../../connection/wallets";
 import GreenDot from "../Icons/GreenDot";
 import { Dispatch } from 'react';
+import { useRouter } from 'next/router';
 
 const getWalletOptions = () => {
     return Object.values(WALLETS);
@@ -31,7 +32,6 @@ interface WalletSelectInnerProps {
     toggleWalletModal: () => void;
     active: boolean;
     connect: (provider: any) => void;
-    provider: string | null;
     deactivate: () => void;
 }
 
@@ -53,7 +53,8 @@ const WalletOption = ({ connect, provider, active }: WalletOptionsProps) => {
     );
 };
 
-const WalletSelectModalInner = ({ provider, connect, active, toggleWalletModal, deactivate }: WalletSelectInnerProps) => {
+const WalletSelectModalInner = ({ connect, active, toggleWalletModal, deactivate }: WalletSelectInnerProps) => {
+    const provider = localStorage.getItem("provider");
     return (
         <>
             <TopRowNavigation isRightDisplay={true} isLeftDisplay={true} close={toggleWalletModal} title={"Connect a wallet"} />
@@ -74,13 +75,16 @@ const WalletSelectModalInner = ({ provider, connect, active, toggleWalletModal, 
 
 const WalletSelectModal = ({ toggleWalletModal, setConnecting, connectOn, setPendingWallet }: WalletSelectProps) => {
     const { active, deactivate } = useWeb3React();
+    const { push } = useRouter()
     const { width } = useViewport();
-    const provider = localStorage.getItem("provider");
 
+    const disconnect = () => {
+        deactivate()
+        toggleWalletModal()
+        push("/home")
+    }
     const connect = async (web3Provider: any): Promise<void> => {
-        if (active) {
-            return;
-        }
+        if (active)  return;
         setPendingWallet(web3Provider);
         setConnecting(true);
         toggleWalletModal();
@@ -93,11 +97,11 @@ const WalletSelectModal = ({ toggleWalletModal, setConnecting, connectOn, setPen
         <>
             {width > 0 && width >= Breakpoints.sm1 ? (
                 <FormWrapper>
-                    <WalletSelectModalInner toggleWalletModal={toggleWalletModal} provider={provider} connect={connect} deactivate={deactivate} active={active} />
+                    <WalletSelectModalInner toggleWalletModal={toggleWalletModal} connect={connect} deactivate={disconnect} active={active} />
                 </FormWrapper>
             ) : (
                 <BottomSheetOptions hideCloseIcon open={true} setOpen={() => null} title={"Connecting"}>
-                    <WalletSelectModalInner toggleWalletModal={toggleWalletModal} provider={provider} connect={connect} deactivate={deactivate} active={active} />
+                    <WalletSelectModalInner toggleWalletModal={toggleWalletModal} connect={connect} deactivate={disconnect} active={active} />
                 </BottomSheetOptions>
             )}
         </>

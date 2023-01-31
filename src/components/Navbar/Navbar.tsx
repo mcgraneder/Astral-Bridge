@@ -1,6 +1,6 @@
 import React, { useState, useEffect, use } from "react";
 import styled from "styled-components";
-import LogoIcon from "../../../public/svgs/chains/renvm.svg";
+import LogoIcon from "../../../public/svgs/assets/RenIconHome.svg";
 import EthereumIcon from "../../../public/svgs/chains/ethereum.svg";
 import { UilSearch } from "@iconscout/react-unicons";
 import { UilSpinnerAlt, UilAngleDown } from "@iconscout/react-unicons";
@@ -57,6 +57,8 @@ export const BoxItemContainer = styled.div`
 
 interface INavbar {
     toggleWalletModal: () => void;
+    toggleAccoundDetailsModal: () => void;
+
 }
 
 const ROUTES: string[] = ["Bridge", "Wallet", "Trade", "History"];
@@ -74,13 +76,13 @@ const NavLinks = ({ routes }: { routes: string[] }) => {
         </>
     );
 };
-export const Navbar = ({ toggleWalletModal }: INavbar) => {
+export const Navbar = ({ toggleWalletModal, toggleAccoundDetailsModal }: INavbar) => {
     const [provider, setProvider] = useState<any>(undefined);
-    const router = useRouter()
+    const router = useRouter();
     const [searchTerm, setSearchTerm] = useState<string>("");
     const { account, active } = useWeb3React();
-    const { width } = useViewport()
-    const activePath = router.pathname
+    const { width } = useViewport();
+    const activePath = router.pathname;
 
     useEffect(() => {
         if (typeof window == "undefined" || !active) return;
@@ -99,18 +101,22 @@ export const Navbar = ({ toggleWalletModal }: INavbar) => {
                         </div>
                         {activePath !== "/home" && <NavLinks routes={ROUTES} />}
                     </BoxItemContainer>
-                    { activePath !== "/home" && (<BoxItemContainer allignment={"flex-end"}>
-                        <div className='flex h-[45px] w-fit lg:w-full max-w-[90%] items-center justify-center rounded-lg border border-transparent lg:border-gray-500 bg-black bg-opacity-10 px-2 mr-4'>
-                            <UilSearch className='text-grey-400 mr-2 h-6 w-6' />
-                            {width >= 1000 && <input value={searchTerm} onChange={(e: React.ChangeEvent<HTMLInputElement>) => () => setSearchTerm(e.target.value)} className='placeholder:text-grey-400 flex-1 bg-transparent  text-[15px] font-medium tracking-wide outline-none' placeholder={"Search for tokens or transactions"} />}
-                        </div>
-                    </BoxItemContainer>)}
+                    {activePath !== "/home" && (
+                        <BoxItemContainer allignment={"flex-end"}>
+                            <div className='mr-4 flex h-[45px] w-fit max-w-[90%] items-center justify-center rounded-lg border border-transparent bg-black bg-opacity-10 px-2 lg:w-full lg:border-gray-500'>
+                                <UilSearch className='text-grey-400 mr-2 h-6 w-6' />
+                                {width >= 1000 && <input value={searchTerm} onChange={(e: React.ChangeEvent<HTMLInputElement>) => () => setSearchTerm(e.target.value)} className='placeholder:text-grey-400 flex-1 bg-transparent  text-[15px] font-medium tracking-wide outline-none' placeholder={"Search for tokens or transactions"} />}
+                            </div>
+                        </BoxItemContainer>
+                    )}
                     <BoxItemContainer allignment={"flex-end"}>
-                        { activePath !== "/home" && (<div className='mr-5 flex  h-full'>
-                            <TokenSelectDropdown/>
-                        </div>)}
+                        {activePath !== "/home" && (
+                            <div className='mr-5 flex  h-full'>
+                                <TokenSelectDropdown />
+                            </div>
+                        )}
                         <div className='mr-5 flex  h-full items-center'>
-                            <PrimaryButton className='mt-[2px] bg-blue-500 hover:bg-blue-600' onClick={toggleWalletModal}>
+                            <PrimaryButton className='mt-[2px] bg-blue-500 hover:bg-blue-600' onClick={!active ? toggleWalletModal : toggleAccoundDetailsModal}>
                                 <span className='mr-2 hidden xs:block'>{active ? shortenAddress(account) : "Connect"}</span>
                                 <span className='mr-2 hidden xs:block'>|</span>
                                 {active && Icon ? <Icon className={"h-5 w-5"} /> : <UilAngleDown className={"h-5 w-5"} />}

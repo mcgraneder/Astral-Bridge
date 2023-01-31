@@ -1,71 +1,137 @@
 import React from "react";
 import { useWeb3React } from "@web3-react/core";
 import { useViewport } from "../../hooks/useViewport";
-import { FormWrapper } from "./WalletConnectModal";
-import { TopRowNavigation } from "./WalletConnectModal";
 import { Breakpoints } from "../../constants/Breakpoints";
 import BottomSheetOptions from "../BottomSheet/BottomSheetOptions";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
-import { ERROR_MESSSAGES } from "../../context/useWalletAuth";
-import { UilExclamationTriangle } from "@iconscout/react-unicons";
-import { AbstractConnector } from "@web3-react/abstract-connector";
+import { useAuth } from "../../context/useWalletAuth";
+import { useRouter } from "next/router";
+import Identicon from "../Identicon/Identicon";
+import { shortenAddress } from "../../utils/misc";
+import CopyIcon from '../Icons/CopyIcon';
+import { ExternalLink, Power } from "react-feather";
+import styled, { css } from "styled-components"
 
-interface ConnectionErrorModalProps {
-    close: () => void;
-    setConnecting: React.Dispatch<React.SetStateAction<boolean>>;
-    toggleWalletModal: () => void;
-    pendingWallet: AbstractConnector | undefined;
-    connectOn: (provider1: any) => void;
-    message: string;
+export const Backdrop = styled.div`
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    opacity: 0;
+    pointer-events: none;
+    backdrop-filter: blur(5px);
+    z-index: 10000000000;
+    pointer-events: none;
+    transition: opacity 0.15s ease-in-out !important;
+ 
+    ${(props: any) =>
+        props.visible &&
+        css`
+            opacity: 1;
+    
+            pointer-events: all;
+        `}
+`;
+
+export const FormWrapper = styled.div`
+    position: fixed;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%, -50%);
+    width: 390px;
+    background-color: rgb(15, 25, 55);
+    text-align: right;
+    padding: 20px 15px;
+    padding-bottom: 20px;
+    border: 1.5px solid rgb(48, 63, 88);
+    border-radius: 15px;
+    display: block;
+    z-index: 10000000000;
+`;
+
+interface AccountDetailsProps {
+    toggleAccoundDetailsModal: () => void;
+    showAccount?: boolean;
 }
 
-const ConnectionErrorModalInner = ({ close, setConnecting, toggleWalletModal, pendingWallet, connectOn, message }: ConnectionErrorModalProps) => {
-    const backToWalletModal = (): void => {
-        toggleWalletModal();
-        close();
-    };
-    const connect = (): void => {
-        if (!pendingWallet) {
-            return;
-        }
-        close();
-        setConnecting(true);
-        setTimeout(() => connectOn(pendingWallet), 1200);
+interface ITopRow {
+    account: any;
+    toggleAccoundDetailsModal: () => void
+}
+
+export const TopRowNavigation = ({ account, toggleAccoundDetailsModal }: ITopRow) => {
+    return (
+        <div className={`mb-2 flex items-center justify-between px-2`}>
+            <div className='flex items-center gap-2'>
+                <Identicon />
+                <span className='text-[15px]'>{shortenAddress(account)}</span>
+            </div>
+            <div className='flex items-center gap-2'>
+                <div className='rounded-xl bg-gray-600 p-0.5 hover:bg-gray-500'>
+                    <CopyIcon text={account} />
+                </div>
+                <div className='rounded-xl bg-gray-600 p-0.5 hover:bg-gray-500'>
+                    <button className='bg-black-600 rounded-full p-[5px]'>
+                        <ExternalLink className='h-4 w-4 text-gray-400 ' />
+                    </button>
+                </div>
+                <div className='rounded-xl bg-gray-600 p-0.5 hover:bg-gray-500'>
+                    <button className='bg-black-600 rounded-full p-[5px]'>
+                        <Power className='h-4 w-4 text-gray-400 ' />
+                    </button>
+                </div>
+                <div className='rounded-xl bg-gray-600 p-0.5 hover:bg-gray-500'>
+                    <button className='bg-black-600 rounded-full p-[5px]' onClick={toggleAccoundDetailsModal}>
+                        <UilTimes className='h-4 w-4 text-gray-400 ' />
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const AccountDetailsModalIner = ({ toggleAccoundDetailsModal }: AccountDetailsProps) => {
+    const { disconnect } = useAuth();
+    const { account } = useWeb3React();
+    const { push } = useRouter();
+
+    const deactivate = (): void => {
+        disconnect();
+        toggleAccoundDetailsModal();
+        push("/home");
     };
 
     return (
         <>
-            <TopRowNavigation isRightDisplay={true} isLeftDisplay={true} backFunction={backToWalletModal} close={close} />
-            <div className='my-4 flex flex-col items-center justify-center  px-2'>
-                <UilExclamationTriangle className={"h-20 w-20 text-red-500"} />
+            <TopRowNavigation account={account} toggleAccoundDetailsModal={toggleAccoundDetailsModal} />
+
+            <div className='my-5 flex flex-col items-center rounded-lg border border-gray-600 p-2 text-center'>
+                <span className=' text-[17px]'>ETH Balance</span>
+                <span className='text-[35px]'>{"0.024 ETH"}</span>
+                <span className=' text-[17px] text-gray-500'>$ 10.67</span>
             </div>
-            <div className='my-2 flex flex-col items-center gap-2 text-center'>
-                <span className=' text-[17px] font-semibold'>Error connecting</span>
-                <span className='text-[15px] text-gray-500'>{message}</span>
+            <div className='mt-2 flex items-center justify-center'>
+                <PrimaryButton className={"w-full justify-center rounded-lg bg-blue-500 py-4 text-center"} onClick={deactivate}>
+                    Disconnect
+                </PrimaryButton>
             </div>
-            {message !== ERROR_MESSSAGES["REQUEST_PENDING"] ? (
-                <div className='mt-8 mb-2 flex items-center justify-center'>
-                    <PrimaryButton className={"w-full justify-center rounded-lg bg-blue-500 py-4 text-center"} onClick={connect}>
-                        Try again
-                    </PrimaryButton>
-                </div>
-            ) : null}
         </>
     );
 };
 
-function AccountDetailsModal({ close, setConnecting, toggleWalletModal, pendingWallet, connectOn, message }: ConnectionErrorModalProps) {
+function AccountDetailsModal({ toggleAccoundDetailsModal, showAccount }: AccountDetailsProps) {
     const { width } = useViewport();
 
     return (
         <>
             {width > 0 && width >= Breakpoints.sm1 ? (
-                <FormWrapper>
-                    <ConnectionErrorModalInner close={close} setConnecting={setConnecting} toggleWalletModal={toggleWalletModal} pendingWallet={pendingWallet} connectOn={connectOn} message={message} />
-                </FormWrapper>
+                <Backdrop visible={showAccount}>
+                    <FormWrapper>
+                        <AccountDetailsModalIner toggleAccoundDetailsModal={toggleAccoundDetailsModal} />
+                    </FormWrapper>
+                </Backdrop>
             ) : (
                 <BottomSheetOptions hideCloseIcon open={true} setOpen={() => null} title={"Connecting"}>
-                    <ConnectionErrorModalInner close={close} setConnecting={setConnecting} toggleWalletModal={toggleWalletModal} pendingWallet={pendingWallet} connectOn={connectOn} message={message} />
+                    <AccountDetailsModalIner toggleAccoundDetailsModal={toggleAccoundDetailsModal} />
                 </BottomSheetOptions>
             )}
         </>
