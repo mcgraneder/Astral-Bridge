@@ -12,6 +12,7 @@ import { shortenAddress } from "../../utils/misc";
 import CopyIcon from '../Icons/CopyIcon';
 import { ExternalLink, Power } from "react-feather";
 import styled, { css } from "styled-components"
+import BalanceDisplay from '../NativeBalanceDisplay/BalanceDisplay';
 
 export const Backdrop = styled.div`
     position: fixed;
@@ -104,14 +105,9 @@ const AccountDetailsModalIner = ({ toggleAccoundDetailsModal }: AccountDetailsPr
     return (
         <>
             <TopRowNavigation account={account} toggleAccoundDetailsModal={toggleAccoundDetailsModal} />
-
-            <div className='my-5 flex flex-col items-center rounded-lg border border-gray-600 p-2 text-center'>
-                <span className=' text-[17px]'>ETH Balance</span>
-                <span className='text-[35px]'>{"0.024 ETH"}</span>
-                <span className=' text-[17px] text-gray-500'>$ 10.67</span>
-            </div>
-            <div className='mt-2 flex items-center justify-center'>
-                <PrimaryButton className={"w-full justify-center rounded-lg bg-blue-500 py-4 text-center"} onClick={deactivate}>
+            <BalanceDisplay/>
+            <div className='mt-4 flex items-center justify-center'>
+                <PrimaryButton className={"w-full justify-center rounded-lg bg-blue-500 py-[15px] text-center"} onClick={deactivate}>
                     Disconnect
                 </PrimaryButton>
             </div>

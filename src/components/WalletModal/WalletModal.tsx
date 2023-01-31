@@ -9,6 +9,7 @@ import ToggleButtonContainer from "./components/ToggleButton";
 import Dropdown from './components/Dropdown';
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import WalletInputForm from "./components/WalletInput";
+import BalanceDisplay from "../NativeBalanceDisplay/BalanceDisplay";
 
 export type Tab = {
     tabName: string;
@@ -98,11 +99,7 @@ const WalletModal = () => {
             <BridgeModalContainer>
                 <Dropdown text={"Bitcoin"} Icon={BtcIcon} type={buttonState.tabName}/>
                 <Dropdown text={"Ethereum"} Icon={EthIcon} type={buttonState.tabName}/>
-                <div className='my-5 flex flex-col items-center rounded-lg border border-tertiary p-2 text-center'>
-                    <span className=' text-[17px]'>ETH Balance</span>
-                    <span className='text-[35px]'>{"0.024 ETH"}</span>
-                    <span className=' text-[17px] text-gray-500'>$ 10.67</span>
-                </div>
+                <BalanceDisplay/>
                 <MintFormContainer>
                     <ToggleButtonContainer activeButton={buttonState} tabs={TABS} setActiveButton={setButtonState} />
                     <WalletInputForm setText={setText} text={text}/>
