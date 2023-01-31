@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import WalletModal from "../components/WalletModal/WalletModal";
 import { Layout } from "../layouts";
 
 const BlockPage: NextPage = () => {
@@ -6,7 +7,7 @@ const BlockPage: NextPage = () => {
   return (
     <>
       <Layout>
-        <div></div>
+        <WalletModal/>
       </Layout>
     </>
   );

@@ -4,6 +4,7 @@ import { useViewport } from "../../hooks/useViewport";
 import { Breakpoints } from "../../constants/Breakpoints";
 import BottomSheetOptions from "../BottomSheet/BottomSheetOptions";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
+import { UilTimes } from '@iconscout/react-unicons';
 import { useAuth } from "../../context/useWalletAuth";
 import { useRouter } from "next/router";
 import Identicon from "../Identicon/Identicon";
@@ -130,7 +131,7 @@ function AccountDetailsModal({ toggleAccoundDetailsModal, showAccount }: Account
                     </FormWrapper>
                 </Backdrop>
             ) : (
-                <BottomSheetOptions hideCloseIcon open={true} setOpen={() => null} title={"Connecting"}>
+                <BottomSheetOptions hideCloseIcon open={showAccount} setOpen={toggleAccoundDetailsModal} title={"Connecting"}>
                     <AccountDetailsModalIner toggleAccoundDetailsModal={toggleAccoundDetailsModal} />
                 </BottomSheetOptions>
             )}

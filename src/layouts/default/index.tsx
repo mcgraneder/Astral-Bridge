@@ -59,16 +59,20 @@ interface DefaultLayoutProps {
 function DefaultLayout({ children }: DefaultLayoutProps) {
     const [showAccount, setShowAccount ] = useState<boolean>(false)
     const { toggleWalletModal } = useAuth();
+    const { pathname } = useRouter()
 
     const toggleAccoundDetailsModal = (): void => setShowAccount(!showAccount)
 
     return (
         <>
             <div className='flex h-screen flex-col items-center text-white  lg:h-auto lg:min-h-screen'>
-                <Gradient isDarkMode={true} />
-                <GlowContainer>
-                    <Glow />
-                </GlowContainer>
+                { pathname === "/home" && (
+                <>
+                  <Gradient isDarkMode={true} />
+                  <GlowContainer>
+                      <Glow />
+                  </GlowContainer>
+                </>)}
                 <AccountVerificationModal />
                 <AccountDetailsModal toggleAccoundDetailsModal={toggleAccoundDetailsModal} showAccount={showAccount}/>
                 <Navbar toggleWalletModal={toggleWalletModal} toggleAccoundDetailsModal={toggleAccoundDetailsModal} />

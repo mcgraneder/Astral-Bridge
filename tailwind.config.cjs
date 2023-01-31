@@ -32,6 +32,7 @@ module.exports = {
       colors: {
        
         tertiary: "rgb(48, 63, 88)",
+        secondary: "rgb(34, 53, 83)",
         lightTertiary: "rgb(66, 87, 122)",
         darkBackground: "rgb(15, 25, 55)"
         
