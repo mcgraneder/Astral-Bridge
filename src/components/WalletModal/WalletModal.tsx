@@ -32,13 +32,13 @@ const TABS: Tab[] = [
 
 export const BridgeModalContainer = styled.div`
 
-    max-width: 470px;
+    max-width: 480px;
     color: White;
     background-color: rgb(15, 25, 55);
     text-align: right;
     padding: 12px 18px;
     border: 1px solid rgb(57, 62, 82);
-    border-radius: 15px;
+    border-radius: 20px;
     box-shadow: 0px 10px 150px 5px rgba(75, 135, 220, 0.03);
     margin: 30px auto 0;
     position: relative;
@@ -95,7 +95,7 @@ const WalletModal = () => {
     });
 
     return (
-        <div className='my-[80px]'>
+        <div className='my-[60px]'>
             <BridgeModalContainer>
                 <Dropdown text={"Bitcoin"} Icon={BtcIcon} type={buttonState.tabName}/>
                 <Dropdown text={"Ethereum"} Icon={EthIcon} type={buttonState.tabName}/>
