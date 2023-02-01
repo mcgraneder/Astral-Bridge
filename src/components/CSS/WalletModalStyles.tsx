@@ -1,6 +1,5 @@
 import styled from "styled-components";
 
-
 export const MintFormmWrapper = styled.div`
     // height: 100%;
     width: 100%;
@@ -298,7 +297,7 @@ export const MaxOption = styled.div`
 export const ForumIcon = styled.div`
     position: absolute;
     font-family: "SuisseIntl", "Helvetica", "Arial", sans-serif;
-  
+
     margin-top: 3px;
     // padding-bottom: 10px;
     width: 25px;
@@ -319,4 +318,3 @@ export const ForumImg = styled.img`
     width: 28px;
     height: 28px;
 `;
-

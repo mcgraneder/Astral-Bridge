@@ -16,12 +16,10 @@ export const Backdrop = styled.div`
     z-index: 1000;
     pointer-events: none;
     transition: opacity 0.15s ease-in-out !important;
- 
     ${(props: any) =>
         props.visible &&
         css`
             opacity: 1;
-    
             pointer-events: all;
         `}
 `;
@@ -63,7 +61,6 @@ export const TopRowNavigation = ({ isLeftDisplay = false, isRightDisplay = false
     );
 };
 
-
 interface WalletModalProps {
     toggleWalletModal: () => void;
 }
@@ -75,8 +72,8 @@ function WalletConnect({ toggleWalletModal }: WalletModalProps) {
         <>
             <Backdrop visible={openWalletModal || connecting || error}>
                 {openWalletModal && <WalletSelectModal setPendingWallet={setPendingWallet} toggleWalletModal={toggleWalletModal} setConnecting={setConnecting} connectOn={connectOn} />}
-                {error && <ConnectionErrorModal  close={toggleErrorModal} pendingWallet={pendingWallet} toggleWalletModal={toggleWalletModal} setConnecting={setConnecting} connectOn={connectOn} message={errorMessage} />}
-                {!error && connecting && <ConnectingModal open={!error && connecting}  close={toggleConecting} />}
+                {error && <ConnectionErrorModal close={toggleErrorModal} pendingWallet={pendingWallet} toggleWalletModal={toggleWalletModal} setConnecting={setConnecting} connectOn={connectOn} message={errorMessage} />}
+                {!error && connecting && <ConnectingModal open={!error && connecting} close={toggleConecting} />}
             </Backdrop>
         </>
     );

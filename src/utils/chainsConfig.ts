@@ -1,0 +1,307 @@
+import { Asset, Chain, chains } from "@renproject/chains";
+import {
+  ArbitrumChain,
+  AvalancheChain,
+  Bch,
+  BinanceSmartChain,
+  Btc,
+  chainsColors,
+  Dgb,
+  Doge,
+  EthereumChain,
+  FantomChain,
+  Fil,
+  KavaChain,
+  Luna,
+  MoonbeamChain,
+  OptimismChain,
+  PolygonChain,
+  SolanaChain,
+  Zec
+} from "@renproject/icons";
+
+import { RenNetwork } from "@renproject/utils";
+import { Icon } from "../components/Icons/AssetLogs/Icon";;
+import { AssetChainsConfig } from "./assetsConfig";
+import {
+  createNetworkConfig,
+  createNetworksConfig,
+  NetworkConfig,
+  NetworksConfig
+} from "./networksConfig";
+import { SvgIcon, SvgIconProps } from "@material-ui/core";
+import { SvgIconComponent } from "@material-ui/icons";
+import FunctionComponent from 'react';
+
+
+export type CustomSvgIconComponent =
+    //@ts-ignore
+  | FunctionComponent<SvgIconProps>
+  | SvgIconComponent;
+
+
+export type ChainIconsConfig = {
+  Icon: CustomSvgIconComponent;
+};
+
+export type ChainLabelsConfig = {
+  fullName: string;
+  shortName: string;
+};
+
+export type ChainNetworksConfig = {
+  networks?: NetworksConfig;
+};
+
+type ChainBaseConfig = ChainIconsConfig &
+  ChainLabelsConfig &
+  ChainNetworksConfig & {};
+
+export type ChainColorConfig = {
+  color: string;
+};
+
+export type ChainConfig = ChainBaseConfig & ChainColorConfig & {};
+
+const unsetChainConfig: ChainBaseConfig = {
+  Icon: null,
+  fullName: "",
+  shortName: "",
+};
+
+const chainsBaseConfig: Record<Chain, ChainBaseConfig> = {
+  Arbitrum: {
+    Icon: Icon(ArbitrumChain),
+    fullName: "Arbitrum",
+    shortName: "Arbitrum",
+    networks: createNetworksConfig(42161, 421611),
+  },
+  Avalanche: {
+    Icon: Icon(AvalancheChain),
+    fullName: "Avalanche",
+    shortName: "Avalanche",
+    networks: createNetworksConfig(43114, 43113),
+  },
+  BinanceSmartChain: {
+    Icon: Icon(BinanceSmartChain),
+    fullName: "Binance Smart Chain",
+    shortName: "BSC",
+    networks: createNetworksConfig(56, 97),
+  },
+  Bitcoin: {
+    Icon: Icon(Btc),
+    fullName: "Bitcoin",
+    shortName: "Bitcoin",
+  },
+  BitcoinCash: {
+    Icon: Icon(Bch),
+    fullName: "Bitcoin Cash",
+    shortName: "Bitcoin Cash",
+  },
+  Dogecoin: {
+    Icon: Icon(Doge),
+    fullName: "Dogecoin",
+    shortName: "Dogecoin",
+  },
+  Ethereum: {
+    Icon: Icon(EthereumChain),
+    fullName: "Ethereum",
+    shortName: "Eth",
+    networks: {
+      ...createNetworkConfig(RenNetwork.Mainnet, 1),
+      ...createNetworkConfig(RenNetwork.Testnet, 5, "Goerli Testnet"),
+    },
+  },
+  Goerli: {
+    Icon: Icon(EthereumChain),
+    fullName: "Goerli Testnet",
+    shortName: "Goerli",
+    networks: createNetworksConfig(1, 5),
+  },
+  Fantom: {
+    Icon: Icon(FantomChain),
+    fullName: "Fantom",
+    shortName: "Fantom",
+    networks: createNetworksConfig(250, 4002),
+  },
+  Kava: {
+    Icon: Icon(KavaChain),
+    fullName: "Kava",
+    shortName: "Kava",
+    networks: createNetworksConfig(2222, 2221),
+  },
+  Moonbeam: {
+    Icon: Icon(MoonbeamChain),
+    fullName: "Moonbeam",
+    shortName: "Moonbeam",
+    networks: createNetworksConfig(1284, 1287),
+  },
+  Optimism: {
+    Icon: Icon(OptimismChain),
+    fullName: "Optimism",
+    shortName: "Optimism",
+    networks: createNetworksConfig(10, 69),
+  },
+  Polygon: {
+    Icon: Icon(PolygonChain),
+    fullName: "Polygon",
+    shortName: "Polygon",
+    networks: createNetworksConfig(137, 80001),
+  },
+  Zcash: {
+    Icon: Icon(Zec),
+    fullName: "Zcash",
+    shortName: "Zcash",
+  },
+  DigiByte: {
+    Icon: Icon(Dgb),
+    fullName: "DigiByte",
+    shortName: "DigiByte",
+  },
+  Filecoin: {
+    Icon: Icon(Fil),
+    fullName: "Filecoin",
+    shortName: "Filecoin",
+  },
+  Terra: {
+    Icon: Icon(Luna),
+    fullName: "Terra",
+    shortName: "Terra",
+  },
+  Solana: {
+    Icon: Icon(SolanaChain),
+    fullName: "Solana",
+    shortName: "Solana",
+    networks: createNetworksConfig(1, 2, RenNetwork.Mainnet, RenNetwork.Testnet),
+  },
+  Catalog: unsetChainConfig,
+};
+
+const getChainColorConfig = (chain: Chain) => {
+  const color = chainsColors[chain];
+  return color.primary;
+};
+
+export const chainsConfig = Object.fromEntries(
+  Object.entries(chainsBaseConfig).map(([chain, config]) => [
+    chain,
+    {
+      ...config,
+      color: getChainColorConfig(chain as Chain),
+    },
+  ])
+) as Record<Chain, ChainConfig>;
+
+export const getChainConfig = (chain: Chain | string) => {
+  const config = chainsConfig[chain as Chain];
+  if (!config) {
+    throw new Error(`Chain config not found for ${chain}`);
+  }
+  return config;
+};
+
+export const getChainNetworks = (chain: Chain) => {
+  const chainConfig = getChainConfig(chain);
+  if (!chainConfig.networks) {
+    throw new Error(`Chain networks config not found for ${chain}`);
+  }
+  return chainConfig.networks;
+};
+
+export const getChainNetworkConfig = (chain: Chain, network: RenNetwork) => {
+  const networks = getChainNetworks(chain);
+  if (!networks[network]) {
+    throw new Error(`Network config incomplete for ${chain} ${network}`);
+  }
+  return networks[network] as NetworkConfig;
+};
+
+type AssetChainsData = AssetChainsConfig & {
+  asset: Asset;
+};
+
+export const supportedDepositChains: Array<Chain> = [
+  Chain.Bitcoin,
+  Chain.BitcoinCash,
+  Chain.Dogecoin,
+  Chain.Zcash,
+  Chain.DigiByte,
+  Chain.Terra,
+  Chain.Filecoin,
+];
+
+export const isDepositBaseChain = (chain: Chain) =>
+  supportedDepositChains.includes(chain);
+
+export const supportedEthereumChains: Array<Chain> = [
+  //TODO: hacky till Goerli became default Ethereum testnet in renJS
+  Chain.Ethereum,
+  Chain.BinanceSmartChain,
+  Chain.Fantom,
+  Chain.Polygon,
+  Chain.Avalanche,
+  Chain.Arbitrum,
+  Chain.Kava,
+  Chain.Moonbeam,
+  Chain.Optimism,
+];
+
+export const isEthereumBaseChain = (chain: Chain) =>
+  supportedEthereumChains.includes(chain);
+
+export const supportedSolanaChains: Array<Chain> = [Chain.Solana];
+
+export const isSolanaBaseChain = (chain: Chain) =>
+  supportedSolanaChains.includes(chain);
+
+export const isContractBaseChain = (chain: Chain) => {
+  return isEthereumBaseChain(chain) || isSolanaBaseChain(chain);
+};
+
+export const contractChains = [
+  ...supportedEthereumChains,
+  ...supportedSolanaChains,
+];
+
+const mintChains = [...supportedEthereumChains, ...supportedSolanaChains];
+
+export const isChainConnectionRequired = (chain: Chain) =>
+  contractChains.includes(chain);
+
+export const assetChainsArray = Object.values(chains).reduce(
+  (acc, chain) => [
+    ...acc,
+    ...Object.values(chain.assets).map((asset) => ({
+      asset: asset as Asset,
+      lockChain: chain.chain as Chain,
+      mintChains: mintChains.filter((mintChain) => mintChain !== chain.chain),
+      lockChainConnectionRequired: isChainConnectionRequired(
+        chain.chain as Chain
+      ),
+    })),
+  ],
+  [] as Array<AssetChainsData>
+);
+
+export const getAssetChainsConfig = (asset: Asset, nullForNotFound = false) => {
+  const info = assetChainsArray.find((entry) => entry.asset === asset);
+  if (!info) {
+    if (nullForNotFound) {
+      return null;
+    } else {
+      throw new Error(`Chain mapping for ${asset} not found.`);
+    }
+  }
+  return {
+    lockChain: info.lockChain,
+    mintChains: info.mintChains,
+    lockChainConnectionRequired: info.lockChainConnectionRequired,
+  } as AssetChainsConfig;
+};
+
+export const supportedContractChains = contractChains;
+
+export const supportedAllChains = [
+  ...supportedContractChains,
+  ...supportedDepositChains,
+];

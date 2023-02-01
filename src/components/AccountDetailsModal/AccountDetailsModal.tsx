@@ -4,15 +4,15 @@ import { useViewport } from "../../hooks/useViewport";
 import { Breakpoints } from "../../constants/Breakpoints";
 import BottomSheetOptions from "../BottomSheet/BottomSheetOptions";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
-import { UilTimes } from '@iconscout/react-unicons';
+import { UilTimes } from "@iconscout/react-unicons";
 import { useAuth } from "../../context/useWalletAuth";
 import { useRouter } from "next/router";
 import Identicon from "../Identicon/Identicon";
 import { shortenAddress } from "../../utils/misc";
-import CopyIcon from '../Icons/CopyIcon';
+import CopyIcon from "../Icons/CopyIcon";
 import { ExternalLink, Power } from "react-feather";
-import styled, { css } from "styled-components"
-import BalanceDisplay from '../NativeBalanceDisplay/BalanceDisplay';
+import styled, { css } from "styled-components";
+import BalanceDisplay from "../NativeBalanceDisplay/BalanceDisplay";
 
 export const Backdrop = styled.div`
     position: fixed;
@@ -24,12 +24,12 @@ export const Backdrop = styled.div`
     z-index: 10000000000;
     pointer-events: none;
     transition: opacity 0.15s ease-in-out !important;
- 
+
     ${(props: any) =>
         props.visible &&
         css`
             opacity: 1;
-    
+
             pointer-events: all;
         `}
 `;
@@ -57,7 +57,7 @@ interface AccountDetailsProps {
 
 interface ITopRow {
     account: any;
-    toggleAccoundDetailsModal: () => void
+    toggleAccoundDetailsModal: () => void;
 }
 
 export const TopRowNavigation = ({ account, toggleAccoundDetailsModal }: ITopRow) => {
@@ -105,7 +105,7 @@ const AccountDetailsModalIner = ({ toggleAccoundDetailsModal }: AccountDetailsPr
     return (
         <>
             <TopRowNavigation account={account} toggleAccoundDetailsModal={toggleAccoundDetailsModal} />
-            <BalanceDisplay/>
+            <BalanceDisplay />
             <div className='mt-4 flex items-center justify-center'>
                 <PrimaryButton className={"w-full justify-center rounded-lg bg-blue-500 py-[15px] text-center"} onClick={deactivate}>
                     Disconnect

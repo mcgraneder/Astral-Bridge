@@ -1,12 +1,12 @@
-import React, { useState } from "react"
-import styled from "styled-components"
-import BtcIcon from "../../../public/svgs/assets/renBTC.svg"
+import React, { useState } from "react";
+import styled from "styled-components";
+import BtcIcon from "../../../public/svgs/assets/renBTC.svg";
 import EthIcon from "../../../public/svgs/chains/ethereum.svg";
 
-import { UilAngleDown } from '@iconscout/react-unicons';
+import { UilAngleDown } from "@iconscout/react-unicons";
 import { MintFormTextWrapper2, MintFormText2 } from "../CSS/WalletModalStyles";
 import ToggleButtonContainer from "./components/ToggleButton";
-import Dropdown from './components/Dropdown';
+import Dropdown from "./components/Dropdown";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import WalletInputForm from "./components/WalletInput";
 import BalanceDisplay from "../NativeBalanceDisplay/BalanceDisplay";
@@ -14,24 +14,23 @@ import BalanceDisplay from "../NativeBalanceDisplay/BalanceDisplay";
 export type Tab = {
     tabName: string;
     tabNumber: number;
-    side: string
+    side: string;
 };
 
 const TABS: Tab[] = [
     {
         tabName: "Deposit",
         tabNumber: 0,
-        side: "left"
+        side: "left",
     },
-        {
+    {
         tabName: "Withdraw",
         tabNumber: 1,
-        side: "right"
-    }
-]
+        side: "right",
+    },
+];
 
 export const BridgeModalContainer = styled.div`
-
     max-width: 480px;
     color: White;
     background-color: rgb(15, 25, 55);
@@ -87,7 +86,7 @@ export const MintToggleButton = styled.div`
 `;
 
 const WalletModal = () => {
-    const [text, setText] = useState<string>("")
+    const [text, setText] = useState<string>("");
     const [buttonState, setButtonState] = useState<Tab>({
         tabName: "Deposit",
         tabNumber: 0,
@@ -97,14 +96,14 @@ const WalletModal = () => {
     return (
         <div className='my-[60px]'>
             <BridgeModalContainer>
-                <Dropdown text={"Bitcoin"} Icon={BtcIcon} type={buttonState.tabName}/>
-                <Dropdown text={"Ethereum"} Icon={EthIcon} type={buttonState.tabName}/>
-                <BalanceDisplay/>
+                <Dropdown text={"Bitcoin"} Icon={BtcIcon} type={buttonState.tabName} />
+                <Dropdown text={"Ethereum"} Icon={EthIcon} type={buttonState.tabName} />
+                <BalanceDisplay />
                 <MintFormContainer>
                     <ToggleButtonContainer activeButton={buttonState} tabs={TABS} setActiveButton={setButtonState} />
-                    <WalletInputForm setText={setText} text={text}/>
-                    <div className='mt-6 mb-1 px-5 flex items-center justify-center'>
-                        <PrimaryButton className={"w-full justify-center rounded-lg bg-blue-500 py-[16px] border border-blue-400 text-center text-[17px] font-semibold hover:bg-blue-600 hover:border-blue-500"} onClick={() => {}}>
+                    <WalletInputForm setText={setText} text={text} />
+                    <div className='mt-6 mb-1 flex items-center justify-center px-5'>
+                        <PrimaryButton className={"w-full justify-center rounded-lg border border-blue-400 bg-blue-500 py-[16px] text-center text-[17px] font-semibold hover:border-blue-500 hover:bg-blue-600"} onClick={() => {}}>
                             {buttonState.tabName}
                         </PrimaryButton>
                     </div>
@@ -112,6 +111,6 @@ const WalletModal = () => {
             </BridgeModalContainer>
         </div>
     );
-}
+};
 
-export default WalletModal
+export default WalletModal;

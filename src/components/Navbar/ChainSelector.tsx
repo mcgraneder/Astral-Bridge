@@ -64,24 +64,24 @@ const TokenSelectDropdown = () => {
         <>
             <div className='relative left-0 h-fit w-fit' ref={ref}>
                 <ChainSelectorButton setIsMenuOpen={setIsMenuOpen} activeChain={activeChain} />
-                {isMenuOpen && (
-                    width > 0 && width >= Breakpoints.sm1 ? (
+                {isMenuOpen &&
+                    (width > 0 && width >= Breakpoints.sm1 ? (
                         <FormWrapper>
                             {getChainOptions()
                                 .filter((chain: ChainType) => chain.isTestnet)
                                 .map((chain: ChainType) => {
                                     return <ChainSelector chain={chain} currentChain={chainId} switchNetwork={switchNetwork} />;
                                 })}
-                    </FormWrapper>)
-                    :
-                    (<BottomSheetOptions hideCloseIcon open={true} setOpen={() => null} title={"Chain selection"}>
-                        {getChainOptions()
-                            .filter((chain: ChainType) => chain.isTestnet)
-                            .map((chain: ChainType) => {
-                                return <ChainSelector chain={chain} currentChain={chainId}  switchNetwork={switchNetwork} />;
-                            })}
-                    </BottomSheetOptions>)
-                )}
+                        </FormWrapper>
+                    ) : (
+                        <BottomSheetOptions hideCloseIcon open={true} setOpen={() => null} title={"Chain selection"}>
+                            {getChainOptions()
+                                .filter((chain: ChainType) => chain.isTestnet)
+                                .map((chain: ChainType) => {
+                                    return <ChainSelector chain={chain} currentChain={chainId} switchNetwork={switchNetwork} />;
+                                })}
+                        </BottomSheetOptions>
+                    ))}
             </div>
         </>
     );
@@ -101,14 +101,14 @@ const ChainSelectorButton = ({ setIsMenuOpen, activeChain }: { setIsMenuOpen: Re
         </div>
     );
 };
-const ChainSelector = ({ chain, currentChain, switchNetwork }: { chain: ChainType; currentChain: number | undefined;  switchNetwork: (id: number) => Promise<void> }) => {
+const ChainSelector = ({ chain, currentChain, switchNetwork }: { chain: ChainType; currentChain: number | undefined; switchNetwork: (id: number) => Promise<void> }) => {
     return (
         <div className='flex flex-row items-center gap-3 rounded-lg px-2 py-2 hover:cursor-pointer hover:bg-tertiary' onClick={() => switchNetwork(chain.id)}>
             <div className='flex h-full'>
                 <chain.logo className={"h-5 w-5"} />
             </div>
             <span className='text-[15px]'>{chain.chainName}</span>
-            {currentChain && currentChain == chain.id && <GreenDot/>}
+            {currentChain && currentChain == chain.id && <GreenDot />}
         </div>
     );
 };

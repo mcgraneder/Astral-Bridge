@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from "react";
 import { Backdrop } from "../WalletConnectModal/WalletConnectModal";
 import { UilTimes, UilArrowLeft, UilSpinnerAlt } from "@iconscout/react-unicons";
 import MetamaskIcon from "../../../public/svgs/metamask-fox.svg";
@@ -7,9 +7,9 @@ import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import { get, post } from "../../services/axios";
 import axios from "axios";
 import { useAuth } from "../../context/useWalletAuth";
-import { useWeb3React } from '@web3-react/core';
+import { useWeb3React } from "@web3-react/core";
 import API from "../../constants/Api";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
 export const FormWrapper = styled.div`
     position: fixed;
@@ -27,7 +27,7 @@ export const FormWrapper = styled.div`
     z-index: 10000000000;
 `;
 
-const TopRowNavigation = ({ close }: { close: any}) => {
+const TopRowNavigation = ({ close }: { close: any }) => {
     return (
         <div className={`mb-2 flex items-center justify-between px-2`}>
             <div className='flex items-center gap-2'>
@@ -39,46 +39,44 @@ const TopRowNavigation = ({ close }: { close: any}) => {
             </div>
         </div>
     );
-}
+};
 
 const AccountVerificationModal = () => {
-    const [loading, setLoading] = useState<boolean>(false)
-    const { library, account } = useWeb3React()
-    const { pathname, push } = useRouter()
+    const [loading, setLoading] = useState<boolean>(false);
+    const { library, account } = useWeb3React();
+    const { pathname, push } = useRouter();
     const { hasSigned, setHasSigned, disconnect, connecting } = useAuth();
 
     const close = () => {
-        setHasSigned(true)
-        disconnect()
-    }
+        setHasSigned(true);
+        disconnect();
+    };
 
-    const signatureVerifier = async(): Promise<void> => {
+    const signatureVerifier = async (): Promise<void> => {
         const nonce: number = Math.floor(Math.random() * 10000);
-        let signature: string | null 
+        let signature: string | null;
         try {
-            setLoading(true)
+            setLoading(true);
             signature = await library.getSigner().signMessage(`Alpha-Bridge Onboarding unique one-time nonce: ${nonce} by signimg this you are verifying your ownership of this wallet`);
-            const data: any = await axios.post(
-                API.ren.verify, { signature, nonce, publicAddress: account }
-            )
+            const data: any = await axios.post(API.ren.verify, { signature, nonce, publicAddress: account });
 
-            localStorage.setItem("authToken", data.data.token)
+            localStorage.setItem("authToken", data.data.token);
             if (pathname === "/home") push("/wallet");
-            
-            setHasSigned(true)
-            setLoading(false)
-        } catch(error: any) {
-            console.log(error)
-            setLoading(false)
+
+            setHasSigned(true);
+            setLoading(false);
+        } catch (error: any) {
+            console.log(error);
+            setLoading(false);
         }
-    }
+    };
 
     return (
         <>
             {!hasSigned && !connecting && (
                 <Backdrop visible={!hasSigned && !connecting}>
                     <FormWrapper>
-                        <TopRowNavigation close={close}/>
+                        <TopRowNavigation close={close} />
                         <div className='text-overflow block break-words px-2 text-left text-gray-500'>You need to verify your ownership of this ENS. please sign the prompted message to continue</div>
                         <div className='my-2 flex items-center justify-center gap-5  p-2'>
                             <div className='flex items-center '>
