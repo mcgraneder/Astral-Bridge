@@ -28,6 +28,7 @@ const nextConfig = {
     config.plugins.push(
       new webpack.DefinePlugin({ "process.env.BUILD_ID": JSON.stringify(buildId) })
     );
+    config.resolve.fallback = { fs: false, module: false, path: false }
     return config;
   },
 
