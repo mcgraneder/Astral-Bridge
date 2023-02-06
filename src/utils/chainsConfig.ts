@@ -27,6 +27,9 @@ export type ChainIconsConfig = {
 export type ChainLabelsConfig = {
   fullName: string;
   shortName: string;
+  mainnetChainId?: number;
+  testnetChainId?: number;
+
 };
 
 export type ChainNetworksConfig = {
@@ -55,18 +58,24 @@ export const chainsBaseConfig: Record<Chain, ChainBaseConfig> = {
     fullName: "Arbitrum",
     shortName: "Arbitrum",
     networks: createNetworksConfig(42161, 421611),
+    mainnetChainId: 42161,
+    testnetChainId: 421611,
   },
   Avalanche: {
     Icon: "Avalanche",
     fullName: "Avalanche",
     shortName: "Avalanche",
     networks: createNetworksConfig(43114, 43113),
+    mainnetChainId: 43114,
+    testnetChainId: 43113,
   },
   BinanceSmartChain: {
     Icon: "BinanceSmartChain",
     fullName: "Binance Smart Chain",
     shortName: "BSC",
     networks: createNetworksConfig(56, 97),
+    mainnetChainId: 56,
+    testnetChainId: 97
   },
   Bitcoin: {
     Icon: "Bitcoin",
@@ -91,42 +100,56 @@ export const chainsBaseConfig: Record<Chain, ChainBaseConfig> = {
       ...createNetworkConfig(RenNetwork.Mainnet, 1),
       ...createNetworkConfig(RenNetwork.Testnet, 5, "Goerli Testnet"),
     },
+    mainnetChainId: 1,
+    testnetChainId: 5
   },
   Goerli: {
     Icon: "Ethereum",
     fullName: "Goerli Testnet",
     shortName: "Goerli",
     networks: createNetworksConfig(1, 5),
+    mainnetChainId: 1,
+    testnetChainId: 1
   },
   Fantom: {
     Icon: "Fantom",
     fullName: "Fantom",
     shortName: "Fantom",
     networks: createNetworksConfig(250, 4002),
+    mainnetChainId: 250,
+    testnetChainId: 4002
   },
   Kava: {
     Icon: "Kava",
     shortName: "Kava",
     fullName: "Kava",
     networks: createNetworksConfig(2222, 2221),
+    mainnetChainId: 2222,
+    testnetChainId: 2221
   },
   Moonbeam: {
     Icon: "Moonbeam",
     fullName: "Moonbeam",
     shortName: "Moonbeam",
     networks: createNetworksConfig(1284, 1287),
+    mainnetChainId: 1284,
+    testnetChainId: 1287
   },
   Optimism: {
     Icon: "Optimism",
     fullName: "Optimism",
     shortName: "Optimism",
     networks: createNetworksConfig(10, 69),
+    mainnetChainId: 10,
+    testnetChainId: 69
   },
   Polygon: {
     Icon: "Polygon",
     fullName: "Polygon",
     shortName: "Polygon",
     networks: createNetworksConfig(137, 80001),
+    mainnetChainId: 137,
+    testnetChainId: 80001
   },
   Zcash: {
     Icon: "Zcash",    
@@ -153,6 +176,8 @@ export const chainsBaseConfig: Record<Chain, ChainBaseConfig> = {
     fullName: "Solana",
     shortName: "Solana",
     networks: createNetworksConfig(1, 2, RenNetwork.Mainnet, RenNetwork.Testnet),
+    mainnetChainId: 1,
+    testnetChainId: 2
   },
   Catalog: unsetChainConfig,
 };

@@ -3,7 +3,7 @@ import { useWeb3React } from '@web3-react/core';
 import { ethers } from "ethers";
 import { toFixed } from "../../utils/misc";
 
-const BalanceDisplay = ({ asset }: { asset: any }) => {
+const BalanceDisplay = ({ asset, chain }: { asset: any, chain: any }) => {
     const [balance, setBalance] = useState<string | undefined>(undefined)
     const { library, account } = useWeb3React();
 
@@ -27,7 +27,7 @@ const BalanceDisplay = ({ asset }: { asset: any }) => {
 
     return (
         <div className='my-5 flex flex-col items-center rounded-lg border border-tertiary p-2 text-center'>
-            <span className=' text-[17px]'><span>{asset.fullName}</span> Balance</span>
+            <span className=' text-[17px]'><span>{asset.shortName}</span> Balance<span> on {chain.fullName}</span></span>
             <span className='text-[35px]'>{balance ? balance : "0.00"}<span>{` ${asset.shortName}`}</span></span>
             <span className=' text-[17px] text-gray-500'>$ 10.67</span>
         </div>

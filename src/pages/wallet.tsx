@@ -4,6 +4,7 @@ import WalletModal from "../components/WalletModal/WalletModal";
 import { Layout } from "../layouts";
 import AssetListModal from '../components/AssetListModal/AssetListModal';
 import { useWallet } from "../context/useWalletState";
+import BottomNavBar from "../components/WalletModal/components/BottomNavbar";
 
 const BlockPage: NextPage = () => {
 
@@ -13,6 +14,7 @@ const BlockPage: NextPage = () => {
           <AssetListModal setShowTokenModal={setShowTokenModal} visible={showTokenModal} />
           <Layout>
               <WalletModal setShowTokenModal={setShowTokenModal} />
+              <BottomNavBar/>
           </Layout>
       </>
   );

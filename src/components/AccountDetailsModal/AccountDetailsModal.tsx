@@ -95,7 +95,7 @@ export const TopRowNavigation = ({ account, toggleAccoundDetailsModal }: ITopRow
 
 const AccountDetailsModalIner = ({ toggleAccoundDetailsModal }: AccountDetailsProps) => {
     const { disconnect } = useAuth();
-    const { asset } = useWallet()
+    const { asset, chain } = useWallet()
     const { account } = useWeb3React();
     const { push } = useRouter();
 
@@ -108,7 +108,7 @@ const AccountDetailsModalIner = ({ toggleAccoundDetailsModal }: AccountDetailsPr
     return (
         <>
             <TopRowNavigation account={account} toggleAccoundDetailsModal={toggleAccoundDetailsModal} />
-            <BalanceDisplay asset={asset}/>
+            <BalanceDisplay asset={asset} chain={chain}/>
             <div className='mt-4 flex items-center justify-center'>
                 <PrimaryButton className={"w-full justify-center rounded-lg bg-blue-500 py-[15px] text-center"} onClick={deactivate}>
                     Disconnect

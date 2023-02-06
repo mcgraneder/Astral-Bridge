@@ -14,6 +14,7 @@ import { useWallet } from "../../context/useWalletState";
 import { useWeb3React } from '@web3-react/core';
 import { ChainIdToRenChain } from '../../connection/chains';
 import { useAuth } from "../../context/useWalletAuth";
+import { RenNetwork } from '@renproject/utils';
 
 export type Tab = {
     tabName: string;
@@ -89,6 +90,8 @@ export const MintToggleButton = styled.div`
 
 `;
 
+const NETWORK: RenNetwork = RenNetwork.Testnet
+
 interface IWalletModal {
     setShowTokenModal: any;
 }
@@ -114,16 +117,16 @@ const WalletModal = ({ setShowTokenModal }: IWalletModal) => {
 
     }
     return (
-        <div className='my-[60px]'>
+        <div className='mt-[60px] mb-[40px]'>
             <BridgeModalContainer>
                 <Dropdown text={asset.fullName} dropDownType={"currency"} Icon={asset.Icon} type={buttonState.tabName} setType={setWalletAssetType} setShowTokenModal={setShowTokenModal} />
                 <Dropdown text={chain.fullName} dropDownType={"chain"} Icon={chain.Icon} type={buttonState.tabName} setType={setWalletAssetType} setShowTokenModal={setShowTokenModal} />
-                <BalanceDisplay asset={asset}/>
+                <BalanceDisplay asset={asset} chain={chain}/>
                 <MintFormContainer>
                     <ToggleButtonContainer activeButton={buttonState} tabs={TABS} setActiveButton={setButtonState} />
                     <WalletInputForm setText={setText} text={text} />
                     <div className='mt-6 mb-1 flex items-center justify-center px-5'>
-                        <PrimaryButton className={"w-full justify-center rounded-lg border border-blue-400 bg-blue-500 py-[16px] text-center text-[17px] font-semibold hover:border-blue-500 hover:bg-blue-600"} onClick={needsToSwitchChain ? () => {} : () => switchNetwork(5)}>
+                        <PrimaryButton className={"w-full justify-center rounded-lg border border-blue-400 bg-blue-500 py-[16px] text-center text-[17px] font-semibold hover:border-blue-500 hover:bg-blue-600"} onClick={needsToSwitchChain ? () => {} : () => switchNetwork(NETWORK === RenNetwork.Testnet ? chain.testnetChainId : chain.mainnetChainId)}>
                             {needsToSwitchChain ? buttonState.tabName : `Switch to ${chain.fullName} network`}
                         </PrimaryButton>
                     </div>

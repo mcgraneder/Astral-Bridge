@@ -12,6 +12,8 @@ import AccountDetailsModal from "../../components/AccountDetailsModal/AccountDet
 import { ChainColor, chainsColors } from '../../utils/chainColours';
 import { useWeb3React } from '@web3-react/core';
 import { ChainIdToRenChain } from '../../connection/chains';
+import Footer from "../../components/Footer/Footer";
+import NetworkWarning from "../../components/NetworkWarning/NetworkWarning";
 
 const Background = styled.div`
     background: rgb(27, 50, 105);
@@ -104,7 +106,9 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
                 <AccountVerificationModal />
                 <AccountDetailsModal toggleAccoundDetailsModal={toggleAccoundDetailsModal} showAccount={showAccount} />
                 <Navbar toggleWalletModal={toggleWalletModal} toggleAccoundDetailsModal={toggleAccoundDetailsModal} />
-                <BottomNavBar />
+                {/* <BottomNavBar /> */}
+                {/* <Footer visible={true}/> */}
+                {/* <NetworkWarning/> */}
                 <WalletConnect toggleWalletModal={toggleWalletModal} />
 
                 <div id='layout' className={`bg-black-900 coingrid-scrollbar relative z-50 w-full flex-1 items-center overflow-x-hidden overflow-y-scroll rounded-t-[40px]  pb-2 pt-6 sm:p-8   md:rounded-[40px] md:p-10 lg:mb-6 lg:overflow-y-auto`}>
