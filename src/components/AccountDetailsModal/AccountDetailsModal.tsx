@@ -13,6 +13,7 @@ import CopyIcon from "../Icons/CopyIcon";
 import { ExternalLink, Power } from "react-feather";
 import styled, { css } from "styled-components";
 import BalanceDisplay from "../NativeBalanceDisplay/BalanceDisplay";
+import { useWallet } from "../../context/useWalletState";
 
 export const Backdrop = styled.div`
     position: fixed;
@@ -23,6 +24,7 @@ export const Backdrop = styled.div`
     backdrop-filter: blur(5px);
     z-index: 10000000000;
     pointer-events: none;
+    background: rgba(2, 8, 26, 0.45);
     transition: opacity 0.15s ease-in-out !important;
 
     ${(props: any) =>
@@ -93,6 +95,7 @@ export const TopRowNavigation = ({ account, toggleAccoundDetailsModal }: ITopRow
 
 const AccountDetailsModalIner = ({ toggleAccoundDetailsModal }: AccountDetailsProps) => {
     const { disconnect } = useAuth();
+    const { asset } = useWallet()
     const { account } = useWeb3React();
     const { push } = useRouter();
 
@@ -105,7 +108,7 @@ const AccountDetailsModalIner = ({ toggleAccoundDetailsModal }: AccountDetailsPr
     return (
         <>
             <TopRowNavigation account={account} toggleAccoundDetailsModal={toggleAccoundDetailsModal} />
-            <BalanceDisplay />
+            <BalanceDisplay asset={asset}/>
             <div className='mt-4 flex items-center justify-center'>
                 <PrimaryButton className={"w-full justify-center rounded-lg bg-blue-500 py-[15px] text-center"} onClick={deactivate}>
                     Disconnect

@@ -1,24 +1,4 @@
 import { Asset, Chain, chains } from "@renproject/chains";
-import {
-  ArbitrumChain,
-  AvalancheChain,
-  Bch,
-  BinanceSmartChain,
-  Btc,
-  chainsColors,
-  Dgb,
-  Doge,
-  EthereumChain,
-  FantomChain,
-  Fil,
-  KavaChain,
-  Luna,
-  MoonbeamChain,
-  OptimismChain,
-  PolygonChain,
-  SolanaChain,
-  Zec
-} from "@renproject/icons";
 
 import { RenNetwork } from "@renproject/utils";
 import { Icon } from "../components/Icons/AssetLogs/Icon";;
@@ -29,9 +9,9 @@ import {
   NetworkConfig,
   NetworksConfig
 } from "./networksConfig";
-import { SvgIcon, SvgIconProps } from "@material-ui/core";
+import { SvgIconProps } from "@material-ui/core";
 import { SvgIconComponent } from "@material-ui/icons";
-import FunctionComponent from 'react';
+import { chainsColors } from "./chainColours";
 
 
 export type CustomSvgIconComponent =
@@ -41,7 +21,7 @@ export type CustomSvgIconComponent =
 
 
 export type ChainIconsConfig = {
-  Icon: CustomSvgIconComponent;
+  Icon: string | null;
 };
 
 export type ChainLabelsConfig = {
@@ -69,42 +49,42 @@ const unsetChainConfig: ChainBaseConfig = {
   shortName: "",
 };
 
-const chainsBaseConfig: Record<Chain, ChainBaseConfig> = {
+export const chainsBaseConfig: Record<Chain, ChainBaseConfig> = {
   Arbitrum: {
-    Icon: Icon(ArbitrumChain),
+    Icon: "Arbitrum",
     fullName: "Arbitrum",
     shortName: "Arbitrum",
     networks: createNetworksConfig(42161, 421611),
   },
   Avalanche: {
-    Icon: Icon(AvalancheChain),
+    Icon: "Avalanche",
     fullName: "Avalanche",
     shortName: "Avalanche",
     networks: createNetworksConfig(43114, 43113),
   },
   BinanceSmartChain: {
-    Icon: Icon(BinanceSmartChain),
+    Icon: "BinanceSmartChain",
     fullName: "Binance Smart Chain",
     shortName: "BSC",
     networks: createNetworksConfig(56, 97),
   },
   Bitcoin: {
-    Icon: Icon(Btc),
+    Icon: "Bitcoin",
     fullName: "Bitcoin",
     shortName: "Bitcoin",
   },
   BitcoinCash: {
-    Icon: Icon(Bch),
+    Icon: "BitcoinCash",
     fullName: "Bitcoin Cash",
     shortName: "Bitcoin Cash",
   },
   Dogecoin: {
-    Icon: Icon(Doge),
+    Icon: "DogeCoin",
     fullName: "Dogecoin",
     shortName: "Dogecoin",
   },
   Ethereum: {
-    Icon: Icon(EthereumChain),
+    Icon: "Ethereum",
     fullName: "Ethereum",
     shortName: "Eth",
     networks: {
@@ -113,63 +93,63 @@ const chainsBaseConfig: Record<Chain, ChainBaseConfig> = {
     },
   },
   Goerli: {
-    Icon: Icon(EthereumChain),
+    Icon: "Ethereum",
     fullName: "Goerli Testnet",
     shortName: "Goerli",
     networks: createNetworksConfig(1, 5),
   },
   Fantom: {
-    Icon: Icon(FantomChain),
+    Icon: "Fantom",
     fullName: "Fantom",
     shortName: "Fantom",
     networks: createNetworksConfig(250, 4002),
   },
   Kava: {
-    Icon: Icon(KavaChain),
-    fullName: "Kava",
+    Icon: "Kava",
     shortName: "Kava",
+    fullName: "Kava",
     networks: createNetworksConfig(2222, 2221),
   },
   Moonbeam: {
-    Icon: Icon(MoonbeamChain),
+    Icon: "Moonbeam",
     fullName: "Moonbeam",
     shortName: "Moonbeam",
     networks: createNetworksConfig(1284, 1287),
   },
   Optimism: {
-    Icon: Icon(OptimismChain),
+    Icon: "Optimism",
     fullName: "Optimism",
     shortName: "Optimism",
     networks: createNetworksConfig(10, 69),
   },
   Polygon: {
-    Icon: Icon(PolygonChain),
+    Icon: "Polygon",
     fullName: "Polygon",
     shortName: "Polygon",
     networks: createNetworksConfig(137, 80001),
   },
   Zcash: {
-    Icon: Icon(Zec),
+    Icon: "Zcash",    
     fullName: "Zcash",
     shortName: "Zcash",
   },
   DigiByte: {
-    Icon: Icon(Dgb),
+    Icon: "DigiByte",
     fullName: "DigiByte",
     shortName: "DigiByte",
   },
   Filecoin: {
-    Icon: Icon(Fil),
+    Icon: "Filecoin",
     fullName: "Filecoin",
     shortName: "Filecoin",
   },
   Terra: {
-    Icon: Icon(Luna),
+    Icon: "Terra",    
     fullName: "Terra",
     shortName: "Terra",
   },
   Solana: {
-    Icon: Icon(SolanaChain),
+    Icon: "Solana",
     fullName: "Solana",
     shortName: "Solana",
     networks: createNetworksConfig(1, 2, RenNetwork.Mainnet, RenNetwork.Testnet),
@@ -181,7 +161,6 @@ const getChainColorConfig = (chain: Chain) => {
   const color = chainsColors[chain];
   return color.primary;
 };
-
 export const chainsConfig = Object.fromEntries(
   Object.entries(chainsBaseConfig).map(([chain, config]) => [
     chain,

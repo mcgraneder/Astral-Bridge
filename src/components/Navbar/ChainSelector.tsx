@@ -13,7 +13,7 @@ import GreenDot from "../Icons/GreenDot";
 export const FormWrapper = styled.div`
     position: fixed;
     left: 73.5%;
-    top: 18.5%;
+    top: 26%;
     transform: translate(-50%, -50%);
     width: 300px;
     background-color: rgb(15, 25, 55);
@@ -35,6 +35,7 @@ const TokenSelectDropdown = () => {
     const [activeChain, setActiveChain] = useState<ChainType | undefined>(undefined);
     const { chainId } = useWeb3React();
     const { width } = useViewport();
+
     const { needToSwitchChain, switchNetwork } = useAuth();
     const ref = useRef<HTMLDivElement>(null);
 

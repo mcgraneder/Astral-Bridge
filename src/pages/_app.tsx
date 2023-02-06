@@ -5,6 +5,7 @@ import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import "../styles/globals.css";
 import { ToastContainerProps, ToastContainer } from "react-toastify";
+import { WalletProvider } from "../context/useWalletState";
 
 const toastConfig = {
   autoClose: 6000,
@@ -25,8 +26,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     return (
         <Web3ReactProvider getLibrary={getLibrary}>
             <AuthProvider>
-                <ToastContainer {...toastConfig} />
-                <Component {...pageProps} />
+                <WalletProvider>
+                    <ToastContainer {...toastConfig} />
+                    <Component {...pageProps} />
+                </WalletProvider>
             </AuthProvider>
         </Web3ReactProvider>
     );

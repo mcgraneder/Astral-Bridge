@@ -69,6 +69,10 @@ const WalletSelectModalInner = ({ connect, active, toggleWalletModal, deactivate
                     </PrimaryButton>
                 </div>
             ) : null}
+            <div className='border-grey-400 rounded border bg-black py-4 text-left flex gap-2 justify-center'>
+                <div>hello</div>
+                <div>hello</div>
+            </div>
         </>
     );
 };

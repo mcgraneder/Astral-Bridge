@@ -16,6 +16,7 @@ export const Backdrop = styled.div`
     z-index: 1000;
     pointer-events: none;
     transition: opacity 0.15s ease-in-out !important;
+    background: rgba(2, 8, 26, 0.45);
     ${(props: any) =>
         props.visible &&
         css`

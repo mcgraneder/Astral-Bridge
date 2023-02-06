@@ -34,7 +34,8 @@ module.exports = {
         tertiary: "rgb(48, 63, 88)",
         secondary: "rgb(34, 53, 83)",
         lightTertiary: "rgb(66, 87, 122)",
-        darkBackground: "rgb(15, 25, 55)"
+        darkBackground: "rgb(15, 25, 55)",
+        extraDarkBackground: "rgb(12,18,43)"
         
       },
       spacing: {

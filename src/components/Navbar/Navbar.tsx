@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
     justify-content: space-between;
     position: fixed;
     top: 0px;
-    z-index: 1000;
+    z-index: 100;
     /* background: black; */
 `;
 
@@ -116,7 +116,7 @@ export const Navbar = ({ toggleWalletModal, toggleAccoundDetailsModal }: INavbar
                             </div>
                         )}
                         <div className='mr-5 flex  h-full items-center'>
-                            <PrimaryButton className='mt-[2px] bg-blue-500 hover:bg-blue-600' onClick={!active ? toggleWalletModal : toggleAccoundDetailsModal}>
+                            <PrimaryButton className='mt-[2px] bg-blue-500 py-[6px] hover:bg-blue-600' onClick={!active ? toggleWalletModal : toggleAccoundDetailsModal}>
                                 <span className='mr-2 hidden xs:block'>{active ? shortenAddress(account) : "Connect"}</span>
                                 <span className='mr-2 hidden xs:block'>|</span>
                                 {active && Icon ? <Icon className={"h-5 w-5"} /> : <UilAngleDown className={"h-5 w-5"} />}

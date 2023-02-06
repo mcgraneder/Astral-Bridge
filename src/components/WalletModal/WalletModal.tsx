@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import BtcIcon from "../../../public/svgs/assets/renBTC.svg";
 import EthIcon from "../../../public/svgs/chains/ethereum.svg";
@@ -10,6 +10,10 @@ import Dropdown from "./components/Dropdown";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import WalletInputForm from "./components/WalletInput";
 import BalanceDisplay from "../NativeBalanceDisplay/BalanceDisplay";
+import { useWallet } from "../../context/useWalletState";
+import { useWeb3React } from '@web3-react/core';
+import { ChainIdToRenChain } from '../../connection/chains';
+import { useAuth } from "../../context/useWalletAuth";
 
 export type Tab = {
     tabName: string;
@@ -85,26 +89,42 @@ export const MintToggleButton = styled.div`
 
 `;
 
-const WalletModal = () => {
+interface IWalletModal {
+    setShowTokenModal: any;
+}
+
+const WalletModal = ({ setShowTokenModal }: IWalletModal) => {
     const [text, setText] = useState<string>("");
     const [buttonState, setButtonState] = useState<Tab>({
         tabName: "Deposit",
         tabNumber: 0,
         side: "left",
     });
+    const { switchNetwork } = useAuth()
+    const { chainId } = useWeb3React()
+    const { walletAssetType, setWalletAssetType, asset, chain } = useWallet()
 
+    const needsToSwitchChain = ChainIdToRenChain[chainId!] === chain.fullName && chainId
+
+    useEffect(() => {
+        if (!chainId) return
+    })
+
+    const handleDeposit = () => {
+
+    }
     return (
         <div className='my-[60px]'>
             <BridgeModalContainer>
-                <Dropdown text={"Bitcoin"} Icon={BtcIcon} type={buttonState.tabName} />
-                <Dropdown text={"Ethereum"} Icon={EthIcon} type={buttonState.tabName} />
-                <BalanceDisplay />
+                <Dropdown text={asset.fullName} dropDownType={"currency"} Icon={asset.Icon} type={buttonState.tabName} setType={setWalletAssetType} setShowTokenModal={setShowTokenModal} />
+                <Dropdown text={chain.fullName} dropDownType={"chain"} Icon={chain.Icon} type={buttonState.tabName} setType={setWalletAssetType} setShowTokenModal={setShowTokenModal} />
+                <BalanceDisplay asset={asset}/>
                 <MintFormContainer>
                     <ToggleButtonContainer activeButton={buttonState} tabs={TABS} setActiveButton={setButtonState} />
                     <WalletInputForm setText={setText} text={text} />
                     <div className='mt-6 mb-1 flex items-center justify-center px-5'>
-                        <PrimaryButton className={"w-full justify-center rounded-lg border border-blue-400 bg-blue-500 py-[16px] text-center text-[17px] font-semibold hover:border-blue-500 hover:bg-blue-600"} onClick={() => {}}>
-                            {buttonState.tabName}
+                        <PrimaryButton className={"w-full justify-center rounded-lg border border-blue-400 bg-blue-500 py-[16px] text-center text-[17px] font-semibold hover:border-blue-500 hover:bg-blue-600"} onClick={needsToSwitchChain ? () => {} : () => switchNetwork(5)}>
+                            {needsToSwitchChain ? buttonState.tabName : `Switch to ${chain.fullName} network`}
                         </PrimaryButton>
                     </div>
                 </MintFormContainer>

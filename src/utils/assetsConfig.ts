@@ -1,14 +1,9 @@
 import { Asset, Chain } from "@renproject/chains";
-import { assetsColors, Avax, Badger, Bch, Bnb, Btc, Busd, Crv, Dai, Dgb, Doge, Eth, Eurt, Fil, Ftm, Ftt, Glmr, Kava, Knc, Link, Luna, Matic, Mim, Ren, RenAvax, RenBadger, RenBch, RenBnb, RenBtc, RenBusd, RenCrv, RenDai, RenDgb, RenDoge, RenEth, RenEurt, RenFil, RenFtm, RenFtt, RenGlmr, RenKava, RenKnc, RenLink, RenLuna, RenMatic, RenMim, RenRen, RenRook, RenSol, RenSushi, RenUni, RenUsdc, RenUsdt, RenZec, Rook, Sol, Sushi, Uni, Usdc, Usdt, Zec } from "@renproject/icons";
 import { getAssetChainsConfig, CustomSvgIconComponent } from './chainsConfig';
 import { Icon } from "../components/Icons/AssetLogs/Icon";
-import { SvgIcon, SvgIconProps } from "@material-ui/core";
-import { SvgIconComponent } from "@material-ui/icons";
-
 
 export type AssetIconsConfig = {
-    Icon: CustomSvgIconComponent;
-    RenIcon: CustomSvgIconComponent;
+    Icon: string | null;
 };
 
 export type AssetLabelsConfig = {
@@ -29,255 +24,254 @@ type AssetBaseConfig = AssetIconsConfig & AssetLabelsConfig & AssetRateConfig & 
 
 const unsetAssetConfig: AssetBaseConfig = {
     Icon: null,
-    RenIcon: null,
     shortName: "",
     fullName: "",
 };
 
-const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
+export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
     AVAX: {
-        Icon: Icon(Avax),
-        RenIcon: Icon(RenAvax),
+        Icon: Asset.AVAX,
+
         shortName: "AVAX",
         fullName: "Avalanche",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "avalanche-2",
     },
     ArbETH: {
-        Icon: Icon(Eth),
-        RenIcon: Icon(RenEth),
+        Icon: Asset.ArbETH,
+
         shortName: "ArbETH",
         fullName: "Arbitrum Ether",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "weth", // simple hack for duplicated ethereum entry
     },
     BADGER: {
-        Icon: Icon(Badger),
-        RenIcon: Icon(RenBadger),
+        Icon: Asset.BADGER,
+
         shortName: "BADGER",
         fullName: "Badger DAO",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "badger-dao",
     },
     BCH: {
-        Icon: Icon(Bch),
-        RenIcon: Icon(RenBch),
+        Icon: Asset.BCH,
+
         shortName: "BCH",
         fullName: "Bitcoin Cash",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "bitcoin-cash",
     },
     BNB: {
-        Icon: Icon(Bnb),
-        RenIcon: Icon(RenBnb),
+        Icon: Asset.BNB,
+
         shortName: "BNB",
         fullName: "Binance Coin",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "binancecoin",
     },
     BTC: {
-        Icon: Icon(Btc),
-        RenIcon: Icon(RenBtc),
+        Icon: Asset.BTC,
+
         shortName: "BTC",
         fullName: "Bitcoin",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "bitcoin",
     },
     BUSD: {
-        Icon: Icon(Busd),
-        RenIcon: Icon(RenBusd),
+        Icon: Asset.BUSD,
+
         shortName: "BUSD",
         fullName: "Binance USD",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "binance-usd",
     },
     CRV: {
-        Icon: Icon(Crv),
-        RenIcon: Icon(RenCrv),
+        Icon: Asset.CRV,
+
         shortName: "CRV",
         fullName: "Curve DAO Token",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "curve-dao-token",
     },
     DAI: {
-        Icon: Icon(Dai),
-        RenIcon: Icon(RenDai),
+        Icon: Asset.DAI,
+
         shortName: "DAI",
         fullName: "Dai",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "dai",
     },
     DGB: {
-        Icon: Icon(Dgb),
-        RenIcon: Icon(RenDgb),
+        Icon: Asset.DGB,
+
         shortName: "DGB",
         fullName: "DigiByte",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "digibyte",
     },
     DOGE: {
-        Icon: Icon(Doge),
-        RenIcon: Icon(RenDoge),
+        Icon: Asset.DOGE,
+
         shortName: "DOGE",
         fullName: "Dogecoin",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "dogecoin",
     },
     ETH: {
-        Icon: Icon(Eth),
-        RenIcon: Icon(RenEth),
+        Icon: Asset.ETH,
+
         shortName: "ETH",
         fullName: "Ether",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "ethereum",
     },
     EURT: {
-        Icon: Icon(Eurt),
-        RenIcon: Icon(RenEurt),
+        Icon: Asset.EURT,
+
         shortName: "EURT",
         fullName: "Euro Tether",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "euro-tether",
     },
     FIL: {
-        Icon: Icon(Fil),
-        RenIcon: Icon(RenFil),
+        Icon: Asset.FIL,
+
         shortName: "FIL",
         fullName: "Filecoin",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "filecoin",
     },
     FTM: {
-        Icon: Icon(Ftm),
-        RenIcon: Icon(RenFtm),
+        Icon: Asset.FTM,
+
         shortName: "FTM",
         fullName: "Fantom",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "fantom",
     },
     FTT: {
-        Icon: Icon(Ftt),
-        RenIcon: Icon(RenFtt),
+        Icon: Asset.FTT,
+
         shortName: "FTT",
         fullName: "FTX Token",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "ftx-token",
     },
     GLMR: {
-        Icon: Icon(Glmr),
-        RenIcon: Icon(RenGlmr),
+        Icon: Asset.GLMR,
+
         shortName: "GLMR",
         fullName: "Glimmer",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "moonbeam",
     },
     KAVA: {
-        Icon: Icon(Kava),
-        RenIcon: Icon(RenKava),
+        Icon: Asset.KAVA,
+
         shortName: "KAVA",
         fullName: "Kava",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "kava",
     },
     KNC: {
-        Icon: Icon(Knc),
-        RenIcon: Icon(RenKnc),
+        Icon: Asset.KNC,
+
         shortName: "KNC",
         fullName: "Kyber Network Crystal",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "kyber-network-crystal",
     },
     LINK: {
-        Icon: Icon(Link),
-        RenIcon: Icon(RenLink),
+        Icon: Asset.LINK,
+
         shortName: "LINK",
         fullName: "Chainlink",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "chainlink",
     },
     LUNA: {
-        Icon: Icon(Luna),
-        RenIcon: Icon(RenLuna),
+        Icon: Asset.LUNA,
+
         shortName: "LUNA",
         fullName: "Terra",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "terra-luna",
     },
     MATIC: {
-        Icon: Icon(Matic),
-        RenIcon: Icon(RenMatic),
+        Icon: Asset.MATIC,
+
         shortName: "MATIC",
         fullName: "Polygon",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "polygon",
     },
     MIM: {
-        Icon: Icon(Mim),
-        RenIcon: Icon(RenMim),
+        Icon: Asset.MIM,
+
         shortName: "MIM",
         fullName: "Magic Internet Money",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "magic-internet-money",
     },
     REN: {
-        Icon: Icon(Ren),
-        RenIcon: Icon(RenRen),
+        Icon: Asset.REN,
+
         shortName: "REN",
         fullName: "REN",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "republic-protocol",
     },
     ROOK: {
-        Icon: Icon(Rook),
-        RenIcon: Icon(RenRook),
+        Icon: Asset.ROOK,
+
         shortName: "ROOK",
         fullName: "KeeperDAO",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "rook",
     },
     SUSHI: {
-        Icon: Icon(Sushi),
-        RenIcon: Icon(RenSushi),
+        Icon: Asset.SUSHI,
+
         shortName: "SUSHI",
         fullName: "Sushi",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "sushi",
     },
     SOL: {
-        Icon: Icon(Sol),
-        RenIcon: Icon(RenSol),
+        Icon: Asset.SOL,
+
         shortName: "SOL",
         fullName: "Solana",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "solana",
     },
     UNI: {
-        Icon: Icon(Uni),
-        RenIcon: Icon(RenUni),
+        Icon: Asset.UNI,
+
         shortName: "UNI",
         fullName: "Uniswap",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "uniswap",
     },
     USDC: {
-        Icon: Icon(Usdc),
-        RenIcon: Icon(RenUsdc),
+        Icon: Asset.USDC,
+
         shortName: "USDC",
         fullName: "USD Coin",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "usd-coin",
     },
     USDT: {
-        Icon: Icon(Usdt),
-        RenIcon: Icon(RenUsdt),
+        Icon: Asset.USDT ,
+
         shortName: "USDT",
         fullName: "Tether",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "tether",
     },
     ZEC: {
-        Icon: Icon(Zec),
-        RenIcon: Icon(RenZec),
+        Icon: Asset.ZEC,
+
         shortName: "ZEC",
         fullName: "Zcash",
         rateService: AssetRateService.Coingecko,
@@ -287,10 +281,6 @@ const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
     oETH: unsetAssetConfig,
 };
 
-const getAssetColorConfig = (asset: Asset) => {
-    const color = assetsColors[asset];
-    return color.primary;
-};
 
 export type AssetChainsConfig = {
     lockChain: Chain;
@@ -309,8 +299,6 @@ export const assetsConfig = Object.fromEntries(
         asset,
         {
             ...config,
-            ...getAssetChainsConfig(asset as Asset),
-            color: getAssetColorConfig(asset as Asset),
             // prevent UNSET for simple cases
             shortName: config.shortName || asset,
             fullName: config.fullName || asset,
@@ -319,7 +307,6 @@ export const assetsConfig = Object.fromEntries(
 ) as Record<Asset, AssetConfig>;
 
 console.log("assetsConfig", assetsConfig);
-(window as any).assetsConfig = assetsConfig;
 
 export const getAssetConfig = (asset: Asset | string) => {
     const config = assetsConfig[asset as Asset];
@@ -331,12 +318,11 @@ export const getAssetConfig = (asset: Asset | string) => {
 
 export const getRenAssetConfig = (asset: Asset | string) => {
     const assetConfig = getAssetConfig(asset);
-    const { shortName, fullName, Icon, RenIcon, ...rest } = assetConfig;
+    const { shortName, fullName, Icon, ...rest } = assetConfig;
     return {
         shortName: getRenAssetName(shortName),
         fullName: getRenAssetFullName(fullName),
-        Icon: RenIcon,
-        RenIcon,
+        Icon: Icon,
         ...rest,
     };
 };

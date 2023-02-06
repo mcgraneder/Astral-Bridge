@@ -70,7 +70,7 @@ export const BottomNavBar = () => {
     const { width } = useViewport()
     return (
         <Wrapper>
-            <Nav>
+            <Nav >
                 <Box>
                     <BoxItemContainer allignment={"space-between"} backgroundColor={width >= 1000 ? "rgb(15,26,58)" : "transparent"}>
                         <NavLinks routes={ROUTES} />

@@ -9,6 +9,7 @@ export const Backdrop = styled.div`
     backdrop-filter: blur(5px);
     z-index: 1000;
     pointer-events: none;
+    background: rgba(2, 8, 26, 0.45);
     transition: opacity 0.15s ease-in-out !important;
     position: relative;
     ${(props: any) =>
