@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import BtcIcon from "../../../public/svgs/assets/renBTC.svg";
 import EthIcon from "../../../public/svgs/chains/ethereum.svg";
@@ -16,6 +16,8 @@ import { ChainIdToRenChain } from "../../connection/chains";
 import { useAuth } from "../../context/useWalletAuth";
 import { RenNetwork } from "@renproject/utils";
 import { MulticallReturn, useGlobalState } from "../../context/useGlobalState";
+import { get } from "../../services/axios";
+import API from "../../constants/Api";
 
 export type Tab = {
   tabName: string;
@@ -97,12 +99,9 @@ const NETWORK: RenNetwork = RenNetwork.Testnet;
 
 interface IWalletModal {
   setShowTokenModal: any;
-  assetBalances: {
-    [x: string]: MulticallReturn | undefined;
-  };
 }
 
-const WalletModal = ({ setShowTokenModal, assetBalances }: IWalletModal) => {
+const WalletModal = ({ setShowTokenModal }: IWalletModal) => {
   const [text, setText] = useState<string>("");
   const [buttonState, setButtonState] = useState<Tab>({
     tabName: "Deposit",
@@ -110,12 +109,13 @@ const WalletModal = ({ setShowTokenModal, assetBalances }: IWalletModal) => {
     side: "left",
   });
   const { switchNetwork } = useAuth();
-  const { chainId } = useWeb3React();
+  const { chainId, account } = useWeb3React();
   const { setWalletAssetType, asset, chain } = useWallet();
 
   const needsToSwitchChain =
     ChainIdToRenChain[chainId!] === chain.fullName && chainId;
   const handleDeposit = () => {};
+
   return (
     <div className="mt-[60px] mb-[40px]">
       <BridgeModalContainer>
@@ -135,10 +135,7 @@ const WalletModal = ({ setShowTokenModal, assetBalances }: IWalletModal) => {
           setType={setWalletAssetType}
           setShowTokenModal={setShowTokenModal}
         />
-        <BalanceDisplay
-          asset={asset}
-          isNative={false}
-        />
+        <BalanceDisplay asset={asset} isNative={false} />
         <MintFormContainer>
           <ToggleButtonContainer
             activeButton={buttonState}

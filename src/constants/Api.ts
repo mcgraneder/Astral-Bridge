@@ -10,11 +10,23 @@ const SigVerifierBaseUrl = isProduction()
   ? "http://localhost:5000/api/auth"
   : "http://localhost:5000/api/auth"; // "http://localhost:4000";
 
+
+  const OwlOracleBaseUrl = "https://www.etherchain.org/api";
+  const CoinGeckoBaseUrl = "https://api.coingecko.com/api/v3";
+
 const API = {
   ren: {
     verify: `${SigVerifierBaseUrl}/verify`,
-    balancesOf: `http://localhost:4000/balancesOf`
-  }
+    balancesOf: `http://localhost:4000/balancesOf`,
+    bridgeTokens: `http://localhost:4000/bridgeTokens`,
+  },
+  coinGecko: {
+    price: `${CoinGeckoBaseUrl}/simple/price`,
+    markets: `${CoinGeckoBaseUrl}/coins/markets/`,
+  },
+  owlOracle: {
+    gasnow: `${OwlOracleBaseUrl}/gasnow`,
+  },
 };
 
 export default API;

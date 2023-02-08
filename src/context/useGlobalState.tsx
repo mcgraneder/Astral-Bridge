@@ -64,7 +64,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
 
   useEffect(() => {
     if (!active || !account) return;
-    const interval: NodeJS.Timer = setInterval(memoizedFetchBalances, 30000);
+    const interval: NodeJS.Timer = setInterval(memoizedFetchBalances, 50000);
 
     return () => clearInterval(interval);
   }, [memoizedFetchBalances, account, active]);

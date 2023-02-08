@@ -5,6 +5,7 @@ import { toFixed } from "../../utils/misc";
 import { useGlobalState } from "../../context/useGlobalState";
 import { CHAINS, ChainIdToRenChain } from "../../connection/chains";
 import { GlowingText } from "../CSS/SkeletomStyles";
+import { fetchPrice } from "../../utils/market/fetchAssetPrice";
 
 interface ITokenDisplay {
   asset: any;
@@ -12,8 +13,17 @@ interface ITokenDisplay {
   assetBalance: number;
   balance: string | undefined;
   fetchingBalances: boolean;
+  assetPrice: any;
   isNative: boolean;
 }
+
+type AssetQuery =
+  | {
+      [token: string]: {
+        [fiat: string]: unknown;
+      };
+    }
+  | "API_FAILED";
 
 const BalanceDisplayInner = ({
   asset,
@@ -21,14 +31,17 @@ const BalanceDisplayInner = ({
   assetBalance,
   balance,
   fetchingBalances,
+  assetPrice,
   isNative,
 }: ITokenDisplay) => {
   return (
     <div className="my-5 flex flex-col items-center rounded-lg border border-tertiary p-2 text-center">
-      <span className=" text-[17px]">
-        <span>{asset.shortName}</span> Balance
-        {isNative ? <span> on {ChainIdToRenChain[chainId!]}</span> : null}
-      </span>
+      {!isNative ? (
+        <span className=" text-[17px]">
+          <span>{asset.shortName}</span> Balance
+          <span> on {ChainIdToRenChain[chainId!]}</span>
+        </span>
+      ) : null}
       {isNative ? (
         <GlowingText loading={fetchingBalances}>
           {balance ? balance : 0}
@@ -40,17 +53,20 @@ const BalanceDisplayInner = ({
           <span>{` ${asset.shortName}`}</span>
         </GlowingText>
       )}
-      <span className=" text-[17px] text-gray-500">$ 10.67</span>
+      {assetPrice ? (
+        <span className=" text-[17px] text-gray-400">{`$ ${assetPrice}`}</span>
+      ) : null}
     </div>
   );
 };
 const BalanceDisplay = ({
   asset,
-  isNative,
+  isNative
 }: {
   asset: any;
   isNative: boolean;
 }) => {
+  const [assetPrice, setAssetPrice] = useState<any | undefined>();
   const [balance, setBalance] = useState<string | undefined>(undefined);
   const [assetBalance, setAssetBalance] = useState<number>(0);
   const { library, account, chainId } = useWeb3React();
@@ -78,22 +94,35 @@ const BalanceDisplay = ({
     return (): void => clearInterval(balanceInteral);
   }, [balance, library, account]);
 
+  //rework assetFetch
   useEffect(() => {
     if (typeof assetBalances == "undefined") return;
     const formattedBalance =
       Number(assetBalances[asset.Icon]?.bridgeBalance) / 10 ** asset.decimals;
+    (async () => {
+      try {
+        const assetPriceQuery = await fetchPrice(asset.Icon, "USD");
+        const formattedObj = Object.values(assetPriceQuery);
+        assetPriceQuery !== "API_FAILED"
+          ? setAssetPrice(formattedObj[0].usd)
+          : setAssetPrice(undefined);
+      } catch (error) {
+        console.error("failed fetch");
+      }
+    })();
     setAssetBalance(formattedBalance);
-  }, [assetBalances, setAssetBalance]);
+  }, [assetBalances, setAssetBalance, asset]);
 
   return (
-        <BalanceDisplayInner
-          asset={asset}
-          chainId={chainId}
-          assetBalance={assetBalance}
-          balance={balance}
-          fetchingBalances={fetchingBalances}
-          isNative={isNative}
-        />   
+    <BalanceDisplayInner
+      asset={asset}
+      chainId={chainId}
+      assetBalance={assetBalance}
+      balance={balance}
+      fetchingBalances={fetchingBalances}
+      assetPrice={assetPrice}
+      isNative={isNative}
+    />
   );
 };
 

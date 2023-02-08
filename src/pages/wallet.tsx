@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
 import type { NextPage } from "next";
 import WalletModal from "../components/WalletModal/WalletModal";
 import { Layout } from "../layouts";
@@ -6,10 +6,15 @@ import AssetListModal from '../components/AssetListModal/AssetListModal';
 import { useWallet } from "../context/useWalletState";
 import BottomNavBar from "../components/WalletModal/components/BottomNavbar";
 import { useGlobalState } from "../context/useGlobalState";
+import API from '../constants/Api';
+import { ChainIdToRenChain } from '../connection/chains';
+import { useWeb3React } from '@web3-react/core';
+import { get } from "../services/axios";
 
 const BlockPage: NextPage = () => {
   const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
   const { assetBalances } = useGlobalState();
+
   return (
     <>
       <AssetListModal
@@ -20,7 +25,6 @@ const BlockPage: NextPage = () => {
       <Layout>
         <WalletModal
           setShowTokenModal={setShowTokenModal}
-          assetBalances={assetBalances}
         />
         <BottomNavBar />
       </Layout>
