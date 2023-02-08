@@ -15,6 +15,7 @@ export const FormWrapper = styled.div`
     display: block;
     z-index: 10000000000;
     color: white;
+   box-shadow: 14px 19px 5px 0px rgba(0, 0, 0, 0.85);
 `;
 
 export const TokenInputContainer = styled.div`

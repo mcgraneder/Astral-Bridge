@@ -57,9 +57,9 @@ export const chainsBaseConfig: Record<Chain, ChainBaseConfig> = {
     Icon: "Arbitrum",
     fullName: "Arbitrum",
     shortName: "Arbitrum",
-    networks: createNetworksConfig(42161, 421611),
+    networks: createNetworksConfig(42161, 421613),
     mainnetChainId: 42161,
-    testnetChainId: 421611,
+    testnetChainId: 421613,
   },
   Avalanche: {
     Icon: "Avalanche",

@@ -106,7 +106,7 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
                 <AccountVerificationModal />
                 <AccountDetailsModal toggleAccoundDetailsModal={toggleAccoundDetailsModal} showAccount={showAccount} />
                 <Navbar toggleWalletModal={toggleWalletModal} toggleAccoundDetailsModal={toggleAccoundDetailsModal} />
-                {/* <BottomNavBar /> */}
+                <BottomNavBar />
                 {/* <Footer visible={true}/> */}
                 {/* <NetworkWarning/> */}
                 <WalletConnect toggleWalletModal={toggleWalletModal} />

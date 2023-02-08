@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useViewport } from '../../hooks/useViewport';
 import { Breakpoints } from '../../constants/Breakpoints';
+import NetworkWarning from "../NetworkWarning/NetworkWarning";
 
 export const Wrapper = styled.div`
     display: flex;
@@ -72,8 +73,8 @@ export const BottomNavBar = () => {
         <Wrapper>
             <Nav >
                 <Box>
-                    <BoxItemContainer allignment={"space-between"} backgroundColor={width >= 1000 ? "rgb(15,26,58)" : "transparent"}>
-                        <NavLinks routes={ROUTES} />
+                    <BoxItemContainer allignment={"flex-end"} backgroundColor={width >= 1000 ? "rgb(15,26,58)" : "transparent"}>
+                        <NetworkWarning/>
                     </BoxItemContainer>
                 </Box>
             </Nav>

@@ -24,6 +24,7 @@ export const FormWrapper = styled.div`
     border-radius: 15px;
     display: block;
     z-index: 10000000000;
+    box-shadow: 14px 19px 5px 0px rgba(0, 0, 0, 0.85);
 `;
 
 const getChainOptions = () => {

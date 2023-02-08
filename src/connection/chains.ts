@@ -119,8 +119,8 @@ export const CHAINS: { [key: number]: ChainType } = {
         chainName: "Arbitrum Testnet",
         logo: ArbitrumChainLogo,
         isTestnet: false,
-        id: 421611,
-        rpcUrls: ["https://rinkeby.arbitrum.io/rpc"],
+        id: 421613,
+        rpcUrls: ["https://goerli-rollup.arbitrum.io/rpc"],
         symbol: "tArbETH",
         currency: "tArb Ether",
         explorerLink: "https://arbiscan.io/"   
@@ -224,5 +224,15 @@ export const CHAINS: { [key: number]: ChainType } = {
         symbol: "tGLMR",
         currency: "tGLMR",
         explorerLink: "https://moonscan.io"   
-    }
+    },
+    [SupportedChainId.MOONBEAM_TESTNET]: {
+        chainName: "Avalanche Testnet",
+        logo: Moonbeam,
+        isTestnet: true,
+        id: 43113,
+        rpcUrls: ["https://api.avax-test.network/ext/bc/C/rpc"],
+        symbol: "tAVAX",
+        currency: "tAVAX",
+        explorerLink: "https://testnet.snowtrace.io/"   
+    }, 
   };
