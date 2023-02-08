@@ -5,18 +5,26 @@ import { Layout } from "../layouts";
 import AssetListModal from '../components/AssetListModal/AssetListModal';
 import { useWallet } from "../context/useWalletState";
 import BottomNavBar from "../components/WalletModal/components/BottomNavbar";
+import { useGlobalState } from "../context/useGlobalState";
 
 const BlockPage: NextPage = () => {
-
-  const [showTokenModal, setShowTokenModal] = useState<boolean>(false)
+  const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
+  const { assetBalances } = useGlobalState();
   return (
-      <>
-          <AssetListModal setShowTokenModal={setShowTokenModal} visible={showTokenModal} />
-          <Layout>
-              <WalletModal setShowTokenModal={setShowTokenModal} />
-              <BottomNavBar/>
-          </Layout>
-      </>
+    <>
+      <AssetListModal
+        setShowTokenModal={setShowTokenModal}
+        visible={showTokenModal}
+        assetBalances={assetBalances}
+      />
+      <Layout>
+        <WalletModal
+          setShowTokenModal={setShowTokenModal}
+          assetBalances={assetBalances}
+        />
+        <BottomNavBar />
+      </Layout>
+    </>
   );
 };
 

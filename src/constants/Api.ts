@@ -7,12 +7,13 @@ if (typeof window === "undefined") {
 } else DOMAIN = window.location.origin;
 
 const SigVerifierBaseUrl = isProduction()
-  ? "https://api-mainnet.catalog.fi"
+  ? "http://localhost:5000/api/auth"
   : "http://localhost:5000/api/auth"; // "http://localhost:4000";
 
 const API = {
   ren: {
-    verify: `${SigVerifierBaseUrl}/verify`
+    verify: `${SigVerifierBaseUrl}/verify`,
+    balancesOf: `http://localhost:4000/balancesOf`
   }
 };
 

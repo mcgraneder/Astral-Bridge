@@ -9,6 +9,7 @@ export type AssetIconsConfig = {
 export type AssetLabelsConfig = {
     shortName: string;
     fullName: string;
+    decimals: number;
 };
 
 export enum AssetRateService {
@@ -26,6 +27,7 @@ const unsetAssetConfig: AssetBaseConfig = {
     Icon: null,
     shortName: "",
     fullName: "",
+    decimals: 18
 };
 
 export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
@@ -36,6 +38,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Avalanche",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "avalanche-2",
+        decimals: 18
     },
     ArbETH: {
         Icon: Asset.ArbETH,
@@ -43,7 +46,8 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         shortName: "ArbETH",
         fullName: "Arbitrum Ether",
         rateService: AssetRateService.Coingecko,
-        rateSymbol: "weth", // simple hack for duplicated ethereum entry
+        rateSymbol: "weth",
+        decimals: 18 // simple hack for duplicated ethereum entry
     },
     BADGER: {
         Icon: Asset.BADGER,
@@ -52,6 +56,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Badger DAO",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "badger-dao",
+        decimals: 18
     },
     BCH: {
         Icon: Asset.BCH,
@@ -60,6 +65,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Bitcoin Cash",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "bitcoin-cash",
+        decimals: 8
     },
     BNB: {
         Icon: Asset.BNB,
@@ -68,6 +74,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Binance Coin",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "binancecoin",
+        decimals: 18
     },
     BTC: {
         Icon: Asset.BTC,
@@ -76,6 +83,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Bitcoin",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "bitcoin",
+        decimals: 8
     },
     BUSD: {
         Icon: Asset.BUSD,
@@ -84,6 +92,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Binance USD",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "binance-usd",
+        decimals: 18
     },
     CRV: {
         Icon: Asset.CRV,
@@ -92,6 +101,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Curve DAO Token",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "curve-dao-token",
+        decimals: 18
     },
     DAI: {
         Icon: Asset.DAI,
@@ -100,6 +110,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Dai",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "dai",
+        decimals: 18
     },
     DGB: {
         Icon: Asset.DGB,
@@ -108,6 +119,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "DigiByte",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "digibyte",
+        decimals: 18
     },
     DOGE: {
         Icon: Asset.DOGE,
@@ -116,6 +128,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Dogecoin",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "dogecoin",
+        decimals: 18
     },
     ETH: {
         Icon: Asset.ETH,
@@ -124,6 +137,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Ether",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "ethereum",
+        decimals: 18
     },
     EURT: {
         Icon: Asset.EURT,
@@ -132,6 +146,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Euro Tether",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "euro-tether",
+        decimals: 18
     },
     FIL: {
         Icon: Asset.FIL,
@@ -140,6 +155,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Filecoin",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "filecoin",
+        decimals: 18
     },
     FTM: {
         Icon: Asset.FTM,
@@ -148,6 +164,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Fantom",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "fantom",
+        decimals: 18
     },
     FTT: {
         Icon: Asset.FTT,
@@ -156,6 +173,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "FTX Token",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "ftx-token",
+        decimals: 18
     },
     GLMR: {
         Icon: Asset.GLMR,
@@ -164,6 +182,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Glimmer",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "moonbeam",
+        decimals: 18
     },
     KAVA: {
         Icon: Asset.KAVA,
@@ -172,6 +191,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Kava",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "kava",
+        decimals: 18
     },
     KNC: {
         Icon: Asset.KNC,
@@ -180,6 +200,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Kyber Network Crystal",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "kyber-network-crystal",
+        decimals: 18
     },
     LINK: {
         Icon: Asset.LINK,
@@ -188,6 +209,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Chainlink",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "chainlink",
+        decimals: 18
     },
     LUNA: {
         Icon: Asset.LUNA,
@@ -196,6 +218,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Terra",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "terra-luna",
+        decimals: 18
     },
     MATIC: {
         Icon: Asset.MATIC,
@@ -204,6 +227,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Polygon",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "polygon",
+        decimals: 18
     },
     MIM: {
         Icon: Asset.MIM,
@@ -212,6 +236,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Magic Internet Money",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "magic-internet-money",
+        decimals: 18
     },
     REN: {
         Icon: Asset.REN,
@@ -220,6 +245,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "REN",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "republic-protocol",
+        decimals: 18
     },
     ROOK: {
         Icon: Asset.ROOK,
@@ -228,6 +254,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "KeeperDAO",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "rook",
+        decimals: 18
     },
     SUSHI: {
         Icon: Asset.SUSHI,
@@ -236,6 +263,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Sushi",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "sushi",
+        decimals: 18
     },
     SOL: {
         Icon: Asset.SOL,
@@ -244,6 +272,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Solana",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "solana",
+        decimals: 18
     },
     UNI: {
         Icon: Asset.UNI,
@@ -252,6 +281,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Uniswap",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "uniswap",
+        decimals: 18
     },
     USDC: {
         Icon: Asset.USDC,
@@ -260,6 +290,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "USD Coin",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "usd-coin",
+        decimals: 18
     },
     USDT: {
         Icon: Asset.USDT ,
@@ -268,6 +299,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Tether",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "tether",
+        decimals: 18
     },
     ZEC: {
         Icon: Asset.ZEC,
@@ -276,6 +308,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
         fullName: "Zcash",
         rateService: AssetRateService.Coingecko,
         rateSymbol: "zcash",
+        decimals: 18
     },
     gETH: unsetAssetConfig,
     oETH: unsetAssetConfig,
