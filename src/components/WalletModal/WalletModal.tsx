@@ -137,7 +137,6 @@ const WalletModal = ({ setShowTokenModal, assetBalances }: IWalletModal) => {
         />
         <BalanceDisplay
           asset={asset}
-          chain={chain}
           isNative={false}
         />
         <MintFormContainer>

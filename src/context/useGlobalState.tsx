@@ -20,6 +20,7 @@ type GlobalContextType = {
   assetBalances: {
     [x: string]: MulticallReturn | undefined;
   };
+  fetchingBalances: boolean;
 };
 
 export type MulticallReturn = {
@@ -33,6 +34,7 @@ export type MulticallReturn = {
 const GlobalStateContext = createContext({} as GlobalContextType);
 
 function GlobalStateProvider({ children }: GlobalStateProviderProps) {
+  const [fetchingBalances, setFetchingBalances] = useState<boolean>(false)
   const [assetBalances, setAssetBalances] = useState<{
     [x: string]: MulticallReturn | undefined;
   }>({});
@@ -40,6 +42,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
 
   const memoizedFetchBalances = useCallback(async () => {
     if (!account || !chainId) return;
+    setFetchingBalances(true)
     const tokensResponse = await get<{
       result: {
         multicall: { [x: string]: MulticallReturn };
@@ -50,14 +53,14 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
         chainName: ChainIdToRenChain[chainId!],
       },
     });
-    console.log(tokensResponse)
 
     if (!tokensResponse) {
+        setFetchingBalances(false)
       throw new Error("Multicall Failed");
     }
-    console.log(tokensResponse.result.multicall);
     setAssetBalances(tokensResponse.result.multicall);
-  }, [account, chainId]);
+    setFetchingBalances(false)
+  }, [account, chainId, setFetchingBalances]);
 
   useEffect(() => {
     if (!active || !account) return;
@@ -74,7 +77,8 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
   return (
     <GlobalStateContext.Provider value={{
         memoizedFetchBalances,
-        assetBalances
+        assetBalances,
+        fetchingBalances
     }}>
       {children}
     </GlobalStateContext.Provider>
