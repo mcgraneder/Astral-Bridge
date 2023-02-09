@@ -10,6 +10,10 @@ import API from '../constants/Api';
 import { ChainIdToRenChain } from '../connection/chains';
 import { useWeb3React } from '@web3-react/core';
 import { get } from "../services/axios";
+import TxConfirmationModal from "../components/TxConfirmationModalFlow";
+import PendingTransactionModal from '../components/TxConfirmationModalFlow/PendinTransactionModal';
+import TransactionRejectedModal from '../components/TxConfirmationModalFlow/TransactionRejectedModal';
+import TransactionFlowModals from '../components/TxConfirmationModalFlow/index';
 
 const BlockPage: NextPage = () => {
   const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
@@ -23,6 +27,8 @@ const BlockPage: NextPage = () => {
         visible={showTokenModal}
         assetBalances={assetBalances}
       />
+      <TransactionFlowModals/>
+
       <Layout>
         <WalletModal
           setShowTokenModal={setShowTokenModal}

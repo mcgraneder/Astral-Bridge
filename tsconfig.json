@@ -16,6 +16,6 @@
     "incremental": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs", "next-twin.js", "src/components/PrimaryButton", "src/components/Footer"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs", "next-twin.js", "src/components/PrimaryButton", "src/components/Footer", "src/components/TxConfirmationModalFlow/index.tsx"],
   "exclude": ["node_modules"]
 }

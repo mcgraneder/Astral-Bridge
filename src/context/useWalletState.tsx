@@ -17,6 +17,7 @@ import {
 } from "../utils/market/getMarketGasData";
 import { ethers } from "ethers";
 import { toFixed } from "../utils/misc";
+import { Tab } from '../components/WalletModal/WalletModal';
 
 interface WalletProviderProps {
   children: React.ReactNode;
@@ -39,6 +40,10 @@ type WalletContextType = {
   togglePendingModal: () => void;
   toggleRejectedModal: () => void;
   toggleConfirmationModal: () => void;
+  text: string;
+  setText: Dispatch<SetStateAction<string>>;
+  buttonState: Tab;
+  setButtonState: Dispatch<SetStateAction<Tab>>;
 };
 
 const WalletContext = createContext({} as WalletContextType);
@@ -48,6 +53,12 @@ function WalletProvider({ children }: WalletProviderProps) {
   const [rejected, setRejected] = useState<boolean>(false);
   const [confirmation, setConfirmation] = useState<boolean>(false);
   const [pending, setPending] = useState<boolean>(false);
+  const [text, setText] = useState<string>("");
+  const [buttonState, setButtonState] = useState<Tab>({
+    tabName: "Deposit",
+    tabNumber: 0,
+    side: "left",
+  });
 
   const [gasPrice, setGasPrice] = useState<any>(0);
   const [assetPrices, setAssetPrices] = useState<any>([]);
@@ -135,6 +146,10 @@ function WalletProvider({ children }: WalletProviderProps) {
         togglePendingModal,
         toggleRejectedModal,
         toggleConfirmationModal,
+        text,
+        setText,
+        buttonState,
+        setButtonState
       }}
     >
       {children}

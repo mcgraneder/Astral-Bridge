@@ -131,15 +131,9 @@ const WalletModal = ({
   const [bridgeBalance, setBridgeBalance] = useState<any>(0);
   const [walletBalance, setWalletBalance] = useState<any>(0);
   const [isMax, setIsMax] = useState<boolean>(false);
-  const [text, setText] = useState<string>("");
-  const [buttonState, setButtonState] = useState<Tab>({
-    tabName: "Deposit",
-    tabNumber: 0,
-    side: "left",
-  });
   const { switchNetwork } = useAuth();
   const { chainId, active } = useWeb3React();
-  const { setWalletAssetType, asset, chain, gasPrice } = useWallet();
+  const { setWalletAssetType, asset, chain, gasPrice, text, setText, buttonState, setButtonState } = useWallet();
   const { assetBalances } = useGlobalState();
 
   const needsToSwitchChain = ChainIdToRenChain[chainId!] === chain.fullName;
