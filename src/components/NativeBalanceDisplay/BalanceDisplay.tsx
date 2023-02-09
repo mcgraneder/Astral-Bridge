@@ -44,12 +44,12 @@ const BalanceDisplayInner = ({
       ) : null}
       {isNative ? (
         <GlowingText loading={fetchingBalances}>
-          {balance ? balance : 0}
+          {balance ? balance : "0.00"}
           {balance ? <span>{` ${CHAINS[chainId!]?.symbol}`}</span> : null}
         </GlowingText>
       ) : (
         <GlowingText loading={fetchingBalances}>
-          {assetBalance ? assetBalance : 0}
+          {assetBalance ? assetBalance : "0.00"}
           <span>{` ${asset.shortName}`}</span>
         </GlowingText>
       )}
@@ -61,9 +61,11 @@ const BalanceDisplayInner = ({
 };
 const BalanceDisplay = ({
   asset,
-  isNative
+  buttonState,
+  isNative,
 }: {
   asset: any;
+  buttonState: string;
   isNative: boolean;
 }) => {
   const [assetPrice, setAssetPrice] = useState<any | undefined>();
@@ -94,11 +96,20 @@ const BalanceDisplay = ({
     return (): void => clearInterval(balanceInteral);
   }, [balance, library, account]);
 
-  //rework assetFetch
   useEffect(() => {
     if (typeof assetBalances == "undefined") return;
     const formattedBalance =
-      Number(assetBalances[asset.Icon]?.bridgeBalance) / 10 ** asset.decimals;
+      buttonState === "Deposit"
+        ? Number(assetBalances[asset.Icon]?.bridgeBalance) /
+          10 ** asset.decimals
+        : Number(assetBalances["USDT_Goerli"]?.walletBalance) /
+          10 ** 6;
+    console.log(buttonState)
+    setAssetBalance(formattedBalance);
+  }, [assetBalances, buttonState, asset]);
+
+  //rework assetFetch
+  useEffect(() => {
     (async () => {
       try {
         const assetPriceQuery = await fetchPrice(asset.Icon, "USD");
@@ -110,8 +121,7 @@ const BalanceDisplay = ({
         console.error("failed fetch");
       }
     })();
-    setAssetBalance(formattedBalance);
-  }, [assetBalances, setAssetBalance, asset]);
+  }, [setAssetPrice, asset]);
 
   return (
     <BalanceDisplayInner

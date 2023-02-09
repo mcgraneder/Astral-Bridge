@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import BtcIcon from "../../../public/svgs/assets/renBTC.svg";
 import EthIcon from "../../../public/svgs/chains/ethereum.svg";
 
@@ -12,13 +12,16 @@ import WalletInputForm from "./components/WalletInput";
 import BalanceDisplay from "../NativeBalanceDisplay/BalanceDisplay";
 import { useWallet } from "../../context/useWalletState";
 import { useWeb3React } from "@web3-react/core";
-import { ChainIdToRenChain } from "../../connection/chains";
+import { ChainIdToRenChain, CHAINS } from "../../connection/chains";
 import { useAuth } from "../../context/useWalletAuth";
 import { RenNetwork } from "@renproject/utils";
 import { MulticallReturn, useGlobalState } from "../../context/useGlobalState";
 import { get } from "../../services/axios";
 import API from "../../constants/Api";
-
+import { ethers } from "ethers";
+import { MINT_GAS_UNIT_COST } from "../../utils/market/getMarketGasData";
+import { UilPump } from "@iconscout/react-unicons";
+import { Icon } from "../Icons/AssetLogs/Icon";
 export type Tab = {
   tabName: string;
   tabNumber: number;
@@ -95,13 +98,39 @@ export const MintToggleButton = styled.div`
 
 `;
 
+export const InfoContainer = styled.div`
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 10px;
+  height: ${(props: any) => (props.visible ? "87px" : "0px")};
+  transition: height 0.25s ease-in;
+  background: rgb(15, 25, 55);
+  border-radius: 10px;
+
+  ${(props: any) =>
+    props.visible &&
+    css`
+      border: 1px solid rgb(57, 75, 105);
+    `}
+`;
+
 const NETWORK: RenNetwork = RenNetwork.Testnet;
 
 interface IWalletModal {
   setShowTokenModal: any;
+  confirmation: boolean;
+  toggleConfirmationModal: () => void;
 }
 
-const WalletModal = ({ setShowTokenModal }: IWalletModal) => {
+const WalletModal = ({
+  setShowTokenModal,
+  confirmation,
+  toggleConfirmationModal,
+}: IWalletModal) => {
+  const [isSufficentBalance, setIsSufficientBalance] = useState<boolean>(true);
+  const [bridgeBalance, setBridgeBalance] = useState<any>(0);
+  const [walletBalance, setWalletBalance] = useState<any>(0);
+  const [isMax, setIsMax] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [buttonState, setButtonState] = useState<Tab>({
     tabName: "Deposit",
@@ -109,12 +138,61 @@ const WalletModal = ({ setShowTokenModal }: IWalletModal) => {
     side: "left",
   });
   const { switchNetwork } = useAuth();
-  const { chainId, account } = useWeb3React();
-  const { setWalletAssetType, asset, chain } = useWallet();
+  const { chainId, active } = useWeb3React();
+  const { setWalletAssetType, asset, chain, gasPrice } = useWallet();
+  const { assetBalances } = useGlobalState();
 
-  const needsToSwitchChain =
-    ChainIdToRenChain[chainId!] === chain.fullName && chainId;
+  const needsToSwitchChain = ChainIdToRenChain[chainId!] === chain.fullName;
+  console.log(ChainIdToRenChain[chainId!], chain.fullName);
   const handleDeposit = () => {};
+
+  useEffect(() => {
+    if (typeof assetBalances === "undefined") return;
+    (async () => {
+      setIsSufficientBalance(true); // reset on component mount to override previous tokens' value
+      if (buttonState.tabName === "Deposit") {
+        const bridgeBalance =
+          Number(assetBalances[asset.Icon]?.bridgeBalance) /
+          10 ** asset.decimals;
+
+        console.log(
+          text,
+          bridgeBalance,
+          Number(bridgeBalance) + Number(gasPrice)
+        );
+        setBridgeBalance(Number(bridgeBalance));
+        setIsSufficientBalance(
+          +bridgeBalance >= Number(text) + Number(gasPrice)
+        );
+      } else {
+        const walletBalance =
+          Number(assetBalances["USDT_Goerli"]?.walletBalance) / 10 ** 6;
+
+        console.log(text, walletBalance, Number(walletBalance) + gasPrice);
+        setWalletBalance(Number(walletBalance));
+        setIsSufficientBalance(
+          Number(text) <= Number(walletBalance) + gasPrice
+        );
+      }
+    })();
+  }, [text, setIsSufficientBalance, asset, assetBalances, buttonState]);
+
+  const getButtonText = (chain: any, library: boolean, buttonState: Tab) => {
+    if (!library) return "Connect Wallet";
+    // else if (pending) return "Pending"
+    else if (!needsToSwitchChain) return `Switch to ${chain.fullName} network`;
+    else if (!isSufficentBalance && text !== "") return "Insufficent funds";
+    else return `${buttonState.tabName} ${text} ${asset.Icon}`;
+  };
+
+  const getButtonColour = () => {
+    if (!needsToSwitchChain || text == "")
+      return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
+    else if (!isSufficentBalance && text !== "")
+      return "bg-red-500 hover:bg-red-600 border border-red-400 hover:border-red-500";
+    else
+      return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
+  };
 
   return (
     <div className="mt-[60px] mb-[40px]">
@@ -135,22 +213,62 @@ const WalletModal = ({ setShowTokenModal }: IWalletModal) => {
           setType={setWalletAssetType}
           setShowTokenModal={setShowTokenModal}
         />
-        <BalanceDisplay asset={asset} isNative={false} />
+        <BalanceDisplay
+          asset={asset}
+          isNative={false}
+          buttonState={buttonState.tabName}
+        />
         <MintFormContainer>
           <ToggleButtonContainer
             activeButton={buttonState}
             tabs={TABS}
             setActiveButton={setButtonState}
           />
-          <WalletInputForm setText={setText} text={text} />
+          <WalletInputForm
+            setAmount={setText}
+            amount={text}
+            isMax={isMax}
+            setIsMax={setIsMax}
+            bridgeBalance={bridgeBalance}
+            walletBalance={walletBalance}
+            buttonState={buttonState.tabName}
+          />
+          {!needsToSwitchChain ? (
+            <InfoContainer visible={text !== ""}>
+              <div
+                className={`flex flex-col items-start justify-center gap-2 text-[15px] ${
+                  text === "" ? "opacity-0" : "opacity-100"
+                } mx-5 my-4`}
+              >
+                <div className="justify0center flex items-center gap-2">
+                  <UilPump className={"h-[18px] w-[18px] text-blue-500"} />
+                  <div>Estimated network fee: </div>
+                  <span className="text-gray-400">
+                    {gasPrice}{" "}
+                    <span className="text-grey-600">
+                      {CHAINS[chainId!]?.symbol!}
+                    </span>
+                  </span>
+                </div>
+                <div className="justify0center flex items-center gap-2">
+                  <Icon
+                    className={"h-[18px] w-[18px]"}
+                    chainName={asset.Icon}
+                  />
+                  <div>Estimated Bridge fee: </div>
+                  <span className="text-gray-400">
+                    {"0.00"} <span className="text-grey-600">{asset.Icon}</span>
+                  </span>
+                </div>
+              </div>
+            </InfoContainer>
+          ) : null}
           <div className="mt-6 mb-1 flex items-center justify-center px-5">
             <PrimaryButton
-              className={
-                "w-full justify-center rounded-lg border border-blue-400 bg-blue-500 py-[16px] text-center text-[17px] font-semibold hover:border-blue-500 hover:bg-blue-600"
-              }
+              className={`borde w-full justify-center rounded-lg ${getButtonColour()} py-[16px] text-center text-[17px] font-semibold`}
               onClick={
                 needsToSwitchChain
-                  ? () => {}
+                  ? toggleConfirmationModal
                   : () =>
                       switchNetwork(
                         NETWORK === RenNetwork.Testnet
@@ -159,9 +277,7 @@ const WalletModal = ({ setShowTokenModal }: IWalletModal) => {
                       )
               }
             >
-              {needsToSwitchChain
-                ? buttonState.tabName
-                : `Switch to ${chain.fullName} network`}
+              {getButtonText(chain, active, buttonState)}
             </PrimaryButton>
           </div>
         </MintFormContainer>

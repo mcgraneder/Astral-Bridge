@@ -14,6 +14,7 @@ import { get } from "../services/axios";
 const BlockPage: NextPage = () => {
   const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
   const { assetBalances } = useGlobalState();
+  const { confirmation, toggleConfirmationModal } = useWallet()
 
   return (
     <>
@@ -25,6 +26,8 @@ const BlockPage: NextPage = () => {
       <Layout>
         <WalletModal
           setShowTokenModal={setShowTokenModal}
+          confirmation={confirmation}
+          toggleConfirmationModal={toggleConfirmationModal}
         />
         <BottomNavBar />
       </Layout>

@@ -59,7 +59,10 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
       throw new Error("Multicall Failed");
     }
     setAssetBalances(tokensResponse.result.multicall);
-    setFetchingBalances(false)
+    setTimeout(
+      () => setFetchingBalances(false),
+      500
+    );
   }, [account, chainId, setFetchingBalances]);
 
   useEffect(() => {
