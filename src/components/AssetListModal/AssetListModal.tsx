@@ -8,15 +8,20 @@ import { assetsConfig, AssetConfig, assetsBaseConfig, supportedAssets } from '..
 import { Asset, Chain } from "@renproject/chains";
 import { useWallet } from "../../context/useWalletState";
 import { MulticallReturn } from "../../context/useGlobalState";
-
-
+import { Tab } from "../WalletModal/WalletModal";
 
 const getOptions = (mode: string): Array<AssetConfig | ChainConfig> => {
-    const options = mode === "chain" ? Object.values(chainsConfig) : Object.values(assetsConfig);
-    return options;
+  const options =
+    mode === "chain"
+      ? Object.values(chainsConfig)
+      : Object.values(assetsConfig);
+  return options;
 };
 
-const getOptionBySymbol = (symbol: string, mode: string) => getOptions(mode).find((option: ChainConfig | AssetConfig) => option.fullName === symbol);
+const getOptionBySymbol = (symbol: string, mode: string) =>
+  getOptions(mode).find(
+    (option: ChainConfig | AssetConfig) => option.fullName === symbol
+  );
 
 interface IAssetModal {
   setShowTokenModal: any;
@@ -27,6 +32,7 @@ interface IAssetModal {
   setAsset: any;
   setChain: any;
   walletAssetType: any;
+  buttonState: Tab;
 }
 
 const createAvailabilityFilter = (available: any) => (option: any) => {
@@ -43,6 +49,7 @@ const AssetListModal = ({
   setAsset,
   setChain,
   walletAssetType,
+  buttonState,
 }: IAssetModal) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const close = (): void => {
@@ -138,13 +145,16 @@ const AssetListModal = ({
             .filter((val) => {
               return handleSearch(val);
             })
-            .map((asset: any) => {
+            .map((asset: any, index: number) => {
               const formattedBalance =
-                Number(assetBalances[asset.Icon]?.bridgeBalance) /
-                10 ** asset.decimals;
+                buttonState.tabName !== "Deposit"
+                  ? Number(assetBalances[asset.Icon]?.bridgeBalance) /
+                    10 ** asset.decimals
+                  : Number(assetBalances[asset.Icon]?.walletBalance) /
+                    10 ** asset.decimals;
               return (
                 <div
-                  key={asset.fullName}
+                  key={index}
                   className="cursor: pointer flex items-center justify-between py-[10px] px-8 hover:cursor-pointer hover:bg-secondary"
                   onClick={
                     walletAssetType === "chain"

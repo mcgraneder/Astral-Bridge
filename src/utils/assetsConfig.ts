@@ -370,7 +370,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
     decimals: 18,
   },
   USDT_Goerli: {
-    Icon: Asset.USDT,
+    Icon: Asset.USDT_GOERLI,
 
     shortName: "USDT_Goerli",
     fullName: "Tether",
@@ -379,7 +379,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
     decimals: 6,
   },
   USDC_Goerli: {
-    Icon: Asset.USDC,
+    Icon: Asset.USDC_Goerli,
 
     shortName: "USDC_Goerli",
     fullName: "USD Coin",
@@ -388,7 +388,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
     decimals: 18,
   },
   REN_Goerli: {
-    Icon: Asset.REN,
+    Icon: Asset.REN_Goerli,
 
     shortName: "REN_Goerli",
     fullName: "REN",
@@ -397,7 +397,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
     decimals: 18,
   },
   DAI_Goerli: {
-    Icon: Asset.DAI,
+    Icon: Asset.DAI_Goerli,
 
     shortName: "DAI_Goerli",
     fullName: "Dai",

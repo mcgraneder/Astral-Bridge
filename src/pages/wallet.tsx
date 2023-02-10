@@ -40,6 +40,7 @@ const BlockPage: NextPage = () => {
           setAsset={setAsset}
           setChain={setChain}
           walletAssetType={walletAssetType}
+          buttonState	={buttonState}
         />
         <TransactionFlowModals
           gasPrice={gasPrice}

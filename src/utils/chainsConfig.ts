@@ -71,7 +71,7 @@ export const chainsBaseConfig: Record<Chain, ChainBaseConfig> = {
   },
   BinanceSmartChain: {
     Icon: "BinanceSmartChain",
-    fullName: "Binance Smart Chain",
+    fullName: "BinanceSmartChain",
     shortName: "BSC",
     networks: createNetworksConfig(56, 97),
     mainnetChainId: 56,
