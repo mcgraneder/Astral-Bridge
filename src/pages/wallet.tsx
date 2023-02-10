@@ -63,7 +63,6 @@ const BlockPage: NextPage = () => {
             setText={setText}
             buttonState={buttonState}
             setButtonState={setButtonState}
-            handleTransaction={handleTransaction}
           />
           <BottomNavBar />
         </Layout>

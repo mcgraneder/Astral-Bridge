@@ -5,10 +5,13 @@ import { useCallback } from "react";
 import { ERC20ABI } from "@renproject/chains-ethereum/contracts";
 import getContract from "../utils/getContract";
 import { useWallet } from "../context/useWalletState";
+import { useTransactionFlow } from "../context/useTransactionFlowState";
+import { useGlobalState } from "../context/useGlobalState";
 
 export const useApproval = () => {
+  const { setPendingTransaction } = useGlobalState()
   const { library, account: address, chainId } = useWeb3React();
-  const { togglePendingModal, toggleRejectedModal } = useWallet()
+  const { togglePendingModal, toggleRejectedModal, toggleSubmittedModal } = useTransactionFlow()
 
   const init = useCallback(
     <contract extends Contract = Contract>(
@@ -34,22 +37,20 @@ export const useApproval = () => {
 
   const approve = useCallback(
     async (tokenAddress: string, amount: any, addressToApprove: string): Promise<void> => {
-    //   togglePendingModal()
-    console.log("hy")
+      togglePendingModal()
       const tokenContract = init(tokenAddress, ERC20ABI, true);
-      console.log(tokenContract)
       if (tokenContract) {
         try {
           const approvalTransaction = await tokenContract.approve(
             addressToApprove,
-            amount
+            amount * 10 ** 8
           );
-        //   togglePendingModal()
+            toggleSubmittedModal()
           await approvalTransaction.wait(1);
+          setPendingTransaction(false)
         } catch (err) {
           console.error(err);
-        //   togglePendingModal()
-        //   toggleRejectedModal()
+         toggleRejectedModal()
         }
       }
     },

@@ -100,7 +100,7 @@ interface TxFlowProps {
   ) => Promise<void>;
 }
 
-function TransactionFlowModals({ gasPrice, text, buttonState, asset, chain, handleDeposit}: TxFlowProps) {
+function TransactionFlowModals({ gasPrice, text, buttonState, asset, chain, handleTransaction}: TxFlowProps) {
 
   const {
     pending,
@@ -125,7 +125,7 @@ function TransactionFlowModals({ gasPrice, text, buttonState, asset, chain, hand
             chain={chain}
             transactionType={buttonState.tabName}
             gasPrice={gasPrice}
-            handleTx={handleDeposit}
+            handleTransaction={handleTransaction}
           />
         )}
         {pending && (

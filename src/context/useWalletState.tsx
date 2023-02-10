@@ -75,6 +75,9 @@ function WalletProvider({ children }: WalletProviderProps) {
   );
   const { chainId, library, account } = useWeb3React();
   const { executeTransaction } = useEcecuteTransaction();
+  const { pendingTransaction } = useGlobalState()
+
+  useEffect(() => setText(""), [buttonState, pendingTransaction])
 
   const fetchSupportedMintAssets = useCallback(async () => {
     if (!chainId) return;
@@ -112,8 +115,7 @@ function WalletProvider({ children }: WalletProviderProps) {
     }
   }, [fetchGasData, library]);
 
-  const handleTransaction = useCallback(
-    async (
+  const handleTransaction = useCallback(async (
       transactionType: string,
       amount: string,
       chain: any,
@@ -123,6 +125,7 @@ function WalletProvider({ children }: WalletProviderProps) {
       const tokenAddress =
         chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
 
+        console.log(chain, asset)
       if (transactionType === "Deposit") {
         const bridgeContract = new ethers.Contract(
           bridgeAddress!,
@@ -132,10 +135,10 @@ function WalletProvider({ children }: WalletProviderProps) {
         await executeTransaction(
           asset,
           chain,
-          ["1000", tokenAddress],
+          ["100", tokenAddress],
           bridgeContract.transferFrom
         );
-      } else if (transactionType === "Withdrawal") {
+      } else if (transactionType === "Withdraw") {
         const bridgeContract = new ethers.Contract(
           bridgeAddress!,
           RenBridgeABI,
@@ -144,20 +147,8 @@ function WalletProvider({ children }: WalletProviderProps) {
         await executeTransaction(
           asset,
           chain,
-          [account, "1000", tokenAddress],
+          [account, "10", tokenAddress],
           bridgeContract.transfer
-        );
-      } else {
-        const tokenContract = new ethers.Contract(
-          tokenAddress!,
-          ERC20ABI,
-          await library.getSigner()
-        );
-        await executeTransaction(
-          asset,
-          chain,
-          [bridgeAddress, "1000"],
-          tokenContract.approve
         );
       }
     },

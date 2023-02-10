@@ -11,7 +11,7 @@ import {
 } from "@renproject/chains-ethereum";
 
 export const BridgeDeployments: { [x: string]: string } = {
-  [Ethereum.chain]: "0xffE167291A3A815A7Af8bEA9a9522387AcEb6f6f",
+  [Ethereum.chain]: "0x9dFFd9DA32975f0955e3EfB62669aC167376d8AA",
   [BinanceSmartChain.chain]: "0x0E245bF0dca306eac0a666001de3862E895acbd7",
   [Polygon.chain]: "0x0E245bF0dca306eac0a666001de3862E895acbd7",
   [Moonbeam.chain]: "0x0E245bF0dca306eac0a666001de3862E895acbd7",

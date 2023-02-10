@@ -103,8 +103,8 @@ const BalanceDisplay = ({
         ? Number(assetBalances[asset.Icon]?.bridgeBalance) /
           10 ** asset.decimals
         : Number(assetBalances[asset.Icon]?.walletBalance) /
-          10 ** 6;
-    console.log(buttonState)
+          10 ** asset.decimals;
+
     setAssetBalance(formattedBalance);
   }, [assetBalances, buttonState, asset]);
 

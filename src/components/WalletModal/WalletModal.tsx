@@ -25,6 +25,9 @@ import { Icon } from "../Icons/AssetLogs/Icon";
 import { useNotification } from '../../context/useNotificationState';
 import WalletButton from "../Buttons/WalletButton";
 import { useTransactionFlow } from "../../context/useTransactionFlowState";
+import { useApproval } from '../../hooks/useApproval';
+import { BridgeDeployments } from "../../constants/deployments";
+import { chainAdresses } from "../../constants/Addresses";
 export type Tab = {
   tabName: string;
   tabNumber: number;
@@ -129,12 +132,6 @@ interface IWalletModal {
   setText: any;
   buttonState: Tab;
   setButtonState: any;
-  handleTransaction: (
-    transactionType: string,
-    amount: string,
-    chain: any,
-    asset: any
-  ) => Promise<void>;
 }
 
 const WalletModal = ({
@@ -147,7 +144,6 @@ const WalletModal = ({
   setText,
   buttonState,
   setButtonState,
-  handleTransaction
 }: IWalletModal) => {
 const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
   const [isSufficentBalance, setIsSufficientBalance] = useState<boolean>(true);
@@ -158,22 +154,29 @@ const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
   const { chainId, account } = useWeb3React();
   const { assetBalances } = useGlobalState();
   const { toggleConfirmationModal } = useTransactionFlow()
+  const { approve } = useApproval()
 
-  const error = text === "" || !isSufficentBalance
   const needsToSwitchChain =
     ChainIdToRenChain[chainId!] === chain.fullName;
+  const error = !needsToSwitchChain ? false : (text === "" || Number(text) == 0 || !isSufficentBalance)
+  console.log(error)
 
   const execute = () => {
-    console.log("hey")
-    needsToSwitchChain
-      ? !isAssetApproved
-        ? toggleConfirmationModal()
-        : handleTransaction("Approval", text, chain, asset)
-      : switchNetwork(
-            NETWORK === RenNetwork.Testnet
-              ? chain.testnetChainId
-              : chain.mainnetChainId
-          );
+    const bridgeAddress = BridgeDeployments[chain.fullName];
+    const tokenAddress =
+        chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
+    
+    if (!needsToSwitchChain) {
+      switchNetwork(
+        NETWORK === RenNetwork.Testnet
+          ? chain.testnetChainId
+          : chain.mainnetChainId
+      );
+    } else if (!isAssetApproved) {
+      approve(tokenAddress, text, bridgeAddress!);
+    }
+    else toggleConfirmationModal()
+    
   }
 
   useEffect(() => {
@@ -189,7 +192,7 @@ const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
         },
       });
       if (!approvalResponse) throw new Error("Multicall Failed");
-      if (Number(approvalResponse.result.hex) > 0) setIsAssetApproved(true);
+      if (Number(approvalResponse.result.hex) > 0 || buttonState.tabName === "Withdraw") setIsAssetApproved(true);
       else setIsAssetApproved(false);
     })();
   }, [asset, account]);
@@ -198,22 +201,22 @@ const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
     if (typeof assetBalances === "undefined") return;
     (async () => {
       setIsSufficientBalance(true); // reset on component mount to override previous tokens' value
-      if (buttonState.tabName !== "Deposit") {
-        const bridgeBalance =
-          Number(assetBalances[asset.Icon]?.bridgeBalance) /
+      if (buttonState.tabName === "Deposit") {
+        const walletBalance =
+          Number(assetBalances[asset.Icon]?.walletBalance) /
           10 ** asset.decimals;
 
-        setBridgeBalance(Number(bridgeBalance));
+        setBridgeBalance(Number(walletBalance));
         setIsSufficientBalance(
-          +bridgeBalance >= Number(text) + Number(gasPrice)
+          +walletBalance >= Number(text)
         );
       } else {
-        const walletBalance =
-          Number(assetBalances[asset.Icon]?.walletBalance) / 10 ** 6;
+        const bridgeBalance =
+          Number(assetBalances[asset.Icon]?.bridgeBalance) / 10 ** asset.decimals;
 
-        setWalletBalance(Number(walletBalance));
+        setWalletBalance(Number(bridgeBalance));
         setIsSufficientBalance(
-          Number(text) <= Number(walletBalance) + gasPrice
+          Number(text) <= Number(bridgeBalance)
         );
       }
     })();
@@ -258,31 +261,36 @@ const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
             walletBalance={walletBalance}
             buttonState={buttonState.tabName}
           />
-          <InfoContainer visible={text !== ""}>
-            <div
-              className={`flex flex-col items-start justify-center gap-2 text-[15px] ${
-                text === "" ? "opacity-0" : "opacity-100"
-              } mx-5 my-4`}
-            >
-              <div className="justify0center flex items-center gap-2">
-                <UilPump className={"h-[18px] w-[18px] text-blue-500"} />
-                <div>Estimated network fee: </div>
-                <span className="text-gray-400">
-                  {gasPrice}{" "}
-                  <span className="text-grey-600">
-                    {CHAINS[chainId!]?.symbol!}
+          {text !== "" && (
+            <InfoContainer visible={text !== ""}>
+              <div
+                className={`flex flex-col items-start justify-center gap-2 text-[15px] ${
+                  text === ""  ? "opacity-0" : "opacity-100"
+                } mx-5 my-4`}
+              >
+                <div className="flex items-center justify-center gap-2">
+                  <UilPump className={"h-[18px] w-[18px] text-blue-500"} />
+                  <div>Estimated network fee: </div>
+                  <span className="text-gray-400">
+                    {gasPrice}{" "}
+                    <span className="text-grey-600">
+                      {CHAINS[chainId!]?.symbol!}
+                    </span>
                   </span>
-                </span>
+                </div>
+                <div className="flex items-center justify-center gap-2">
+                  <Icon
+                    className={"h-[18px] w-[18px]"}
+                    chainName={asset.Icon}
+                  />
+                  <div>Estimated Bridge fee: </div>
+                  <span className="text-gray-400">
+                    {"0.00"} <span className="text-grey-600">{asset.Icon}</span>
+                  </span>
+                </div>
               </div>
-              <div className="justify0center flex items-center gap-2">
-                <Icon className={"h-[18px] w-[18px]"} chainName={asset.Icon} />
-                <div>Estimated Bridge fee: </div>
-                <span className="text-gray-400">
-                  {"0.00"} <span className="text-grey-600">{asset.Icon}</span>
-                </span>
-              </div>
-            </div>
-          </InfoContainer>
+            </InfoContainer>
+          )}
 
           <div className="mt-6 mb-1 flex items-center justify-center px-5">
             <WalletButton

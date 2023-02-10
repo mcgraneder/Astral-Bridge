@@ -29,26 +29,26 @@ interface IAssetModal {
   chain: any;
   transactionType: string;
   gasPrice: number;
-  handleTx: (asset: any, chain: any, amount: string) => Promise<void>;
+  handleTransaction: (transactionType: string, amount: string, chain: any, asset: any) => void
 }
 
 const TxConfirmationModal = ({
   toggleConfirmationModal,
   confirmation,
-  text,  
+  text,
   asset,
   chain,
   transactionType,
   gasPrice,
-  handleTx
+  handleTransaction,
 }: IAssetModal) => {
-   const [assetPrice, setAssetPrice] = useState<any>() 
+  const [assetPrice, setAssetPrice] = useState<any>();
 
-   const executeTransaction = () => {
-    toggleConfirmationModal()
-    handleTx(asset, chain, text)
-   }
-   useEffect(() => {
+  const executeTransaction = () => {
+    toggleConfirmationModal();
+    handleTransaction(transactionType, text, chain, asset);
+  };
+  useEffect(() => {
     (async () => {
       try {
         const assetPriceQuery = await fetchPrice(asset.Icon, "USD");

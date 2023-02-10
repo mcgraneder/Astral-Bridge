@@ -49,11 +49,11 @@ const WalletButton = ({
   };
   return (
     <PrimaryButton
-      className={`borde w-full justify-center rounded-lg ${getButtonColour()} py-[16px] text-center text-[17px] font-semibold`}
+      className={`x-50 border w-full justify-center rounded-lg ${getButtonColour()} py-[16px] text-center text-[17px] font-semibold hover:cursor-pointer`}
       disabled={error}
       onClick={execute}
     >
-      {getButtonText(chain, active, buttonState)}
+      <span>{getButtonText(chain, active, buttonState)}</span>
       {pendingTransaction && (
         <UilSpinner className={" h-6 w-6 animate-spin text-white"} />
       )}
