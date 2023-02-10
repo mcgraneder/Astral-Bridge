@@ -9,15 +9,21 @@ import { CHAINS, ChainType, ChainIdToRenChain } from '../connection/chains';
 import { assetsBaseConfig } from '../utils/assetsConfig';
 import { chainsBaseConfig } from '../utils/chainsConfig';
 import { get } from "../services/axios";
-import API from '../constants/Api';
-import CG from "../utils/market/fetchAssetPrice";
+import API from "../constants/Api";
 import {
   fetchMarketDataGasPrices,
   MINT_GAS_UNIT_COST,
 } from "../utils/market/getMarketGasData";
 import { ethers } from "ethers";
 import { toFixed } from "../utils/misc";
-import { Tab } from '../components/WalletModal/WalletModal';
+import { Tab } from "../components/WalletModal/WalletModal";
+import { useApproval } from "../hooks/useApproval";
+import { chainAdresses } from "../constants/Addresses";
+import { ERC20ABI } from "@renproject/chains-ethereum/contracts";
+import RenBridgeABI from "../constants/ABIs/RenBridgeABI.json";
+import { BridgeDeployments } from "../constants/deployments";
+import BigNumber from "bignumber.js";
+import { useGlobalState } from "./useGlobalState";
 
 interface WalletProviderProps {
   children: React.ReactNode;
@@ -44,6 +50,17 @@ type WalletContextType = {
   setText: Dispatch<SetStateAction<string>>;
   buttonState: Tab;
   setButtonState: Dispatch<SetStateAction<Tab>>;
+  handleTransaction: (
+    transactionType: string,
+    amount: string,
+    chain: string,
+    asset: string
+  ) => Promise<void>;
+  handleApproval: (asset: string, chain: any, amount: string) => Promise<void>;
+  isAssetApproved: boolean;
+  setIsAssetApproved: Dispatch<SetStateAction<boolean>>;
+  submitted: boolean;
+  toggleSubmittedModal: () => void;
 };
 
 const WalletContext = createContext({} as WalletContextType);
@@ -52,6 +69,8 @@ function WalletProvider({ children }: WalletProviderProps) {
   const [transactionFailed, setTransactionFailed] = useState<boolean>(false);
   const [rejected, setRejected] = useState<boolean>(false);
   const [confirmation, setConfirmation] = useState<boolean>(false);
+  const [submitted, setSubmitted] = useState<boolean>(false);
+
   const [pending, setPending] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [buttonState, setButtonState] = useState<Tab>({
@@ -59,7 +78,7 @@ function WalletProvider({ children }: WalletProviderProps) {
     tabNumber: 0,
     side: "left",
   });
-
+  const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
   const [gasPrice, setGasPrice] = useState<any>(0);
   const [assetPrices, setAssetPrices] = useState<any>([]);
   const [asset, setAsset] = useState<any>(assetsBaseConfig.BTC);
@@ -70,8 +89,9 @@ function WalletProvider({ children }: WalletProviderProps) {
   const [supportedMintAssets, setSupportedMintAssets] = useState<Array<string>>(
     []
   );
-
-  const { chainId, library } = useWeb3React();
+  const { chainId, library, active, account } = useWeb3React();
+  const { pendingTransaction, setPendingTransaction } = useGlobalState();
+  const { init, approve } = useApproval();
 
   const toggleTransactionFailedModal = useCallback(
     () => setTransactionFailed(false),
@@ -89,6 +109,11 @@ function WalletProvider({ children }: WalletProviderProps) {
   const toggleConfirmationModal = useCallback(
     () => setConfirmation((w: boolean) => !w),
     [setConfirmation]
+  );
+
+  const toggleSubmittedModal = useCallback(
+    () => setSubmitted((w: boolean) => !w),
+    [setSubmitted]
   );
 
   const fetchSupportedMintAssets = useCallback(async () => {
@@ -127,6 +152,88 @@ function WalletProvider({ children }: WalletProviderProps) {
     }
   }, [fetchGasData, library]);
 
+  const handleDeposit = useCallback(async (amount: string) => {
+    console.log("aaaaaa");
+    const approvalResponse = await get<{
+      result: any;
+    }>(API.ren.getTokenApproval, {
+      params: { chainName: chain, assetName: asset, account: account },
+    });
+
+    console.log(approvalResponse);
+    if (!approvalResponse) {
+      togglePendingModal();
+      toggleRejectedModal();
+      throw new Error("Multicall Failed");
+    }
+    const bridgeAddress =
+      chainAdresses[ChainIdToRenChain[chainId!]!]?.bridgeAddress!;
+    if (Number(approvalResponse.result) <= 0) {
+      const success = await approve(
+        chainAdresses[ChainIdToRenChain[chainId!]!]?.assets[asset]
+          ?.tokenAddress!,
+        amount,
+        bridgeAddress
+      );
+    }
+    const bridgeContract = await init(bridgeAddress, RenBridgeABI, true);
+    const depositTx = await bridgeContract?.transferFrom(
+      account,
+      bridgeAddress,
+      amount
+    );
+    const depositReceipt = await depositTx.wait(1);
+    togglePendingModal();
+  }, []);
+
+  const handleWithdrawal = useCallback(async () => {}, []);
+
+  const handleApproval = useCallback(
+    async (asset: any, chain: any, amount: string): Promise<void> => {
+      if (!library) return;
+      setPending(true);
+      setPendingTransaction(true);
+      setConfirmation(false);
+      const tokenAddress =
+        chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
+      const bridgeAddress = BridgeDeployments[chain.fullName];
+      const signer = await library.getSigner();
+      const tokenContract = new ethers.Contract(tokenAddress, ERC20ABI, signer);
+
+      try {
+        const approvalTx = await tokenContract.approve(bridgeAddress, "0");
+        setPending(false);
+        setSubmitted(true);
+        await approvalTx.wait(1);
+        setPendingTransaction(false);
+      } catch (error) {
+        setPending(false);
+        setPendingTransaction(false);
+        setRejected(true);
+      }
+    },
+    [library]
+  );
+
+  const handleTransaction = useCallback(
+    async (
+      transactionType: string,
+      amount: string,
+      chain: string,
+      asset: string
+    ): Promise<void> => {
+      console.log("hey");
+      //   if (!active) return;
+      console.log(transactionType);
+      if (transactionType === "Deposit") {
+        console.log("oooof");
+        handleDeposit(amount);
+      }
+      //   else handleWithdrawal();
+    },
+    []
+  );
+
   return (
     <WalletContext.Provider
       value={{
@@ -149,7 +256,13 @@ function WalletProvider({ children }: WalletProviderProps) {
         text,
         setText,
         buttonState,
-        setButtonState
+        setButtonState,
+        handleTransaction,
+        handleApproval,
+        isAssetApproved,
+        setIsAssetApproved,
+        submitted,
+        toggleSubmittedModal,
       }}
     >
       {children}

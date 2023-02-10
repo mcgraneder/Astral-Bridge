@@ -10,6 +10,7 @@ import { ChainIdToRenChain } from "../connection/chains";
 import { Chain, Asset } from "@renproject/chains";
 import { get } from "../services/axios";
 import API from "../constants/Api";
+import { SetStateAction, Dispatch } from 'react';
 
 interface GlobalStateProviderProps {
   children: React.ReactNode;
@@ -21,6 +22,8 @@ type GlobalContextType = {
     [x: string]: MulticallReturn | undefined;
   };
   fetchingBalances: boolean;
+  pendingTransaction: boolean;
+  setPendingTransaction: Dispatch<SetStateAction<boolean>>;
 };
 
 export type MulticallReturn = {
@@ -34,6 +37,7 @@ export type MulticallReturn = {
 const GlobalStateContext = createContext({} as GlobalContextType);
 
 function GlobalStateProvider({ children }: GlobalStateProviderProps) {
+  const [pendingTransaction, setPendingTransaction] = useState<boolean>(false)  
   const [fetchingBalances, setFetchingBalances] = useState<boolean>(false)
   const [assetBalances, setAssetBalances] = useState<{
     [x: string]: MulticallReturn | undefined;
@@ -81,7 +85,9 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     <GlobalStateContext.Provider value={{
         memoizedFetchBalances,
         assetBalances,
-        fetchingBalances
+        fetchingBalances,
+        pendingTransaction,
+        setPendingTransaction
     }}>
       {children}
     </GlobalStateContext.Provider>

@@ -5,6 +5,7 @@ import TxConfirmationModal from "./TransactionConfirmationModal";
 import PendingTransactionModal from "./PendinTransactionModal";
 import { useWallet } from "../../context/useWalletState";
 import TransactionRejectedModal from "./TransactionRejectedModal";
+import TransactionSubmittedModal from './TransactionSubmittedModal';
 
 export const Backdrop = styled.div`
   position: fixed;
@@ -100,15 +101,16 @@ function TransactionFlowModals() {
     buttonState,
     asset,
     chain,
+    handleTransaction,
+    handleApproval,
+    isAssetApproved,
+    submitted,
+    toggleSubmittedModal
   } = useWallet();
 
-  const x = () => {
-    toggleConfirmationModal();
-    togglePendingModal();
-  };
   return (
     <>
-      <Backdrop visible={confirmation || pending || rejected}>
+      <Backdrop visible={confirmation || pending || rejected || submitted}>
         {confirmation && (
           <TxConfirmationModal
             confirmation={confirmation}
@@ -118,7 +120,7 @@ function TransactionFlowModals() {
             chain={chain}
             transactionType={buttonState.tabName}
             gasPrice={gasPrice}
-            handleTx={x}
+            handleTx={handleApproval}
           />
         )}
         {pending && (
@@ -129,6 +131,12 @@ function TransactionFlowModals() {
             transactionType={buttonState.tabName}
             chain={chain}
             asset={asset}
+          />
+        )}
+        {submitted && (
+          <TransactionSubmittedModal
+            close={toggleSubmittedModal}
+            open={submitted}
           />
         )}
         {rejected && (

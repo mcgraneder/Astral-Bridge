@@ -29,7 +29,7 @@ interface IAssetModal {
   chain: any;
   transactionType: string;
   gasPrice: number;
-  handleTx: () => void;
+  handleTx: (asset: any, chain: any, amount: string) => Promise<void>;
 }
 
 const TxConfirmationModal = ({
@@ -118,15 +118,20 @@ const TxConfirmationModal = ({
         </div>
         <div className="mt-3 mb-4 w-full break-words px-4 text-left text-[14px] text-gray-400">
           <span>
-            output is estimated. You will receive at least <span>{text}{" "}{asset.Icon}</span> from this
-            transaction
+            output is estimated. You will receive at least{" "}
+            <span>
+              {text} {asset.Icon}
+            </span>{" "}
+            from this transaction
           </span>
         </div>
         <PrimaryButton
           className={
             "w-full justify-center rounded-2xl bg-blue-500 py-[14px] text-center"
           }
-          onClick={handleTx}
+          onClick={() =>
+            handleTx(asset, chain, text)
+          }
         >
           Confirm {transactionType}
         </PrimaryButton>

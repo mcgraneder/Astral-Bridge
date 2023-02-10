@@ -19,6 +19,7 @@ const API = {
     verify: `${SigVerifierBaseUrl}/verify`,
     balancesOf: `http://localhost:4000/balancesOf`,
     bridgeTokens: `http://localhost:4000/bridgeTokens`,
+    getTokenApproval: `http://localhost:4000/getTokenApproval`,
   },
   coinGecko: {
     price: `${CoinGeckoBaseUrl}/simple/price`,

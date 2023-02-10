@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import BtcIcon from "../../../public/svgs/assets/renBTC.svg";
 import EthIcon from "../../../public/svgs/chains/ethereum.svg";
 
-import { UilAngleDown } from "@iconscout/react-unicons";
+import { UilAngleDown, UilSpinner } from '@iconscout/react-unicons';
 import { MintFormTextWrapper2, MintFormText2 } from "../CSS/WalletModalStyles";
 import ToggleButtonContainer from "./components/ToggleButton";
 import Dropdown from "./components/Dropdown";
@@ -132,19 +132,46 @@ const WalletModal = ({
   const [walletBalance, setWalletBalance] = useState<any>(0);
   const [isMax, setIsMax] = useState<boolean>(false);
   const { switchNetwork } = useAuth();
-  const { chainId, active } = useWeb3React();
-  const { setWalletAssetType, asset, chain, gasPrice, text, setText, buttonState, setButtonState } = useWallet();
-  const { assetBalances } = useGlobalState();
+  const { chainId, active, account } = useWeb3React();
+  const {
+    setWalletAssetType,
+    asset,
+    chain,
+    gasPrice,
+    text,
+    setText,
+    buttonState,
+    setButtonState,
+    isAssetApproved,
+    setIsAssetApproved
+  } = useWallet();
+  const { assetBalances, pendingTransaction } = useGlobalState();
 
   const needsToSwitchChain = ChainIdToRenChain[chainId!] === chain.fullName;
   console.log(ChainIdToRenChain[chainId!], chain.fullName);
   const handleDeposit = () => {};
 
   useEffect(() => {
+    if (!asset || !account) return
+    (async() => {
+        const approvalResponse = await get<{
+            result: any;
+        }>(API.ren.getTokenApproval, {
+            params: { chainName: chain.fullName, assetName: asset.Icon, account: account },
+        });
+
+        if (!approvalResponse) throw new Error("Multicall Failed");
+        if (Number(approvalResponse.result) > 0) setIsAssetApproved(true)
+        else (setIsAssetApproved(false))
+   
+    })()
+  }, [asset, account]);
+
+  useEffect(() => {
     if (typeof assetBalances === "undefined") return;
     (async () => {
       setIsSufficientBalance(true); // reset on component mount to override previous tokens' value
-      if (buttonState.tabName === "Deposit") {
+      if (buttonState.tabName !== "Deposit") {
         const bridgeBalance =
           Number(assetBalances[asset.Icon]?.bridgeBalance) /
           10 ** asset.decimals;
@@ -160,7 +187,7 @@ const WalletModal = ({
         );
       } else {
         const walletBalance =
-          Number(assetBalances["USDT_Goerli"]?.walletBalance) / 10 ** 6;
+          Number(assetBalances[asset.Icon]?.walletBalance) / 10 ** 6;
 
         console.log(text, walletBalance, Number(walletBalance) + gasPrice);
         setWalletBalance(Number(walletBalance));
@@ -173,10 +200,11 @@ const WalletModal = ({
 
   const getButtonText = (chain: any, library: boolean, buttonState: Tab) => {
     if (!library) return "Connect Wallet";
-    // else if (pending) return "Pending"
+    else if (pendingTransaction) return "Transaction pending"
     else if (!needsToSwitchChain) return `Switch to ${chain.fullName} network`;
     else if (!isSufficentBalance && text !== "") return "Insufficent funds";
-    else return `${buttonState.tabName} ${text} ${asset.Icon}`;
+    else if (!isAssetApproved && text !== "") return `Approve ${asset.Icon} on ${chain.fullName}`;
+    else return `${buttonState.tabName} ${text} ${asset.Icon}.`;
   };
 
   const getButtonColour = () => {
@@ -272,6 +300,9 @@ const WalletModal = ({
               }
             >
               {getButtonText(chain, active, buttonState)}
+              {pendingTransaction && (
+                <UilSpinner className={" h-6 w-6 animate-spin text-white"} />
+              )}
             </PrimaryButton>
           </div>
         </MintFormContainer>
