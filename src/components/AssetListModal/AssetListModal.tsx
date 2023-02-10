@@ -52,10 +52,10 @@ const AssetListModal = ({
   buttonState,
 }: IAssetModal) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const close = (): void => {
+  const close = useCallback((): void => {
     setShowTokenModal(false);
     setSearchTerm("");
-  };
+  }, [setSearchTerm, setShowTokenModal]);
 
   const available =
     walletAssetType === "chain" ? supportedEthereumChains : undefined;
@@ -158,8 +158,8 @@ const AssetListModal = ({
                   className="cursor: pointer flex items-center justify-between py-[10px] px-8 hover:cursor-pointer hover:bg-secondary"
                   onClick={
                     walletAssetType === "chain"
-                      ? () => handleChainChange(asset.shortName, asset)
-                      : () => handleCurrencyChange(asset.shortName, asset)
+                      ? () => handleChainChange(asset.fullName, asset)
+                      : () => handleCurrencyChange(asset.fullName, asset)
                   }
                 >
                   <div className="flex items-center justify-center gap-4">

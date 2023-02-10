@@ -40,13 +40,14 @@ export type MulticallReturn = {
 const GlobalStateContext = createContext({} as GlobalContextType);
 
 function GlobalStateProvider({ children }: GlobalStateProviderProps) {
+  const [fetchedStoredChain, setFetchStoredChain] = useState<boolean>(false)
   const [pendingTransaction, setPendingTransaction] = useState<boolean>(false);
   const [fetchingBalances, setFetchingBalances] = useState<boolean>(false);
   const [chain, setChain] = useState<any>(chainsBaseConfig.Ethereum);
   const [assetBalances, setAssetBalances] = useState<{
     [x: string]: MulticallReturn | undefined;
   }>({});
-  const { library, account, chainId, active } = useWeb3React();
+  const { account, chainId, active } = useWeb3React();
 
   const memoizedFetchBalances = useCallback(async () => {
     if (!account || !chainId || !chain) return;
@@ -69,6 +70,13 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     setAssetBalances(tokensResponse.result.multicall);
     setTimeout(() => setFetchingBalances(false), 500);
   }, [account, chainId, setFetchingBalances, chain]);
+
+  useEffect(() => {
+    if (typeof window === undefined || fetchedStoredChain) return
+    const storedChain = localStorage.getItem("selected_chain")
+    setChain(JSON.parse(storedChain!))
+    setFetchStoredChain(true)
+  }, [fetchedStoredChain, active])
 
   useEffect(() => {
     if (!active || !account || !chain) return;
