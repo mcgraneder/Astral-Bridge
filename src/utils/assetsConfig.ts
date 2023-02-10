@@ -1,6 +1,7 @@
-import { Asset, Chain } from "@renproject/chains";
+import { Chain } from "@renproject/chains";
 import { getAssetChainsConfig, CustomSvgIconComponent } from './chainsConfig';
 import { Icon } from "../components/Icons/AssetLogs/Icon";
+
 
 export type AssetIconsConfig = {
     Icon: string | null;
@@ -30,288 +31,380 @@ const unsetAssetConfig: AssetBaseConfig = {
     decimals: 18
 };
 
+export enum Asset {
+  ArbETH = "ArbETH",
+  AVAX = "AVAX",
+  BADGER = "BADGER",
+  BCH = "BCH",
+  BNB = "BNB",
+  BTC = "BTC",
+  BUSD = "BUSD",
+  CRV = "CRV",
+  DAI = "DAI",
+  DGB = "DGB",
+  DOGE = "DOGE",
+  ETH = "ETH",
+  EURT = "EURT",
+  FIL = "FIL",
+  FTM = "FTM",
+  FTT = "FTT",
+  gETH = "gETH",
+  GLMR = "GLMR",
+  KAVA = "KAVA",
+  KNC = "KNC",
+  LINK = "LINK",
+  LUNA = "LUNA",
+  MATIC = "MATIC",
+  MIM = "MIM",
+  oETH = "oETH",
+  REN = "REN",
+  ROOK = "ROOK",
+  SOL = "SOL",
+  SUSHI = "SUSHI",
+  UNI = "UNI",
+  USDC = "USDC",
+  USDT = "USDT",
+  ZEC = "ZEC",
+  USDT_GOERLI = "USDT_Goerli",
+  USDC_Goerli = "USDC_Goerli",
+  DAI_Goerli = "DAI_Goerli",
+  REN_Goerli = "REN_Goerli"
+ }
+
 export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
-    AVAX: {
-        Icon: Asset.AVAX,
+  AVAX: {
+    Icon: Asset.AVAX,
 
-        shortName: "AVAX",
-        fullName: "Avalanche",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "avalanche-2",
-        decimals: 18
-    },
-    ArbETH: {
-        Icon: Asset.ArbETH,
+    shortName: "AVAX",
+    fullName: "Avalanche",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "avalanche-2",
+    decimals: 18,
+  },
+  ArbETH: {
+    Icon: Asset.ArbETH,
 
-        shortName: "ArbETH",
-        fullName: "Arbitrum Ether",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "weth",
-        decimals: 18 // simple hack for duplicated ethereum entry
-    },
-    BADGER: {
-        Icon: Asset.BADGER,
+    shortName: "ArbETH",
+    fullName: "Arbitrum Ether",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "weth",
+    decimals: 18, // simple hack for duplicated ethereum entry
+  },
+  BADGER: {
+    Icon: Asset.BADGER,
 
-        shortName: "BADGER",
-        fullName: "Badger DAO",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "badger-dao",
-        decimals: 18
-    },
-    BCH: {
-        Icon: Asset.BCH,
+    shortName: "BADGER",
+    fullName: "Badger DAO",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "badger-dao",
+    decimals: 18,
+  },
+  BCH: {
+    Icon: Asset.BCH,
 
-        shortName: "BCH",
-        fullName: "Bitcoin Cash",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "bitcoin-cash",
-        decimals: 8
-    },
-    BNB: {
-        Icon: Asset.BNB,
+    shortName: "BCH",
+    fullName: "Bitcoin Cash",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "bitcoin-cash",
+    decimals: 8,
+  },
+  BNB: {
+    Icon: Asset.BNB,
 
-        shortName: "BNB",
-        fullName: "Binance Coin",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "binancecoin",
-        decimals: 18
-    },
-    BTC: {
-        Icon: Asset.BTC,
+    shortName: "BNB",
+    fullName: "Binance Coin",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "binancecoin",
+    decimals: 18,
+  },
+  BTC: {
+    Icon: Asset.BTC,
 
-        shortName: "BTC",
-        fullName: "Bitcoin",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "bitcoin",
-        decimals: 8
-    },
-    BUSD: {
-        Icon: Asset.BUSD,
+    shortName: "BTC",
+    fullName: "Bitcoin",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "bitcoin",
+    decimals: 8,
+  },
+  BUSD: {
+    Icon: Asset.BUSD,
 
-        shortName: "BUSD",
-        fullName: "Binance USD",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "binance-usd",
-        decimals: 18
-    },
-    CRV: {
-        Icon: Asset.CRV,
+    shortName: "BUSD",
+    fullName: "Binance USD",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "binance-usd",
+    decimals: 18,
+  },
+  CRV: {
+    Icon: Asset.CRV,
 
-        shortName: "CRV",
-        fullName: "Curve DAO Token",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "curve-dao-token",
-        decimals: 18
-    },
-    DAI: {
-        Icon: Asset.DAI,
+    shortName: "CRV",
+    fullName: "Curve DAO Token",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "curve-dao-token",
+    decimals: 18,
+  },
+  DAI: {
+    Icon: Asset.DAI,
 
-        shortName: "DAI",
-        fullName: "Dai",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "dai",
-        decimals: 18
-    },
-    DGB: {
-        Icon: Asset.DGB,
+    shortName: "DAI",
+    fullName: "Dai",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "dai",
+    decimals: 18,
+  },
+  DGB: {
+    Icon: Asset.DGB,
 
-        shortName: "DGB",
-        fullName: "DigiByte",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "digibyte",
-        decimals: 18
-    },
-    DOGE: {
-        Icon: Asset.DOGE,
+    shortName: "DGB",
+    fullName: "DigiByte",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "digibyte",
+    decimals: 18,
+  },
+  DOGE: {
+    Icon: Asset.DOGE,
 
-        shortName: "DOGE",
-        fullName: "Dogecoin",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "dogecoin",
-        decimals: 18
-    },
-    ETH: {
-        Icon: Asset.ETH,
+    shortName: "DOGE",
+    fullName: "Dogecoin",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "dogecoin",
+    decimals: 18,
+  },
+  ETH: {
+    Icon: Asset.ETH,
 
-        shortName: "ETH",
-        fullName: "Ether",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "ethereum",
-        decimals: 18
-    },
-    EURT: {
-        Icon: Asset.EURT,
+    shortName: "ETH",
+    fullName: "Ether",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "ethereum",
+    decimals: 18,
+  },
+  EURT: {
+    Icon: Asset.EURT,
 
-        shortName: "EURT",
-        fullName: "Euro Tether",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "euro-tether",
-        decimals: 18
-    },
-    FIL: {
-        Icon: Asset.FIL,
+    shortName: "EURT",
+    fullName: "Euro Tether",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "euro-tether",
+    decimals: 18,
+  },
+  FIL: {
+    Icon: Asset.FIL,
 
-        shortName: "FIL",
-        fullName: "Filecoin",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "filecoin",
-        decimals: 18
-    },
-    FTM: {
-        Icon: Asset.FTM,
+    shortName: "FIL",
+    fullName: "Filecoin",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "filecoin",
+    decimals: 18,
+  },
+  FTM: {
+    Icon: Asset.FTM,
 
-        shortName: "FTM",
-        fullName: "Fantom",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "fantom",
-        decimals: 18
-    },
-    FTT: {
-        Icon: Asset.FTT,
+    shortName: "FTM",
+    fullName: "Fantom",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "fantom",
+    decimals: 18,
+  },
+  FTT: {
+    Icon: Asset.FTT,
 
-        shortName: "FTT",
-        fullName: "FTX Token",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "ftx-token",
-        decimals: 18
-    },
-    GLMR: {
-        Icon: Asset.GLMR,
+    shortName: "FTT",
+    fullName: "FTX Token",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "ftx-token",
+    decimals: 18,
+  },
+  GLMR: {
+    Icon: Asset.GLMR,
 
-        shortName: "GLMR",
-        fullName: "Glimmer",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "moonbeam",
-        decimals: 18
-    },
-    KAVA: {
-        Icon: Asset.KAVA,
+    shortName: "GLMR",
+    fullName: "Glimmer",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "moonbeam",
+    decimals: 18,
+  },
+  KAVA: {
+    Icon: Asset.KAVA,
 
-        shortName: "KAVA",
-        fullName: "Kava",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "kava",
-        decimals: 18
-    },
-    KNC: {
-        Icon: Asset.KNC,
+    shortName: "KAVA",
+    fullName: "Kava",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "kava",
+    decimals: 18,
+  },
+  KNC: {
+    Icon: Asset.KNC,
 
-        shortName: "KNC",
-        fullName: "Kyber Network Crystal",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "kyber-network-crystal",
-        decimals: 18
-    },
-    LINK: {
-        Icon: Asset.LINK,
+    shortName: "KNC",
+    fullName: "Kyber Network Crystal",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "kyber-network-crystal",
+    decimals: 18,
+  },
+  LINK: {
+    Icon: Asset.LINK,
 
-        shortName: "LINK",
-        fullName: "Chainlink",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "chainlink",
-        decimals: 18
-    },
-    LUNA: {
-        Icon: Asset.LUNA,
+    shortName: "LINK",
+    fullName: "Chainlink",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "chainlink",
+    decimals: 18,
+  },
+  LUNA: {
+    Icon: Asset.LUNA,
 
-        shortName: "LUNA",
-        fullName: "Terra",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "terra-luna",
-        decimals: 18
-    },
-    MATIC: {
-        Icon: Asset.MATIC,
+    shortName: "LUNA",
+    fullName: "Terra",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "terra-luna",
+    decimals: 18,
+  },
+  MATIC: {
+    Icon: Asset.MATIC,
 
-        shortName: "MATIC",
-        fullName: "Polygon",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "polygon",
-        decimals: 18
-    },
-    MIM: {
-        Icon: Asset.MIM,
+    shortName: "MATIC",
+    fullName: "Polygon",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "polygon",
+    decimals: 18,
+  },
+  MIM: {
+    Icon: Asset.MIM,
 
-        shortName: "MIM",
-        fullName: "Magic Internet Money",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "magic-internet-money",
-        decimals: 18
-    },
-    REN: {
-        Icon: Asset.REN,
+    shortName: "MIM",
+    fullName: "Magic Internet Money",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "magic-internet-money",
+    decimals: 18,
+  },
+  REN: {
+    Icon: Asset.REN,
 
-        shortName: "REN",
-        fullName: "REN",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "republic-protocol",
-        decimals: 18
-    },
-    ROOK: {
-        Icon: Asset.ROOK,
+    shortName: "REN",
+    fullName: "REN",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "republic-protocol",
+    decimals: 18,
+  },
+  ROOK: {
+    Icon: Asset.ROOK,
 
-        shortName: "ROOK",
-        fullName: "KeeperDAO",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "rook",
-        decimals: 18
-    },
-    SUSHI: {
-        Icon: Asset.SUSHI,
+    shortName: "ROOK",
+    fullName: "KeeperDAO",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "rook",
+    decimals: 18,
+  },
+  SUSHI: {
+    Icon: Asset.SUSHI,
 
-        shortName: "SUSHI",
-        fullName: "Sushi",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "sushi",
-        decimals: 18
-    },
-    SOL: {
-        Icon: Asset.SOL,
+    shortName: "SUSHI",
+    fullName: "Sushi",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "sushi",
+    decimals: 18,
+  },
+  SOL: {
+    Icon: Asset.SOL,
 
-        shortName: "SOL",
-        fullName: "Solana",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "solana",
-        decimals: 18
-    },
-    UNI: {
-        Icon: Asset.UNI,
+    shortName: "SOL",
+    fullName: "Solana",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "solana",
+    decimals: 18,
+  },
+  UNI: {
+    Icon: Asset.UNI,
 
-        shortName: "UNI",
-        fullName: "Uniswap",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "uniswap",
-        decimals: 18
-    },
-    USDC: {
-        Icon: Asset.USDC,
+    shortName: "UNI",
+    fullName: "Uniswap",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "uniswap",
+    decimals: 18,
+  },
+  USDC: {
+    Icon: Asset.USDC,
 
-        shortName: "USDC",
-        fullName: "USD Coin",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "usd-coin",
-        decimals: 18
-    },
-    USDT: {
-        Icon: Asset.USDT ,
+    shortName: "USDC",
+    fullName: "USD Coin",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "usd-coin",
+    decimals: 18,
+  },
+  USDT: {
+    Icon: Asset.USDT,
 
-        shortName: "USDT",
-        fullName: "Tether",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "tether",
-        decimals: 18
-    },
-    ZEC: {
-        Icon: Asset.ZEC,
+    shortName: "USDT",
+    fullName: "Tether",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "tether",
+    decimals: 6,
+  },
+  ZEC: {
+    Icon: Asset.ZEC,
 
-        shortName: "ZEC",
-        fullName: "Zcash",
-        rateService: AssetRateService.Coingecko,
-        rateSymbol: "zcash",
-        decimals: 18
-    },
-    gETH: unsetAssetConfig,
-    oETH: unsetAssetConfig,
+    shortName: "ZEC",
+    fullName: "Zcash",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "zcash",
+    decimals: 8,
+  },
+  gETH: {
+    Icon: Asset.ETH,
+
+    shortName: "gETH",
+    fullName: "Goerli Ether",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "ethereum",
+    decimals: 18,
+  },
+  oETH: {
+    Icon: Asset.oETH,
+
+    shortName: "oETH",
+    fullName: "Optimism Ether",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "ethereum",
+    decimals: 18,
+  },
+  USDT_Goerli: {
+    Icon: Asset.USDT,
+
+    shortName: "USDT_Goerli",
+    fullName: "Tether",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "tether",
+    decimals: 6,
+  },
+  USDC_Goerli: {
+    Icon: Asset.USDC,
+
+    shortName: "USDC_Goerli",
+    fullName: "USD Coin",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "usd-coin",
+    decimals: 18,
+  },
+  REN_Goerli: {
+    Icon: Asset.REN,
+
+    shortName: "REN_Goerli",
+    fullName: "REN",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "republic-protocol",
+    decimals: 18,
+  },
+  DAI_Goerli: {
+    Icon: Asset.DAI,
+
+    shortName: "DAI_Goerli",
+    fullName: "Dai",
+    rateService: AssetRateService.Coingecko,
+    rateSymbol: "dai",
+    decimals: 18,
+  },
 };
 
 
