@@ -161,11 +161,11 @@ const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
   const error = !needsToSwitchChain ? false : (text === "" || Number(text) == 0 || !isSufficentBalance)
   console.log(error)
 
-  const execute = () => {
+  const execute = useCallback(() => {
     const bridgeAddress = BridgeDeployments[chain.fullName];
     const tokenAddress =
-        chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
-    
+      chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
+
     if (!needsToSwitchChain) {
       switchNetwork(
         NETWORK === RenNetwork.Testnet
@@ -174,10 +174,18 @@ const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
       );
     } else if (!isAssetApproved) {
       approve(tokenAddress, text, bridgeAddress!);
-    }
-    else toggleConfirmationModal()
-    
-  }
+      setIsAssetApproved(true)
+    } else toggleConfirmationModal();
+  }, [
+    approve,
+    asset,
+    chain,
+    isAssetApproved,
+    needsToSwitchChain,
+    switchNetwork,
+    text,
+    toggleConfirmationModal,
+  ]);
 
   useEffect(() => {
     if (!asset || !account) return;
@@ -192,10 +200,14 @@ const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
         },
       });
       if (!approvalResponse) throw new Error("Multicall Failed");
-      if (Number(approvalResponse.result.hex) > 0 || buttonState.tabName === "Withdraw") setIsAssetApproved(true);
+      if (
+        Number(approvalResponse.result.hex) > 0 ||
+        buttonState.tabName === "Withdraw"
+      )
+        setIsAssetApproved(true);
       else setIsAssetApproved(false);
     })();
-  }, [asset, account]);
+  }, [asset, account, buttonState.tabName, chain.fullName]);
 
   useEffect(() => {
     if (typeof assetBalances === "undefined") return;

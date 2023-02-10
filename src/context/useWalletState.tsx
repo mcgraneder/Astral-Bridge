@@ -26,8 +26,6 @@ import { ERC20ABI } from "@renproject/chains-ethereum/contracts";
 import RenBridgeABI from "../constants/ABIs/RenBridgeABI.json";
 import { BridgeDeployments } from "../constants/deployments";
 import { useGlobalState } from "./useGlobalState";
-import { useNotification } from "./useNotificationState";
-import { useTransactionFlow } from "./useTransactionFlowState";
 import useEcecuteTransaction from "../hooks/useExecuteTransaction";
 
 interface WalletProviderProps {
@@ -75,7 +73,7 @@ function WalletProvider({ children }: WalletProviderProps) {
   );
   const { chainId, library, account } = useWeb3React();
   const { executeTransaction } = useEcecuteTransaction();
-  const { pendingTransaction } = useGlobalState()
+  const { pendingTransaction, memoizedFetchBalances} = useGlobalState()
 
   useEffect(() => setText(""), [buttonState, pendingTransaction])
 
@@ -105,7 +103,7 @@ function WalletProvider({ children }: WalletProviderProps) {
       );
       setGasPrice(toFixed(totalGas, 7));
     });
-  }, []);
+  }, [setGasPrice]);
 
   useEffect(() => {
     if (!library) {
@@ -125,7 +123,6 @@ function WalletProvider({ children }: WalletProviderProps) {
       const tokenAddress =
         chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
 
-        console.log(chain, asset)
       if (transactionType === "Deposit") {
         const bridgeContract = new ethers.Contract(
           bridgeAddress!,
@@ -151,8 +148,9 @@ function WalletProvider({ children }: WalletProviderProps) {
           bridgeContract.transfer
         );
       }
+      await memoizedFetchBalances()
     },
-    [library, account, asset, chain]
+    [library, account, executeTransaction, memoizedFetchBalances]
   );
 
   return (

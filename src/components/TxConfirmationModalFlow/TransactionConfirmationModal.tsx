@@ -3,20 +3,6 @@ import { TopRowNavigation } from "../WalletConnectModal/WalletConnectModal";
 import { FormWrapper } from "../WalletConnectModal/WalletConnectModal";
 import { Backdrop } from "../WalletConnectModal/WalletConnectModal";
 import { Icon } from "../Icons/AssetLogs/Icon";
-import {
-  chainsConfig,
-  ChainConfig,
-  supportedEthereumChains,
-} from "../../utils/chainsConfig";
-import {
-  assetsConfig,
-  AssetConfig,
-  assetsBaseConfig,
-  supportedAssets,
-} from "../../utils/assetsConfig";
-import { Asset, Chain } from "@renproject/chains";
-import { useWallet } from "../../context/useWalletState";
-import { MulticallReturn } from "../../context/useGlobalState";
 import { UilArrowDown } from "@iconscout/react-unicons";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import { fetchPrice } from "../../utils/market/fetchAssetPrice";
@@ -44,10 +30,18 @@ const TxConfirmationModal = ({
 }: IAssetModal) => {
   const [assetPrice, setAssetPrice] = useState<any>();
 
-  const executeTransaction = () => {
+  const executeTransaction = useCallback(() => {
     toggleConfirmationModal();
     handleTransaction(transactionType, text, chain, asset);
-  };
+  }, [
+    asset,
+    chain,
+    toggleConfirmationModal,
+    handleTransaction,
+    text,
+    transactionType,
+  ]);
+  
   useEffect(() => {
     (async () => {
       try {

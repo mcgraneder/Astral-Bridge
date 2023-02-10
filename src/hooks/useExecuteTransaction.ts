@@ -39,7 +39,6 @@ const useEcecuteTransaction = (): ExecuteTxType => {
         const tx = await contractFn(...args);
 
         toggleSubmittedModal();
-        setText("")
         await tx.wait(1);
         setPendingTransaction(false);
 
@@ -59,7 +58,7 @@ const useEcecuteTransaction = (): ExecuteTxType => {
       toggleSubmittedModal,
       toggleRejectedModal,
       setPendingTransaction,
-      getContract,
+      HandleNewNotification
     ]
   );
 

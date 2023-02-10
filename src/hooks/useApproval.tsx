@@ -1,5 +1,5 @@
 import { useWeb3React } from "@web3-react/core";
-import { Contract } from "ethers";
+import { Contract, ethers } from 'ethers';
 import { useTranslation } from "next-i18next";
 import { useCallback } from "react";
 import { ERC20ABI } from "@renproject/chains-ethereum/contracts";
@@ -43,7 +43,7 @@ export const useApproval = () => {
         try {
           const approvalTransaction = await tokenContract.approve(
             addressToApprove,
-            amount * 10 ** 8
+            ethers.constants.MaxUint256
           );
             toggleSubmittedModal()
           await approvalTransaction.wait(1);
