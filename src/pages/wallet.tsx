@@ -18,27 +18,57 @@ import TransactionFlowModals from '../components/TxConfirmationModalFlow/index';
 const BlockPage: NextPage = () => {
   const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
   const { assetBalances } = useGlobalState();
-  const { confirmation, toggleConfirmationModal } = useWallet()
+    const {
+      gasPrice,
+      text,
+      buttonState,
+      asset,
+      chain,
+      setAsset,
+      setChain,
+      walletAssetType,
+      setText,
+      setWalletAssetType,
+      setButtonState,
+      handleTransaction
+    } = useWallet();
 
-  return (
-    <>
-      <AssetListModal
-        setShowTokenModal={setShowTokenModal}
-        visible={showTokenModal}
-        assetBalances={assetBalances}
-      />
-      <TransactionFlowModals/>
-
-      <Layout>
-        <WalletModal
+    return (
+      <>
+        <AssetListModal
           setShowTokenModal={setShowTokenModal}
-          confirmation={confirmation}
-          toggleConfirmationModal={toggleConfirmationModal}
+          visible={showTokenModal}
+          assetBalances={assetBalances}
+          setAsset={setAsset}
+          setChain={setChain}
+          walletAssetType={walletAssetType}
         />
-        <BottomNavBar />
-      </Layout>
-    </>
-  );
+        <TransactionFlowModals
+          gasPrice={gasPrice}
+          text={text}
+          buttonState={buttonState}
+          asset={asset}
+          chain={chain}
+          handleTransaction={handleTransaction}
+        />
+
+        <Layout>
+          <WalletModal
+            setShowTokenModal={setShowTokenModal}
+            setWalletAssetType={setWalletAssetType}
+            asset={asset}
+            chain={chain}
+            gasPrice={gasPrice}
+            text={text}
+            setText={setText}
+            buttonState={buttonState}
+            setButtonState={setButtonState}
+            handleTransaction={handleTransaction}
+          />
+          <BottomNavBar />
+        </Layout>
+      </>
+    );
 };
 
 // export const getStaticProps = async ({ locale }: any) => ({

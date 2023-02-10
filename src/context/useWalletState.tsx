@@ -1,13 +1,16 @@
-import { createContext, Dispatch, SetStateAction, useCallback, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { useWeb3React } from "@web3-react/core";
-import { injected, walletconnect } from "../connection/providers";
-import { NoEthereumProviderError, UserRejectedRequestError as UserRejectedRequestErrorInjected } from "@web3-react/injected-connector";
-import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from "@web3-react/walletconnect-connector";
-import { WalletInfo } from "../connection/wallets";
-import { AbstractConnector } from "@web3-react/abstract-connector";
-import { CHAINS, ChainType, ChainIdToRenChain } from '../connection/chains';
-import { assetsBaseConfig } from '../utils/assetsConfig';
-import { chainsBaseConfig } from '../utils/chainsConfig';
+import { ChainIdToRenChain } from "../connection/chains";
+import { assetsBaseConfig } from "../utils/assetsConfig";
+import { chainsBaseConfig } from "../utils/chainsConfig";
 import { get } from "../services/axios";
 import API from "../constants/Api";
 import {
@@ -22,9 +25,10 @@ import { chainAdresses } from "../constants/Addresses";
 import { ERC20ABI } from "@renproject/chains-ethereum/contracts";
 import RenBridgeABI from "../constants/ABIs/RenBridgeABI.json";
 import { BridgeDeployments } from "../constants/deployments";
-import BigNumber from "bignumber.js";
 import { useGlobalState } from "./useGlobalState";
-import { useNotification } from './useNotificationState';
+import { useNotification } from "./useNotificationState";
+import { useTransactionFlow } from "./useTransactionFlowState";
+import useEcecuteTransaction from "../hooks/useExecuteTransaction";
 
 interface WalletProviderProps {
   children: React.ReactNode;
@@ -35,18 +39,10 @@ type WalletContextType = {
   setAsset: any;
   chain: any;
   setChain: any;
-  walletAssetType: string;
-  setWalletAssetType: any;
+  walletAssetType: "chain" | "currency";
+  setWalletAssetType: Dispatch<SetStateAction<"chain" | "currency">>;
   supportedMintAssets: string[];
   gasPrice: any;
-  transactionFailed: boolean;
-  pending: boolean;
-  confirmation: boolean;
-  rejected: boolean;
-  toggleTransactionFailedModal: () => void;
-  togglePendingModal: () => void;
-  toggleRejectedModal: () => void;
-  toggleConfirmationModal: () => void;
   text: string;
   setText: Dispatch<SetStateAction<string>>;
   buttonState: Tab;
@@ -54,79 +50,31 @@ type WalletContextType = {
   handleTransaction: (
     transactionType: string,
     amount: string,
-    chain: string,
-    asset: string
+    chain: any,
+    asset: any
   ) => Promise<void>;
-  handleApproval: (asset: string, chain: any, amount: string) => Promise<void>;
-  isAssetApproved: boolean;
-  setIsAssetApproved: Dispatch<SetStateAction<boolean>>;
-  submitted: boolean;
-  toggleSubmittedModal: () => void;
 };
 
 const WalletContext = createContext({} as WalletContextType);
 
 function WalletProvider({ children }: WalletProviderProps) {
-  const [transactionFailed, setTransactionFailed] = useState<boolean>(false);
-  const [rejected, setRejected] = useState<boolean>(false);
-  const [confirmation, setConfirmation] = useState<boolean>(false);
-  const [submitted, setSubmitted] = useState<boolean>(false);
-
-  const [pending, setPending] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
+  const [gasPrice, setGasPrice] = useState<any>(0);
+  const [asset, setAsset] = useState<any>(assetsBaseConfig.BTC);
+  const [chain, setChain] = useState<any>(chainsBaseConfig.Ethereum);
   const [buttonState, setButtonState] = useState<Tab>({
     tabName: "Deposit",
     tabNumber: 0,
     side: "left",
   });
-  const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
-  const [gasPrice, setGasPrice] = useState<any>(0);
-  const [assetPrices, setAssetPrices] = useState<any>([]);
-  const [asset, setAsset] = useState<any>(assetsBaseConfig.BTC);
-  const [chain, setChain] = useState<any>(chainsBaseConfig.Ethereum);
   const [walletAssetType, setWalletAssetType] = useState<"chain" | "currency">(
     "chain"
   );
   const [supportedMintAssets, setSupportedMintAssets] = useState<Array<string>>(
     []
   );
-  const { chainId, library, active, account } = useWeb3React();
-  const { pendingTransaction, setPendingTransaction } = useGlobalState();
-  const { init, approve } = useApproval();
-  const dispatch = useNotification();
-
-  const HandleNewNotification = (title: string, message: string) => {
-    dispatch({
-      type: "info",
-      message: message,
-      title: title,
-      position: "topR" || "topR",
-      success: true,
-    });
-  };
-
-  const toggleTransactionFailedModal = useCallback(
-    () => setTransactionFailed(false),
-    [setTransactionFailed]
-  );
-  const togglePendingModal = useCallback(
-    () => setPending((c: boolean) => !c),
-    [setPending]
-  );
-  const toggleRejectedModal = useCallback(
-    () => setRejected((w: boolean) => !w),
-    [setRejected]
-  );
-
-  const toggleConfirmationModal = useCallback(
-    () => setConfirmation((w: boolean) => !w),
-    [setConfirmation]
-  );
-
-  const toggleSubmittedModal = useCallback(
-    () => setSubmitted((w: boolean) => !w),
-    [setSubmitted]
-  );
+  const { chainId, library, account } = useWeb3React();
+  const { executeTransaction } = useEcecuteTransaction();
 
   const fetchSupportedMintAssets = useCallback(async () => {
     if (!chainId) return;
@@ -164,87 +112,56 @@ function WalletProvider({ children }: WalletProviderProps) {
     }
   }, [fetchGasData, library]);
 
-  const handleDeposit = useCallback(async (amount: string) => {
-    console.log("aaaaaa");
-    const approvalResponse = await get<{
-      result: any;
-    }>(API.ren.getTokenApproval, {
-      params: { chainName: chain, assetName: asset, account: account },
-    });
-
-    console.log(approvalResponse);
-    if (!approvalResponse) {
-      togglePendingModal();
-      toggleRejectedModal();
-      throw new Error("Multicall Failed");
-    }
-    const bridgeAddress =
-      chainAdresses[ChainIdToRenChain[chainId!]!]?.bridgeAddress!;
-    if (Number(approvalResponse.result) <= 0) {
-      const success = await approve(
-        chainAdresses[ChainIdToRenChain[chainId!]!]?.assets[asset]
-          ?.tokenAddress!,
-        amount,
-        bridgeAddress
-      );
-    }
-    const bridgeContract = await init(bridgeAddress, RenBridgeABI, true);
-    const depositTx = await bridgeContract?.transferFrom(
-      account,
-      bridgeAddress,
-      amount
-    );
-    const depositReceipt = await depositTx.wait(1);
-    togglePendingModal();
-  }, []);
-
-  const handleWithdrawal = useCallback(async () => {}, []);
-
-  const handleApproval = useCallback(
-    async (asset: any, chain: any, amount: string): Promise<void> => {
-      if (!library) return;
-      setPending(true);
-      setPendingTransaction(true);
-      setConfirmation(false);
-      const tokenAddress =
-        chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
-      const bridgeAddress = BridgeDeployments[chain.fullName];
-      const signer = await library.getSigner();
-      const tokenContract = new ethers.Contract(tokenAddress, ERC20ABI, signer);
-
-      try {
-        const approvalTx = await tokenContract.approve(bridgeAddress, "0");
-        setPending(false);
-        setSubmitted(true);
-        await approvalTx.wait(1);
-        setPendingTransaction(false);
-        HandleNewNotification("Approval Success", `Successfully approved asset ${asset.Icon} on ${chain.fullName}`)
-      } catch (error) {
-        setPending(false);
-        setPendingTransaction(false);
-        setRejected(true);
-      }
-    },
-    [library]
-  );
-
   const handleTransaction = useCallback(
     async (
       transactionType: string,
       amount: string,
-      chain: string,
-      asset: string
+      chain: any,
+      asset: any
     ): Promise<void> => {
-      console.log("hey");
-      //   if (!active) return;
-      console.log(transactionType);
+      const bridgeAddress = BridgeDeployments[chain.fullName];
+      const tokenAddress =
+        chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
+
       if (transactionType === "Deposit") {
-        console.log("oooof");
-        handleDeposit(amount);
+        const bridgeContract = new ethers.Contract(
+          bridgeAddress!,
+          RenBridgeABI,
+          await library.getSigner()
+        );
+        await executeTransaction(
+          asset,
+          chain,
+          ["1000", tokenAddress],
+          bridgeContract.transferFrom
+        );
+      } else if (transactionType === "Withdrawal") {
+        const bridgeContract = new ethers.Contract(
+          bridgeAddress!,
+          RenBridgeABI,
+          await library.getSigner()
+        );
+        await executeTransaction(
+          asset,
+          chain,
+          [account, "1000", tokenAddress],
+          bridgeContract.transfer
+        );
+      } else {
+        const tokenContract = new ethers.Contract(
+          tokenAddress!,
+          ERC20ABI,
+          await library.getSigner()
+        );
+        await executeTransaction(
+          asset,
+          chain,
+          [bridgeAddress, "1000"],
+          tokenContract.approve
+        );
       }
-      //   else handleWithdrawal();
     },
-    []
+    [library, account, asset, chain]
   );
 
   return (
@@ -258,24 +175,11 @@ function WalletProvider({ children }: WalletProviderProps) {
         setWalletAssetType,
         supportedMintAssets,
         gasPrice,
-        transactionFailed,
-        pending,
-        confirmation,
-        rejected,
-        toggleTransactionFailedModal,
-        togglePendingModal,
-        toggleRejectedModal,
-        toggleConfirmationModal,
         text,
         setText,
         buttonState,
         setButtonState,
         handleTransaction,
-        handleApproval,
-        isAssetApproved,
-        setIsAssetApproved,
-        submitted,
-        toggleSubmittedModal,
       }}
     >
       {children}
@@ -284,7 +188,7 @@ function WalletProvider({ children }: WalletProviderProps) {
 }
 
 const useWallet = () => {
-    return useContext(WalletContext);
+  return useContext(WalletContext);
 };
 
 export { WalletProvider, useWallet };

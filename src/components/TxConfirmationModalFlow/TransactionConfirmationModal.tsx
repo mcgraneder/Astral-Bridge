@@ -44,6 +44,10 @@ const TxConfirmationModal = ({
 }: IAssetModal) => {
    const [assetPrice, setAssetPrice] = useState<any>() 
 
+   const executeTransaction = () => {
+    toggleConfirmationModal()
+    handleTx(asset, chain, text)
+   }
    useEffect(() => {
     (async () => {
       try {
@@ -129,9 +133,7 @@ const TxConfirmationModal = ({
           className={
             "w-full justify-center rounded-2xl bg-blue-500 py-[14px] text-center"
           }
-          onClick={() =>
-            handleTx(asset, chain, text)
-          }
+          onClick={executeTransaction}
         >
           Confirm {transactionType}
         </PrimaryButton>

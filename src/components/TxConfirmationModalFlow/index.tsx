@@ -6,6 +6,8 @@ import PendingTransactionModal from "./PendinTransactionModal";
 import { useWallet } from "../../context/useWalletState";
 import TransactionRejectedModal from "./TransactionRejectedModal";
 import TransactionSubmittedModal from './TransactionSubmittedModal';
+import { useTransactionFlow } from "../../context/useTransactionFlowState";
+import { Tab } from '../WalletModal/WalletModal';
 
 export const Backdrop = styled.div`
   position: fixed;
@@ -85,28 +87,31 @@ export const TopRowNavigation = ({
 };
 
 interface TxFlowProps {
-  toggleWalletModal: () => void;
+  gasPrice: number;
+  text: string;
+  buttonState: Tab;
+  asset: any;
+  chain: any;
+  handleTransaction: (
+    transactionType: string,
+    amount: string,
+    chain: any,
+    asset: any
+  ) => Promise<void>;
 }
 
-function TransactionFlowModals() {
+function TransactionFlowModals({ gasPrice, text, buttonState, asset, chain, handleDeposit}: TxFlowProps) {
+
   const {
-    confirmation,
-    toggleConfirmationModal,
-    toggleRejectedModal,
-    rejected,
     pending,
     togglePendingModal,
-    gasPrice,
-    text,
-    buttonState,
-    asset,
-    chain,
-    handleTransaction,
-    handleApproval,
-    isAssetApproved,
+    toggleRejectedModal,
+    rejected,
+    confirmation,
+    toggleConfirmationModal,
     submitted,
-    toggleSubmittedModal
-  } = useWallet();
+    toggleSubmittedModal,
+  } = useTransactionFlow();
 
   return (
     <>
@@ -120,7 +125,7 @@ function TransactionFlowModals() {
             chain={chain}
             transactionType={buttonState.tabName}
             gasPrice={gasPrice}
-            handleTx={handleApproval}
+            handleTx={handleDeposit}
           />
         )}
         {pending && (

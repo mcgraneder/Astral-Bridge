@@ -23,6 +23,8 @@ import { MINT_GAS_UNIT_COST } from "../../utils/market/getMarketGasData";
 import { UilPump } from "@iconscout/react-unicons";
 import { Icon } from "../Icons/AssetLogs/Icon";
 import { useNotification } from '../../context/useNotificationState';
+import WalletButton from "../Buttons/WalletButton";
+import { useTransactionFlow } from "../../context/useTransactionFlowState";
 export type Tab = {
   tabName: string;
   tabNumber: number;
@@ -119,53 +121,77 @@ const NETWORK: RenNetwork = RenNetwork.Testnet;
 
 interface IWalletModal {
   setShowTokenModal: any;
-  confirmation: boolean;
-  toggleConfirmationModal: () => void;
+  setWalletAssetType: any;
+  asset: any;
+  chain: any;
+  gasPrice: number;
+  text: string;
+  setText: any;
+  buttonState: Tab;
+  setButtonState: any;
+  handleTransaction: (
+    transactionType: string,
+    amount: string,
+    chain: any,
+    asset: any
+  ) => Promise<void>;
 }
 
 const WalletModal = ({
   setShowTokenModal,
-  confirmation,
-  toggleConfirmationModal,
+  setWalletAssetType,
+  asset,
+  chain,
+  gasPrice,
+  text,
+  setText,
+  buttonState,
+  setButtonState,
+  handleTransaction
 }: IWalletModal) => {
+const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
   const [isSufficentBalance, setIsSufficientBalance] = useState<boolean>(true);
   const [bridgeBalance, setBridgeBalance] = useState<any>(0);
   const [walletBalance, setWalletBalance] = useState<any>(0);
   const [isMax, setIsMax] = useState<boolean>(false);
   const { switchNetwork } = useAuth();
-  const { chainId, active, account } = useWeb3React();
-  const {
-    setWalletAssetType,
-    asset,
-    chain,
-    gasPrice,
-    text,
-    setText,
-    buttonState,
-    setButtonState,
-    isAssetApproved,
-    setIsAssetApproved
-  } = useWallet();
-  const { assetBalances, pendingTransaction } = useGlobalState();
+  const { chainId, account } = useWeb3React();
+  const { assetBalances } = useGlobalState();
+  const { toggleConfirmationModal } = useTransactionFlow()
 
-  const needsToSwitchChain = ChainIdToRenChain[chainId!] === chain.fullName;
-  console.log(ChainIdToRenChain[chainId!], chain.fullName);
-  const handleDeposit = () => {};
+  const error = text === "" || !isSufficentBalance
+  const needsToSwitchChain =
+    ChainIdToRenChain[chainId!] === chain.fullName;
+
+  const execute = () => {
+    console.log("hey")
+    needsToSwitchChain
+      ? !isAssetApproved
+        ? toggleConfirmationModal()
+        : handleTransaction("Approval", text, chain, asset)
+      : switchNetwork(
+            NETWORK === RenNetwork.Testnet
+              ? chain.testnetChainId
+              : chain.mainnetChainId
+          );
+  }
 
   useEffect(() => {
-    if (!asset || !account) return
-    (async() => {
-        const approvalResponse = await get<{
-            result: any;
-        }>(API.ren.getTokenApproval, {
-            params: { chainName: chain.fullName, assetName: asset.Icon, account: account },
-        });
-
-        if (!approvalResponse) throw new Error("Multicall Failed");
-        if (Number(approvalResponse.result) > 0) setIsAssetApproved(true)
-        else (setIsAssetApproved(false))
-   
-    })()
+    if (!asset || !account) return;
+    (async () => {
+      const approvalResponse = await get<{
+        result: any;
+      }>(API.ren.getTokenApproval, {
+        params: {
+          chainName: chain.fullName,
+          assetName: asset.Icon,
+          account: account,
+        },
+      });
+      if (!approvalResponse) throw new Error("Multicall Failed");
+      if (Number(approvalResponse.result.hex) > 0) setIsAssetApproved(true);
+      else setIsAssetApproved(false);
+    })();
   }, [asset, account]);
 
   useEffect(() => {
@@ -177,11 +203,6 @@ const WalletModal = ({
           Number(assetBalances[asset.Icon]?.bridgeBalance) /
           10 ** asset.decimals;
 
-        console.log(
-          text,
-          bridgeBalance,
-          Number(bridgeBalance) + Number(gasPrice)
-        );
         setBridgeBalance(Number(bridgeBalance));
         setIsSufficientBalance(
           +bridgeBalance >= Number(text) + Number(gasPrice)
@@ -190,7 +211,6 @@ const WalletModal = ({
         const walletBalance =
           Number(assetBalances[asset.Icon]?.walletBalance) / 10 ** 6;
 
-        console.log(text, walletBalance, Number(walletBalance) + gasPrice);
         setWalletBalance(Number(walletBalance));
         setIsSufficientBalance(
           Number(text) <= Number(walletBalance) + gasPrice
@@ -198,24 +218,6 @@ const WalletModal = ({
       }
     })();
   }, [text, setIsSufficientBalance, asset, assetBalances, buttonState]);
-
-  const getButtonText = (chain: any, library: boolean, buttonState: Tab) => {
-    if (!library) return "Connect Wallet";
-    else if (pendingTransaction) return "Transaction pending"
-    else if (!needsToSwitchChain) return `Switch to ${chain.fullName} network`;
-    else if (!isSufficentBalance && text !== "") return "Insufficent funds";
-    else if (!isAssetApproved && text !== "") return `Approve ${asset.Icon} on ${chain.fullName}`;
-    else return `${buttonState.tabName} ${text} ${asset.Icon}.`;
-  };
-
-  const getButtonColour = () => {
-    if (!needsToSwitchChain || text == "")
-      return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
-    else if (!isSufficentBalance && text !== "")
-      return "bg-red-500 hover:bg-red-600 border border-red-400 hover:border-red-500";
-    else
-      return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
-  };
 
   return (
     <div className="mt-[60px] mb-[40px]">
@@ -256,55 +258,44 @@ const WalletModal = ({
             walletBalance={walletBalance}
             buttonState={buttonState.tabName}
           />
-          {!needsToSwitchChain ? (
-            <InfoContainer visible={text !== ""}>
-              <div
-                className={`flex flex-col items-start justify-center gap-2 text-[15px] ${
-                  text === "" ? "opacity-0" : "opacity-100"
-                } mx-5 my-4`}
-              >
-                <div className="justify0center flex items-center gap-2">
-                  <UilPump className={"h-[18px] w-[18px] text-blue-500"} />
-                  <div>Estimated network fee: </div>
-                  <span className="text-gray-400">
-                    {gasPrice}{" "}
-                    <span className="text-grey-600">
-                      {CHAINS[chainId!]?.symbol!}
-                    </span>
-                  </span>
-                </div>
-                <div className="justify0center flex items-center gap-2">
-                  <Icon
-                    className={"h-[18px] w-[18px]"}
-                    chainName={asset.Icon}
-                  />
-                  <div>Estimated Bridge fee: </div>
-                  <span className="text-gray-400">
-                    {"0.00"} <span className="text-grey-600">{asset.Icon}</span>
-                  </span>
-                </div>
-              </div>
-            </InfoContainer>
-          ) : null}
-          <div className="mt-6 mb-1 flex items-center justify-center px-5">
-            <PrimaryButton
-              className={`borde w-full justify-center rounded-lg ${getButtonColour()} py-[16px] text-center text-[17px] font-semibold`}
-              onClick={
-                needsToSwitchChain
-                  ? toggleConfirmationModal
-                  : () =>
-                      switchNetwork(
-                        NETWORK === RenNetwork.Testnet
-                          ? chain.testnetChainId
-                          : chain.mainnetChainId
-                      )
-              }
+          <InfoContainer visible={text !== ""}>
+            <div
+              className={`flex flex-col items-start justify-center gap-2 text-[15px] ${
+                text === "" ? "opacity-0" : "opacity-100"
+              } mx-5 my-4`}
             >
-              {getButtonText(chain, active, buttonState)}
-              {pendingTransaction && (
-                <UilSpinner className={" h-6 w-6 animate-spin text-white"} />
-              )}
-            </PrimaryButton>
+              <div className="justify0center flex items-center gap-2">
+                <UilPump className={"h-[18px] w-[18px] text-blue-500"} />
+                <div>Estimated network fee: </div>
+                <span className="text-gray-400">
+                  {gasPrice}{" "}
+                  <span className="text-grey-600">
+                    {CHAINS[chainId!]?.symbol!}
+                  </span>
+                </span>
+              </div>
+              <div className="justify0center flex items-center gap-2">
+                <Icon className={"h-[18px] w-[18px]"} chainName={asset.Icon} />
+                <div>Estimated Bridge fee: </div>
+                <span className="text-gray-400">
+                  {"0.00"} <span className="text-grey-600">{asset.Icon}</span>
+                </span>
+              </div>
+            </div>
+          </InfoContainer>
+
+          <div className="mt-6 mb-1 flex items-center justify-center px-5">
+            <WalletButton
+              chain={chain}
+              asset={asset}
+              buttonState={buttonState}
+              isSufficentBalance={isSufficentBalance}
+              isAssetApproved={isAssetApproved}
+              needsToSwitchChain={needsToSwitchChain}
+              execute={execute}
+              text={text}
+              error={error}
+            />
           </div>
         </MintFormContainer>
       </BridgeModalContainer>
