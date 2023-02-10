@@ -6,6 +6,7 @@ import { useGlobalState } from "../../context/useGlobalState";
 import { CHAINS, ChainIdToRenChain } from "../../connection/chains";
 import { GlowingText } from "../CSS/SkeletomStyles";
 import { fetchPrice } from "../../utils/market/fetchAssetPrice";
+import useFetchAssetPrice from '../../hooks/useFetchAssetPrice';
 
 interface ITokenDisplay {
   asset: any;
@@ -15,6 +16,7 @@ interface ITokenDisplay {
   fetchingBalances: boolean;
   assetPrice: any;
   isNative: boolean;
+  chain: any;
 }
 
 type AssetQuery =
@@ -33,13 +35,14 @@ const BalanceDisplayInner = ({
   fetchingBalances,
   assetPrice,
   isNative,
+  chain
 }: ITokenDisplay) => {
   return (
     <div className="my-5 flex flex-col items-center rounded-lg border border-tertiary p-2 text-center">
       {!isNative ? (
         <span className=" text-[17px]">
           <span>{asset.shortName}</span> Balance
-          <span> on {ChainIdToRenChain[chainId!]}</span>
+          <span> on {chain.fullName}</span>
         </span>
       ) : null}
       {isNative ? (
@@ -68,11 +71,11 @@ const BalanceDisplay = ({
   buttonState: string;
   isNative: boolean;
 }) => {
-  const [assetPrice, setAssetPrice] = useState<any | undefined>();
   const [balance, setBalance] = useState<string | undefined>(undefined);
   const [assetBalance, setAssetBalance] = useState<number>(0);
   const { library, account, chainId } = useWeb3React();
-  const { assetBalances, fetchingBalances } = useGlobalState();
+  const { assetBalances, fetchingBalances, chain } = useGlobalState();
+  const { assetPrice } = useFetchAssetPrice(asset)
 
   useEffect(() => {
     if (!library || !account) return;
@@ -107,22 +110,7 @@ const BalanceDisplay = ({
 
     setAssetBalance(formattedBalance);
   }, [assetBalances, buttonState, asset]);
-
-  //rework assetFetch
-  useEffect(() => {
-    (async () => {
-      try {
-        const assetPriceQuery = await fetchPrice(asset.Icon, "USD");
-        const formattedObj = Object.values(assetPriceQuery);
-        assetPriceQuery !== "API_FAILED"
-          ? setAssetPrice(formattedObj[0].usd)
-          : setAssetPrice(undefined);
-      } catch (error) {
-        console.error("failed fetch");
-      }
-    })();
-  }, [setAssetPrice, asset]);
-
+  
   return (
     <BalanceDisplayInner
       asset={asset}
@@ -132,6 +120,7 @@ const BalanceDisplay = ({
       fetchingBalances={fetchingBalances}
       assetPrice={assetPrice}
       isNative={isNative}
+      chain={chain}
     />
   );
 };

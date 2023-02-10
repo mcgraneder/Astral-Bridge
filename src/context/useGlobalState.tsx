@@ -11,6 +11,7 @@ import { Chain, Asset } from "@renproject/chains";
 import { get } from "../services/axios";
 import API from "../constants/Api";
 import { SetStateAction, Dispatch } from 'react';
+import { chainsBaseConfig } from "../utils/chainsConfig";
 
 interface GlobalStateProviderProps {
   children: React.ReactNode;
@@ -24,6 +25,8 @@ type GlobalContextType = {
   fetchingBalances: boolean;
   pendingTransaction: boolean;
   setPendingTransaction: Dispatch<SetStateAction<boolean>>;
+  chain: any;
+  setChain: any;
 };
 
 export type MulticallReturn = {
@@ -37,16 +40,17 @@ export type MulticallReturn = {
 const GlobalStateContext = createContext({} as GlobalContextType);
 
 function GlobalStateProvider({ children }: GlobalStateProviderProps) {
-  const [pendingTransaction, setPendingTransaction] = useState<boolean>(false)  
-  const [fetchingBalances, setFetchingBalances] = useState<boolean>(false)
+  const [pendingTransaction, setPendingTransaction] = useState<boolean>(false);
+  const [fetchingBalances, setFetchingBalances] = useState<boolean>(false);
+  const [chain, setChain] = useState<any>(chainsBaseConfig.Ethereum);
   const [assetBalances, setAssetBalances] = useState<{
     [x: string]: MulticallReturn | undefined;
   }>({});
   const { library, account, chainId, active } = useWeb3React();
 
   const memoizedFetchBalances = useCallback(async () => {
-    if (!account || !chainId) return;
-    setFetchingBalances(true)
+    if (!account || !chainId || !chain) return;
+    setFetchingBalances(true);
     const tokensResponse = await get<{
       result: {
         multicall: { [x: string]: MulticallReturn };
@@ -54,41 +58,42 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     }>(API.ren.balancesOf, {
       params: {
         of: account,
-        chainName: ChainIdToRenChain[chainId!],
+        chainName: chain.fullName,
       },
     });
 
     if (!tokensResponse) {
-        setFetchingBalances(false)
+      setFetchingBalances(false);
       throw new Error("Multicall Failed");
     }
     setAssetBalances(tokensResponse.result.multicall);
-    setTimeout(
-      () => setFetchingBalances(false),
-      500
-    );
-  }, [account, chainId, setFetchingBalances]);
+    setTimeout(() => setFetchingBalances(false), 500);
+  }, [account, chainId, setFetchingBalances, chain]);
 
   useEffect(() => {
-    if (!active || !account) return;
+    if (!active || !account || !chain) return;
     const interval: NodeJS.Timer = setInterval(memoizedFetchBalances, 50000);
 
     return () => clearInterval(interval);
-  }, [memoizedFetchBalances, account, active]);
+  }, [memoizedFetchBalances, account, active, chain]);
 
   useEffect(() => {
-    if (!chainId) return
+    if (!chainId || !chain) return;
     memoizedFetchBalances();
-  }, [memoizedFetchBalances, chainId])
+  }, [memoizedFetchBalances, chainId, chain]);
 
   return (
-    <GlobalStateContext.Provider value={{
+    <GlobalStateContext.Provider
+      value={{
         memoizedFetchBalances,
         assetBalances,
         fetchingBalances,
         pendingTransaction,
-        setPendingTransaction
-    }}>
+        setPendingTransaction,
+        chain,
+        setChain,
+      }}
+    >
       {children}
     </GlobalStateContext.Provider>
   );

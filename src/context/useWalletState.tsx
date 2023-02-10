@@ -27,6 +27,8 @@ import RenBridgeABI from "../constants/ABIs/RenBridgeABI.json";
 import { BridgeDeployments } from "../constants/deployments";
 import { useGlobalState } from "./useGlobalState";
 import useEcecuteTransaction from "../hooks/useExecuteTransaction";
+import BigNumber from "bignumber.js";
+import { fetchPrice } from "../utils/market/fetchAssetPrice";
 
 interface WalletProviderProps {
   children: React.ReactNode;
@@ -35,8 +37,6 @@ interface WalletProviderProps {
 type WalletContextType = {
   asset: any;
   setAsset: any;
-  chain: any;
-  setChain: any;
   walletAssetType: "chain" | "currency";
   setWalletAssetType: Dispatch<SetStateAction<"chain" | "currency">>;
   supportedMintAssets: string[];
@@ -59,7 +59,7 @@ function WalletProvider({ children }: WalletProviderProps) {
   const [text, setText] = useState<string>("");
   const [gasPrice, setGasPrice] = useState<any>(0);
   const [asset, setAsset] = useState<any>(assetsBaseConfig.BTC);
-  const [chain, setChain] = useState<any>(chainsBaseConfig.Ethereum);
+ 
   const [buttonState, setButtonState] = useState<Tab>({
     tabName: "Deposit",
     tabNumber: 0,
@@ -73,9 +73,9 @@ function WalletProvider({ children }: WalletProviderProps) {
   );
   const { chainId, library, account } = useWeb3React();
   const { executeTransaction } = useEcecuteTransaction();
-  const { pendingTransaction, memoizedFetchBalances} = useGlobalState()
+  const { pendingTransaction, memoizedFetchBalances, chain} = useGlobalState()
 
-  useEffect(() => setText(""), [buttonState, pendingTransaction])
+  useEffect(() => setText(""), [buttonState, pendingTransaction, chain])
 
   const fetchSupportedMintAssets = useCallback(async () => {
     if (!chainId) return;
@@ -119,6 +119,7 @@ function WalletProvider({ children }: WalletProviderProps) {
       chain: any,
       asset: any
     ): Promise<void> => {
+      const txAmount = new BigNumber(amount).shiftedBy(asset.decimals)
       const bridgeAddress = BridgeDeployments[chain.fullName];
       const tokenAddress =
         chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
@@ -132,7 +133,7 @@ function WalletProvider({ children }: WalletProviderProps) {
         await executeTransaction(
           asset,
           chain,
-          ["100", tokenAddress],
+          [txAmount.toString(), tokenAddress],
           bridgeContract.transferFrom
         );
       } else if (transactionType === "Withdraw") {
@@ -144,7 +145,7 @@ function WalletProvider({ children }: WalletProviderProps) {
         await executeTransaction(
           asset,
           chain,
-          [account, "10", tokenAddress],
+          [account, txAmount.toString(), tokenAddress],
           bridgeContract.transfer
         );
       }
@@ -158,8 +159,6 @@ function WalletProvider({ children }: WalletProviderProps) {
       value={{
         asset,
         setAsset,
-        chain,
-        setChain,
         walletAssetType,
         setWalletAssetType,
         supportedMintAssets,

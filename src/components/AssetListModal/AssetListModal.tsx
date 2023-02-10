@@ -144,6 +144,7 @@ const AssetListModal = ({
                 10 ** asset.decimals;
               return (
                 <div
+                  key={asset.fullName}
                   className="cursor: pointer flex items-center justify-between py-[10px] px-8 hover:cursor-pointer hover:bg-secondary"
                   onClick={
                     walletAssetType === "chain"

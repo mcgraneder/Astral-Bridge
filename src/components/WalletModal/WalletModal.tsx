@@ -28,6 +28,7 @@ import { useTransactionFlow } from "../../context/useTransactionFlowState";
 import { useApproval } from '../../hooks/useApproval';
 import { BridgeDeployments } from "../../constants/deployments";
 import { chainAdresses } from "../../constants/Addresses";
+import BigNumber from "bignumber.js";
 export type Tab = {
   tabName: string;
   tabNumber: number;
@@ -214,17 +215,18 @@ const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
     (async () => {
       setIsSufficientBalance(true); // reset on component mount to override previous tokens' value
       if (buttonState.tabName === "Deposit") {
-        const walletBalance =
-          Number(assetBalances[asset.Icon]?.walletBalance) /
-          10 ** asset.decimals;
+        const walletBalance = new BigNumber(
+          assetBalances[asset.Icon]?.walletBalance!
+        ).shiftedBy(-asset.decimals);
 
         setBridgeBalance(Number(walletBalance));
         setIsSufficientBalance(
           +walletBalance >= Number(text)
         );
       } else {
-        const bridgeBalance =
-          Number(assetBalances[asset.Icon]?.bridgeBalance) / 10 ** asset.decimals;
+        const bridgeBalance = new BigNumber(
+          assetBalances[asset.Icon]?.bridgeBalance!
+        ).shiftedBy(-asset.decimals);
 
         setWalletBalance(Number(bridgeBalance));
         setIsSufficientBalance(

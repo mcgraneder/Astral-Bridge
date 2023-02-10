@@ -38,7 +38,7 @@ const useEcecuteTransaction = (): ExecuteTxType => {
       try {
         const tx = await contractFn(...args);
 
-        toggleSubmittedModal();
+        setTimeout(() => toggleSubmittedModal(), 250);
         await tx.wait(1);
         setPendingTransaction(false);
 

@@ -17,15 +17,13 @@ import TransactionFlowModals from '../components/TxConfirmationModalFlow/index';
 
 const BlockPage: NextPage = () => {
   const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
-  const { assetBalances } = useGlobalState();
+  const { assetBalances, chain, setChain } = useGlobalState();
     const {
       gasPrice,
       text,
       buttonState,
       asset,
-      chain,
       setAsset,
-      setChain,
       walletAssetType,
       setText,
       setWalletAssetType,

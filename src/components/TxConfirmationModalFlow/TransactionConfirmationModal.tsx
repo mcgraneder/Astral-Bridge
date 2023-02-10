@@ -6,6 +6,7 @@ import { Icon } from "../Icons/AssetLogs/Icon";
 import { UilArrowDown } from "@iconscout/react-unicons";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import { fetchPrice } from "../../utils/market/fetchAssetPrice";
+import useFetchAssetPrice from '../../hooks/useFetchAssetPrice';
 
 interface IAssetModal {
   toggleConfirmationModal: () => void;
@@ -28,7 +29,7 @@ const TxConfirmationModal = ({
   gasPrice,
   handleTransaction,
 }: IAssetModal) => {
-  const [assetPrice, setAssetPrice] = useState<any>();
+  const { assetPrice } = useFetchAssetPrice(asset)
 
   const executeTransaction = useCallback(() => {
     toggleConfirmationModal();
@@ -42,19 +43,6 @@ const TxConfirmationModal = ({
     transactionType,
   ]);
   
-  useEffect(() => {
-    (async () => {
-      try {
-        const assetPriceQuery = await fetchPrice(asset.Icon, "USD");
-        const formattedObj = Object.values(assetPriceQuery);
-        assetPriceQuery !== "API_FAILED"
-          ? setAssetPrice(formattedObj[0].usd)
-          : setAssetPrice(undefined);
-      } catch (error) {
-        console.error("failed fetch");
-      }
-    })();
-  }, [setAssetPrice, asset]);
   return (
     <Backdrop visible={confirmation}>
       <FormWrapper>
