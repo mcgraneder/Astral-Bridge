@@ -24,6 +24,7 @@ import RenBridgeABI from "../constants/ABIs/RenBridgeABI.json";
 import { BridgeDeployments } from "../constants/deployments";
 import BigNumber from "bignumber.js";
 import { useGlobalState } from "./useGlobalState";
+import { useNotification } from './useNotificationState';
 
 interface WalletProviderProps {
   children: React.ReactNode;
@@ -92,6 +93,17 @@ function WalletProvider({ children }: WalletProviderProps) {
   const { chainId, library, active, account } = useWeb3React();
   const { pendingTransaction, setPendingTransaction } = useGlobalState();
   const { init, approve } = useApproval();
+  const dispatch = useNotification();
+
+  const HandleNewNotification = (title: string, message: string) => {
+    dispatch({
+      type: "info",
+      message: message,
+      title: title,
+      position: "topR" || "topR",
+      success: true,
+    });
+  };
 
   const toggleTransactionFailedModal = useCallback(
     () => setTransactionFailed(false),
@@ -206,6 +218,7 @@ function WalletProvider({ children }: WalletProviderProps) {
         setSubmitted(true);
         await approvalTx.wait(1);
         setPendingTransaction(false);
+        HandleNewNotification("Approval Success", `Successfully approved asset ${asset.Icon} on ${chain.fullName}`)
       } catch (error) {
         setPending(false);
         setPendingTransaction(false);

@@ -7,6 +7,7 @@ import "../styles/globals.css";
 import { ToastContainerProps, ToastContainer } from "react-toastify";
 import { WalletProvider } from "../context/useWalletState";
 import { GlobalStateProvider } from "../context/useGlobalState";
+import NotificationProvider from "../context/useNotificationState";
 
 const toastConfig = {
   autoClose: 6000,
@@ -26,12 +27,14 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <Web3ReactProvider getLibrary={getLibrary}>
       <AuthProvider>
-        <GlobalStateProvider>
-          <WalletProvider>
-            <ToastContainer {...toastConfig} />
-            <Component {...pageProps} />
-          </WalletProvider>
-        </GlobalStateProvider>
+        <NotificationProvider>
+          <GlobalStateProvider>
+            <WalletProvider>
+              <ToastContainer {...toastConfig} />
+              <Component {...pageProps} />
+            </WalletProvider>
+          </GlobalStateProvider>
+        </NotificationProvider>
       </AuthProvider>
     </Web3ReactProvider>
   );

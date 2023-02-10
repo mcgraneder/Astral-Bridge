@@ -22,6 +22,7 @@ import { ethers } from "ethers";
 import { MINT_GAS_UNIT_COST } from "../../utils/market/getMarketGasData";
 import { UilPump } from "@iconscout/react-unicons";
 import { Icon } from "../Icons/AssetLogs/Icon";
+import { useNotification } from '../../context/useNotificationState';
 export type Tab = {
   tabName: string;
   tabNumber: number;

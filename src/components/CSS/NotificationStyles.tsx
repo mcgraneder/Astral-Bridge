@@ -19,7 +19,7 @@ const openLeft = keyframes`
 
 const NotificationContainerStyled = styled.div`
   position: fixed;
-  z-index: 30;
+  z-index: 10000000000;
   right: 0;
   top: 75px;
 `;
@@ -77,22 +77,18 @@ const BarStyled = styled.div`
 `;
 
 const NotificationStyled = styled.div`
-  font-family: "Open Sans", sans-serif;
-
   animation-fill-mode: forwards;
-  background-color: rgb(7, 10, 29);
+  background-color: rgb(12, 18, 43);
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(48, 71, 105, 0.1);
-  color: grey;
   display: flex;
-  margin: 18px;
-  padding: 16px 48px 16px 6px;
+  margin: 15px;
+  padding: 15px;
   position: relative;
-  width: 280px;
   overflow: hidden;
   z-index: 9999;
 
-  animation: ${(props) => (!props.isClosing ? opneRight : openLeft)} 1s;
+  animation: ${(props) => (!props.isClosing ? opneRight : openLeft)} 0.65s;
 `;
 
 const NotificationStyles = {
