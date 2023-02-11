@@ -14,6 +14,7 @@ import API from "../constants/Api";
 import { SetStateAction, Dispatch } from 'react';
 import { chainsBaseConfig } from "../utils/chainsConfig";
 import { ChainBaseConfig } from '../constants/Addresses';
+import { GasPriceType } from "../components/TxConfirmationModalFlow/TransactionConfirmationModal";
 
 interface GlobalStateProviderProps {
   children: React.ReactNode;
@@ -29,6 +30,10 @@ type GlobalContextType = {
   setPendingTransaction: Dispatch<SetStateAction<boolean>>;
   chain: any;
   setChain: any;
+  fetchMarketDataGasPrices: () => Promise<void>;
+  gasPrices: GasPriceType[];
+  activeGasPriceType: string;
+  setActiveGasPriceType: Dispatch<SetStateAction<string>>;
 };
 
 export type MulticallReturn = {
@@ -39,9 +44,16 @@ export type MulticallReturn = {
   bridgeBalance: string;
 };
 
+export type GP = {
+  type: string;
+  gasPrice: number | null;
+  gasLimit: number | null;
+}
 const GlobalStateContext = createContext({} as GlobalContextType);
 
 function GlobalStateProvider({ children }: GlobalStateProviderProps) {
+  const [gasPrices, setGasPrices] = useState<Array<GasPriceType>>([]);
+  const [activeGasPriceType, setActiveGasPriceType] = useState<GP>({ type: "standard", gasPrice: null, gasLimit: null })
   const [fetchedStoredChain, setFetchStoredChain] = useState<boolean>(false)
   const [pendingTransaction, setPendingTransaction] = useState<boolean>(false);
   const [fetchingBalances, setFetchingBalances] = useState<boolean>(false);
@@ -50,6 +62,15 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     [x: string]: MulticallReturn | undefined;
   }>({});
   const { account, chainId, active } = useWeb3React();
+
+  const fetchMarketDataGasPrices = useCallback(async () => {
+    const ethereumGasPriceData = await fetch(API.owlOracle.gasnow)
+      .then((response) => response.json())
+      .catch((error) => console.error(error));
+
+    console.log(ethereumGasPriceData);
+    setGasPrices(ethereumGasPriceData.data);
+  }, [setGasPrices]);
   
 
   const memoizedFetchBalances = useCallback(async () => {
@@ -103,6 +124,10 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
         setPendingTransaction,
         chain,
         setChain,
+        fetchMarketDataGasPrices,
+        gasPrices,
+        activeGasPriceType,
+        setActiveGasPriceType
       }}
     >
       {children}

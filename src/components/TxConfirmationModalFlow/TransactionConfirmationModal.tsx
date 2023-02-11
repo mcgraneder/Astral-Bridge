@@ -9,6 +9,7 @@ import { fetchPrice } from "../../utils/market/fetchAssetPrice";
 import useFetchAssetPrice from '../../hooks/useFetchAssetPrice';
 import API from "../../constants/Api";
 import GasOptionsModal from "./GasOptionsModal";
+import { useGlobalState } from "../../context/useGlobalState";
 
 export type GasPriceType = {
   fast: number;
@@ -46,7 +47,7 @@ const TxConfirmationModal = ({
   handleTransaction,
 }: IAssetModal) => {
   const { assetPrice } = useFetchAssetPrice(asset);
-  const [gasPrices, setGasPrices] = useState<Array<GasPriceType>>([]);
+  const { fetchMarketDataGasPrices, gasPrices, setActiveGasPriceType, activeGasPriceType } = useGlobalState();
   const [advancedOptions, setAdvancedOptions] = useState<boolean>(false);
 
   const toggleAdvancedOptions = useCallback(
@@ -68,15 +69,6 @@ const TxConfirmationModal = ({
 
   const GASPRRICES = ["rapid", "fast", "slow", "standard"];
 
-  const fetchMarketDataGasPrices = useCallback(async () => {
-    const ethereumGasPriceData = await fetch(API.owlOracle.gasnow)
-      .then((response) => response.json())
-      .catch((error) => console.error(error));
-
-    console.log(ethereumGasPriceData);
-    setGasPrices(ethereumGasPriceData.data);
-  }, []);
-
   useEffect(() => {
     fetchMarketDataGasPrices();
   }, [fetchMarketDataGasPrices]);
@@ -90,6 +82,8 @@ const TxConfirmationModal = ({
             fetchMarketDataGasPrices={fetchMarketDataGasPrices}
             gasPrices={gasPrices}
             priceTypes={GASPRRICES}
+            activeGasPriceType={activeGasPriceType}
+            setActiveGasPriceType={setActiveGasPriceType}
           />
         ) : (
           <>

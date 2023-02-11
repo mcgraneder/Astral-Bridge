@@ -10,10 +10,11 @@ import useFetchAssetPrice from "../../hooks/useFetchAssetPrice";
 import { Tab } from "../WalletModal/WalletModal";
 import { MintFormText2 } from '../CSS/WalletModalStyles';
 
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { GasPriceType } from './TransactionConfirmationModal';
 import BigNumber from "bignumber.js";
 import { toFixed } from '../../utils/misc';
+import { GP } from "../../context/useGlobalState";
 const TABS: Tab[] = [
   {
     tabName: "Basic",
@@ -77,7 +78,7 @@ export const WalletInputWrapper = styled.div`
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
   }
-  background-color: rgb(9, 13, 31);
+  background-color: rgb(34 53 83);
   border: 1px solid rgb(48, 63, 88);
   border-radius: 10px;
 
@@ -107,6 +108,29 @@ export const MintToggleButton = styled.div`
         cursor: pointer;
     }
 
+`;
+
+//    <div className="h-6 w-6 border border-white bg-blue-500 rounded-full">
+
+//             </div>
+const RadioButton = styled.div`
+  height: 22px;
+  width: 22px;
+  border: ${(props) => (props.active ? "1px solid white" : "1px solid gray")};
+  border-radius: 50%;
+  background-color: ${(props) =>
+    props.active ? "rgb(59,130,246)" : "transparent"};
+  transition: background-color 0.35s ease, border 0.35s ease;
+  /* transition: border 2s ease; */
+  ${(props) =>
+    props.active &&
+    css`
+      box-shadow: 0px 0px 1.2px 1.2px #fff;
+    `}
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 interface IToggleButton {
@@ -158,13 +182,17 @@ interface IAssetModal {
   fetchMarketDataGasPrices: () => Promise<void>;
   gasPrices: GasPriceType[];
   priceTypes: any;
+  activeGasPriceType: GP;
+  setActiveGasPriceType: any;
 }
 
 const GasOptionsModal = ({
 setAdvancedOptions,
 fetchMarketDataGasPrices,
 gasPrices,
-priceTypes
+priceTypes,
+activeGasPriceType,
+setActiveGasPriceType
 }: IAssetModal) => {
     const [activeButton, setActiveButton] = useState<Tab>({
       tabName: "Basic",
@@ -198,41 +226,56 @@ priceTypes
         tabs={TABS}
         setActiveButton={setActiveButton}
       />
-      <div className="mx-[6px] mb-3 mt-5 flex flex-col gap-2 rounded-xl border-gray-400 bg-secondary px-2 py-2">
+      <div className="mx-[6px] flex items-center justify-start gap-2 p-2">
+        <span className="text-[14px] text-gray-300">GasPrice</span>
+      </div>
+      <div className="mx-[6px] mb-3 flex flex-col gap-2 rounded-xl border-gray-400 bg-secondary px-2 py-2">
         {priceTypes.map((type: any, index: number) => {
-            const vals = Object.values(gasPrices);
-            const gasPrice = toFixed(Number(new BigNumber(vals[index]).shiftedBy(-9)), 3)
-            return (
-              <div
-                key={type}
-                className="flex justify-between rounded-lg py-1 px-2 "
-              >
-                <div className="flex items-center justify-center gap-1">
-                  <input
-                    id={`radio${index.toString()}`}
-                    type="radio"
-                    name="radio"
-                    className="hidden"
-                    checked
-                  />
-                  <label
-                    htmlFor={`radio${index.toString()}`}
-                    className="flex cursor-pointer items-center"
-                  >
-                    <span className="border-grey flex-no-shrink mr-2 inline-block h-6 w-6 rounded-full border"></span>
-                    {type}
-                  </label>
-                </div>
-                <span>{gasPrice}</span>
+          const vals = Object.values(gasPrices);
+          const gasPrice = toFixed(
+            Number(new BigNumber(vals[index]).shiftedBy(-9)),
+            3
+          );
+          return (
+            <div
+              key={type}
+              className="flex justify-between rounded-lg py-1 px-2 "
+            >
+              <div className="flex items-center justify-center gap-2">
+                <RadioButton
+                  active={type === activeGasPriceType.type}
+                  onClick={() =>
+                    setActiveGasPriceType({
+                      type: type,
+                      gasPrice: gasPrice,
+                      gasLimit: 210000,
+                    })
+                  }
+                />
+
+                <span
+                  className={`${
+                    type === activeGasPriceType.type ? "white" : "text-gray-500"
+                  }`}
+                >
+                  {type}
+                </span>
               </div>
-            );
+              <span
+                className={`${
+                  type === activeGasPriceType.type ? "white" : "text-gray-500"
+                }`}
+              >
+                {gasPrice} Gwei
+              </span>
+            </div>
+          );
         })}
       </div>
-      <div className="mx-[6px] mt-2 mb-1 flex items-center justify-start gap-2 p-2">
-        <UilPump />
-        <span>Gas Limit</span>
+      <div className="mx-[6px] mt-2 flex items-center justify-start gap-2 p-2">
+        <span className="text-[14px] text-gray-300">GasLimit</span>
       </div>
-      <div className="broder mx-[6px] mb-5 flex flex-col gap-2 rounded-xl border-tertiary px-1 text-[20px]">
+      <div className="broder mx-[6px] mb-3 flex flex-col gap-2 rounded-2xl border-tertiary px-1 text-[20px]">
         <WalletInputWrapper>
           <WalletInput
             //   onKeyPress={preventMinus}
@@ -242,14 +285,21 @@ priceTypes
           ></WalletInput>
         </WalletInputWrapper>
       </div>
-      <PrimaryButton
-        className={
-          "w-full justify-center rounded-2xl bg-blue-500 py-[14px] text-center"
-        }
-        onClick={setAdvancedOptions}
-      >
-        Confirm Options
-      </PrimaryButton>
+      <div className=" mb-4 w-full break-words px-5 text-left text-[14px] text-gray-400">
+        <span>
+          Chainging the GasLimit may have unintened effects. Only change this if you know what your doing
+        </span>
+      </div>
+      <div className="mx-2 mb-1 mt-2 flex items-center justify-center">
+        <PrimaryButton
+          className={
+            "w-full justify-center rounded-2xl bg-blue-500 py-[15px] text-center"
+          }
+          onClick={setAdvancedOptions}
+        >
+          Confirm Options
+        </PrimaryButton>
+      </div>
     </>
   );
 };
