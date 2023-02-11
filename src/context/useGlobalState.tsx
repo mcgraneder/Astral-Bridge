@@ -12,6 +12,7 @@ import { get } from "../services/axios";
 import API from "../constants/Api";
 import { SetStateAction, Dispatch } from 'react';
 import { chainsBaseConfig } from "../utils/chainsConfig";
+import { ChainBaseConfig } from '../constants/Addresses';
 
 interface GlobalStateProviderProps {
   children: React.ReactNode;
@@ -72,11 +73,10 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
   }, [account, chainId, setFetchingBalances, chain]);
 
   useEffect(() => {
-    if (typeof window === undefined || fetchedStoredChain) return
-    const storedChain = localStorage.getItem("selected_chain")
-    setChain(JSON.parse(storedChain!))
+    if (fetchedStoredChain || !chainId) return
+    setChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!])
     setFetchStoredChain(true)
-  }, [fetchedStoredChain, active])
+  }, [fetchedStoredChain, chainId])
 
   useEffect(() => {
     if (!active || !account || !chain) return;
