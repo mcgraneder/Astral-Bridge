@@ -65,11 +65,11 @@ export enum Asset {
   USDC = "USDC",
   USDT = "USDT",
   ZEC = "ZEC",
-  USDT_GOERLI = "USDT_Goerli",
+  USDT_Goerli = "USDT_Goerli",
   USDC_Goerli = "USDC_Goerli",
   DAI_Goerli = "DAI_Goerli",
-  REN_Goerli = "REN_Goerli"
- }
+  REN_Goerli = "REN_Goerli",
+}
 
 export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
   AVAX: {
@@ -331,7 +331,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
     fullName: "USD Coin",
     rateService: AssetRateService.Coingecko,
     rateSymbol: "usd-coin",
-    decimals: 18,
+    decimals: 6,
   },
   USDT: {
     Icon: Asset.USDT,
@@ -370,7 +370,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
     decimals: 18,
   },
   USDT_Goerli: {
-    Icon: Asset.USDT_GOERLI,
+    Icon: Asset.USDT_Goerli,
 
     shortName: "USDT_Goerli",
     fullName: "Tether",
@@ -385,7 +385,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
     fullName: "USD Coin",
     rateService: AssetRateService.Coingecko,
     rateSymbol: "usd-coin",
-    decimals: 18,
+    decimals: 6,
   },
   REN_Goerli: {
     Icon: Asset.REN_Goerli,
@@ -407,118 +407,147 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
   },
 };
 
-
 export type AssetChainsConfig = {
-    lockChain: Chain;
-    mintChains: Array<Chain>;
-    lockChainConnectionRequired?: boolean; // better name?
+  lockChain: Chain;
+  mintChains: Array<Chain>;
+  lockChainConnectionRequired?: boolean; // better name?
 };
 
 export type AssetColorConfig = {
-    color: string;
+  color: string;
 };
 
-export type AssetConfig = AssetBaseConfig & AssetColorConfig & AssetChainsConfig;
+export type AssetConfig = AssetBaseConfig &
+  AssetColorConfig &
+  AssetChainsConfig;
 
 export const assetsConfig = Object.fromEntries(
-    Object.entries(assetsBaseConfig).map(([asset, config]) => [
-        asset,
-        {
-            ...config,
-            // prevent UNSET for simple cases
-            shortName: config.shortName || asset,
-            fullName: config.fullName || asset,
-        },
-    ])
+  Object.entries(assetsBaseConfig).map(([asset, config]) => [
+    asset,
+    {
+      ...config,
+      // prevent UNSET for simple cases
+      shortName: config.shortName || asset,
+      fullName: config.fullName || asset,
+    },
+  ])
 ) as Record<Asset, AssetConfig>;
 
 console.log("assetsConfig", assetsConfig);
 
 export const getAssetConfig = (asset: Asset | string) => {
-    const config = assetsConfig[asset as Asset];
-    if (!config) {
-        throw new Error(`Asset config not found for ${asset}`);
-    }
-    return config;
+  const config = assetsConfig[asset as Asset];
+  if (!config) {
+    throw new Error(`Asset config not found for ${asset}`);
+  }
+  return config;
 };
 
 export const getRenAssetConfig = (asset: Asset | string) => {
-    const assetConfig = getAssetConfig(asset);
-    const { shortName, fullName, Icon, ...rest } = assetConfig;
-    return {
-        shortName: getRenAssetName(shortName),
-        fullName: getRenAssetFullName(fullName),
-        Icon: Icon,
-        ...rest,
-    };
+  const assetConfig = getAssetConfig(asset);
+  const { shortName, fullName, Icon, ...rest } = assetConfig;
+  return {
+    shortName: getRenAssetName(shortName),
+    fullName: getRenAssetFullName(fullName),
+    Icon: Icon,
+    ...rest,
+  };
 };
 
 export const getAssetSymbolByRateSymbol = (symbol: string) => {
-    const entry = Object.entries(assetsConfig).find(([_, config]) => config.rateSymbol === symbol);
-    if (!entry) {
-        throw new Error(`Asset config not found by rateSymbol: ${symbol}`);
-    }
-    return entry[0];
+  const entry = Object.entries(assetsConfig).find(
+    ([_, config]) => config.rateSymbol === symbol
+  );
+  if (!entry) {
+    throw new Error(`Asset config not found by rateSymbol: ${symbol}`);
+  }
+  return entry[0];
 };
 
 export const getRenAssetFullName = (fullName: string) => `Ren ${fullName}`;
 // TODO: invent naming similar to renJS, Noah
 export const getRenAssetName = (asset: Asset | string) => `ren${asset}`; //or mint?
 export const getOriginAssetName = (renAsset: string) => {
-    if (renAsset.indexOf("ren") !== 0) {
-        throw new Error(`Unable to convert asset to origin (locked): ${renAsset}`);
-    }
-    return renAsset.substr(3);
+  if (renAsset.indexOf("ren") !== 0) {
+    throw new Error(`Unable to convert asset to origin (locked): ${renAsset}`);
+  }
+  return renAsset.substr(3);
 };
 
 export const isChainNativeAsset = (chain: Chain, asset: Asset) => {
-    return getAssetConfig(asset).lockChain === chain;
+  return getAssetConfig(asset).lockChain === chain;
 };
 
 export const getUIAsset = (asset: Asset, chain: Chain) => {
-    const assetConfig = getAssetConfig(asset);
-    const isNative = isChainNativeAsset(chain, asset);
-    const renAssetConfig = getRenAssetConfig(asset);
-    const shortName = isNative ? assetConfig.shortName : renAssetConfig.shortName;
-    const fullName = isNative ? assetConfig.fullName : renAssetConfig.fullName;
-    const Icon = isNative ? assetConfig.Icon : renAssetConfig.Icon;
-    return { shortName, fullName, Icon };
+  const assetConfig = getAssetConfig(asset);
+  const isNative = isChainNativeAsset(chain, asset);
+  const renAssetConfig = getRenAssetConfig(asset);
+  const shortName = isNative ? assetConfig.shortName : renAssetConfig.shortName;
+  const fullName = isNative ? assetConfig.fullName : renAssetConfig.fullName;
+  const Icon = isNative ? assetConfig.Icon : renAssetConfig.Icon;
+  return { shortName, fullName, Icon };
 };
 
-export const supportedAssets =
- [
-              Asset.BTC,
-              Asset.BCH,
-              Asset.DGB,
-              Asset.DOGE,
-              Asset.FIL,
-              Asset.LUNA,
-              Asset.ZEC,
-              Asset.ETH,
-              Asset.BNB,
-              Asset.AVAX,
-              Asset.FTM,
-              Asset.ArbETH,
-              Asset.MATIC,
-              Asset.GLMR,
-              Asset.KAVA,
-              // Asset.SOL, // not sure about that
-              Asset.REN,
-              Asset.DAI,
-              Asset.USDC,
-              Asset.USDT,
-              Asset.EURT,
-              Asset.BUSD,
-              Asset.MIM,
-              Asset.CRV,
-              Asset.LINK,
-              Asset.UNI,
-              Asset.SUSHI,
-              Asset.FTT,
-              Asset.ROOK,
-              Asset.BADGER,
-              Asset.KNC,
-          ]
-       
+export const supportedAssets = [
+  Asset.BTC,
+  Asset.BCH,
+  Asset.DGB,
+  Asset.DOGE,
+  Asset.FIL,
+  Asset.LUNA,
+  Asset.ZEC,
+  Asset.ETH,
+  Asset.BNB,
+  Asset.AVAX,
+  Asset.FTM,
+  Asset.ArbETH,
+  Asset.MATIC,
+  Asset.GLMR,
+  Asset.KAVA,
+  // Asset.SOL, // not sure about that
+  Asset.REN,
+  Asset.DAI,
+  Asset.USDC,
+  Asset.USDT,
+  Asset.EURT,
+  Asset.BUSD,
+  Asset.MIM,
+  Asset.CRV,
+  Asset.LINK,
+  Asset.UNI,
+  Asset.SUSHI,
+  Asset.FTT,
+  Asset.ROOK,
+  Asset.BADGER,
+  Asset.KNC,
+];
+
+export const whiteListedEVMAssets = [
+  Asset.gETH,
+  Asset.ETH,
+  Asset.BNB,
+  Asset.MATIC,
+  Asset.oETH,
+  Asset.AVAX,
+  Asset.KAVA,
+  Asset.FTM,
+  Asset.ArbETH,
+  Asset.GLMR,
+  Asset.REN_Goerli,
+  Asset.DAI_Goerli,
+  Asset.USDC_Goerli,
+  Asset.USDT_Goerli,
+  Asset.DAI_Goerli,
+];
+
+export const WhiteListedLegacyAssets = [
+  Asset.BTC,
+  Asset.BCH,
+  Asset.DGB,
+  Asset.DOGE,
+  Asset.FIL,
+  Asset.LUNA,
+  Asset.ZEC,
+];
 
 console.log("supportedAssets", supportedAssets);

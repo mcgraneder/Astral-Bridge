@@ -9,8 +9,11 @@ import {
   Optimism,
   Polygon,
 } from "@renproject/chains-ethereum";
-import { Chain, Asset } from "@renproject/chains";
+import { Chain } from "@renproject/chains";
 import { BridgeDeployments } from "./deployments";
+import { Asset, whiteListedEVMAssets, WhiteListedLegacyAssets } from "../utils/assetsConfig";
+
+type WhiteListed = Asset[]
 
 type AssetBaseConfig = {
   [asset: string]: {
@@ -23,6 +26,7 @@ export type ChainBaseConfig = {
   multicallContract: string;
   chain: Chain;
   assets: AssetBaseConfig;
+  whiteListedAssets: WhiteListed
 };
 
 export const chainAdresses: { [chain: string]: ChainBaseConfig } = {
@@ -159,23 +163,27 @@ export const chainAdresses: { [chain: string]: ChainBaseConfig } = {
         tokenAddress: "0x6A70A587451Eae2117693926863BcdCa244Db61A",
         mintGatewayAddress: "0xfb6c3F4467496AEa90956d8CD1873D790659E94D",
       },
-      ["REN_Goerli"]: {
+      [Asset.REN_Goerli]: {
         tokenAddress: "0xf147382E2e18D252EA57C4cb79C8BB3794739e53",
         mintGatewayAddress: "0x7260871a5F92d9f9B9d2b914B2eF932A6d8689A9",
       },
-      ["DAI_Goerli"]: {
+      [Asset.DAI_Goerli]: {
         tokenAddress: "0xd80FD06C79B21763329488EB4B96551Cd5ECD08f",
         mintGatewayAddress: "0xf8cF76E32Fe3063d79Ff9D75701d2Bb89311fE03",
       },
-      ["USDC_Goerli"]: {
+      [Asset.USDC_Goerli]: {
         tokenAddress: "0x2b8435cAe98a18EaF080dDC4f72392A94b5c4556",
         mintGatewayAddress: "0xcA24bC8A2f203f8aC6a2A5BBCaAB4d905047Db75",
       },
-      ["USDT_Goerli"]: {
+      [Asset.USDT_Goerli]: {
         tokenAddress: "0xF0dbeB58522b96cdCdB790BCaD9Fd8Da7D7fa35c",
         mintGatewayAddress: "0xda07AD211799496A8473cdeBAA91Df03db156644",
       },
     },
+    whiteListedAssets: [
+     ...whiteListedEVMAssets,
+     ...WhiteListedLegacyAssets
+    ]
   },
   [Avalanche.chain]: {
     bridgeAddress: BridgeDeployments[Avalanche.chain]!,
@@ -310,23 +318,27 @@ export const chainAdresses: { [chain: string]: ChainBaseConfig } = {
         tokenAddress: "0x6A70A587451Eae2117693926863BcdCa244Db61A",
         mintGatewayAddress: "0xfb6c3F4467496AEa90956d8CD1873D790659E94D",
       },
-      ["REN_Goerli"]: {
+      [Asset.REN_Goerli]: {
         tokenAddress: "0xf147382E2e18D252EA57C4cb79C8BB3794739e53",
         mintGatewayAddress: "0x7260871a5F92d9f9B9d2b914B2eF932A6d8689A9",
       },
-      ["DAI_Goerli"]: {
+      [Asset.DAI_Goerli]: {
         tokenAddress: "0xd80FD06C79B21763329488EB4B96551Cd5ECD08f",
         mintGatewayAddress: "0xf8cF76E32Fe3063d79Ff9D75701d2Bb89311fE03",
       },
-      ["USDC_Goerli"]: {
+      [Asset.USDC_Goerli]: {
         tokenAddress: "0x2b8435cAe98a18EaF080dDC4f72392A94b5c4556",
         mintGatewayAddress: "0xcA24bC8A2f203f8aC6a2A5BBCaAB4d905047Db75",
       },
-      ["USDT_Goerli"]: {
+      [Asset.USDT_Goerli]: {
         tokenAddress: "0xF0dbeB58522b96cdCdB790BCaD9Fd8Da7D7fa35c",
         mintGatewayAddress: "0xda07AD211799496A8473cdeBAA91Df03db156644",
       },
     },
+    whiteListedAssets: [
+     ...whiteListedEVMAssets,
+     ...WhiteListedLegacyAssets
+    ]
   },
   [BinanceSmartChain.chain]: {
     bridgeAddress: BridgeDeployments[BinanceSmartChain.chain]!,
@@ -461,23 +473,27 @@ export const chainAdresses: { [chain: string]: ChainBaseConfig } = {
         tokenAddress: "0x6A70A587451Eae2117693926863BcdCa244Db61A",
         mintGatewayAddress: "0xfb6c3F4467496AEa90956d8CD1873D790659E94D",
       },
-      ["REN_Goerli"]: {
+      [Asset.REN_Goerli]: {
         tokenAddress: "0xf147382E2e18D252EA57C4cb79C8BB3794739e53",
         mintGatewayAddress: "0x7260871a5F92d9f9B9d2b914B2eF932A6d8689A9",
       },
-      ["DAI_Goerli"]: {
+      [Asset.DAI_Goerli]: {
         tokenAddress: "0xd80FD06C79B21763329488EB4B96551Cd5ECD08f",
         mintGatewayAddress: "0xf8cF76E32Fe3063d79Ff9D75701d2Bb89311fE03",
       },
-      ["USDC_Goerli"]: {
+      [Asset.USDC_Goerli]: {
         tokenAddress: "0x2b8435cAe98a18EaF080dDC4f72392A94b5c4556",
         mintGatewayAddress: "0xcA24bC8A2f203f8aC6a2A5BBCaAB4d905047Db75",
       },
-      ["USDT_Goerli"]: {
+      [Asset.USDT_Goerli]: {
         tokenAddress: "0xF0dbeB58522b96cdCdB790BCaD9Fd8Da7D7fa35c",
         mintGatewayAddress: "0xda07AD211799496A8473cdeBAA91Df03db156644",
       },
     },
+    whiteListedAssets: [
+     ...whiteListedEVMAssets,
+     ...WhiteListedLegacyAssets
+    ]
   },
   [Ethereum.chain]: {
     bridgeAddress: BridgeDeployments[Ethereum.chain]!,
@@ -612,7 +628,26 @@ export const chainAdresses: { [chain: string]: ChainBaseConfig } = {
         tokenAddress: "0x6A70A587451Eae2117693926863BcdCa244Db61A",
         mintGatewayAddress: "0xfb6c3F4467496AEa90956d8CD1873D790659E94D",
       },
+      [Asset.REN_Goerli]: {
+        tokenAddress: "0x9B5e38f20F90ED9CeA25f0a6b16E3e08DeBA9019",
+        mintGatewayAddress: "0x7260871a5F92d9f9B9d2b914B2eF932A6d8689A9",
+      },
+      [Asset.DAI_Goerli]: {
+        tokenAddress: "0x11fE4B6AE13d2a6055C8D9cF65c55bac32B5d844",
+        mintGatewayAddress: "0xf8cF76E32Fe3063d79Ff9D75701d2Bb89311fE03",
+      },
+      [Asset.USDC_Goerli]: {
+        tokenAddress: "0x07865c6E87B9F70255377e024ace6630C1Eaa37F",
+        mintGatewayAddress: "0xcA24bC8A2f203f8aC6a2A5BBCaAB4d905047Db75",
+      },
+      [Asset.USDT_Goerli]: {
+        tokenAddress: "0x270203070650134837F3C33Fa7D97DC456eF624e",
+        mintGatewayAddress: "0xda07AD211799496A8473cdeBAA91Df03db156644",
+      },
     },
+    whiteListedAssets : [
+
+    ]
   },
   [Fantom.chain]: {
     bridgeAddress: BridgeDeployments[Fantom.chain]!,
@@ -747,23 +782,27 @@ export const chainAdresses: { [chain: string]: ChainBaseConfig } = {
         tokenAddress: "0x6A70A587451Eae2117693926863BcdCa244Db61A",
         mintGatewayAddress: "0xfb6c3F4467496AEa90956d8CD1873D790659E94D",
       },
-      ["REN_Goerli"]: {
+      [Asset.REN_Goerli]: {
         tokenAddress: "0xf147382E2e18D252EA57C4cb79C8BB3794739e53",
         mintGatewayAddress: "0x7260871a5F92d9f9B9d2b914B2eF932A6d8689A9",
       },
-      ["DAI_Goerli"]: {
+      [Asset.DAI_Goerli]: {
         tokenAddress: "0xd80FD06C79B21763329488EB4B96551Cd5ECD08f",
         mintGatewayAddress: "0xf8cF76E32Fe3063d79Ff9D75701d2Bb89311fE03",
       },
-      ["USDC_Goerli"]: {
+      [Asset.USDC_Goerli]: {
         tokenAddress: "0x2b8435cAe98a18EaF080dDC4f72392A94b5c4556",
         mintGatewayAddress: "0xcA24bC8A2f203f8aC6a2A5BBCaAB4d905047Db75",
       },
-      ["USDT_Goerli"]: {
+      [Asset.USDT_Goerli]: {
         tokenAddress: "0xF0dbeB58522b96cdCdB790BCaD9Fd8Da7D7fa35c",
         mintGatewayAddress: "0xda07AD211799496A8473cdeBAA91Df03db156644",
       },
     },
+    whiteListedAssets: [
+     ...whiteListedEVMAssets,
+     ...WhiteListedLegacyAssets
+    ]
   },
   [Kava.chain]: {
     bridgeAddress: BridgeDeployments[Kava.chain]!,
@@ -898,23 +937,27 @@ export const chainAdresses: { [chain: string]: ChainBaseConfig } = {
         tokenAddress: "0x6A70A587451Eae2117693926863BcdCa244Db61A",
         mintGatewayAddress: "0xfb6c3F4467496AEa90956d8CD1873D790659E94D",
       },
-      ["REN_Goerli"]: {
+      [Asset.REN_Goerli]: {
         tokenAddress: "0xf147382E2e18D252EA57C4cb79C8BB3794739e53",
         mintGatewayAddress: "0x7260871a5F92d9f9B9d2b914B2eF932A6d8689A9",
       },
-      ["DAI_Goerli"]: {
+      [Asset.DAI_Goerli]: {
         tokenAddress: "0xd80FD06C79B21763329488EB4B96551Cd5ECD08f",
         mintGatewayAddress: "0xf8cF76E32Fe3063d79Ff9D75701d2Bb89311fE03",
       },
-      ["USDC_Goerli"]: {
+      [Asset.USDC_Goerli]: {
         tokenAddress: "0x2b8435cAe98a18EaF080dDC4f72392A94b5c4556",
         mintGatewayAddress: "0xcA24bC8A2f203f8aC6a2A5BBCaAB4d905047Db75",
       },
-      ["USDT_Goerli"]: {
+      [Asset.USDT_Goerli]: {
         tokenAddress: "0xF0dbeB58522b96cdCdB790BCaD9Fd8Da7D7fa35c",
         mintGatewayAddress: "0xda07AD211799496A8473cdeBAA91Df03db156644",
       },
     },
+    whiteListedAssets: [
+     ...whiteListedEVMAssets,
+     ...WhiteListedLegacyAssets
+    ]
   },
   [Moonbeam.chain]: {
     bridgeAddress: BridgeDeployments[Moonbeam.chain]!,
@@ -1049,23 +1092,27 @@ export const chainAdresses: { [chain: string]: ChainBaseConfig } = {
         tokenAddress: "0x1d3FfDd58f17bfD204B770CBA6d67A6c048A5Ab7",
         mintGatewayAddress: "0x1a4F5BE3cce35D5e3302c0F3b993a32eFFe8817a",
       },
-      ["REN_Goerli"]: {
+      [Asset.REN_Goerli]: {
         tokenAddress: "0xf147382E2e18D252EA57C4cb79C8BB3794739e53",
         mintGatewayAddress: "0x7260871a5F92d9f9B9d2b914B2eF932A6d8689A9",
       },
-      ["DAI_Goerli"]: {
+      [Asset.DAI_Goerli]: {
         tokenAddress: "0xd80FD06C79B21763329488EB4B96551Cd5ECD08f",
         mintGatewayAddress: "0xf8cF76E32Fe3063d79Ff9D75701d2Bb89311fE03",
       },
-      ["USDC_Goerli"]: {
+      [Asset.USDC_Goerli]: {
         tokenAddress: "0x2b8435cAe98a18EaF080dDC4f72392A94b5c4556",
         mintGatewayAddress: "0xcA24bC8A2f203f8aC6a2A5BBCaAB4d905047Db75",
       },
-      ["USDT_Goerli"]: {
+      [Asset.USDT_Goerli]: {
         tokenAddress: "0xF0dbeB58522b96cdCdB790BCaD9Fd8Da7D7fa35c",
         mintGatewayAddress: "0xda07AD211799496A8473cdeBAA91Df03db156644",
       },
     },
+    whiteListedAssets: [
+     ...whiteListedEVMAssets,
+     ...WhiteListedLegacyAssets
+    ]
   },
   [Optimism.chain]: {
     bridgeAddress: BridgeDeployments[Optimism.chain]!,
@@ -1200,23 +1247,27 @@ export const chainAdresses: { [chain: string]: ChainBaseConfig } = {
         tokenAddress: "0xCFA0859D44D64daEB000b9eD7a14772459da42cA",
         mintGatewayAddress: "0xf8eD1f5433e7BE58332FB124D56c6d67e990DF91",
       },
-      ["REN_Goerli"]: {
+      [Asset.REN_Goerli]: {
         tokenAddress: "0xf147382E2e18D252EA57C4cb79C8BB3794739e53",
         mintGatewayAddress: "0x7260871a5F92d9f9B9d2b914B2eF932A6d8689A9",
       },
-      ["DAI_Goerli"]: {
+      [Asset.DAI_Goerli]: {
         tokenAddress: "0xd80FD06C79B21763329488EB4B96551Cd5ECD08f",
         mintGatewayAddress: "0xf8cF76E32Fe3063d79Ff9D75701d2Bb89311fE03",
       },
-      ["USDC_Goerli"]: {
+      [Asset.USDC_Goerli]: {
         tokenAddress: "0x2b8435cAe98a18EaF080dDC4f72392A94b5c4556",
         mintGatewayAddress: "0xcA24bC8A2f203f8aC6a2A5BBCaAB4d905047Db75",
       },
-      ["USDT_Goerli"]: {
+      [Asset.USDT_Goerli]: {
         tokenAddress: "0xF0dbeB58522b96cdCdB790BCaD9Fd8Da7D7fa35c",
         mintGatewayAddress: "0xda07AD211799496A8473cdeBAA91Df03db156644",
       },
     },
+    whiteListedAssets: [
+     ...whiteListedEVMAssets,
+     ...WhiteListedLegacyAssets
+    ]
   },
   [Polygon.chain]: {
     bridgeAddress: BridgeDeployments[Polygon.chain]!,
@@ -1351,22 +1402,26 @@ export const chainAdresses: { [chain: string]: ChainBaseConfig } = {
         tokenAddress: "0x6A70A587451Eae2117693926863BcdCa244Db61A",
         mintGatewayAddress: "0xfb6c3F4467496AEa90956d8CD1873D790659E94D",
       },
-      ["REN_Goerli"]: {
+      [Asset.REN_Goerli]: {
         tokenAddress: "0xf147382E2e18D252EA57C4cb79C8BB3794739e53",
         mintGatewayAddress: "0x7260871a5F92d9f9B9d2b914B2eF932A6d8689A9",
       },
-      ["DAI_Goerli"]: {
+      [Asset.DAI_Goerli]: {
         tokenAddress: "0xd80FD06C79B21763329488EB4B96551Cd5ECD08f",
         mintGatewayAddress: "0xf8cF76E32Fe3063d79Ff9D75701d2Bb89311fE03",
       },
-      ["USDC_Goerli"]: {
+      [Asset.USDC_Goerli]: {
         tokenAddress: "0x2b8435cAe98a18EaF080dDC4f72392A94b5c4556",
         mintGatewayAddress: "0xcA24bC8A2f203f8aC6a2A5BBCaAB4d905047Db75",
       },
-      ["USDT_Goerli"]: {
+      [Asset.USDT_Goerli]: {
         tokenAddress: "0xF0dbeB58522b96cdCdB790BCaD9Fd8Da7D7fa35c",
         mintGatewayAddress: "0xda07AD211799496A8473cdeBAA91Df03db156644",
       },
     },
+    whiteListedAssets: [
+     ...whiteListedEVMAssets,
+     ...WhiteListedLegacyAssets
+    ]
   },
 };

@@ -30,6 +30,10 @@ import RenUSDTIcon from "../../../../../public/svgs/assets/renUSDT.svg";
 import RenUSTIcon from "../../../../../public/svgs/assets/renUST.svg";
 import RenWBTCIcon from "../../../../../public/svgs/assets/renwBTC.svg";
 import RenZECIcon from "../../../../../public/svgs/assets/renZEC.svg";
+import RenGLMRIcon from "../../../../../public/svgs/assets/renGLMR.svg";
+import RenKAVAIcon from "../../../../../public/svgs/assets/renKAVA.svg";
+
+
 
 export const Icons: {
   [key: string]: React.FunctionComponent<
@@ -70,4 +74,12 @@ export const Icons: {
   UST: RenUSTIcon,
   USDT: RenUSDTIcon,
   USDC: RenUSDCIcon,
+  gETH: RenETHIcon,
+  GLMR: RenGLMRIcon,
+  KAVA: RenKAVAIcon,
+  REN_Goerli: RenRENIcon,
+  DAI_Goerli: RenDAIIcon,
+  USDT_Goerli: RenUSDTIcon,
+  USDC_Goerli: RenUSDCIcon,
+  oETH: RenETHIcon,
 };

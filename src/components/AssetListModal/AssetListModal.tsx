@@ -4,7 +4,14 @@ import { FormWrapper, TokenInputContainer, TokenInput } from '../CSS/AssetListMo
 import { Backdrop } from "../WalletConnectModal/WalletConnectModal"
 import { Icon } from '../Icons/AssetLogs/Icon';
 import { chainsConfig, ChainConfig, supportedEthereumChains } from '../../utils/chainsConfig';
-import { assetsConfig, AssetConfig, assetsBaseConfig, supportedAssets } from '../../utils/assetsConfig';
+import {
+  assetsConfig,
+  AssetConfig,
+  assetsBaseConfig,
+  supportedAssets,
+  whiteListedEVMAssets,
+  WhiteListedLegacyAssets,
+} from "../../utils/assetsConfig";
 import { Asset, Chain } from "@renproject/chains";
 import { useWallet } from "../../context/useWalletState";
 import { MulticallReturn } from "../../context/useGlobalState";
@@ -35,12 +42,15 @@ interface IAssetModal {
   buttonState: Tab;
 }
 
-const createAvailabilityFilter = (available: any) => (option: any) => {
-  if (!available) {
-    return true;
-  }
-  return available.includes(option.fullName);
-};
+const createAvailabilityFilter =
+  (available: any, walletAssetType: string) => (option: any) => {
+    if (!available) {
+      return true;
+    }
+    return walletAssetType === "chain"
+      ? available.includes(option.fullName)
+      : available.includes(option.Icon);
+  };
 
 const AssetListModal = ({
   setShowTokenModal,
@@ -58,11 +68,13 @@ const AssetListModal = ({
   }, [setSearchTerm, setShowTokenModal]);
 
   const available =
-    walletAssetType === "chain" ? supportedEthereumChains : undefined;
+    walletAssetType === "chain"
+      ? supportedEthereumChains
+      : [...whiteListedEVMAssets, ...WhiteListedLegacyAssets];
 
   const availabilityFilter = React.useMemo(
-    () => createAvailabilityFilter(available),
-    [available]
+    () => createAvailabilityFilter(available, walletAssetType),
+    [available, walletAssetType]
   );
 
   const handleSearch = (val: any) => {
@@ -72,6 +84,23 @@ const AssetListModal = ({
       val.shortName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       val.fullName.toLowerCase().includes(searchTerm.toLowerCase())
     );
+  };
+
+  const handleSort = (a: any, b: any) => {
+    if (buttonState.tabName === "Deposit") {
+      if (
+        Number(assetBalances[a.Icon]?.walletBalance) >
+        Number(assetBalances[b.Icon]?.walletBalance)
+      )
+        return -1;
+    } else {
+      if (
+        Number(assetBalances[a.Icon]?.bridgeBalance) >
+        Number(assetBalances[b.Icon]?.bridgeBalance)
+      )
+        return -1;
+    }
+    return 0;
   };
 
   const setSelectedToken = React.useCallback(
@@ -145,6 +174,7 @@ const AssetListModal = ({
             .filter((val) => {
               return handleSearch(val);
             })
+            .sort(handleSort)
             .map((asset: any, index: number) => {
               const formattedBalance =
                 buttonState.tabName !== "Deposit"
@@ -174,7 +204,7 @@ const AssetListModal = ({
                     </div>
                   </div>
                   {walletAssetType === "currency" ? (
-                    <span>{formattedBalance}</span>
+                    <span className="text-[14px]">{formattedBalance}</span>
                   ) : null}
                 </div>
               );
