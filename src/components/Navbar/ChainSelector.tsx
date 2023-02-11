@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { UilAngleDown, UilSpinner } from "@iconscout/react-unicons";
 import styled from "styled-components";
-import { CHAINS, ChainType } from "../../connection/chains";
+import { CHAINS, ChainType, ChainIdToRenChain } from '../../connection/chains';
 import { useWeb3React } from "@web3-react/core";
 import { useAuth } from "../../context/useWalletAuth";
 import { Toast } from "../Notification/Toast";
@@ -9,6 +9,8 @@ import { Breakpoints } from "../../constants/Breakpoints";
 import { useViewport } from "../../hooks/useViewport";
 import BottomSheetOptions from "../BottomSheet/BottomSheetOptions";
 import GreenDot from "../Icons/GreenDot";
+import { useGlobalState } from "../../context/useGlobalState";
+import { chainsBaseConfig } from '../../utils/chainsConfig';
 
 export const FormWrapper = styled.div`
     position: fixed;
@@ -36,6 +38,7 @@ const TokenSelectDropdown = () => {
     const [activeChain, setActiveChain] = useState<ChainType | undefined>(undefined);
     const { chainId } = useWeb3React();
     const { width } = useViewport();
+    const { setChain } = useGlobalState()
 
     const { needToSwitchChain, switchNetwork } = useAuth();
     const ref = useRef<HTMLDivElement>(null);
@@ -43,11 +46,12 @@ const TokenSelectDropdown = () => {
     useEffect(() => {
         if (!chainId) return;
         const activeChain: ChainType | undefined = CHAINS[chainId];
-        setActiveChain(activeChain);
+        setActiveChain(activeChain)
+        setChain(chainsBaseConfig[ChainIdToRenChain[chainId]!]);
         const onCorrectChain = needToSwitchChain(chainId);
         console.log(onCorrectChain);
         // if (!onCorrectChain) Toast.info("you are currently on an unsupported chain")
-    }, [chainId, needToSwitchChain]);
+    }, [chainId, needToSwitchChain, setChain]);
 
     useEffect(() => {
         const checkIfClickedOutside = (e: Event) => {
@@ -71,16 +75,16 @@ const TokenSelectDropdown = () => {
                         <FormWrapper>
                             {getChainOptions()
                                 .filter((chain: ChainType) => chain.isTestnet)
-                                .map((chain: ChainType) => {
-                                    return <ChainSelector chain={chain} currentChain={chainId} switchNetwork={switchNetwork} />;
+                                .map((chain: ChainType, index: number) => {
+                                    return <ChainSelector key={index} chain={chain} currentChain={chainId} switchNetwork={switchNetwork} />;
                                 })}
                         </FormWrapper>
                     ) : (
                         <BottomSheetOptions hideCloseIcon open={true} setOpen={() => null} title={"Chain selection"}>
                             {getChainOptions()
                                 .filter((chain: ChainType) => chain.isTestnet)
-                                .map((chain: ChainType) => {
-                                    return <ChainSelector chain={chain} currentChain={chainId} switchNetwork={switchNetwork} />;
+                                .map((chain: ChainType, index: number) => {
+                                    return <ChainSelector key={index} chain={chain} currentChain={chainId} switchNetwork={switchNetwork} />;
                                 })}
                         </BottomSheetOptions>
                     ))}

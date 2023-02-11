@@ -4,6 +4,7 @@ import {
   useContext,
   useEffect,
   useState,
+  useRef
 } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { ChainIdToRenChain } from "../connection/chains";
@@ -49,6 +50,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     [x: string]: MulticallReturn | undefined;
   }>({});
   const { account, chainId, active } = useWeb3React();
+  
 
   const memoizedFetchBalances = useCallback(async () => {
     if (!account || !chainId || !chain) return;
@@ -89,6 +91,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     if (!chainId || !chain) return;
     memoizedFetchBalances();
   }, [memoizedFetchBalances, chainId, chain]);
+
 
   return (
     <GlobalStateContext.Provider

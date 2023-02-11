@@ -3,6 +3,7 @@ import EthereumChainLogo from "../../public/svgs/chains/ethereum.svg"
 import PolygonChainLogo from "../../public/svgs/chains/polygon.svg"
 import ArbitrumChainLogo from "../../public/svgs/chains/arbitrum.svg"
 import OptimismChainLogo from "../../public/svgs/chains/optimism.svg"
+import AvalancheLogo from "../../public/svgs/chains/avalanche.svg";
 import FantomLogo from "../../public/svgs/chains/fantom.svg"
 import Kava from "../../public/svgs/chains/kava.svg"
 import Moonbeam from "../../public/svgs/chains/moonbeam.svg"
@@ -25,50 +26,51 @@ export interface ChainType {
 }
 
 export enum SupportedChainId {
-    MAINNET = 1,
-    GOERLI = 5,
-    ARBITRUM_ONE = 42161,
-    ARBITRUM_RINKEBY = 421611,
-    OPTIMISM = 10,
-    OPTIMISM_GOERLI = 420,
-    POLYGON = 137,
-    POLYGON_MUMBAI = 80001,
-    FANTOM_OPERA = 250,
-    FANTOM_TESTNET = 4002,
-    KAVA = 2222,
-    KAVA_TESTNET = 2221,
-    BINANCE_SMART_CHAIN = 56,
-    BINANCE_SMART_CHAIN_TESTNET = 97,
-    MOONBEAM = 1284,
-    MOONBEAM_TESTNET = 1287 
-
+  MAINNET = 1,
+  GOERLI = 5,
+  ARBITRUM_ONE = 42161,
+  ARBITRUM_RINKEBY = 421611,
+  OPTIMISM = 10,
+  OPTIMISM_GOERLI = 420,
+  POLYGON = 137,
+  POLYGON_MUMBAI = 80001,
+  FANTOM_OPERA = 250,
+  FANTOM_TESTNET = 4002,
+  KAVA = 2222,
+  KAVA_TESTNET = 2221,
+  BINANCE_SMART_CHAIN = 56,
+  BINANCE_SMART_CHAIN_TESTNET = 97,
+  MOONBEAM = 1284,
+  MOONBEAM_TESTNET = 1287,
+  AVALANCHE_TESTNET = 43113,
 }
 
-export const ChainIdToRenChain: { [chainId: number]: Chain} = {
-    [SupportedChainId.MAINNET]: Chain.Ethereum,
-    [SupportedChainId.GOERLI]: Chain.Ethereum,
-    [SupportedChainId.POLYGON]: Chain.Polygon,
-    [SupportedChainId.POLYGON_MUMBAI]: Chain.Polygon,
-    [SupportedChainId.POLYGON_MUMBAI]: Chain.Polygon,
-    [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
-    [SupportedChainId.ARBITRUM_RINKEBY]: Chain.Arbitrum,
-    [SupportedChainId.OPTIMISM]: Chain.Optimism,
-    [SupportedChainId.OPTIMISM_GOERLI]: Chain.Optimism,
-    [SupportedChainId.FANTOM_OPERA]: Chain.Fantom,
-    [SupportedChainId.FANTOM_TESTNET]: Chain.Fantom,
-    [SupportedChainId.BINANCE_SMART_CHAIN]: Chain.BinanceSmartChain,
-    [SupportedChainId.BINANCE_SMART_CHAIN_TESTNET]: Chain.BinanceSmartChain,
-    [SupportedChainId.KAVA]: Chain.Kava,
-    [SupportedChainId.KAVA_TESTNET]: Chain.Kava,
-    [SupportedChainId.MOONBEAM]: Chain.Moonbeam,
-    [SupportedChainId.MOONBEAM_TESTNET]: Chain.Moonbeam,
-}
+export const ChainIdToRenChain: { [chainId: number]: Chain } = {
+  [SupportedChainId.MAINNET]: Chain.Ethereum,
+  [SupportedChainId.GOERLI]: Chain.Ethereum,
+  [SupportedChainId.POLYGON]: Chain.Polygon,
+  [SupportedChainId.POLYGON_MUMBAI]: Chain.Polygon,
+  [SupportedChainId.POLYGON_MUMBAI]: Chain.Polygon,
+  [SupportedChainId.ARBITRUM_ONE]: Chain.Arbitrum,
+  [SupportedChainId.ARBITRUM_RINKEBY]: Chain.Arbitrum,
+  [SupportedChainId.OPTIMISM]: Chain.Optimism,
+  [SupportedChainId.OPTIMISM_GOERLI]: Chain.Optimism,
+  [SupportedChainId.FANTOM_OPERA]: Chain.Fantom,
+  [SupportedChainId.FANTOM_TESTNET]: Chain.Fantom,
+  [SupportedChainId.BINANCE_SMART_CHAIN]: Chain.BinanceSmartChain,
+  [SupportedChainId.BINANCE_SMART_CHAIN_TESTNET]: Chain.BinanceSmartChain,
+  [SupportedChainId.KAVA]: Chain.Kava,
+  [SupportedChainId.KAVA_TESTNET]: Chain.Kava,
+  [SupportedChainId.MOONBEAM]: Chain.Moonbeam,
+  [SupportedChainId.MOONBEAM_TESTNET]: Chain.Moonbeam,
+  [SupportedChainId.AVALANCHE_TESTNET]: Chain.Avalanche,
+};
 
 export const CHAINS: { [key: number]: ChainType } = {
     [SupportedChainId.MAINNET]: {
       chainName: "Ethereum",
       logo: EthereumChainLogo,
-      isTestnet: true,
+      isTestnet: false,
       id: 1,
       rpcUrls: [""],
       symbol: "ETH",
@@ -78,7 +80,7 @@ export const CHAINS: { [key: number]: ChainType } = {
     [SupportedChainId.GOERLI]: {
         chainName: "Goerli",
         logo: EthereumChainLogo,
-        isTestnet: false,
+        isTestnet: true,
         id: 5  ,
         rpcUrls: [""],
         symbol: "gETH",
@@ -88,7 +90,7 @@ export const CHAINS: { [key: number]: ChainType } = {
     [SupportedChainId.POLYGON]: {
         chainName: "Polygon",
         logo: PolygonChainLogo,
-        isTestnet: true,
+        isTestnet: false,
         id: 137,
         rpcUrls: ["https://polygon-rpc.com/"],
         symbol: "MATIC",
@@ -98,7 +100,7 @@ export const CHAINS: { [key: number]: ChainType } = {
     [SupportedChainId.POLYGON_MUMBAI]: {
         chainName: "Polygon Testnet",
         logo: PolygonChainLogo,
-        isTestnet: false,
+        isTestnet: true,
         id: 80001,
         rpcUrls: ["https://matic-mumbai.maticvigil.com/"],
         symbol: "tMATIC",
@@ -108,7 +110,7 @@ export const CHAINS: { [key: number]: ChainType } = {
     [SupportedChainId.ARBITRUM_ONE]: {
         chainName: "Arbitrum",
         logo: ArbitrumChainLogo,
-        isTestnet: true,
+        isTestnet: false,
         id: 42161,
         rpcUrls: ["https://arb1.arbitrum.io/rpc"],
         symbol: "ArbETH",
@@ -118,7 +120,7 @@ export const CHAINS: { [key: number]: ChainType } = {
     [SupportedChainId.ARBITRUM_RINKEBY]: {
         chainName: "Arbitrum Testnet",
         logo: ArbitrumChainLogo,
-        isTestnet: false,
+        isTestnet: true,
         id: 421613,
         rpcUrls: ["https://goerli-rollup.arbitrum.io/rpc"],
         symbol: "tArbETH",
@@ -225,9 +227,9 @@ export const CHAINS: { [key: number]: ChainType } = {
         currency: "tGLMR",
         explorerLink: "https://moonscan.io"   
     },
-    [SupportedChainId.MOONBEAM_TESTNET]: {
+    [SupportedChainId.AVALANCHE_TESTNET]: {
         chainName: "Avalanche Testnet",
-        logo: Moonbeam,
+        logo: AvalancheLogo,
         isTestnet: true,
         id: 43113,
         rpcUrls: ["https://api.avax-test.network/ext/bc/C/rpc"],
