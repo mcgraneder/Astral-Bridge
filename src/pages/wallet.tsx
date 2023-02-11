@@ -57,6 +57,7 @@ const BlockPage: NextPage = () => {
             setWalletAssetType={setWalletAssetType}
             asset={asset}
             chain={chain}
+            setChain={setChain}
             gasPrice={gasPrice}
             text={text}
             setText={setText}

@@ -79,3 +79,22 @@
       background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0.51) 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF
     }
   } */
+input[type="radio"]+label span {
+  transition: background .2s,
+    transform .2s;
+}
+
+input[type="radio"]+label span:hover,
+input[type="radio"]+label:hover span {
+  transform: scale(1.1);
+}
+
+input[type="radio"]:checked+label span {
+  background-color: #3490DC; 
+  box-shadow: 0px 0px 0px 1px white inset;
+}
+
+input[type="radio"]:checked+label {
+  color: #3490DC;
+  font-weight: bold; 
+}

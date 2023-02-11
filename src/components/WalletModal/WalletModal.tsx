@@ -29,6 +29,7 @@ import { useApproval } from '../../hooks/useApproval';
 import { BridgeDeployments } from "../../constants/deployments";
 import { chainAdresses } from "../../constants/Addresses";
 import BigNumber from "bignumber.js";
+import { chainsBaseConfig } from '../../utils/chainsConfig';
 export type Tab = {
   tabName: string;
   tabNumber: number;
@@ -128,6 +129,7 @@ interface IWalletModal {
   setWalletAssetType: any;
   asset: any;
   chain: any;
+  setChain: any;
   gasPrice: number;
   text: string;
   setText: any;
@@ -140,6 +142,7 @@ const WalletModal = ({
   setWalletAssetType,
   asset,
   chain,
+  setChain,
   gasPrice,
   text,
   setText,
@@ -173,6 +176,7 @@ const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
           ? chain.testnetChainId
           : chain.mainnetChainId
       );
+      setChain(chainsBaseConfig[ChainIdToRenChain[chain.testnetChainId]!]);
     } else if (!isAssetApproved) {
       approve(tokenAddress, text, bridgeAddress!);
       setIsAssetApproved(true)
@@ -186,6 +190,7 @@ const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
     switchNetwork,
     text,
     toggleConfirmationModal,
+    setChain
   ]);
 
   useEffect(() => {
