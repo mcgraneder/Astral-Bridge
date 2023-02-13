@@ -4,7 +4,6 @@ import { useTranslation } from "next-i18next";
 import { useCallback } from "react";
 import { ERC20ABI } from "@renproject/chains-ethereum/contracts";
 import getContract from "../utils/getContract";
-import { useWallet } from "../context/useWalletState";
 import { useTransactionFlow } from "../context/useTransactionFlowState";
 import { useGlobalState } from "../context/useGlobalState";
 

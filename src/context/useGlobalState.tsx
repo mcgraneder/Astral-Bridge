@@ -4,7 +4,7 @@ import {
   useContext,
   useEffect,
   useState,
-  useRef
+  useMemo
 } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { ChainIdToRenChain } from "../connection/chains";
@@ -17,6 +17,7 @@ import { GasPriceType } from "../components/TxConfirmationModalFlow/TransactionC
 import { get } from "../services/axios";
 import { ethers } from 'ethers';
 import { fetchNetworkFeeData, NetReturn } from '../utils/market/getMarketGasData';
+import { useGasPrices } from "../hooks/usGasPrices";
 interface GlobalStateProviderProps {
   children: React.ReactNode;
 }
@@ -31,10 +32,6 @@ type GlobalContextType = {
   setPendingTransaction: Dispatch<SetStateAction<boolean>>;
   chain: any;
   setChain: any;
-  fetchMarketDataGasPrices: () => Promise<void>;
-  gasPrices: NetReturn | null;
-  activeGasPriceType: GP;
-  setActiveGasPriceType: Dispatch<SetStateAction<GP>>;
 };
 
 export type MulticallReturn = {
@@ -49,13 +46,11 @@ export type GP = {
   type: string;
   gasPrice: number | null;
   gasLimit: number | null;
-}
+};
 const GlobalStateContext = createContext({} as GlobalContextType);
 
 function GlobalStateProvider({ children }: GlobalStateProviderProps) {
-  const [gasPrices, setGasPrices] = useState<NetReturn | null>(null);
-  const [activeGasPriceType, setActiveGasPriceType] = useState<GP>({ type: "standard", gasPrice: null, gasLimit: null })
-  const [fetchedStoredChain, setFetchStoredChain] = useState<boolean>(false)
+  const [fetchedStoredChain, setFetchStoredChain] = useState<boolean>(false);
   const [pendingTransaction, setPendingTransaction] = useState<boolean>(false);
   const [fetchingBalances, setFetchingBalances] = useState<boolean>(false);
   const [chain, setChain] = useState<any>(chainsBaseConfig.Ethereum);
@@ -63,13 +58,6 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     [x: string]: MulticallReturn | undefined;
   }>({});
   const { account, chainId, active } = useWeb3React();
-
-  const fetchMarketDataGasPrices = useCallback(async () => {
-    console.log("fetching")
-    const gp = await fetchNetworkFeeData(chainId!)
-    setGasPrices(gp);
-  }, [setGasPrices, chainId]);
-  
 
   const memoizedFetchBalances = useCallback(async () => {
     if (!account || !chainId || !chain) return;
@@ -92,7 +80,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     setAssetBalances(tokensResponse.result.multicall);
     setTimeout(() => setFetchingBalances(false), 500);
   }, [account, chainId, setFetchingBalances, chain]);
-  
+
   useEffect(() => {
     if (fetchedStoredChain || !chainId) return;
     setChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!]);
@@ -101,20 +89,15 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
 
   useEffect(() => {
     if (!active || !account || !chain) return;
+    console.log("heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
+      memoizedFetchBalances();
     const interval: NodeJS.Timer = setInterval(memoizedFetchBalances, 50000);
-
     return () => clearInterval(interval);
   }, [memoizedFetchBalances, account, active, chain]);
 
-  useEffect(() => {
-    if (!chainId || !chain) return;
-    memoizedFetchBalances();
-  }, [memoizedFetchBalances, chainId, chain]);
 
-
-  return (
-    <GlobalStateContext.Provider
-      value={{
+    const ProvRet = useMemo(
+      () => ({
         memoizedFetchBalances,
         assetBalances,
         fetchingBalances,
@@ -122,11 +105,20 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
         setPendingTransaction,
         chain,
         setChain,
-        fetchMarketDataGasPrices,
-        gasPrices,
-        activeGasPriceType,
-        setActiveGasPriceType
-      }}
+      }),
+      [
+        memoizedFetchBalances,
+        assetBalances,
+        fetchingBalances,
+        pendingTransaction,
+        setPendingTransaction,
+        chain,
+        setChain,
+      ]
+    );
+  return (
+    <GlobalStateContext.Provider
+      value={ProvRet}
     >
       {children}
     </GlobalStateContext.Provider>

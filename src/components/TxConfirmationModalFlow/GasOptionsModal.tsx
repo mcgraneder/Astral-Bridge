@@ -15,13 +15,14 @@ import { GasPriceType } from './TransactionConfirmationModal';
 import BigNumber from "bignumber.js";
 import { toFixed } from '../../utils/misc';
 import { GP, useGlobalState } from '../../context/useGlobalState';
-import { formatValue, NetReturn } from "../../utils/market/getMarketGasData";
+import { formatValue, NetReturn, fetchMarketDataGasPrices } from '../../utils/market/getMarketGasData';
 import { ethers } from "ethers";
 import { BridgeDeployments } from "../../constants/deployments";
 import { chainAdresses } from "../../constants/Addresses";
 import { useWeb3React } from "@web3-react/core";
 import { ERC20ABI } from "@renproject/chains-ethereum/contracts";
 import RenBridgeABI from "../../constants/ABIs/RenBridgeABI.json";
+import { useGasPriceState, gasPriceData } from '../../context/useGasPriceState';
 
 const GASPRICES = ["slow", "standard", "fast", "rapid"];
 
@@ -196,74 +197,79 @@ const ToggleButtonContainer = ({
 };
 
 interface IBasicOptions {
-  gasPrices: NetReturn | null;
-  activeGasPriceType: GP;
-  setActiveGasPriceType: React.Dispatch<React.SetStateAction<GP>>;
+  networkGasData: gasPriceData | undefined;
+  defaultGasPrice: GP | undefined;
+  setDefaultGasPrice: React.Dispatch<React.SetStateAction<GP | undefined>>;
   gasLimit: string;
   loading: boolean;
 }
 const BasicOptions = ({
-  gasPrices,
-  activeGasPriceType,
-  setActiveGasPriceType,
+  networkGasData,
+  defaultGasPrice,
+  setDefaultGasPrice,
   gasLimit,
-  loading
+  loading,
 }: IBasicOptions) => {
   return (
     <div className="mx-[6px] mb-3 flex flex-col gap-2 rounded-xl border-gray-400 bg-secondary px-2 py-2">
-      {gasPrices && GASPRICES.map((type: string, index: number) => {
-
-        const gasPriceFeeTypes: ethers.BigNumber[] = Object.values(gasPrices?.fees!);
-        const feeTypePrice = formatValue(gasPriceFeeTypes[index]!, 9);
-
-        return (
-          <div
-            key={type}
-            className="flex justify-between rounded-lg py-1 px-2 "
-          >
-            <div className="flex items-center justify-center gap-2">
-              <RadioButton
-                active={type === activeGasPriceType.type}
-                onClick={() => {
-                  setActiveGasPriceType({
-                    type: type,
-                    gasPrice: Number(gasPriceFeeTypes[index]),
-                    gasLimit: Number(gasLimit),
-                  });
-                }}
-              />
-
-              <span
-                className={`${
-                  type === activeGasPriceType.type ? "white" : "text-gray-500"
-                }`}
-              >
-                {type}
-              </span>
-            </div>
-            { loading ? <UilSpinner className={"animate-spin"}/> :
-            (<><span
-              className={`${
-                type === activeGasPriceType.type ? "white" : "text-gray-500"
-              }`}
+      {networkGasData &&
+        GASPRICES.map((type: string, index: number) => {
+          const gasPriceFeeTypes: number[] = Object.values(
+            networkGasData?.fees!
+          );
+          return (
+            <div
+              key={type}
+              className="flex justify-between rounded-lg py-1 px-2 "
             >
-              {toFixed(feeTypePrice, 3)} Gwei
-            </span></>)}
-          </div>
-        );
-      })}
+              <div className="flex items-center justify-center gap-2">
+                <RadioButton
+                  active={type === defaultGasPrice?.type}
+                  onClick={() => {
+                    setDefaultGasPrice({
+                      type: type,
+                      gasPrice: Number(gasPriceFeeTypes[index]),
+                      gasLimit: Number(gasLimit),
+                    });
+                  }}
+                />
+
+                <span
+                  className={`${
+                    type === defaultGasPrice?.type ? "white" : "text-gray-500"
+                  }`}
+                >
+                  {type}
+                </span>
+              </div>
+              {loading ? (
+                <UilSpinner className={"animate-spin"} />
+              ) : (
+                <>
+                  <span
+                    className={`${
+                      type === defaultGasPrice?.type ? "white" : "text-gray-500"
+                    }`}
+                  >
+                    {toFixed(gasPriceFeeTypes[index]!, 3)} Gwei
+                  </span>
+                </>
+              )}
+            </div>
+          );
+        })}
     </div>
   );
 };
 
-const AdvancedOptions = ({ gasPrices, maxPriorityFee, maxFee }: any) => {
+const AdvancedOptions = ({ networkGasData, maxPriorityFee, maxFee }: any) => {
   return (
     <div className="broder mx-[6px] mb-3 flex flex-col gap-2 rounded-2xl border-tertiary px-1 text-[20px]">
       <WalletInputWrapper>
         <WalletInput
           //   onKeyPress={preventMinus}
           type={"number"}
-          value={formatValue(gasPrices.fees.slow!, 9)}
+          value={formatValue(networkGasData.fees.slow!, 9)}
           placeholder={"Amount"}
         ></WalletInput>
         <span className="mx-6 text-[14px] text-gray-400">Base fee</span>
@@ -282,7 +288,7 @@ const AdvancedOptions = ({ gasPrices, maxPriorityFee, maxFee }: any) => {
           //   onKeyPress={preventMinus}
           type={"number"}
           value={Number(maxFee)}
-          placeholder={gasPrices}
+          placeholder={networkGasData}
         ></WalletInput>
         <span className="mx-6 text-[14px] text-gray-400">MaxFee</span>
       </WalletInputWrapper>
@@ -303,22 +309,16 @@ const GasOptionsModal = ({
   asset
 }: IAssetModal) => {
   const { account, library } = useWeb3React();
-  const {
-    fetchMarketDataGasPrices,
-    gasPrices,
-    setActiveGasPriceType,
-    activeGasPriceType,
-  } = useGlobalState();
+ const { fetchMarketDataGasPrices, networkGasData, setDefaultGasPrice, defaultGasPrice, customGasPrice, setCustomtGasPrice } = useGasPriceState()
 
   const [loading, setLoading] = useState<boolean>(true)
   const [maxPriorityFee, setMaxPriorityFee] = useState<string>("1.5");
   const [gasLimit, setGasLimit] = useState<string>("0");
   const [gasMinLimit, setMinGasLimit] = useState<string>("0");
-  const [baseFee, setBaseFee] = useState<string>("0")
-
-  const [maxFee, setMaxFee] = useState<string>(
-    Number(new BigNumber(Number(gasPrices?.gasData.maxFeePerGas)).shiftedBy(-9)).toString()
+  const [baseFee, setBaseFee] = useState<string | undefined>(
+    networkGasData?.fees!.slow!.toString()
   );
+  const [maxFee, setMaxFee] = useState<string | undefined>(networkGasData?.fees!.rapid!.toString());
   const [activeButton, setActiveButton] = useState<Tab>({
     tabName: "Basic",
     tabNumber: 0,
@@ -411,16 +411,15 @@ const GasOptionsModal = ({
       </div>
       {activeButton.tabName === "Basic" ? (
         <BasicOptions
-          gasPrices={gasPrices}
-          activeGasPriceType={activeGasPriceType}
-          setActiveGasPriceType={setActiveGasPriceType}
+          networkGasData={networkGasData}
+          defaultGasPrice={customGasPrice}
+          setDefaultGasPrice={setCustomtGasPrice}
           gasLimit={gasLimit}
-          minGasLimit={gasMinLimit}
           loading={loading}
         />
       ) : (
         <AdvancedOptions
-          gasPrices={gasPrices}
+          networkGasData={networkGasData}
           maxPriorityFee={maxPriorityFee}
           maxFee={maxFee}
         />

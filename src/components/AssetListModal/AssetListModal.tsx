@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useCallback } from "react"
 import { TopRowNavigation } from "../WalletConnectModal/WalletConnectModal"
 import { FormWrapper, TokenInputContainer, TokenInput } from '../CSS/AssetListModalStyles';
 import { Backdrop } from "../WalletConnectModal/WalletConnectModal"
@@ -7,14 +7,10 @@ import { chainsConfig, ChainConfig, supportedEthereumChains } from '../../utils/
 import {
   assetsConfig,
   AssetConfig,
-  assetsBaseConfig,
-  supportedAssets,
   whiteListedEVMAssets,
   WhiteListedLegacyAssets,
 } from "../../utils/assetsConfig";
-import { Asset, Chain } from "@renproject/chains";
-import { useWallet } from "../../context/useWalletState";
-import { MulticallReturn } from "../../context/useGlobalState";
+import { useGlobalState } from "../../context/useGlobalState";
 import { Tab } from "../WalletModal/WalletModal";
 
 const getOptions = (mode: string): Array<AssetConfig | ChainConfig> => {
@@ -33,9 +29,6 @@ const getOptionBySymbol = (symbol: string, mode: string) =>
 interface IAssetModal {
   setShowTokenModal: any;
   visible: boolean;
-  assetBalances: {
-    [x: string]: MulticallReturn | undefined;
-  };
   setAsset: any;
   setChain: any;
   walletAssetType: any;
@@ -55,13 +48,13 @@ const createAvailabilityFilter =
 const AssetListModal = ({
   setShowTokenModal,
   visible,
-  assetBalances,
   setAsset,
   setChain,
   walletAssetType,
   buttonState,
 }: IAssetModal) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const { assetBalances } = useGlobalState()
   const close = useCallback((): void => {
     setShowTokenModal(false);
     setSearchTerm("");

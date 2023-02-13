@@ -12,8 +12,6 @@ type ExecuteTxType = {
     chain: any,
     args: any[],
     contractFn: any,
-    estimateGas: any,
-    activeGasPriceType: GP
   ) => Promise<void>;
 };
 const useEcecuteTransaction = (): ExecuteTxType => {
@@ -42,23 +40,21 @@ const useEcecuteTransaction = (): ExecuteTxType => {
       chain: any,
       args: any[],
       contractFn: any,
-      estimateGas: any,
-      activeGasPriceType: GP
     ): Promise<void> => {
       if (!library || !account) return;
       togglePendingModal();
 
       try {
-        const overrideParams =
-          activeGasPriceType.gasLimit !== null
-            ? {
-                gasLimit: activeGasPriceType.gasLimit,
-                gasPrice: activeGasPriceType.gasPrice,
-              }
-            : {};
+        // const overrideParams =
+        //   activeGasPriceType.gasLimit !== null
+        //     ? {
+        //         gasLimit: activeGasPriceType.gasLimit,
+        //         gasPrice: activeGasPriceType.gasPrice,
+        //       }
+        //     : {};
 
-            console.log(overrideParams)
-        const tx = await contractFn(...args, overrideParams);
+        //     console.log(overrideParams)
+        const tx = await contractFn(...args);
 
         setTimeout(() => toggleSubmittedModal(), 250);
         await tx.wait(1);

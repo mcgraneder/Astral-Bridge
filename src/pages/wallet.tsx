@@ -2,74 +2,59 @@ import { useState, useEffect, useCallback } from "react"
 import type { NextPage } from "next";
 import WalletModal from "../components/WalletModal/WalletModal";
 import { Layout } from "../layouts";
-import AssetListModal from '../components/AssetListModal/AssetListModal';
-import { useWallet } from "../context/useWalletState";
+import AssetListModal from "../components/AssetListModal/AssetListModal";
 import BottomNavBar from "../components/WalletModal/components/BottomNavbar";
 import { useGlobalState } from "../context/useGlobalState";
-import API from '../constants/Api';
-import { ChainIdToRenChain } from '../connection/chains';
-import { useWeb3React } from '@web3-react/core';
+import API from "../constants/Api";
+import { ChainIdToRenChain } from "../connection/chains";
+import { useWeb3React } from "@web3-react/core";
 import { get } from "../services/axios";
-import TxConfirmationModal from "../components/TxConfirmationModalFlow";
-import PendingTransactionModal from '../components/TxConfirmationModalFlow/PendinTransactionModal';
-import TransactionRejectedModal from '../components/TxConfirmationModalFlow/TransactionRejectedModal';
-import TransactionFlowModals from '../components/TxConfirmationModalFlow/index';
+import TransactionFlowModals from "../components/TxConfirmationModalFlow/index";
+import { Tab } from "../components/WalletModal/WalletModal";
+import { assetsBaseConfig } from "../utils/assetsConfig";
+
+type AssetType = "chain" | "currency";
 
 const BlockPage: NextPage = () => {
+  
   const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
-  const { assetBalances, chain, setChain } = useGlobalState();
-    const {
-      gasPrice,
-      text,
-      buttonState,
-      asset,
-      setAsset,
-      walletAssetType,
-      setText,
-      setWalletAssetType,
-      setButtonState,
-      handleTransaction
-    } = useWallet();
-    
+  const [text, setText] = useState<string>("");
+  const [walletAssetType, setWalletAssetType] = useState<AssetType>("chain");
+  const [asset, setAsset] = useState<any>(assetsBaseConfig.BTC);
+  const [buttonState, setButtonState] = useState<Tab>({
+    tabName: "Deposit",
+    tabNumber: 0,
+    side: "left",
+  });
+  return (
+    <>
+      <AssetListModal
+        setShowTokenModal={setShowTokenModal}
+        visible={showTokenModal}
+        setAsset={setAsset}
+        walletAssetType={walletAssetType}
+        buttonState={buttonState}
+      />
+      <TransactionFlowModals
+        text={text}
+        buttonState={buttonState}
+        asset={asset}
+      />
 
-    return (
-      <>
-        <AssetListModal
+      <Layout>
+        <WalletModal
           setShowTokenModal={setShowTokenModal}
-          visible={showTokenModal}
-          assetBalances={assetBalances}
-          setAsset={setAsset}
-          setChain={setChain}
-          walletAssetType={walletAssetType}
-          buttonState	={buttonState}
-        />
-        <TransactionFlowModals
-          gasPrice={gasPrice}
-          text={text}
-          buttonState={buttonState}
+          setWalletAssetType={setWalletAssetType}
           asset={asset}
-          chain={chain}
-          handleTransaction={handleTransaction}
-          
+          text={text}
+          setText={setText}
+          buttonState={buttonState}
+          setButtonState={setButtonState}
         />
-
-        <Layout>
-          <WalletModal
-            setShowTokenModal={setShowTokenModal}
-            setWalletAssetType={setWalletAssetType}
-            asset={asset}
-            chain={chain}
-            setChain={setChain}
-            gasPrice={gasPrice}
-            text={text}
-            setText={setText}
-            buttonState={buttonState}
-            setButtonState={setButtonState}
-          />
-          <BottomNavBar />
-        </Layout>
-      </>
-    );
+        <BottomNavBar />
+      </Layout>
+    </>
+  );
 };
 
 // export const getStaticProps = async ({ locale }: any) => ({

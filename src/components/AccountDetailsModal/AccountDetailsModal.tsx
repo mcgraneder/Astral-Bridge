@@ -13,7 +13,6 @@ import CopyIcon from "../Icons/CopyIcon";
 import { ExternalLink, Power } from "react-feather";
 import styled, { css } from "styled-components";
 import BalanceDisplay from "../NativeBalanceDisplay/BalanceDisplay";
-import { useWallet } from "../../context/useWalletState";
 
 export const Backdrop = styled.div`
   position: fixed;
@@ -104,7 +103,6 @@ const AccountDetailsModalIner = ({
   toggleAccoundDetailsModal,
 }: AccountDetailsProps) => {
   const { disconnect } = useAuth();
-  const { asset, chain } = useWallet();
   const { account } = useWeb3React();
   const { push } = useRouter();
 
@@ -120,7 +118,7 @@ const AccountDetailsModalIner = ({
         account={account}
         toggleAccoundDetailsModal={toggleAccoundDetailsModal}
       />
-      <BalanceDisplay asset={asset} isNative={true}/>
+      {/* <BalanceDisplay asset={"ETH"} isNative={true}/> */}
       <div className="mt-4 flex items-center justify-center">
         <PrimaryButton
           className={

@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { UilTimes, UilArrowLeft } from "@iconscout/react-unicons";
 import TxConfirmationModal from "./TransactionConfirmationModal";
 import PendingTransactionModal from "./PendinTransactionModal";
-import { useWallet } from "../../context/useWalletState";
+
 import TransactionRejectedModal from "./TransactionRejectedModal";
 import TransactionSubmittedModal from './TransactionSubmittedModal';
 import { useTransactionFlow } from "../../context/useTransactionFlowState";
@@ -87,20 +87,13 @@ export const TopRowNavigation = ({
 };
 
 interface TxFlowProps {
-  gasPrice: number;
   text: string;
   buttonState: Tab;
   asset: any;
   chain: any;
-  handleTransaction: (
-    transactionType: string,
-    amount: string,
-    chain: any,
-    asset: any
-  ) => Promise<void>;
 }
 
-function TransactionFlowModals({ gasPrice, text, buttonState, asset, chain, handleTransaction}: TxFlowProps) {
+function TransactionFlowModals({ text, buttonState, asset, chain}: TxFlowProps) {
 
   const {
     pending,
@@ -124,8 +117,6 @@ function TransactionFlowModals({ gasPrice, text, buttonState, asset, chain, hand
             asset={asset}
             chain={chain}
             transactionType={buttonState.tabName}
-            gasPrice={gasPrice}
-            handleTransaction={handleTransaction}
             buttonState={buttonState}
           />
         )}
