@@ -73,7 +73,7 @@ function WalletProvider({ children }: WalletProviderProps) {
   );
   const { chainId, library, account } = useWeb3React();
   const { executeTransaction } = useEcecuteTransaction();
-  const { pendingTransaction, memoizedFetchBalances, chain} = useGlobalState()
+  const { pendingTransaction, memoizedFetchBalances, chain, activeGasPriceType} = useGlobalState()
 
   useEffect(() => setText(""), [buttonState, pendingTransaction, chain])
 
@@ -106,12 +106,12 @@ function WalletProvider({ children }: WalletProviderProps) {
   }, [setGasPrice]);
 
   useEffect(() => {
-    if (!library) {
+    if (!library || !chainId) {
       fetchGasData();
       const intervalId = setInterval(fetchGasData, 30000);
       return () => clearInterval(intervalId);
     }
-  }, [fetchGasData, library]);
+  }, [fetchGasData, library, chainId]);
 
   const handleTransaction = useCallback(async (
       transactionType: string,
@@ -134,7 +134,9 @@ function WalletProvider({ children }: WalletProviderProps) {
           asset,
           chain,
           [txAmount.toString(), tokenAddress],
-          bridgeContract.transferFrom
+          bridgeContract.transferFrom,
+          bridgeContract.estimateGas.transferFrom,
+          activeGasPriceType
         );
       } else if (transactionType === "Withdraw") {
         const bridgeContract = new ethers.Contract(
@@ -146,7 +148,9 @@ function WalletProvider({ children }: WalletProviderProps) {
           asset,
           chain,
           [account, txAmount.toString(), tokenAddress],
-          bridgeContract.transfer
+          bridgeContract.transfer,
+          bridgeContract.estimateGas.transferFrom,
+          activeGasPriceType
         );
       }
       await memoizedFetchBalances()

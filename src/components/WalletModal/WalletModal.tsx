@@ -34,6 +34,7 @@ export type Tab = {
   tabName: string;
   tabNumber: number;
   side: string;
+  contractFunc?: any;
 };
 
 const TABS: Tab[] = [
@@ -175,8 +176,9 @@ const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
         NETWORK === RenNetwork.Testnet
           ? chain.testnetChainId
           : chain.mainnetChainId
-      );
-      setChain(chainsBaseConfig[ChainIdToRenChain[chain.testnetChainId]!]);
+      )
+       setChain(chainsBaseConfig[ChainIdToRenChain[chain.testnetChainId]!]);
+    
     } else if (!isAssetApproved) {
       approve(tokenAddress, text, bridgeAddress!);
       setIsAssetApproved(true)

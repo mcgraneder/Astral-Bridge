@@ -226,7 +226,7 @@ function AuthProvider({ children }: AuthProviderProps) {
           
           return { switched: false, errorCode: error.code };
         }
-      }, [pendingChain]);
+      }, [setWalletError, setErrorMessage]);
 
     const needToSwitchChain =
       (id: number): boolean => {

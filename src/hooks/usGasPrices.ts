@@ -1,0 +1,94 @@
+export const useGasPrices = () => {
+  const dispatch = useDispatch();
+  const report = useReportSystemStatus();
+
+  const fetchData = useCallback(async () => {
+    const anyBlockEth = await fetchWithTimeout(
+      "https://api.anyblock.tools/ethereum/ethereum/mainnet/gasprice"
+    )
+      .then((response) => {
+        report(SystemType.Anyblock, SystemStatus.Operational);
+        return response.json();
+      })
+      .catch((error) => {
+        console.error(error);
+        report(SystemType.Anyblock, SystemStatus.Failure);
+        return {
+          fast: 50, // fallback
+        };
+      });
+    const fast = anyBlockEth.fast;
+    const ethPrice = {
+      chain: Chain.Ethereum,
+      standard: fast < 20 ? 50 : fast,
+    };
+    const matic = await fetchWithTimeout(
+      "https://gasstation-mainnet.matic.network"
+    )
+      .then((response) => {
+        report(SystemType.MaticGasStation, SystemStatus.Operational);
+        return response.json();
+      })
+      .catch((error) => {
+        console.error(error);
+        report(SystemType.MaticGasStation, SystemStatus.Failure);
+        return {
+          fast: 6, // fallback
+        };
+      });
+    const maticPrice = {
+      chain: Chain.Polygon,
+      standard: matic.fast,
+    };
+    const bscPrice = {
+      chain: Chain.BinanceSmartChain,
+      standard: 20, // unable to find reliable source, but binance gas price is stable
+    };
+    const avaxPrice = {
+      chain: Chain.Avalanche,
+      standard: 225, // taken from https://docs.avax.network/learn/platform-overview/transaction-fees#fee-schedule
+    };
+    const ftmPrice = {
+      chain: Chain.Fantom,
+      standard: 5, // https://cointool.app/gasPrice/ftm
+    };
+    const arbPrice = {
+      chain: Chain.Arbitrum,
+      standard: 0.4, // https://cointool.app/gasPrice/arb
+    };
+    const glmrPrice = {
+      chain: Chain.Moonbeam,
+      standard: 100, // https://cointool.app/gasPrice/glmr
+    };
+    const kavaPrice = {
+      chain: Chain.Kava,
+      standard: 1,
+    };
+    const oethPrice = {
+      chain: Chain.Optimism,
+      standard: 20, // https://public-grafana.optimism.io/d/9hkhMxn7z/public-dashboard?orgId=1&refresh=5m
+    };
+    const solanaPrice = {
+      chain: Chain.Solana,
+      standard: 6, // extrapolated to make it around 0,001 SOL
+    };
+    const gasPrices = [
+      ethPrice,
+      bscPrice,
+      avaxPrice,
+      ftmPrice,
+      maticPrice,
+      solanaPrice,
+      arbPrice,
+      glmrPrice,
+      kavaPrice,
+      oethPrice,
+    ] as Array<GasPrice>;
+
+    dispatch(setGasPrices(gasPrices));
+  }, [dispatch, report]);
+
+  useEffect(() => {
+    fetchData().finally();
+  }, [fetchData]);
+};

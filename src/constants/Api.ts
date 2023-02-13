@@ -27,6 +27,7 @@ const API = {
   },
   owlOracle: {
     gasnow: `${OwlOracleBaseUrl}/gasnow`,
+    gasPrice: `https://api.blocknative.com/gasprices/blockprices`,
   },
 };
 

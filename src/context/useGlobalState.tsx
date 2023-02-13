@@ -9,13 +9,14 @@ import {
 import { useWeb3React } from "@web3-react/core";
 import { ChainIdToRenChain } from "../connection/chains";
 import { Chain, Asset } from "@renproject/chains";
-import { get } from "../services/axios";
 import API from "../constants/Api";
 import { SetStateAction, Dispatch } from 'react';
 import { chainsBaseConfig } from "../utils/chainsConfig";
 import { ChainBaseConfig } from '../constants/Addresses';
 import { GasPriceType } from "../components/TxConfirmationModalFlow/TransactionConfirmationModal";
-
+import { get } from "../services/axios";
+import { ethers } from 'ethers';
+import { fetchNetworkFeeData, NetReturn } from '../utils/market/getMarketGasData';
 interface GlobalStateProviderProps {
   children: React.ReactNode;
 }
@@ -31,9 +32,9 @@ type GlobalContextType = {
   chain: any;
   setChain: any;
   fetchMarketDataGasPrices: () => Promise<void>;
-  gasPrices: GasPriceType[];
-  activeGasPriceType: string;
-  setActiveGasPriceType: Dispatch<SetStateAction<string>>;
+  gasPrices: NetReturn | null;
+  activeGasPriceType: GP;
+  setActiveGasPriceType: Dispatch<SetStateAction<GP>>;
 };
 
 export type MulticallReturn = {
@@ -52,7 +53,7 @@ export type GP = {
 const GlobalStateContext = createContext({} as GlobalContextType);
 
 function GlobalStateProvider({ children }: GlobalStateProviderProps) {
-  const [gasPrices, setGasPrices] = useState<Array<GasPriceType>>([]);
+  const [gasPrices, setGasPrices] = useState<NetReturn | null>(null);
   const [activeGasPriceType, setActiveGasPriceType] = useState<GP>({ type: "standard", gasPrice: null, gasLimit: null })
   const [fetchedStoredChain, setFetchStoredChain] = useState<boolean>(false)
   const [pendingTransaction, setPendingTransaction] = useState<boolean>(false);
@@ -64,13 +65,10 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
   const { account, chainId, active } = useWeb3React();
 
   const fetchMarketDataGasPrices = useCallback(async () => {
-    const ethereumGasPriceData = await fetch(API.owlOracle.gasnow)
-      .then((response) => response.json())
-      .catch((error) => console.error(error));
-
-    console.log(ethereumGasPriceData);
-    setGasPrices(ethereumGasPriceData.data);
-  }, [setGasPrices]);
+    console.log("fetching")
+    const gp = await fetchNetworkFeeData(chainId!)
+    setGasPrices(gp);
+  }, [setGasPrices, chainId]);
   
 
   const memoizedFetchBalances = useCallback(async () => {
@@ -94,12 +92,12 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     setAssetBalances(tokensResponse.result.multicall);
     setTimeout(() => setFetchingBalances(false), 500);
   }, [account, chainId, setFetchingBalances, chain]);
-
+  
   useEffect(() => {
-    if (fetchedStoredChain || !chainId) return
-    setChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!])
-    setFetchStoredChain(true)
-  }, [fetchedStoredChain, chainId])
+    if (fetchedStoredChain || !chainId) return;
+    setChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!]);
+    setFetchStoredChain(true);
+  }, [fetchedStoredChain, chainId]);
 
   useEffect(() => {
     if (!active || !account || !chain) return;

@@ -30,6 +30,7 @@ const BlockPage: NextPage = () => {
       setButtonState,
       handleTransaction
     } = useWallet();
+    
 
     return (
       <>
@@ -49,6 +50,7 @@ const BlockPage: NextPage = () => {
           asset={asset}
           chain={chain}
           handleTransaction={handleTransaction}
+          
         />
 
         <Layout>

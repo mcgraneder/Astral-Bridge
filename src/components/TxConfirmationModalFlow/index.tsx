@@ -126,6 +126,7 @@ function TransactionFlowModals({ gasPrice, text, buttonState, asset, chain, hand
             transactionType={buttonState.tabName}
             gasPrice={gasPrice}
             handleTransaction={handleTransaction}
+            buttonState={buttonState}
           />
         )}
         {pending && (

@@ -3,7 +3,7 @@ import { TopRowNavigation } from "../WalletConnectModal/WalletConnectModal";
 import { FormWrapper } from "../WalletConnectModal/WalletConnectModal";
 import { Backdrop } from "../WalletConnectModal/WalletConnectModal";
 import { Icon } from "../Icons/AssetLogs/Icon";
-import { UilArrowDown, UilPump, UilCheckCircle } from '@iconscout/react-unicons';
+import { UilArrowDown, UilPump, UilCheckCircle, UilSpinner } from '@iconscout/react-unicons';
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import { fetchPrice } from "../../utils/market/fetchAssetPrice";
 import useFetchAssetPrice from "../../hooks/useFetchAssetPrice";
@@ -14,7 +14,17 @@ import styled, { css } from "styled-components"
 import { GasPriceType } from './TransactionConfirmationModal';
 import BigNumber from "bignumber.js";
 import { toFixed } from '../../utils/misc';
-import { GP } from "../../context/useGlobalState";
+import { GP, useGlobalState } from '../../context/useGlobalState';
+import { formatValue, NetReturn } from "../../utils/market/getMarketGasData";
+import { ethers } from "ethers";
+import { BridgeDeployments } from "../../constants/deployments";
+import { chainAdresses } from "../../constants/Addresses";
+import { useWeb3React } from "@web3-react/core";
+import { ERC20ABI } from "@renproject/chains-ethereum/contracts";
+import RenBridgeABI from "../../constants/ABIs/RenBridgeABI.json";
+
+const GASPRICES = ["slow", "standard", "fast", "rapid"];
+
 const TABS: Tab[] = [
   {
     tabName: "Basic",
@@ -42,7 +52,7 @@ export const MinFormToggleButtonContainer = styled.div`
 `;
 
 export const WalletInput = styled.input`
-  width: 100%;
+  width: 50%;
   background: transparent;
   border: none;
   color: white;
@@ -61,26 +71,34 @@ export const WalletInput = styled.input`
   }
 
   &:focus {
-    border: 1px solid rgb(59, 130, 246);
+    border: none;
+  }
+  &:active {
+    border: none;
   }
 `;
 
 export const WalletInputWrapper = styled.div`
-  height: 100%;
+  height: 50px;
+  
+
   // width: 100%;
-  line-height: 50px;
+  /* line-height: 50px; */
   display: flex;
+  align-items: center;
+  justify-content: space-between;
   /* align-items: center;
     justify-content: center; */
-  border: none;
+  border: ${(props) => props.error ? "1px solid red" : "none"};
   -webkit-appearance: none;
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
   }
   background-color: rgb(34 53 83);
-  border: 1px solid rgb(48, 63, 88);
+  
   border-radius: 10px;
+  font-size: 14px;
 
   // border: 3px solid rgb(34,43,68);
 
@@ -177,36 +195,198 @@ const ToggleButtonContainer = ({
   );
 };
 
+interface IBasicOptions {
+  gasPrices: NetReturn | null;
+  activeGasPriceType: GP;
+  setActiveGasPriceType: React.Dispatch<React.SetStateAction<GP>>;
+  gasLimit: string;
+  loading: boolean;
+}
+const BasicOptions = ({
+  gasPrices,
+  activeGasPriceType,
+  setActiveGasPriceType,
+  gasLimit,
+  loading
+}: IBasicOptions) => {
+  return (
+    <div className="mx-[6px] mb-3 flex flex-col gap-2 rounded-xl border-gray-400 bg-secondary px-2 py-2">
+      {gasPrices && GASPRICES.map((type: string, index: number) => {
+
+        const gasPriceFeeTypes: ethers.BigNumber[] = Object.values(gasPrices?.fees!);
+        const feeTypePrice = formatValue(gasPriceFeeTypes[index]!, 9);
+
+        return (
+          <div
+            key={type}
+            className="flex justify-between rounded-lg py-1 px-2 "
+          >
+            <div className="flex items-center justify-center gap-2">
+              <RadioButton
+                active={type === activeGasPriceType.type}
+                onClick={() => {
+                  setActiveGasPriceType({
+                    type: type,
+                    gasPrice: Number(gasPriceFeeTypes[index]),
+                    gasLimit: Number(gasLimit),
+                  });
+                }}
+              />
+
+              <span
+                className={`${
+                  type === activeGasPriceType.type ? "white" : "text-gray-500"
+                }`}
+              >
+                {type}
+              </span>
+            </div>
+            { loading ? <UilSpinner className={"animate-spin"}/> :
+            (<><span
+              className={`${
+                type === activeGasPriceType.type ? "white" : "text-gray-500"
+              }`}
+            >
+              {toFixed(feeTypePrice, 3)} Gwei
+            </span></>)}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const AdvancedOptions = ({ gasPrices, maxPriorityFee, maxFee }: any) => {
+  return (
+    <div className="broder mx-[6px] mb-3 flex flex-col gap-2 rounded-2xl border-tertiary px-1 text-[20px]">
+      <WalletInputWrapper>
+        <WalletInput
+          //   onKeyPress={preventMinus}
+          type={"number"}
+          value={formatValue(gasPrices.fees.slow!, 9)}
+          placeholder={"Amount"}
+        ></WalletInput>
+        <span className="mx-6 text-[14px] text-gray-400">Base fee</span>
+      </WalletInputWrapper>
+      <WalletInputWrapper>
+        <WalletInput
+          //   onKeyPress={preventMinus}
+          type={"number"}
+          value={maxPriorityFee}
+          placeholder={"Amount"}
+        ></WalletInput>
+        <span className="mx-6 text-[14px] text-gray-400">Max Prioity Fee</span>
+      </WalletInputWrapper>
+      <WalletInputWrapper>
+        <WalletInput
+          //   onKeyPress={preventMinus}
+          type={"number"}
+          value={Number(maxFee)}
+          placeholder={gasPrices}
+        ></WalletInput>
+        <span className="mx-6 text-[14px] text-gray-400">MaxFee</span>
+      </WalletInputWrapper>
+    </div>
+  );
+};
 interface IAssetModal {
   setAdvancedOptions: () => void;
-  fetchMarketDataGasPrices: () => Promise<void>;
-  gasPrices: GasPriceType[];
-  priceTypes: any;
-  activeGasPriceType: GP;
-  setActiveGasPriceType: any;
+  buttonState: Tab;
+  chain: any;
+  asset: any;
 }
 
 const GasOptionsModal = ({
-setAdvancedOptions,
-fetchMarketDataGasPrices,
-gasPrices,
-priceTypes,
-activeGasPriceType,
-setActiveGasPriceType
+  setAdvancedOptions,
+  buttonState,
+  chain,
+  asset
 }: IAssetModal) => {
-    const [activeButton, setActiveButton] = useState<Tab>({
-      tabName: "Basic",
-      tabNumber: 0,
-      side: "left",
-    });
+  const { account, library } = useWeb3React();
+  const {
+    fetchMarketDataGasPrices,
+    gasPrices,
+    setActiveGasPriceType,
+    activeGasPriceType,
+  } = useGlobalState();
 
-    useEffect(() => {
-      const interval: NodeJS.Timer = setInterval(
-        fetchMarketDataGasPrices,
-        5000
-      );
-      return () => clearInterval(interval);
-    }, [fetchMarketDataGasPrices]);
+  const [loading, setLoading] = useState<boolean>(true)
+  const [maxPriorityFee, setMaxPriorityFee] = useState<string>("1.5");
+  const [gasLimit, setGasLimit] = useState<string>("0");
+  const [gasMinLimit, setMinGasLimit] = useState<string>("0");
+  const [baseFee, setBaseFee] = useState<string>("0")
+
+  const [maxFee, setMaxFee] = useState<string>(
+    Number(new BigNumber(Number(gasPrices?.gasData.maxFeePerGas)).shiftedBy(-9)).toString()
+  );
+  const [activeButton, setActiveButton] = useState<Tab>({
+    tabName: "Basic",
+    tabNumber: 0,
+    side: "left",
+  });
+
+  const estimateGasLimit = useCallback(async (): Promise<ethers.BigNumber> => {
+    const bridgeAddress = BridgeDeployments[chain.fullName];
+    const tokenAddress =
+      chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
+    const bridgeContract = new ethers.Contract(
+      bridgeAddress!,
+      RenBridgeABI,
+      await library.getSigner()
+    );
+    const gasEstimate =
+      buttonState.tabName === "Deposit"
+        ? await bridgeContract.estimateGas.transferFrom?.(
+            "10000",
+            tokenAddress!
+          )
+        : await bridgeContract.estimateGas.transfer?.(
+            account!,
+            "10000",
+            tokenAddress!
+          );
+
+    return gasEstimate as ethers.BigNumber;
+  }, [chain, library, account, buttonState, asset]);
+
+  useEffect(() => {
+    estimateGasLimit().then((gasLimit: ethers.BigNumber) => {
+      setGasLimit(Number(gasLimit).toString())
+      setMinGasLimit(Number(gasLimit).toString())
+  });
+  }, []);
+
+  useEffect(() => {
+    fetchMarketDataGasPrices().then(() => setLoading(false));
+    const interval: NodeJS.Timer = setInterval(fetchMarketDataGasPrices, 5000);
+    return () => clearInterval(interval);
+  }, [fetchMarketDataGasPrices]);
+
+  const onChange = useCallback(
+    (v: string, _isMax = false) => {
+      let value: number | string = v;
+      setGasLimit(String(value));
+    },
+    [setGasLimit]
+  );
+
+  const handleChange = (e: any) => {
+    e.preventDefault();
+    const value: string = e.target.value;
+    if (value.length > 11) {
+      const pointIndex = value.indexOf(".");
+      if (
+        pointIndex === -1 ||
+        (pointIndex >= 0 && value.substring(0, pointIndex).length > 11)
+      ) {
+        e.preventDefault();
+        return;
+      }
+    }
+    onChange(value);
+  };
+
+  console.log(Number(gasMinLimit) > Number(gasLimit));
 
   return (
     <>
@@ -229,65 +409,44 @@ setActiveGasPriceType
       <div className="mx-[6px] flex items-center justify-start gap-2 p-2">
         <span className="text-[14px] text-gray-300">GasPrice</span>
       </div>
-      <div className="mx-[6px] mb-3 flex flex-col gap-2 rounded-xl border-gray-400 bg-secondary px-2 py-2">
-        {priceTypes.map((type: any, index: number) => {
-          const vals = Object.values(gasPrices);
-          const gasPrice = toFixed(
-            Number(new BigNumber(vals[index]).shiftedBy(-9)),
-            3
-          );
-          return (
-            <div
-              key={type}
-              className="flex justify-between rounded-lg py-1 px-2 "
-            >
-              <div className="flex items-center justify-center gap-2">
-                <RadioButton
-                  active={type === activeGasPriceType.type}
-                  onClick={() =>
-                    setActiveGasPriceType({
-                      type: type,
-                      gasPrice: gasPrice,
-                      gasLimit: 210000,
-                    })
-                  }
-                />
-
-                <span
-                  className={`${
-                    type === activeGasPriceType.type ? "white" : "text-gray-500"
-                  }`}
-                >
-                  {type}
-                </span>
-              </div>
-              <span
-                className={`${
-                  type === activeGasPriceType.type ? "white" : "text-gray-500"
-                }`}
-              >
-                {gasPrice} Gwei
-              </span>
-            </div>
-          );
-        })}
-      </div>
-      <div className="mx-[6px] mt-2 flex items-center justify-start gap-2 p-2">
+      {activeButton.tabName === "Basic" ? (
+        <BasicOptions
+          gasPrices={gasPrices}
+          activeGasPriceType={activeGasPriceType}
+          setActiveGasPriceType={setActiveGasPriceType}
+          gasLimit={gasLimit}
+          minGasLimit={gasMinLimit}
+          loading={loading}
+        />
+      ) : (
+        <AdvancedOptions
+          gasPrices={gasPrices}
+          maxPriorityFee={maxPriorityFee}
+          maxFee={maxFee}
+        />
+      )}
+      <div className="mx-[6px] mt-2 flex items-center justify-between gap-2 p-2">
         <span className="text-[14px] text-gray-300">GasLimit</span>
+        {Number(gasMinLimit) > Number(gasLimit) && (
+          <span className="text-[14px] text-red-500">gas limit too low</span>
+        )}
       </div>
       <div className="broder mx-[6px] mb-3 flex flex-col gap-2 rounded-2xl border-tertiary px-1 text-[20px]">
-        <WalletInputWrapper>
+        <WalletInputWrapper error={Number(gasMinLimit) > Number(gasLimit)}>
           <WalletInput
             //   onKeyPress={preventMinus}
             type={"number"}
-            value={"21000"}
-            placeholder={"Amount"}
+            value={gasLimit}
+            placeholder={gasMinLimit}
+            onChange={handleChange}
+            error={Number(gasMinLimit) > Number(gasLimit)}
           ></WalletInput>
         </WalletInputWrapper>
       </div>
       <div className=" mb-4 w-full break-words px-5 text-left text-[14px] text-gray-400">
         <span>
-          Chainging the GasLimit may have unintened effects. Only change this if you know what your doing
+          Chainging the GasLimit may have unintened effects. Only change this if
+          you know what your doing
         </span>
       </div>
       <div className="mx-2 mb-1 mt-2 flex items-center justify-center">

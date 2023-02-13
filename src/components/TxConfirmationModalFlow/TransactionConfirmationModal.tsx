@@ -10,7 +10,15 @@ import useFetchAssetPrice from '../../hooks/useFetchAssetPrice';
 import API from "../../constants/Api";
 import GasOptionsModal from "./GasOptionsModal";
 import { useGlobalState } from "../../context/useGlobalState";
-
+import { Tab } from "../WalletModal/WalletModal";
+import { ethers } from "ethers";
+import { ERC20ABI } from "@renproject/chains-ethereum/contracts";
+import RenBridgeABI from "../../constants/ABIs/RenBridgeABI.json";
+import { BridgeDeployments } from "../../constants/deployments";
+import { useWeb3React } from "@web3-react/core";
+import { chainAdresses } from '../../constants/Addresses';
+import  BigNumber  from "bignumber.js";
+import { toFixed } from '../../utils/misc';
 export type GasPriceType = {
   fast: number;
   priceUSD: number;
@@ -34,6 +42,7 @@ interface IAssetModal {
     chain: any,
     asset: any
   ) => void;
+  buttonState: Tab;
 }
 
 const TxConfirmationModal = ({
@@ -45,13 +54,16 @@ const TxConfirmationModal = ({
   transactionType,
   gasPrice,
   handleTransaction,
+  buttonState,
 }: IAssetModal) => {
   const { assetPrice } = useFetchAssetPrice(asset);
-  const { fetchMarketDataGasPrices, gasPrices, setActiveGasPriceType, activeGasPriceType } = useGlobalState();
+  const { gasPrices, activeGasPriceType } = useGlobalState();
   const [advancedOptions, setAdvancedOptions] = useState<boolean>(false);
 
   const toggleAdvancedOptions = useCallback(
-    () => setAdvancedOptions((w: any) => !w),
+    () => {
+      setAdvancedOptions((w: any) => !w)
+    },
     [setAdvancedOptions]
   );
 
@@ -67,11 +79,14 @@ const TxConfirmationModal = ({
     transactionType,
   ]);
 
-  const GASPRRICES = ["rapid", "fast", "slow", "standard"];
-
-  useEffect(() => {
-    fetchMarketDataGasPrices();
-  }, [fetchMarketDataGasPrices]);
+  const fee = toFixed(
+    Number(
+      new BigNumber(
+        activeGasPriceType.gasLimit! * activeGasPriceType.gasPrice!
+      ).shiftedBy(-18)
+    ),
+    4
+  );
 
   return (
     <Backdrop visible={confirmation}>
@@ -79,11 +94,9 @@ const TxConfirmationModal = ({
         {advancedOptions ? (
           <GasOptionsModal
             setAdvancedOptions={toggleAdvancedOptions}
-            fetchMarketDataGasPrices={fetchMarketDataGasPrices}
-            gasPrices={gasPrices}
-            priceTypes={GASPRRICES}
-            activeGasPriceType={activeGasPriceType}
-            setActiveGasPriceType={setActiveGasPriceType}
+            buttonState={buttonState}
+            chain={chain}
+            asset={asset}
           />
         ) : (
           <>
@@ -130,7 +143,14 @@ const TxConfirmationModal = ({
                 </div>
                 <div className="flex flex-row items-center justify-between">
                   <span className="text-gray-400">Network Fee</span>
-                  <span className="">{gasPrice} Gwei</span>
+                  <span className="">
+                    <span>
+                      {activeGasPriceType.gasLimit
+                        ? fee
+                        : gasPrice}
+                    </span>{" "}
+                    Gwei
+                  </span>
                 </div>
               </div>
               <div className="my-2 h-[1.2px] w-full bg-gray-600" />
@@ -144,22 +164,23 @@ const TxConfirmationModal = ({
                   <span className="">{asset.Icon}</span>
                 </div>
               </div>
+              <div className="mt-4 mb-[3px]">
+                <PrimaryButton
+                  className={
+                    "w-full justify-center rounded-lg border border-blue-500 bg-secondaryButtonColor py-[6px] text-center text-blue-400"
+                  }
+                  onClick={toggleAdvancedOptions}
+                >
+                  Advanced Options
+                </PrimaryButton>
+              </div>
             </div>
-            <div className="mx-4 mb-3 mt-4">
-              <PrimaryButton
-                className={
-                  "w-full justify-center rounded-2xl border border-blue-500 bg-secondaryButtonColor py-[6px] text-center text-blue-400"
-                }
-                onClick={toggleAdvancedOptions}
-              >
-                Advanced Options
-              </PrimaryButton>
-            </div>
+
             <div className="mt-3 mb-4 w-full break-words px-4 text-left text-[14px] text-gray-400">
               <span>
                 output is estimated. You will receive at least{" "}
                 <span>
-                  {text} {asset.Icon}
+                  {activeGasPriceType.gasLimit ? Number(text) + Number(fee) : Number(text) + Number(gasPrice)} {asset.Icon}
                 </span>{" "}
                 from this transaction
               </span>
