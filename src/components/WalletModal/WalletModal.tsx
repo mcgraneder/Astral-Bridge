@@ -159,7 +159,7 @@ const WalletModal = ({
   const { toggleConfirmationModal } = useTransactionFlow();
   const { defaultGasPrice } = useGasPriceState();
   const { approve } = useApproval();
-  const { setChain, pendingTransaction, chain. assetBalances } = useGlobalState();
+  const { setChain, pendingTransaction, chain, assetBalances } = useGlobalState();
 
   const needsToSwitchChain = ChainIdToRenChain[chainId!] === chain.fullName;
   const error = !needsToSwitchChain
@@ -169,7 +169,7 @@ const WalletModal = ({
 
       useEffect(() => setText(""), [buttonState, pendingTransaction, chain]);
 
-      
+
   useEffect(() => {
     if (!asset || !account) return;
     (async () => {

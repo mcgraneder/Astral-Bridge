@@ -35,7 +35,6 @@ interface IAssetModal {
   confirmation: boolean;
   text: string;
   asset: any;
-  chain: any;
   transactionType: string;
   buttonState: Tab;
 }
@@ -156,7 +155,6 @@ const TxConfirmationModal = ({
   confirmation,
   text,
   asset,
-  chain,
   transactionType,
   buttonState,
 }: IAssetModal) => {
@@ -166,6 +164,7 @@ const TxConfirmationModal = ({
   const { executeTransaction: exec } = useEcecuteTransaction();
   const { init } = useApproval();
   const { defaultGasPrice, customGasPrice } = useGasPriceState();
+  const { chain } = useGlobalState()
 
   const fee = toFixed(defaultGasPrice?.networkFee!, 4);
 

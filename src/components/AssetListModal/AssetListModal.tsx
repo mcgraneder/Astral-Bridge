@@ -30,7 +30,6 @@ interface IAssetModal {
   setShowTokenModal: any;
   visible: boolean;
   setAsset: any;
-  setChain: any;
   walletAssetType: any;
   buttonState: Tab;
 }
@@ -49,12 +48,11 @@ const AssetListModal = ({
   setShowTokenModal,
   visible,
   setAsset,
-  setChain,
   walletAssetType,
   buttonState,
 }: IAssetModal) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { assetBalances } = useGlobalState()
+  const { assetBalances, setChain } = useGlobalState()
   const close = useCallback((): void => {
     setShowTokenModal(false);
     setSearchTerm("");
