@@ -67,7 +67,7 @@ export const AssetRotator: FunctionComponent<ChainAssetRotatorProps> = ({ classN
             setAi(ai === assetsCount - 1 ? 0 : ai + 1);
         }, timeout);
 
-         console.log(ai);
+        //  console.log(ai);
         return () => {
             clearTimeout(switchAiTick);
             clearTimeout(hideTick);

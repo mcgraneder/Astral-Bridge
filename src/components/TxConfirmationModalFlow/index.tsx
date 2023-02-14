@@ -124,7 +124,6 @@ function TransactionFlowModals({ text, buttonState, asset}: TxFlowProps) {
             open={pending}
             text={text}
             transactionType={buttonState.tabName}
-            chain={chain}
             asset={asset}
           />
         )}

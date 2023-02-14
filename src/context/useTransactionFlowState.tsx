@@ -46,7 +46,7 @@ function TransactionFlowStateProvider({ children }: TransactionFlowStateProps) {
 
   const toggleConfirmationModal = useCallback(
     (): void => {
-        console.log("hey")
+        // console.log("hey")
         setConfirmation((w: boolean) => !w)
     },
     [setConfirmation]

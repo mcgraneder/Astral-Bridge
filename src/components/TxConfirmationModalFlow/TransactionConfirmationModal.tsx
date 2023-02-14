@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { TopRowNavigation } from "../WalletConnectModal/WalletConnectModal";
 import { FormWrapper } from "../WalletConnectModal/WalletConnectModal";
 import { Backdrop } from "../WalletConnectModal/WalletConnectModal";
@@ -7,7 +7,7 @@ import { UilArrowDown } from "@iconscout/react-unicons";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import useFetchAssetPrice from "../../hooks/useFetchAssetPrice";
 import GasOptionsModal from "./GasOptionsModal";
-import { useGlobalState, GP } from "../../context/useGlobalState";
+import { useGlobalState } from "../../context/useGlobalState";
 import { Tab } from "../WalletModal/WalletModal";
 import BigNumber from "bignumber.js";
 import { toFixed } from "../../utils/misc";
@@ -19,7 +19,8 @@ import { useWeb3React } from "@web3-react/core";
 import RenBridgeABI from "../../constants/ABIs/RenBridgeABI.json";
 import { useApproval } from "../../hooks/useApproval";
 import { useGasPrices } from "../../hooks/usGasPrices";
-import { useGasPriceState } from "../../context/useGasPriceState";
+import { useGasPriceState, customGP } from '../../context/useGasPriceState';
+import { GP } from "./GasOptionsModal";
 
 export type GasPriceType = {
   fast: number;
@@ -150,6 +151,21 @@ const TransactionSummary = ({ text, fee, asset }: ITxSummary) => {
   );
 };
 
+export type GasOverride = {
+  type: string;
+  gasPrice: string;
+  gasLimit: string;
+  networkFee: string;
+};
+
+export type AdvancedGasOverride = {
+  baseFee: string;
+  maxPriorityFee: string;
+  maxFee: string;
+  gasLimit: string;
+  networkFee: string;
+};
+
 const TxConfirmationModal = ({
   toggleConfirmationModal,
   confirmation,
@@ -158,19 +174,92 @@ const TxConfirmationModal = ({
   transactionType,
   buttonState,
 }: IAssetModal) => {
+   const { account, library } = useWeb3React();
+   const { executeTransaction: exec } = useEcecuteTransaction();
+   const { init } = useApproval();
+   const { defaultGasPrice, customGasPrice, setCustomtGasPrice, networkGasData } =
+     useGasPriceState();
+   const { chain } = useGlobalState();
   const { assetPrice } = useFetchAssetPrice(asset);
+  const [gasMinLimit, setMinGasLimit] = useState<string>("0");
   const [advancedOptions, setAdvancedOptions] = useState<boolean>(false);
-  const { account } = useWeb3React();
-  const { executeTransaction: exec } = useEcecuteTransaction();
-  const { init } = useApproval();
-  const { defaultGasPrice, customGasPrice } = useGasPriceState();
-  const { chain } = useGlobalState()
+  const [basicGasOverride, setBasicGasOverride] = useState<customGP>(defaultGasPrice!);
+  const [advancedGasOveride, setAdvancedGasOverride] =
+    useState<customGP>({
+      overrideType: "Advanced",
+      baseFee: networkGasData?.gasData.lastBaseFeePerGas.toString()!,
+      maxPriorityFee: networkGasData?.gasData.maxPriorityFeePerGas.toString()!,
+      maxFee: networkGasData?.gasData.maxFeePerGas.toString()!,
+      gasLimit: defaultGasPrice?.gasLimit?.toString()!,
+      networkFee: defaultGasPrice?.networkFee?.toString()
+    });
 
-  const fee = toFixed(defaultGasPrice?.networkFee!, 4);
+    useEffect(() => {
+      console.log(advancedGasOveride);
+      console.log(basicGasOverride);
+    }, [advancedGasOveride, basicGasOverride]);
+      const estimateGasLimit =
+        useCallback(async (): Promise<ethers.BigNumber> => {
+          const bridgeAddress = BridgeDeployments[chain.fullName];
+          const tokenAddress =
+            chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
+          const bridgeContract = new ethers.Contract(
+            bridgeAddress!,
+            RenBridgeABI,
+            await library.getSigner()
+          );
+          const gasEstimate =
+            buttonState.tabName === "Deposit"
+              ? await bridgeContract.estimateGas.transferFrom?.(
+                  "10000",
+                  tokenAddress!
+                )
+              : await bridgeContract.estimateGas.transfer?.(
+                  account!,
+                  "10000",
+                  tokenAddress!
+                );
+
+          return gasEstimate as ethers.BigNumber;
+        }, [chain, library, account, buttonState, asset]);
+
+      useEffect(() => {
+        estimateGasLimit().then((gasLimit: ethers.BigNumber) => {
+          setMinGasLimit(Number(gasLimit).toString());
+          updateBasicGasOverride({ gasLimit: gasLimit.toString() });
+          updateAdvancedGasOverride({ gasLimit: gasLimit.toString() });
+
+        });
+      }, []);
+
+
+  const fee = customGasPrice
+    ? toFixed(Number(customGasPrice?.networkFee!), 6)
+    : toFixed(Number(defaultGasPrice?.networkFee!), 6);
 
   const toggleAdvancedOptions = useCallback(() => {
     setAdvancedOptions((w: any) => !w);
   }, [setAdvancedOptions]);
+
+  const updateBasicGasOverride = useCallback(
+    (newEntry: any) => {
+      setBasicGasOverride({
+        ...basicGasOverride,
+        ...newEntry,
+      });
+    },
+    [basicGasOverride]
+  );
+
+    const updateAdvancedGasOverride = useCallback(
+      (newEntry: any) => {
+        setAdvancedGasOverride({
+          ...advancedGasOveride,
+          ...newEntry,
+        });
+      },
+      [advancedGasOveride]
+    );
 
   const executeTransaction = useCallback(
     async (
@@ -212,9 +301,11 @@ const TxConfirmationModal = ({
         {advancedOptions ? (
           <GasOptionsModal
             setAdvancedOptions={toggleAdvancedOptions}
-            buttonState={buttonState}
-            chain={chain}
-            asset={asset}
+            basicGasOverride={basicGasOverride}
+            updateBasicGasOverride={updateBasicGasOverride}
+            advancedGasOverride={advancedGasOveride}
+            updateAdvancedGasOverride={updateAdvancedGasOverride}
+            minGasLimit={gasMinLimit}
           />
         ) : (
           <>

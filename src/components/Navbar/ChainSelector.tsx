@@ -49,7 +49,7 @@ const TokenSelectDropdown = () => {
         setActiveChain(activeChain)
         setChain(chainsBaseConfig[ChainIdToRenChain[chainId]!]);
         const onCorrectChain = needToSwitchChain(chainId);
-        console.log(onCorrectChain);
+        // console.log(onCorrectChain);
         // if (!onCorrectChain) Toast.info("you are currently on an unsupported chain")
     }, [chainId, needToSwitchChain, setChain]);
 

@@ -13,7 +13,7 @@ import API from "../constants/Api";
 import { SetStateAction, Dispatch } from "react";
 import { chainsBaseConfig } from "../utils/chainsConfig";
 import { ChainBaseConfig } from "../constants/Addresses";
-import { GasPriceType } from "../components/TxConfirmationModalFlow/TransactionConfirmationModal";
+import { AdvancedGasOverride, GasPriceType } from "../components/TxConfirmationModalFlow/TransactionConfirmationModal";
 import { get } from "../services/axios";
 import { ethers } from "ethers";
 import {
@@ -24,17 +24,17 @@ import { useGasPrices } from "../hooks/usGasPrices";
 import BigNumber from "bignumber.js";
 
 export type NetworkFeeReturnType = {
-  gasPrice: ethers.BigNumber;
-  lastBaseFeePerGas: ethers.BigNumber;
-  maxFeePerGas: ethers.BigNumber;
-  maxPriorityFeePerGas: ethers.BigNumber;
+  gasPrice: string;
+  lastBaseFeePerGas: string;
+  maxFeePerGas: string;
+  maxPriorityFeePerGas: string;
 };
 
 export type Fees = {
-  slow: number;
-  standard: number;
-  fast: number;
-  rapid: number;
+  slow: string;
+  standard: string;
+  fast: string;
+  rapid: string;
 };
 
 export type gasPriceData = {
@@ -42,12 +42,16 @@ export type gasPriceData = {
   fees: Fees;
 };
 
-export type GP = {
+export type GP = {  
   type: string;
-  gasPrice: number;
-  gasLimit: number;
-  networkFee: number;
+  gasPrice: string;
+  gasLimit: string;
+  networkFee: string;
 };
+
+export type customGP = (Partial<GP> & Partial<AdvancedGasOverride>) & {
+    overrideType: string;
+}
 
 interface GasStateProviderProps {
   children: React.ReactNode;
@@ -56,10 +60,12 @@ interface GasStateProviderProps {
 type GasContextType = {
   networkGasData: gasPriceData | undefined;
   fetchMarketDataGasPrices: () => Promise<void>;
-  defaultGasPrice: GP | undefined;
-  setDefaultGasPrice: Dispatch<SetStateAction<GP | undefined>>;
-  customGasPrice: GP | undefined;
-  setCustomtGasPrice: Dispatch<SetStateAction<GP | undefined>>;
+  defaultGasPrice: customGP | undefined;
+  setDefaultGasPrice: Dispatch<SetStateAction<customGP | undefined>>;
+  customGasPrice: customGP | undefined;
+  setCustomtGasPrice: Dispatch<
+    SetStateAction<customGP | undefined>
+  >;
 };
 
 const GasStateContext = createContext({} as GasContextType);
@@ -71,36 +77,47 @@ const formatToBigNumber = (
 ) => {
   return Number(
     new BigNumber(Number(value)).shiftedBy(shiftIndex).multipliedBy(mod)
-  );
+  ).toString();
 };
 function GasStateProvider({ children }: GasStateProviderProps) {
   const { chainId } = useWeb3React();
   const [networkGasData, setNetworkGasData] = useState<
     gasPriceData | undefined
   >(undefined);
-  const [defaultGasPrice, setDefaultGasPrice] = useState<GP | undefined>(
+  const [defaultGasPrice, setDefaultGasPrice] = useState<customGP | undefined>(
     undefined
   );
-  const [customGasPrice, setCustomtGasPrice] = useState<GP | undefined>(
-    undefined
-  );
+  const [customGasPrice, setCustomtGasPrice] = useState<
+    customGP | undefined
+  >(undefined);
+
+  useEffect(() => {
+    console.log(customGasPrice)
+  }, [customGasPrice])
 
   const fetchNetworkFeeData = async (
     chainId: number
   ): Promise<gasPriceData> => {
     const chainProviderUrl = CHAINS[chainId]?.rpcUrls[0];
-    console.log(chainProviderUrl);
+    // console.log(chainProviderUrl);
     const provider = new ethers.providers.JsonRpcProvider(chainProviderUrl);
-    const feeData = (await provider.getFeeData()) as NetworkFeeReturnType;
+    const feeData = (await provider.getFeeData());
 
-    const fees: Fees = {
-      slow: formatToBigNumber(feeData.lastBaseFeePerGas, -9, 1),
-      standard: formatToBigNumber(feeData.lastBaseFeePerGas, -9, 1.5),
-      fast: formatToBigNumber(feeData.lastBaseFeePerGas, -9, 2),
-      rapid: formatToBigNumber(feeData.maxFeePerGas, -9, 1),
+    const gasData: NetworkFeeReturnType = {
+      gasPrice: formatToBigNumber(feeData.gasPrice!, -9, 1),
+      lastBaseFeePerGas: formatToBigNumber(feeData.lastBaseFeePerGas!, -9, 1),
+      maxPriorityFeePerGas: formatToBigNumber(feeData.maxPriorityFeePerGas!, -9, 1),
+      maxFeePerGas: formatToBigNumber(feeData.maxFeePerGas!, -9, 1),
     };
 
-    return { gasData: feeData, fees: fees };
+    const fees: Fees = {
+      slow: formatToBigNumber(feeData.lastBaseFeePerGas!, -9, 1),
+      standard: formatToBigNumber(feeData.lastBaseFeePerGas!, -9, 1.5),
+      fast: formatToBigNumber(feeData.lastBaseFeePerGas!, -9, 2),
+      rapid: formatToBigNumber(feeData.maxFeePerGas!, -9, 1),
+    };
+
+    return { gasData: gasData, fees: fees };
   };
 
   const fetchMarketDataGasPrices =
@@ -110,13 +127,14 @@ function GasStateProvider({ children }: GasStateProviderProps) {
       try {
         gasPriceData = await fetchNetworkFeeData(chainId);
         const price =
-          gasPriceData.gasData.lastBaseFeePerGas.mul(MINT_GAS_UNIT_COST);
+          Number(gasPriceData.gasData.lastBaseFeePerGas) * Number(MINT_GAS_UNIT_COST / 10 ** -9);
         setNetworkGasData(gasPriceData);
         setDefaultGasPrice({
+          overrideType: "Basic",
           type: "standard",
-          gasLimit: MINT_GAS_UNIT_COST,
-          gasPrice: gasPriceData.fees.standard,
-          networkFee: Number(ethers.utils.formatEther(price)),
+          gasLimit: MINT_GAS_UNIT_COST.toString(),
+          gasPrice: gasPriceData.fees.standard.toString(),
+          networkFee: Number(ethers.utils.formatEther(price)).toString(),
         });
       } catch (error: any) {
         console.error(error);

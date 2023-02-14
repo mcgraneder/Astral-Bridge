@@ -4,7 +4,7 @@ import API from "../../constants/Api";
 import { CHAINS } from "../../connection/chains";
 // overestimate gasLimit of required to execute deposit
 // user will be refunded unused gas
-export const MINT_GAS_UNIT_COST = 30000;
+export const MINT_GAS_UNIT_COST = 100000;
 
 export enum SupportedNetworks {
   ETH = "ETH",

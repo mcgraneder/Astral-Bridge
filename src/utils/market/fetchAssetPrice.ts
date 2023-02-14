@@ -34,7 +34,7 @@ export async function fetchPrice(token: SupportedToken, currency: SupportedFiat)
       if (!response) {
         throw new Error("coingecko api failed");
       }
-      console.log(response);
+      // console.log(response);
 
       return response;
     } catch (error) {

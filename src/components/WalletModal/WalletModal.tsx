@@ -165,9 +165,9 @@ const WalletModal = ({
   const error = !needsToSwitchChain
     ? false
     : text === "" || Number(text) == 0 || !isSufficentBalance;
-  console.log(error);
+  // console.log(error);
 
-      useEffect(() => setText(""), [buttonState, pendingTransaction, chain]);
+      useEffect(() => setText(""), [buttonState, pendingTransaction, chain, setText]);
 
 
   useEffect(() => {

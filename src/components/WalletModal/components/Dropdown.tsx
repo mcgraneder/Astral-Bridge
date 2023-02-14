@@ -18,7 +18,7 @@ const Dropdown = ({
   setType,
   setShowTokenModal,
 }: IDropdown) => {
-  console.log("iconnnnnn", Icon);
+  // console.log("iconnnnnn", Icon);
   const on = () => {
     setType(dropDownType);
     setShowTokenModal(true);

@@ -6,13 +6,13 @@ import { TopRowNavigation } from "../WalletConnectModal/WalletConnectModal";
 import { Breakpoints } from "../../constants/Breakpoints";
 import BottomSheetOptions from "../BottomSheet/BottomSheetOptions";
 import { UilSpinner } from "@iconscout/react-unicons";
+import { useGlobalState } from "../../context/useGlobalState";
 
 interface PendingTransactionModalProps {
   close: () => void;
   open: boolean;
   text: string;
   transactionType: string;
-  chain: any;
   asset: any;
 }
 
@@ -21,14 +21,12 @@ interface IconProps {
 }
 
 const PendingModalInner = ({
-  active,
   close,
   text,
   transactionType,
   chain,
   asset
 }: {
-  active: boolean;
   close: () => void;
   text: string;
   transactionType: string;
@@ -59,18 +57,16 @@ function PendingTransactionModal({
   open,
   text,
   transactionType,
-  chain,
   asset
 }: PendingTransactionModalProps) {
-  const { active } = useWeb3React();
   const { width } = useViewport();
+  const { chain } = useGlobalState()
 
   return (
     <>
       {width > 0 && width >= Breakpoints.sm1 ? (
         <FormWrapper>
           <PendingModalInner
-            active={active}
             close={close}
             text={text}
             transactionType={transactionType}
@@ -86,7 +82,6 @@ function PendingTransactionModal({
           title={"Pending"}
         >
           <PendingModalInner
-            active={active}
             close={close}
             text={text}
             transactionType={transactionType}

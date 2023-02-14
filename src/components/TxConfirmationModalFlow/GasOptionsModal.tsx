@@ -11,18 +11,27 @@ import { Tab } from "../WalletModal/WalletModal";
 import { MintFormText2 } from '../CSS/WalletModalStyles';
 
 import styled, { css } from "styled-components"
-import { GasPriceType } from './TransactionConfirmationModal';
+import {
+  GasPriceType,
+  GasOverride,
+  AdvancedGasOverride,
+} from "./TransactionConfirmationModal";
 import BigNumber from "bignumber.js";
-import { toFixed } from '../../utils/misc';
-import { GP, useGlobalState } from '../../context/useGlobalState';
-import { formatValue, NetReturn, fetchMarketDataGasPrices } from '../../utils/market/getMarketGasData';
+import { toFixed } from "../../utils/misc";
+import { useGlobalState } from "../../context/useGlobalState";
+import {
+  formatValue,
+  NetReturn,
+  fetchMarketDataGasPrices,
+} from "../../utils/market/getMarketGasData";
 import { ethers } from "ethers";
 import { BridgeDeployments } from "../../constants/deployments";
 import { chainAdresses } from "../../constants/Addresses";
 import { useWeb3React } from "@web3-react/core";
 import { ERC20ABI } from "@renproject/chains-ethereum/contracts";
 import RenBridgeABI from "../../constants/ABIs/RenBridgeABI.json";
-import { useGasPriceState, gasPriceData } from '../../context/useGasPriceState';
+import { useGasPriceState, gasPriceData, customGP } from '../../context/useGasPriceState';
+import { string } from "zod";
 
 const GASPRICES = ["slow", "standard", "fast", "rapid"];
 
@@ -38,6 +47,13 @@ const TABS: Tab[] = [
     side: "right",
   },
 ];
+
+export type GP = {
+  type: string;
+  gasPrice: number;
+  gasLimit: number;
+  networkFee: number;
+};
 
 export const MinFormToggleButtonContainer = styled.div`
   height: 40px;
@@ -81,7 +97,6 @@ export const WalletInput = styled.input`
 
 export const WalletInputWrapper = styled.div`
   height: 50px;
-  
 
   // width: 100%;
   /* line-height: 50px; */
@@ -90,14 +105,14 @@ export const WalletInputWrapper = styled.div`
   justify-content: space-between;
   /* align-items: center;
     justify-content: center; */
-  border: ${(props) => props.error ? "1px solid red" : "none"};
+  border: ${(props) => (props.error ? "1px solid red" : "none")};
   -webkit-appearance: none;
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
   }
   background-color: rgb(34 53 83);
-  
+
   border-radius: 10px;
   font-size: 14px;
 
@@ -198,25 +213,27 @@ const ToggleButtonContainer = ({
 
 interface IBasicOptions {
   networkGasData: gasPriceData | undefined;
-  defaultGasPrice: GP | undefined;
-  setDefaultGasPrice: React.Dispatch<React.SetStateAction<GP | undefined>>;
-  gasLimit: string;
   loading: boolean;
+  updateBasicGasOverride: (newEntry: any) => void;
+  basicGasOverride: customGP;
 }
 const BasicOptions = ({
   networkGasData,
-  defaultGasPrice,
-  setDefaultGasPrice,
-  gasLimit,
   loading,
+  updateBasicGasOverride,
+  basicGasOverride,
 }: IBasicOptions) => {
   return (
     <div className="mx-[6px] mb-3 flex flex-col gap-2 rounded-xl border-gray-400 bg-secondary px-2 py-2">
-      {networkGasData &&
+      {networkGasData?.fees &&
         GASPRICES.map((type: string, index: number) => {
-          const gasPriceFeeTypes: number[] = Object.values(
-            networkGasData?.fees!
-          );
+          const gasPriceFeeTypes: number[] = Object.values(networkGasData.fees);
+
+          const customType = basicGasOverride.type;
+          const networkFee = new BigNumber(basicGasOverride.gasLimit)
+            .shiftedBy(-9)
+            .multipliedBy(gasPriceFeeTypes![index]);
+
           return (
             <div
               key={type}
@@ -224,19 +241,20 @@ const BasicOptions = ({
             >
               <div className="flex items-center justify-center gap-2">
                 <RadioButton
-                  active={type === defaultGasPrice?.type}
+                  active={customType === type}
                   onClick={() => {
-                    setDefaultGasPrice({
+                    updateBasicGasOverride({
                       type: type,
                       gasPrice: Number(gasPriceFeeTypes[index]),
-                      gasLimit: Number(gasLimit),
+                      gasLimit: Number(basicGasOverride.gasLimit),
+                      networkFee: Number(networkFee),
                     });
                   }}
                 />
 
                 <span
                   className={`${
-                    type === defaultGasPrice?.type ? "white" : "text-gray-500"
+                    customType === type ? "white" : "text-gray-500"
                   }`}
                 >
                   {type}
@@ -248,7 +266,7 @@ const BasicOptions = ({
                 <>
                   <span
                     className={`${
-                      type === defaultGasPrice?.type ? "white" : "text-gray-500"
+                      customType === type ? "white" : "text-gray-500"
                     }`}
                   >
                     {toFixed(gasPriceFeeTypes[index]!, 3)} Gwei
@@ -262,99 +280,118 @@ const BasicOptions = ({
   );
 };
 
-const AdvancedOptions = ({ networkGasData, maxPriorityFee, maxFee }: any) => {
+interface IAdvancedOptions {
+  networkGasData: gasPriceData | undefined;
+  advancedGasOverride: customGP;
+  updateAdvancedGasOverride: (newEntry: any) => void;
+}
+
+const AdvancedOptions = ({
+  networkGasData,
+  advancedGasOverride,
+  updateAdvancedGasOverride,
+}: IAdvancedOptions) => {
+;
+  const maxPriorityError =
+    advancedGasOverride.maxPriorityFee === "" ||
+    Number(advancedGasOverride.maxPriorityFee) == 0 ||
+    Number(advancedGasOverride.maxPriorityFee) > 3;
+
+      const onChangePriority = useCallback((e: any) => {
+       const gasLimit = advancedGasOverride.gasLimit
+       const baseFee = advancedGasOverride.baseFee
+       const priorityFee = advancedGasOverride.maxPriorityFee
+
+       const networkFee = new BigNumber(gasLimit!).shiftedBy(-9).multipliedBy(Number(baseFee!) * Number(priorityFee)) 
+       console.log(networkFee.toString())
+       updateAdvancedGasOverride({
+         maxPriorityFee: e.target.value,
+         networkFee: networkFee.toString()
+       });
+      }, [advancedGasOverride, updateAdvancedGasOverride]);
+
+    const maxFeeError =
+      advancedGasOverride.maxFee === "" ||
+      Number(advancedGasOverride.maxFee) < Number(advancedGasOverride.baseFee) ||
+      Number(advancedGasOverride.maxFee) > 3 * Number(advancedGasOverride.baseFee);
+
+    const onChangeMaxFee = (e: any) => {
+      updateAdvancedGasOverride({
+        maxFee: e.target.value,
+      });
+    };
   return (
     <div className="broder mx-[6px] mb-3 flex flex-col gap-2 rounded-2xl border-tertiary px-1 text-[20px]">
       <WalletInputWrapper>
         <WalletInput
           //   onKeyPress={preventMinus}
           type={"number"}
-          value={formatValue(networkGasData.fees.slow!, 9)}
+          value={advancedGasOverride.baseFee}
           placeholder={"Amount"}
+          disabled={true}
         ></WalletInput>
         <span className="mx-6 text-[14px] text-gray-400">Base fee</span>
       </WalletInputWrapper>
-      <WalletInputWrapper>
+      <WalletInputWrapper error={maxPriorityError}>
         <WalletInput
           //   onKeyPress={preventMinus}
           type={"number"}
-          value={maxPriorityFee}
+          value={advancedGasOverride.maxPriorityFee}
           placeholder={"Amount"}
+          onChange={onChangePriority}
         ></WalletInput>
-        <span className="mx-6 text-[14px] text-gray-400">Max Prioity Fee</span>
+        <span
+          className={`mx-6 text-[14px] ${
+            maxPriorityError ? "text-red-500" : "text-gray-400"
+          }`}
+        >
+          {maxPriorityError ? "gas limit too low" : "Max Prioity Fee"}
+        </span>
       </WalletInputWrapper>
-      <WalletInputWrapper>
+      <WalletInputWrapper error={maxFeeError}>
         <WalletInput
           //   onKeyPress={preventMinus}
           type={"number"}
-          value={Number(maxFee)}
-          placeholder={networkGasData}
+          value={advancedGasOverride.maxFee}
+          onChange={onChangeMaxFee}
         ></WalletInput>
-        <span className="mx-6 text-[14px] text-gray-400">MaxFee</span>
+        <span
+          className={`mx-6 text-[14px] ${
+            maxPriorityError ? "text-red-500" : "text-gray-400"
+          }`}
+        >
+          {maxFeeError ? "bad Max Fee" : "Max Fee"}
+        </span>
       </WalletInputWrapper>
     </div>
   );
 };
 interface IAssetModal {
   setAdvancedOptions: () => void;
-  buttonState: Tab;
-  chain: any;
-  asset: any;
+  basicGasOverride: customGP;
+  updateBasicGasOverride: (newEntry: any) => void;
+  advancedGasOverride: customGP;
+  updateAdvancedGasOverride: (newEntry: any) => void;
+  minGasLimit: string;
 }
 
 const GasOptionsModal = ({
   setAdvancedOptions,
-  buttonState,
-  chain,
-  asset
+  basicGasOverride,
+  updateBasicGasOverride,
+  advancedGasOverride,
+  updateAdvancedGasOverride,
+  minGasLimit,
 }: IAssetModal) => {
-  const { account, library } = useWeb3React();
- const { fetchMarketDataGasPrices, networkGasData, setDefaultGasPrice, defaultGasPrice, customGasPrice, setCustomtGasPrice } = useGasPriceState()
+  const { fetchMarketDataGasPrices, networkGasData, setCustomtGasPrice } =
+    useGasPriceState();
 
-  const [loading, setLoading] = useState<boolean>(true)
-  const [maxPriorityFee, setMaxPriorityFee] = useState<string>("1.5");
-  const [gasLimit, setGasLimit] = useState<string>("0");
-  const [gasMinLimit, setMinGasLimit] = useState<string>("0");
-  const [baseFee, setBaseFee] = useState<string | undefined>(
-    networkGasData?.fees!.slow!.toString()
-  );
-  const [maxFee, setMaxFee] = useState<string | undefined>(networkGasData?.fees!.rapid!.toString());
+  const [loading, setLoading] = useState<boolean>(true);
   const [activeButton, setActiveButton] = useState<Tab>({
     tabName: "Basic",
     tabNumber: 0,
     side: "left",
   });
-
-  const estimateGasLimit = useCallback(async (): Promise<ethers.BigNumber> => {
-    const bridgeAddress = BridgeDeployments[chain.fullName];
-    const tokenAddress =
-      chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
-    const bridgeContract = new ethers.Contract(
-      bridgeAddress!,
-      RenBridgeABI,
-      await library.getSigner()
-    );
-    const gasEstimate =
-      buttonState.tabName === "Deposit"
-        ? await bridgeContract.estimateGas.transferFrom?.(
-            "10000",
-            tokenAddress!
-          )
-        : await bridgeContract.estimateGas.transfer?.(
-            account!,
-            "10000",
-            tokenAddress!
-          );
-
-    return gasEstimate as ethers.BigNumber;
-  }, [chain, library, account, buttonState, asset]);
-
-  useEffect(() => {
-    estimateGasLimit().then((gasLimit: ethers.BigNumber) => {
-      setGasLimit(Number(gasLimit).toString())
-      setMinGasLimit(Number(gasLimit).toString())
-  });
-  }, []);
 
   useEffect(() => {
     fetchMarketDataGasPrices().then(() => setLoading(false));
@@ -362,31 +399,30 @@ const GasOptionsModal = ({
     return () => clearInterval(interval);
   }, [fetchMarketDataGasPrices]);
 
-  const onChange = useCallback(
-    (v: string, _isMax = false) => {
-      let value: number | string = v;
-      setGasLimit(String(value));
-    },
-    [setGasLimit]
-  );
+  const overrideCustomOptions = useCallback((overrideType: string) => {
+    setCustomtGasPrice(overrideType === "Basic" ? basicGasOverride : advancedGasOverride);
+    setAdvancedOptions();
+  }, [setCustomtGasPrice, setAdvancedOptions, basicGasOverride, advancedGasOverride]);
 
-  const handleChange = (e: any) => {
-    e.preventDefault();
-    const value: string = e.target.value;
-    if (value.length > 11) {
-      const pointIndex = value.indexOf(".");
-      if (
-        pointIndex === -1 ||
-        (pointIndex >= 0 && value.substring(0, pointIndex).length > 11)
-      ) {
-        e.preventDefault();
-        return;
-      }
-    }
-    onChange(value);
-  };
+  const onChange = useCallback((e: any) => {
+    const baseFee = advancedGasOverride.baseFee;
+    const priorityFee = advancedGasOverride.maxPriorityFee;
 
-  console.log(Number(gasMinLimit) > Number(gasLimit));
+    const aNetworkFee = new BigNumber(e.target.value!)
+      .shiftedBy(-9)
+      .multipliedBy(Number(baseFee!) * Number(priorityFee)); 
+    const bNetworkFee = new BigNumber(e.target.value)
+      .shiftedBy(-9)
+      .multipliedBy(basicGasOverride.gasPrice!);
+    updateBasicGasOverride({
+      gasLimit: e.target.value,
+      networkFee: aNetworkFee.toString(),
+    });
+     updateAdvancedGasOverride({
+       gasLimit: e.target.value,
+       networkFee: bNetworkFee.toString()
+     });
+  }, [advancedGasOverride, basicGasOverride, updateAdvancedGasOverride, updateBasicGasOverride]);
 
   return (
     <>
@@ -412,33 +448,34 @@ const GasOptionsModal = ({
       {activeButton.tabName === "Basic" ? (
         <BasicOptions
           networkGasData={networkGasData}
-          defaultGasPrice={customGasPrice}
-          setDefaultGasPrice={setCustomtGasPrice}
-          gasLimit={gasLimit}
           loading={loading}
+          updateBasicGasOverride={updateBasicGasOverride}
+          basicGasOverride={basicGasOverride}
         />
       ) : (
         <AdvancedOptions
           networkGasData={networkGasData}
-          maxPriorityFee={maxPriorityFee}
-          maxFee={maxFee}
+          advancedGasOverride={advancedGasOverride}
+          updateAdvancedGasOverride={updateAdvancedGasOverride}
         />
       )}
       <div className="mx-[6px] mt-2 flex items-center justify-between gap-2 p-2">
         <span className="text-[14px] text-gray-300">GasLimit</span>
-        {Number(gasMinLimit) > Number(gasLimit) && (
+        {Number(basicGasOverride.gasLimit) < Number(minGasLimit) && (
           <span className="text-[14px] text-red-500">gas limit too low</span>
         )}
       </div>
       <div className="broder mx-[6px] mb-3 flex flex-col gap-2 rounded-2xl border-tertiary px-1 text-[20px]">
-        <WalletInputWrapper error={Number(gasMinLimit) > Number(gasLimit)}>
+        <WalletInputWrapper
+          error={Number(basicGasOverride.gasLimit) < Number(minGasLimit)}
+        >
           <WalletInput
             //   onKeyPress={preventMinus}
             type={"number"}
-            value={gasLimit}
-            placeholder={gasMinLimit}
-            onChange={handleChange}
-            error={Number(gasMinLimit) > Number(gasLimit)}
+            value={basicGasOverride.gasLimit}
+            placeholder={minGasLimit}
+            onChange={onChange}
+            error={Number(basicGasOverride.gasLimit) < Number(minGasLimit)}
           ></WalletInput>
         </WalletInputWrapper>
       </div>
@@ -453,7 +490,7 @@ const GasOptionsModal = ({
           className={
             "w-full justify-center rounded-2xl bg-blue-500 py-[15px] text-center"
           }
-          onClick={setAdvancedOptions}
+          onClick={() => overrideCustomOptions(activeButton.tabName)}
         >
           Confirm Options
         </PrimaryButton>
