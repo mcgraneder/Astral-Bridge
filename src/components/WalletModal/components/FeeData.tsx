@@ -4,11 +4,11 @@ import { Icon } from "../../Icons/AssetLogs/Icon";
 import { toFixed } from "../../../utils/misc";
 import { CHAINS } from "../../../connection/chains";
 import { useWeb3React } from "@web3-react/core";
-import { GP } from "../../../context/useGasPriceState";
+import { customGP, shiftBN } from '../../../context/useGasPriceState';
 
 interface IFeeData {
   text: string;
-  defaultGasPrice: GP | undefined;
+  defaultGasPrice: customGP | undefined;
   asset: any;
 }
 const FeeData = ({
@@ -28,7 +28,7 @@ const FeeData = ({
           <UilPump className={"h-[18px] w-[18px] text-blue-500"} />
           <div>Estimated network fee: </div>
           <span className="text-gray-400">
-            {defaultGasPrice && toFixed(defaultGasPrice.networkFee, 6)}{" "}{" "}
+            {defaultGasPrice && toFixed(shiftBN(defaultGasPrice.networkFee, -18), 6)}{" "}{" "}
             <span className="text-grey-600">{CHAINS[chainId!]?.symbol!}</span>
           </span>
         </div>

@@ -69,6 +69,7 @@ interface IAssetModal {
   ) => void;
   advancedGasOverride: customGP;
   minGasLimit: string;
+  showTopRow: boolean
 }
 
 const GasOptionsModal = ({
@@ -77,6 +78,7 @@ const GasOptionsModal = ({
   updateGasOverride,
   advancedGasOverride,
   minGasLimit,
+  showTopRow
 }: IAssetModal) => {
   const { fetchMarketDataGasPrices, networkGasData, setCustomtGasPrice } =
     useGasPriceState();
@@ -141,7 +143,7 @@ const GasOptionsModal = ({
 
   return (
     <>
-      <TopRowNavigation
+      {showTopRow && <TopRowNavigation
         isRightDisplay={true}
         isLeftDisplay={true}
         close={setAdvancedOptions}
@@ -151,7 +153,7 @@ const GasOptionsModal = ({
             <span>Gas Options</span>
           </div>
         }
-      />
+      />}
       <ToggleButtonContainer
         activeButton={activeButton}
         tabs={TABS}

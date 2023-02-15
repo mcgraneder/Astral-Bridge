@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { TopRowNavigation } from "../../WalletConnectModal/WalletConnectModal";
 import { FormWrapper } from "../../WalletConnectModal/WalletConnectModal";
 import { Backdrop } from "../../WalletConnectModal/WalletConnectModal";
-import { UilArrowDown } from "@iconscout/react-unicons";
+import { UilTimes, UilAngleDown } from "@iconscout/react-unicons";
 import PrimaryButton from "../../PrimaryButton/PrimaryButton";
 import useFetchAssetPrice from "../../../hooks/useFetchAssetPrice";
 import GasOptionsModal from "./components/AdvancedOptions/GasOptionsModal";
@@ -26,6 +26,10 @@ import { GP, shiftBN } from "../../../context/useGasPriceState";
 import AssetSummary from "./components/AssetSummary";
 import FeeSummary from "./components/FeeSummary";
 import TransactionSummary from "./components/TransactionSummary";
+import ProtocolBanner from "./components/GasOptionSummary";
+import BottomSheetOptions from "../../BottomSheet/BottomSheet";
+import { Breakpoints } from "../../../constants/Breakpoints";
+import { useViewport } from "../../../hooks/useViewport";
 
 interface IAssetModal {
   toggleConfirmationModal: () => void;
@@ -35,6 +39,116 @@ interface IAssetModal {
   transactionType: string;
   buttonState: Tab;
 }
+
+interface IAssetModalInner {
+  advancedOptions: boolean;
+  toggleAdvancedOptions: () => void;
+  basicGasOverride: customGP;
+  advancedGasOveride: customGP;
+  gasMinLimit: string;
+  updateGasOverride: (
+    newEntry: Partial<GP> | Partial<AdvancedGasOverride>,
+    type: string
+  ) => void;
+  asset: any;
+  chain: any;
+  exit: () => void;
+  text: string;
+  assetPrice: number | BigNumber | undefined;
+  transactionType: string;
+  customGasPrice: customGP | undefined;
+  fee: string | number;
+  executeTransaction: (
+    transactionType: string,
+    amount: string,
+    chain: any,
+    asset: any
+  ) => Promise<void>;
+  showTopRow: boolean;
+}
+
+const TxModalInner = ({
+  advancedOptions,
+  toggleAdvancedOptions,
+  basicGasOverride,
+  advancedGasOveride,
+  gasMinLimit,
+  updateGasOverride,
+  asset,
+  chain,
+  exit,
+  text,
+  assetPrice,
+  transactionType,
+  customGasPrice,
+  fee,
+  showTopRow,
+  executeTransaction,
+}: IAssetModalInner) => {
+  return (
+    <>
+      {advancedOptions ? (
+        <GasOptionsModal
+          setAdvancedOptions={toggleAdvancedOptions}
+          basicGasOverride={basicGasOverride}
+          updateGasOverride={updateGasOverride}
+          advancedGasOverride={advancedGasOveride}
+          minGasLimit={gasMinLimit}
+          showTopRow={showTopRow}
+        />
+      ) : (
+        <>
+          {showTopRow && (
+            <TopRowNavigation
+              isRightDisplay={true}
+              isLeftDisplay={true}
+              close={exit}
+              title={`Confirm Transaction`}
+            />
+          )}
+          <div className="relative flex flex-col">
+            <AssetSummary
+              fullName={asset.fullName}
+              shortName={text}
+              icon={asset.Icon}
+            />
+            <AssetSummary
+              fullName={chain.fullName}
+              shortName={chain.shortName}
+              icon={chain.Icon}
+            />
+            <div className="absolute top-[37%] right-[45%] flex h-9 w-9 items-center justify-center rounded-xl border border-gray-600 bg-darkBackground">
+              <UilAngleDown className={""} />
+            </div>
+          </div>
+          <div className="my-2 px-4 text-left">
+            <span>{`1 ${asset.Icon} = ${assetPrice}`}</span>
+          </div>
+          <FeeSummary
+            gasPrice={Number(fee)}
+            asset={asset}
+            text={text}
+            toggleAdvancedOptions={toggleAdvancedOptions}
+          />
+          <ProtocolBanner
+            type={customGasPrice ? customGasPrice.type! : "standard"}
+          />
+          <TransactionSummary fee={Number(fee)} asset={asset} text={text} />
+          <PrimaryButton
+            className={
+              "w-full justify-center rounded-2xl bg-blue-500 py-[14px] text-center"
+            }
+            onClick={() =>
+              executeTransaction(transactionType, text, chain, asset)
+            }
+          >
+            Confirm {transactionType}
+          </PrimaryButton>
+        </>
+      )}
+    </>
+  );
+};
 
 const TxConfirmationModal = ({
   toggleConfirmationModal,
@@ -47,6 +161,7 @@ const TxConfirmationModal = ({
   const { account, library } = useWeb3React();
   const { executeTransaction: exec } = useEcecuteTransaction();
   const { init } = useApproval();
+  const { width } = useViewport();
   const { chain } = useGlobalState();
   const { assetPrice } = useFetchAssetPrice(asset);
   const {
@@ -185,63 +300,58 @@ const TxConfirmationModal = ({
   );
 
   return (
-    <Backdrop visible={confirmation}>
-      <FormWrapper>
-        {advancedOptions ? (
-          <GasOptionsModal
-            setAdvancedOptions={toggleAdvancedOptions}
-            basicGasOverride={basicGasOverride}
-            updateGasOverride={updateGasOverride}
-            advancedGasOverride={advancedGasOveride}
-            minGasLimit={gasMinLimit}
-          />
-        ) : (
-          <>
-            <TopRowNavigation
-              isRightDisplay={true}
-              isLeftDisplay={true}
-              close={exit}
-              title={`Confirm Transaction`}
-            />
-            <div className="relative flex flex-col">
-              <AssetSummary
-                fullName={asset.fullName}
-                shortName={text}
-                icon={asset.Icon}
-              />
-              <AssetSummary
-                fullName={chain.fullName}
-                shortName={chain.shortName}
-                icon={chain.Icon}
-              />
-              <div className="absolute top-[37%] right-[45%] flex h-9 w-9 items-center justify-center rounded-xl border border-gray-600 bg-darkBackground">
-                <UilArrowDown className={""} />
-              </div>
-            </div>
-            <div className="my-2 px-4 text-left">
-              <span>{`1 ${asset.Icon} = ${assetPrice}`}</span>
-            </div>
-            <FeeSummary
-              gasPrice={Number(fee)}
-              asset={asset}
-              text={text}
+    <>
+      {width > 0 && width >= Breakpoints.sm1 ? (
+        <Backdrop visible={confirmation}>
+          <FormWrapper>
+            <TxModalInner
+              advancedOptions={advancedOptions}
               toggleAdvancedOptions={toggleAdvancedOptions}
+              basicGasOverride={basicGasOverride}
+              advancedGasOveride={advancedGasOveride}
+              gasMinLimit={gasMinLimit}
+              updateGasOverride={updateGasOverride}
+              asset={asset}
+              chain={chain}
+              exit={exit}
+              text={text}
+              assetPrice={assetPrice}
+              transactionType={transactionType}
+              customGasPrice={customGasPrice}
+              fee={fee}
+              showTopRow={true}
+              executeTransaction={executeTransaction}
             />
-            <TransactionSummary fee={Number(fee)} asset={asset} text={text} />
-            <PrimaryButton
-              className={
-                "w-full justify-center rounded-2xl bg-blue-500 py-[14px] text-center"
-              }
-              onClick={() =>
-                executeTransaction(transactionType, text, chain, asset)
-              }
-            >
-              Confirm {transactionType}
-            </PrimaryButton>
-          </>
-        )}
-      </FormWrapper>
-    </Backdrop>
+          </FormWrapper>
+        </Backdrop>
+      ) : (
+        <BottomSheetOptions
+          hideCloseIcon={false}
+          open={true}
+          setOpen={advancedOptions ? toggleAdvancedOptions : toggleConfirmationModal}
+          title={advancedOptions ? "Gas Settings" : "Transaction Summary"}
+        >
+          <TxModalInner
+            advancedOptions={advancedOptions}
+            toggleAdvancedOptions={toggleAdvancedOptions}
+            basicGasOverride={basicGasOverride}
+            advancedGasOveride={advancedGasOveride}
+            gasMinLimit={gasMinLimit}
+            updateGasOverride={updateGasOverride}
+            asset={asset}
+            chain={chain}
+            exit={exit}
+            text={text}
+            assetPrice={assetPrice}
+            transactionType={transactionType}
+            customGasPrice={customGasPrice}
+            fee={fee}
+            showTopRow={false}
+            executeTransaction={executeTransaction}
+          />
+        </BottomSheetOptions>
+      )}
+    </>
   );
 };
 

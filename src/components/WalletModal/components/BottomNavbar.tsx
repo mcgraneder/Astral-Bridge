@@ -8,7 +8,7 @@ const NavLinks = ({ routes }: { routes: string[] }) => {
         <>
             {routes.map((route: string) => {
                 return (
-                    <div className='flex flex-row items-center gap-2'>
+                    <div key={route} className='flex flex-row items-center gap-2'>
                         <span className='m-1 w-full rounded-xl px-7 py-2 text-center hover:cursor-pointer hover:bg-black hover:bg-opacity-20'>{route}</span>
                     </div>
                 );

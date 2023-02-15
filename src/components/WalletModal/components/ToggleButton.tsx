@@ -26,7 +26,7 @@ const ToggleButtonContainer = ({ activeButton, tabs, setActiveButton }: IToggleC
     return (
         <MinFormToggleButtonContainer>
             {tabs.map((tab: Tab, index: number) => {
-                return <ToggleButton side={tab.side} text={tab.tabName} active={activeButton.tabNumber == index} onClick={() => tabSelect(index)} />;
+                return <ToggleButton key={index} side={tab.side} text={tab.tabName} active={activeButton.tabNumber == index} onClick={() => tabSelect(index)} />;
             })}
         </MinFormToggleButtonContainer>
     );

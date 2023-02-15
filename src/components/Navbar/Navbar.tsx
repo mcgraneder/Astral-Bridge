@@ -69,7 +69,7 @@ const NavLinks = ({ routes }: { routes: string[] }) => {
         <>
             {routes.map((route: string) => {
                 return (
-                    <div className='hidden md:flex flex-row items-center gap-2'>
+                    <div key={route} className='hidden md:flex flex-row items-center gap-2'>
                         <span className='my-2 w-full rounded-xl px-4 py-2 text-center hover:cursor-pointer hover:bg-black hover:bg-opacity-20'>{route}</span>
                     </div>
                 );

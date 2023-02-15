@@ -64,7 +64,7 @@ const FeeSummary = ({
           }
           onClick={toggleAdvancedOptions}
         >
-          Advanced Options
+          Advanced Gas Settings
         </PrimaryButton>
       </div>
     </div>
