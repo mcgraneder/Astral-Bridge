@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { UilTimes, UilArrowLeft } from "@iconscout/react-unicons";
-import TxConfirmationModal from "./TransactionConfirmationModal";
+import TxConfirmationModal from "./TransactionConfirmationModal/TransactionConfirmationModal";
 import PendingTransactionModal from "./PendinTransactionModal";
 
 import TransactionRejectedModal from "./TransactionRejectedModal";

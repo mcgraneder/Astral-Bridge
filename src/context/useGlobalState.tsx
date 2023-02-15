@@ -13,7 +13,7 @@ import API from "../constants/Api";
 import { SetStateAction, Dispatch } from 'react';
 import { chainsBaseConfig } from "../utils/chainsConfig";
 import { ChainBaseConfig } from '../constants/Addresses';
-import { GasPriceType } from "../components/TxConfirmationModalFlow/TransactionConfirmationModal";
+import { GasPriceType } from "../components/TxConfirmationModalFlow/TransactionConfirmationModal/TransactionConfirmationModal";
 import { get } from "../services/axios";
 import { ethers } from 'ethers';
 import { fetchNetworkFeeData, NetReturn } from '../utils/market/getMarketGasData';

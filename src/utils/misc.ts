@@ -22,8 +22,9 @@ export const toTitleCase = (s: string) => {
   return s[0]?.toUpperCase() + s.substring(1);
 };
 
-export const toFixed = (n: number, precision = 4) => {
-  if (n === undefined || n === null || isNaN(n)) return n;
+export const toFixed = (n: number | string, precision = 4) => {
+  if (n === undefined || n === null || isNaN(Number(n))) return n;
+  n = Number(n)
   let p = 10 ** precision;
   let preciseNumber: number | string = Math.trunc(n * p) / p;
   if (preciseNumber === 0) {

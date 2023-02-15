@@ -72,7 +72,7 @@ export const CHAINS: { [key: number]: ChainType } = {
     logo: EthereumChainLogo,
     isTestnet: false,
     id: 1,
-    rpcUrls: ["https://mainnet.infura.io/v3/ac9d2c8a561a47739b23c52e6e7ec93f"],
+    rpcUrls: ["https://goerli.infura.io/v3/ac9d2c8a561a47739b23c52e6e7ec93f"],
     symbol: "ETH",
     currency: "Ether",
     explorerLink: "https://etherscan.io/",

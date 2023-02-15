@@ -50,7 +50,7 @@ interface ITopRow {
     isRightDisplay?: boolean;
     backFunction?: () => void;
     close?: () => void;
-    title?: string;
+    title?: JSX.Element | string;
 }
 
 export const TopRowNavigation = ({ isLeftDisplay = false, isRightDisplay = false, backFunction = () => {}, close = () => {}, title = "" }: ITopRow) => {
