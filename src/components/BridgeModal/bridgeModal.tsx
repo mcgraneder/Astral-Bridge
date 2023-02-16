@@ -20,7 +20,6 @@ import BigNumber from "bignumber.js";
 import { chainsBaseConfig } from "../../utils/chainsConfig";
 import { useGasPriceState } from "../../context/useGasPriceState";
 import FeeData from "./components/FeeData";
-import { useGateway as useGatewayState } from "../../context/useGatewayState";
 import {
   pickChains,
   supportedEthereumChains,
@@ -136,7 +135,6 @@ interface IWalletModal {
   text: string;
   setText: any;
   buttonState: Tab;
-  setButtonState: any;
 }
 
 const BridgeModal = ({
@@ -146,7 +144,6 @@ const BridgeModal = ({
   text,
   setText,
   buttonState,
-  setButtonState,
 }: IWalletModal) => {
   const [isSufficentBalance, setIsSufficientBalance] = useState<boolean>(true);
   const [walletBalance, setWalletBalance] = useState<any>(0);
@@ -156,19 +153,18 @@ const BridgeModal = ({
   const { toggleConfirmationModal } = useTransactionFlow();
   const { defaultGasPrice } = useGasPriceState();
   const {
-    setChain,
+    setDestinationChain,
     pendingTransaction,
-    chain,
+    destinationChain,
     assetBalances,
-    toChain,
-    setToChain,
+    fromChain,
+    setFromChain,
+    setChainType,
   } = useGlobalState();
-  const { from, to, amount, toAddress, defaultChains } = useGatewayState();
-  const [gatewayChains] = useState(pickChains(defaultChains, from, to));
 
-  console.log(gatewayChains, toAddress);
 
-  const needsToSwitchChain = ChainIdToRenChain[chainId!] === chain.fullName;
+  const needsToSwitchChain =
+    ChainIdToRenChain[chainId!] === destinationChain.fullName;
   const error = !needsToSwitchChain
     ? false
     : text === "" || Number(text) == 0 || !isSufficentBalance;
@@ -176,7 +172,7 @@ const BridgeModal = ({
 
   useEffect(
     () => setText(""),
-    [buttonState, pendingTransaction, chain, setText]
+    [buttonState, pendingTransaction, destinationChain, setText]
   );
 
   useEffect(() => {
@@ -193,10 +189,11 @@ const BridgeModal = ({
   }, [text, setIsSufficientBalance, asset, assetBalances, buttonState]);
 
   const execute = useCallback(() => {
-    const bridgeAddress = BridgeDeployments[chain.fullName];
+    const bridgeAddress = BridgeDeployments[destinationChain.fullName];
     const tokenAddress =
-      chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
-  }, [asset, chain]);
+      chainAdresses[destinationChain.fullName]?.assets[asset.Icon]
+        ?.tokenAddress!;
+  }, [asset, destinationChain]);
 
   return (
     <div className="mt-[60px] mb-[40px]">
@@ -208,29 +205,30 @@ const BridgeModal = ({
           type={buttonState.tabName}
           setType={setWalletAssetType}
           setShowTokenModal={setShowTokenModal}
+          setChainType={() => setChainType("from")}
         />
-        <Dropdown
-          text={chain.fullName}
-          dropDownType={"chain"}
-          Icon={chain.Icon}
-          type={
-            whiteListedEVMAssets.includes(asset.Icon as Asset)
-              ? "FromChain"
-              : "To"
-          }
-          setType={setWalletAssetType}
-          setShowTokenModal={setShowTokenModal}
-        />
-        {whiteListedEVMAssets.includes(asset.Icon as Asset) && (
+        {WhiteListedLegacyAssets.includes(asset.Icon) && (
           <Dropdown
-            text={toChain.fullName}
+            text={fromChain.fullName}
             dropDownType={"chain"}
-            Icon={toChain.Icon}
-            type={"To"}
+            Icon={fromChain.Icon}
+            type={"FromChain"}
             setType={setWalletAssetType}
             setShowTokenModal={setShowTokenModal}
+            setChainType={() => setChainType("from")}
           />
         )}
+
+        <Dropdown
+          text={destinationChain.fullName}
+          dropDownType={"chain"}
+          Icon={destinationChain.Icon}
+          type={"To"}
+          setType={setWalletAssetType}
+          setShowTokenModal={setShowTokenModal}
+          setChainType={() => setChainType("destination")}
+        />
+
         <BalanceDisplay
           asset={asset}
           isNative={false}
@@ -255,7 +253,7 @@ const BridgeModal = ({
 
           <div className="mt-6 mb-1 flex items-center justify-center px-5">
             <BridegButton
-              chain={chain}
+              chain={destinationChain}
               asset={asset}
               buttonState={buttonState}
               isSufficentBalance={isSufficentBalance}

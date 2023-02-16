@@ -2,8 +2,16 @@ import { Asset, Chain } from "@renproject/chains";
 import { Gateway } from "@renproject/ren";
 import { supportedAssets } from "../utils/assetsConfig";
 import { chainsConfig } from "../utils/chainsConfig";
-import { getDefaultChains, ChainInstanceMap } from "../utils/networksConfig";
+import {
+  getDefaultChains,
+  ChainInstanceMap,
+  pickChains,
+} from "../utils/networksConfig";
 import { RenNetwork } from "@renproject/utils";
+import { useWeb3React } from "@web3-react/core";
+import RenJS from "@renproject/ren";
+import { Bitcoin } from '@renproject/chains-bitcoin';
+import { Ethereum } from '../bridgeGateway/Ethereum';
 import {
   useEffect,
   useState,
@@ -19,20 +27,7 @@ interface GatewayProviderProps {
 }
 
 type GatewayContextType = {
-  asset: Asset;
-  from: Chain;
-  to: Chain;
-  amount: string;
-  toAddress: string;
-  toContractAddress: string;
   gateway: Gateway | null;
-  setAsset: Dispatch<SetStateAction<Asset>>;
-  setFrom: Dispatch<SetStateAction<Chain>>;
-  setTo: Dispatch<SetStateAction<Chain>>;
-  // setFromTo: Dispatch<SetStateAction<Chain>>,
-  setAmount: Dispatch<SetStateAction<string>>;
-  setToAddress: Dispatch<SetStateAction<string>>;
-  setToContractAddress: Dispatch<SetStateAction<string>>;
   setGateway: Dispatch<SetStateAction<Gateway<any, any> | null>>;
   allAssets: string[];
   allChains: string[];
@@ -40,6 +35,10 @@ type GatewayContextType = {
     path: string
   ) => GatewayIOType.lockAndMint | GatewayIOType.burnAndRelease;
   defaultChains: ChainInstanceMap;
+  initProvider: (
+    fromChain: Chain,
+    destinationChain: Chain
+  ) => Promise<RenJS | undefined>;
 };
 
 const GatewayContext = createContext({} as GatewayContextType);
@@ -55,13 +54,50 @@ function GatewayProvider({ children }: GatewayProviderProps) {
   const allChains = Object.keys(chainsConfig);
   const defaultChains = getDefaultChains(RenNetwork.Testnet);
 
-  const [asset, setAsset] = useState<Asset>(Asset.gETH);
-  const [from, setFrom] = useState<Chain>(Chain.Ethereum);
-  const [to, setTo] = useState<Chain>(Chain.Catalog);
-  const [amount, setAmount] = useState<string>("");
-  const [toAddress, setToAddress] = useState<string>("");
-  const [toContractAddress, setToContractAddress] = useState<string>("");
+  const { library } = useWeb3React();
+  const [renJs, setRenJs] = useState<RenJS | null>(null);
+  const [error, setError] = useState(null);
   const [gateway, setGateway] = useState<Gateway | null>(null);
+
+  const initProvider = useCallback(
+    async (
+      fromChain: Chain,
+      destinationChain: Chain
+    ): Promise<RenJS | undefined> => {
+      if (!library) {
+        return;
+      }
+
+      const renJs = new RenJS(RenNetwork.Testnet).withChains(Bitcoin, Ethereum);
+      console.log(renJs)
+      setRenJs(renJs);
+      return renJs;
+    },
+    [library]
+  );
+
+  //   useEffect(() => {
+  //     if (!defaultChains || library) {
+  //       return;
+  //     }
+  //     const initProvider = async () => {
+  //       const chainsArray = Object.values(defaultChains).map((chain) => {
+  //         //@ts-ignore
+  //         // chain.chain.withSigner(library.getSigner());
+  //         return chain.chain;
+  //       });
+  //       const renJs = new RenJS(RenNetwork.Testnet).withChains(...chainsArray);
+  //       return renJs;
+  //     };
+  //     initProvider()
+  //       .then((renJs) => {
+  //         setRenJs(renJs)})
+  //       .catch((error) => {
+  //         console.error("gateway renJs error", error);
+  //         setError(error);
+  //       });
+  //       console.log(renJs)
+  //   }, [defaultChains, library]);
 
   const getIoTypeFromPath = (path: string) => {
     if (path === "deposit") {
@@ -74,24 +110,13 @@ function GatewayProvider({ children }: GatewayProviderProps) {
   return (
     <GatewayContext.Provider
       value={{
-        asset,
-        from,
-        to,
-        amount,
-        toAddress,
-        toContractAddress,
-        gateway,
-        setAsset,
-        setFrom,
-        setTo,
-        setAmount,
-        setToAddress,
-        setToContractAddress,
         setGateway,
         allAssets,
         allChains,
         getIoTypeFromPath,
         defaultChains,
+        gateway,
+        initProvider
       }}
     >
       {children}

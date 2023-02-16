@@ -12,19 +12,30 @@ import TransactionFlowModals from "../components/TxConfirmationModalFlow/index";
 import { Tab } from "../components/WalletModal/WalletModal";
 import { assetsBaseConfig } from "../utils/assetsConfig";
 import BridgeModal from '../components/BridgeModal/bridgeModal';
+import { useGateway } from "../context/useGatewayState";
+import RenJS from "@renproject/ren";
 
 type AssetType = "chain" | "currency";
 
+const defaultButtonState: Tab = {
+  tabName: "Deposit",
+  tabNumber: 0,
+  side: "left",
+};
 const BlockPage: NextPage = () => {
   const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [walletAssetType, setWalletAssetType] = useState<AssetType>("chain");
   const [asset, setAsset] = useState<any>(assetsBaseConfig.BTC);
-  const [buttonState, setButtonState] = useState<Tab>({
-    tabName: "Deposit",
-    tabNumber: 0,
-    side: "left",
-  });
+  const { fromChain, destinationChain } = useGlobalState();
+  const { defaultChains, initProvider } = useGateway();
+
+  useEffect(() => {
+    if (!fromChain || !destinationChain) return;
+    initProvider(fromChain.fullName, destinationChain.fullName)
+      .catch((error: Error) => console.error(error));
+  }, [fromChain, destinationChain, initProvider]);
+
   return (
     <>
       <AssetListModal
@@ -32,11 +43,11 @@ const BlockPage: NextPage = () => {
         visible={showTokenModal}
         setAsset={setAsset}
         walletAssetType={walletAssetType}
-        buttonState={buttonState}
+        buttonState={defaultButtonState}
       />
       <TransactionFlowModals
         text={text}
-        buttonState={buttonState}
+        buttonState={defaultButtonState}
         asset={asset}
       />
 
@@ -47,8 +58,7 @@ const BlockPage: NextPage = () => {
           asset={asset}
           text={text}
           setText={setText}
-          buttonState={buttonState}
-          setButtonState={setButtonState}
+          buttonState={defaultButtonState}
         />
         <BottomNavBar />
       </Layout>

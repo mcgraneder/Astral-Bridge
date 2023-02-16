@@ -38,7 +38,7 @@ export const useGateway = (
   {
     autoTeardown = true,
     initialGateway = null,
-    chains = null,
+    chains,
   }: UseGatewayAdditionalParams
 ) => {
   const { library } = useWeb3React();

@@ -3,7 +3,12 @@ import { TopRowNavigation } from "../WalletConnectModal/WalletConnectModal"
 import { FormWrapper, TokenInputContainer, TokenInput } from '../CSS/AssetListModalStyles';
 import { Backdrop } from "../WalletConnectModal/WalletConnectModal"
 import { Icon } from '../Icons/AssetLogs/Icon';
-import { chainsConfig, ChainConfig, supportedEthereumChains } from '../../utils/chainsConfig';
+import {
+  chainsConfig,
+  ChainConfig,
+  supportedEthereumChains,
+  chainsBaseConfig,
+} from "../../utils/chainsConfig";
 import {
   assetsConfig,
   AssetConfig,
@@ -12,6 +17,8 @@ import {
 } from "../../utils/assetsConfig";
 import { useGlobalState } from "../../context/useGlobalState";
 import { Tab } from "../WalletModal/WalletModal";
+import { Asset } from "../../utils/assetsConfig";
+import { Chain } from "@renproject/chains";
 
 const getOptions = (mode: string): Array<AssetConfig | ChainConfig> => {
   const options =
@@ -35,13 +42,14 @@ interface IAssetModal {
 }
 
 const createAvailabilityFilter =
-  (available: any, walletAssetType: string) => (option: any) => {
+  (available: Array<Chain> | Array<Asset>, walletAssetType: string) =>
+  (option: ChainConfig | AssetConfig) => {
     if (!available) {
       return true;
     }
     return walletAssetType === "chain"
-      ? available.includes(option.fullName)
-      : available.includes(option.Icon);
+      ? (available as Chain[]).includes(option.fullName as Chain)
+      : (available as Asset[]).includes(option.Icon as Asset);
   };
 
 const AssetListModal = ({
@@ -52,7 +60,8 @@ const AssetListModal = ({
   buttonState,
 }: IAssetModal) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { assetBalances, setChain } = useGlobalState()
+  const { assetBalances, setDestinationChain, setFromChain, chainType } =
+    useGlobalState();
   const close = useCallback((): void => {
     setShowTokenModal(false);
     setSearchTerm("");
@@ -60,7 +69,7 @@ const AssetListModal = ({
 
   const available =
     walletAssetType === "chain"
-      ? supportedEthereumChains
+      ? undefined
       : [...whiteListedEVMAssets, ...WhiteListedLegacyAssets];
 
   const availabilityFilter = React.useMemo(
@@ -98,18 +107,23 @@ const AssetListModal = ({
     (option: any, type: string) => {
       if (type === "currency") {
         setAsset(option);
-      } else if (type === "chain") {
-        setChain(option);
+      } else if (type === "chain" && chainType === "from") {
+        setFromChain(option);
+      } else if (type === "chain" && chainType === "destination") {
+        console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+        setDestinationChain(option);
       }
       setSearchTerm("");
       close();
     },
-    [close, setAsset, setChain]
+    [close, setAsset, setDestinationChain, chainType, setFromChain]
   );
 
   const handleCurrencyChange = useCallback(
-    (currency: string, option: any): void => {
+    (currency: string, option: AssetConfig): void => {
       setSelectedToken(option, "currency");
+      if (WhiteListedLegacyAssets.includes(option.Icon as Asset))
+        setFromChain(chainsBaseConfig[option.fullName as Chain]);
       const selectedCurrency = getOptionBySymbol(currency, "currency");
       localStorage.setItem(
         "selected_currency",
@@ -117,7 +131,7 @@ const AssetListModal = ({
       );
       setShowTokenModal(false);
     },
-    [setSelectedToken, setShowTokenModal]
+    [setSelectedToken, setShowTokenModal, setFromChain]
   );
 
   const handleChainChange = useCallback(
@@ -166,40 +180,45 @@ const AssetListModal = ({
               return handleSearch(val);
             })
             .sort(handleSort)
-            .map((asset: any, index: number) => {
-              const formattedBalance =
-                buttonState.tabName !== "Deposit"
-                  ? Number(assetBalances[asset.Icon]?.bridgeBalance) /
-                    10 ** asset.decimals
-                  : Number(assetBalances[asset.Icon]?.walletBalance) /
-                    10 ** asset.decimals;
-              return (
-                <div
-                  key={index}
-                  className="cursor: pointer flex items-center justify-between py-[10px] px-8 hover:cursor-pointer hover:bg-secondary"
-                  onClick={
-                    walletAssetType === "chain"
-                      ? () => handleChainChange(asset.fullName, asset)
-                      : () => handleCurrencyChange(asset.fullName, asset)
-                  }
-                >
-                  <div className="flex items-center justify-center gap-4">
-                    <Icon chainName={asset.Icon} className="h-8 w-8" />
-                    <div className="flex flex-col items-start justify-start text-center">
-                      <span className="text-[16px] font-semibold leading-tight">
-                        {asset.fullName}
-                      </span>
-                      <span className="text-[14px] leading-tight text-gray-500">
-                        {asset.shortName}
-                      </span>
+            .map(
+              (
+                asset: Partial<AssetConfig> & Partial<ChainConfig>,
+                index: number
+              ) => {
+                const formattedBalance =
+                  buttonState.tabName !== "Deposit"
+                    ? Number(assetBalances[asset.Icon!]?.bridgeBalance) /
+                      10 ** asset.decimals!
+                    : Number(assetBalances[asset.Icon!]?.walletBalance) /
+                      10 ** asset.decimals!;
+                return (
+                  <div
+                    key={index}
+                    className="cursor: pointer flex items-center justify-between py-[10px] px-8 hover:cursor-pointer hover:bg-secondary"
+                    onClick={
+                      walletAssetType === "chain"
+                        ? () => handleChainChange(asset.fullName!, asset)
+                        : () => handleCurrencyChange(asset.fullName!, asset)
+                    }
+                  >
+                    <div className="flex items-center justify-center gap-4">
+                      <Icon chainName={asset.Icon} className="h-8 w-8" />
+                      <div className="flex flex-col items-start justify-start text-center">
+                        <span className="text-[16px] font-semibold leading-tight">
+                          {asset.fullName}
+                        </span>
+                        <span className="text-[14px] leading-tight text-gray-500">
+                          {asset.shortName}
+                        </span>
+                      </div>
                     </div>
+                    {walletAssetType === "currency" ? (
+                      <span className="text-[14px]">{formattedBalance}</span>
+                    ) : null}
                   </div>
-                  {walletAssetType === "currency" ? (
-                    <span className="text-[14px]">{formattedBalance}</span>
-                  ) : null}
-                </div>
-              );
-            })}
+                );
+              }
+            )}
         </div>
         <div className="border-t border-tertiary px-[25px] py-[20px] text-center">
           <span className="text-center text-[17px] font-semibold text-blue-500">

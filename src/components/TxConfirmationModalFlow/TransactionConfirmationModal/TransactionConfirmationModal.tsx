@@ -51,7 +51,7 @@ interface IAssetModalInner {
     type: string
   ) => void;
   asset: any;
-  chain: any;
+  destinationChain: any;
   exit: () => void;
   text: string;
   assetPrice: number | BigNumber | undefined;
@@ -61,7 +61,7 @@ interface IAssetModalInner {
   executeTransaction: (
     transactionType: string,
     amount: string,
-    chain: any,
+    chaindestinationChain: any,
     asset: any
   ) => Promise<void>;
   showTopRow: boolean;
@@ -75,7 +75,7 @@ const TxModalInner = ({
   gasMinLimit,
   updateGasOverride,
   asset,
-  chain,
+  destinationChain,
   exit,
   text,
   assetPrice,
@@ -113,9 +113,9 @@ const TxModalInner = ({
               icon={asset.Icon}
             />
             <AssetSummary
-              fullName={chain.fullName}
-              shortName={chain.shortName}
-              icon={chain.Icon}
+              fullName={destinationChain.fullName}
+              shortName={destinationChain.shortName}
+              icon={destinationChain.Icon}
             />
             <div className="absolute top-[37%] right-[45%] flex h-9 w-9 items-center justify-center rounded-xl border border-gray-600 bg-darkBackground">
               <UilAngleDown className={""} />
@@ -139,7 +139,7 @@ const TxModalInner = ({
               "w-full justify-center rounded-2xl bg-blue-500 py-[14px] text-center"
             }
             onClick={() =>
-              executeTransaction(transactionType, text, chain, asset)
+              executeTransaction(transactionType, text, destinationChain, asset)
             }
           >
             Confirm {transactionType}
@@ -162,7 +162,7 @@ const TxConfirmationModal = ({
   const { executeTransaction: exec } = useEcecuteTransaction();
   const { init } = useApproval();
   const { width } = useViewport();
-  const { chain } = useGlobalState();
+  const { destinationChain } = useGlobalState();
   const { assetPrice } = useFetchAssetPrice(asset);
   const {
     defaultGasPrice,
@@ -185,15 +185,10 @@ const TxConfirmationModal = ({
     networkFee: defaultGasPrice?.networkFee!,
   });
 
-  useEffect(() => {
-    console.log(customGasPrice);
-    console.log(basicGasOverride);
-  }, [advancedGasOveride, basicGasOverride, customGasPrice]);
-
   const estimateGasLimit = useCallback(async (): Promise<ethers.BigNumber> => {
-    const bridgeAddress = BridgeDeployments[chain.fullName];
+    const bridgeAddress = BridgeDeployments[destinationChain.fullName];
     const tokenAddress =
-      chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
+      chainAdresses[destinationChain.fullName]?.assets[asset.Icon]?.tokenAddress!;
 
     const bridgeContract = new ethers.Contract(
       bridgeAddress!,
@@ -213,7 +208,7 @@ const TxConfirmationModal = ({
           );
 
     return gasEstimate as ethers.BigNumber;
-  }, [chain, library, account, buttonState, asset]);
+  }, [destinationChain, library, account, buttonState, asset]);
 
   useEffect(() => {
     estimateGasLimit().then((gasLimit: ethers.BigNumber) => {
@@ -260,14 +255,14 @@ const TxConfirmationModal = ({
     async (
       transactionType: string,
       amount: string,
-      chain: any,
+      destinationChain: any,
       asset: any
     ): Promise<void> => {
       toggleConfirmationModal();
       const txAmount = new BigNumber(amount).shiftedBy(asset.decimals);
-      const bridgeAddress = BridgeDeployments[chain.fullName];
+      const bridgeAddress = BridgeDeployments[destinationChain.fullName];
       const tokenAddress =
-        chainAdresses[chain.fullName]?.assets[asset.Icon]?.tokenAddress!;
+        chainAdresses[destinationChain.fullName]?.assets[asset.Icon]?.tokenAddress!;
 
       const bridgeContract = init(bridgeAddress!, RenBridgeABI);
 
@@ -283,14 +278,14 @@ const TxConfirmationModal = ({
       if (transactionType === "Deposit") {
         await exec(
           asset,
-          chain,
+          destinationChain,
           [txAmount.toString(), tokenAddress, optionalParams],
           bridgeContract?.transferFrom
         );
       } else if (transactionType === "Withdraw") {
         await exec(
           asset,
-          chain,
+          destinationChain,
           [account, txAmount.toString(), tokenAddress, optionalParams],
           bridgeContract?.transfer
         );
@@ -312,7 +307,7 @@ const TxConfirmationModal = ({
               gasMinLimit={gasMinLimit}
               updateGasOverride={updateGasOverride}
               asset={asset}
-              chain={chain}
+              destinationChain={destinationChain}
               exit={exit}
               text={text}
               assetPrice={assetPrice}
@@ -339,7 +334,7 @@ const TxConfirmationModal = ({
             gasMinLimit={gasMinLimit}
             updateGasOverride={updateGasOverride}
             asset={asset}
-            chain={chain}
+            destinationChain={destinationChain}
             exit={exit}
             text={text}
             assetPrice={assetPrice}

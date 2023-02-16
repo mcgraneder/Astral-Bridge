@@ -74,7 +74,7 @@ const BalanceDisplay = ({
   const [balance, setBalance] = useState<string | undefined>(undefined);
   const [assetBalance, setAssetBalance] = useState<number>(0);
   const { library, account, chainId } = useWeb3React();
-  const { assetBalances, fetchingBalances, chain } = useGlobalState();
+  const { assetBalances, fetchingBalances, destinationChain: chain } = useGlobalState();
   const { assetPrice } = useFetchAssetPrice(asset)
 
   useEffect(() => {

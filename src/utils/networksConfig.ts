@@ -1,8 +1,10 @@
-import { Catalog, Chain, EthProvider, EVMNetworkConfig } from "@renproject/chains";
+import { Avalanche, BinanceSmartChain, Chain, EthProvider, EVMNetworkConfig, Fantom, Kava, Moonbeam, Polygon } from "@renproject/chains";
+import { Arbitrum } from "../bridgeGateway/Arbitrum";
+import { Optimism } from "../bridgeGateway/Optimism";
 import { RenNetwork } from "@renproject/utils";
 import { getChainNetworkConfig } from "./chainsConfig";
 import { providers } from "ethers"
-import { Ethereum } from '@renproject/chains-ethereum';
+import { Ethereum } from "../bridgeGateway/Ethereum";
 import { EthereumBaseChain } from '@renproject/chains-ethereum/base';
 import { BitcoinBaseChain, Bitcoin } from '@renproject/chains-bitcoin';
 import { Chain as GatewayChain } from "@renproject/utils";
@@ -164,8 +166,14 @@ const getBitcoinBaseChain = <BTC extends BitcoinBaseChain>(ChainClass: BTC) => {
 export const getDefaultChains = (network: RenNetwork): ChainInstanceMap => {
   const ethereumBaseChains = {
     [Chain.Ethereum]: getEthereumChain(network),
-    // [Chain.Goerli]: getEthereumBaseChain(Goerli, network),
-    [Chain.Catalog]: getEthereumBaseChain(Catalog, network),
+    [Chain.BinanceSmartChain]: getEthereumBaseChain(BinanceSmartChain, network),
+    [Chain.Polygon]: getEthereumBaseChain(Polygon, network),
+    [Chain.Optimism]: getEthereumBaseChain(Optimism, network),
+    [Chain.Arbitrum]: getEthereumBaseChain(Arbitrum, network),
+    [Chain.Fantom]: getEthereumBaseChain(Fantom, network),
+    [Chain.Moonbeam]: getEthereumBaseChain(Moonbeam, network),
+    [Chain.Avalanche]: getEthereumBaseChain(Avalanche, network),
+    [Chain.Kava]: getEthereumBaseChain(Kava, network),
   };
 
   const bitcoinBaseChains = {
@@ -179,7 +187,7 @@ export const getDefaultChains = (network: RenNetwork): ChainInstanceMap => {
 };
 
 export const supportedEthereumChains: Array<Chain> = [
-  network === RenNetwork.Mainnet ? Chain.Ethereum : Chain.Goerli,
+  Chain.Ethereum,
 ];
 
 export const isEthereumBaseChain = (chain: Chain) =>
@@ -191,5 +199,7 @@ export const pickChains = (
   to: Chain
 ) => {
   const pickedChains = { [from]: chains[from], [to]: chains[to] };
-  return pickedChains;
+  const pickedChainsArray = [chains[from], chains[to]]
+
+  return { pickedChains, pickedChainsArray };
 };

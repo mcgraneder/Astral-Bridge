@@ -18,6 +18,11 @@ import { get } from "../services/axios";
 import { ethers } from 'ethers';
 import { fetchNetworkFeeData, NetReturn } from '../utils/market/getMarketGasData';
 import { useGasPrices } from "../hooks/usGasPrices";
+import { ChainInstanceMap, getDefaultChains } from "../utils/networksConfig";
+import { supportedAssets } from "../utils/assetsConfig";
+import { chainsConfig } from "../utils/chainsConfig";
+import { RenNetwork } from '@renproject/utils';
+
 interface GlobalStateProviderProps {
   children: React.ReactNode;
 }
@@ -30,10 +35,13 @@ type GlobalContextType = {
   fetchingBalances: boolean;
   pendingTransaction: boolean;
   setPendingTransaction: Dispatch<SetStateAction<boolean>>;
-  chain: any;
-  setChain: any;
-  toChain: any;
-  setToChain: any;
+  fromChain: any;
+  setFromChain: any;
+  destinationChain: any;
+  setDestinationChain: any;
+  chainType: string;
+  setChainType: Dispatch<SetStateAction<string>>;
+  defaultChains: ChainInstanceMap;
 };
 
 export type MulticallReturn = {
@@ -52,11 +60,16 @@ export type GP = {
 const GlobalStateContext = createContext({} as GlobalContextType);
 
 function GlobalStateProvider({ children }: GlobalStateProviderProps) {
+    const allAssets = supportedAssets;
+    const allChains = Object.keys(chainsConfig);
+    const defaultChains = getDefaultChains(RenNetwork.Testnet);
   const [fetchedStoredChain, setFetchStoredChain] = useState<boolean>(false);
   const [pendingTransaction, setPendingTransaction] = useState<boolean>(false);
   const [fetchingBalances, setFetchingBalances] = useState<boolean>(false);
-  const [chain, setChain] = useState<any>(chainsBaseConfig.Ethereum);
-  const [toChain, setToChain] = useState<any>(chainsBaseConfig.Bitcoin);
+  const [fromChain, setFromChain] = useState<any>(chainsBaseConfig.Bitcoin);
+  const [destinationChain, setDestinationChain] = useState<any>(chainsBaseConfig.Ethereum);
+  const [chainType, setChainType] = useState<string>("from");
+
 
   const [assetBalances, setAssetBalances] = useState<{
     [x: string]: MulticallReturn | undefined;
@@ -64,7 +77,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
   const { account, chainId, active } = useWeb3React();
 
   const memoizedFetchBalances = useCallback(async () => {
-    if (!account || !chainId || !chain) return;
+    if (!account || !chainId || !fromChain) return;
     setFetchingBalances(true);
     const tokensResponse = await get<{
       result: {
@@ -73,7 +86,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     }>(API.ren.balancesOf, {
       params: {
         of: account,
-        chainName: chain.fullName,
+        chainName: fromChain.fullName,
       },
     });
 
@@ -83,20 +96,20 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     }
     setAssetBalances(tokensResponse.result.multicall);
     setTimeout(() => setFetchingBalances(false), 500);
-  }, [account, chainId, setFetchingBalances, chain]);
+  }, [account, chainId, setFetchingBalances, fromChain]);
+
+  // useEffect(() => {
+  //   if (fetchedStoredChain || !chainId) return;
+  //   setFromChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!]);
+  //   setFetchStoredChain(true);
+  // }, [fetchedStoredChain, chainId]);
 
   useEffect(() => {
-    if (fetchedStoredChain || !chainId) return;
-    setChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!]);
-    setFetchStoredChain(true);
-  }, [fetchedStoredChain, chainId]);
-
-  useEffect(() => {
-    if (!active || !account || !chain) return;
+    if (!active || !account || !fromChain) return;
       memoizedFetchBalances();
     const interval: NodeJS.Timer = setInterval(memoizedFetchBalances, 50000);
     return () => clearInterval(interval);
-  }, [memoizedFetchBalances, account, active, chain]);
+  }, [memoizedFetchBalances, account, active, fromChain]);
 
 
     const ProvRet = useMemo(
@@ -106,10 +119,13 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
         fetchingBalances,
         pendingTransaction,
         setPendingTransaction,
-        chain,
-        setChain,
-        toChain,
-        setToChain
+        fromChain,
+        setFromChain,
+        destinationChain,
+        setDestinationChain,
+        chainType,
+        setChainType,
+        defaultChains
       }),
       [
         memoizedFetchBalances,
@@ -117,10 +133,13 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
         fetchingBalances,
         pendingTransaction,
         setPendingTransaction,
-        chain,
-        setChain,
-        toChain,
-        setToChain
+        fromChain,
+        setFromChain,
+        destinationChain,
+        setDestinationChain,
+        chainType,
+        setChainType,
+        defaultChains
       ]
     );
   return (

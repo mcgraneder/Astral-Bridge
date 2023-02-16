@@ -38,7 +38,7 @@ const TokenSelectDropdown = () => {
     const [activeChain, setActiveChain] = useState<ChainType | undefined>(undefined);
     const { chainId } = useWeb3React();
     const { width } = useViewport();
-    const { setChain } = useGlobalState()
+    const { setDestinationChain } = useGlobalState()
 
     const { needToSwitchChain, switchNetwork } = useAuth();
     const ref = useRef<HTMLDivElement>(null);
@@ -47,11 +47,11 @@ const TokenSelectDropdown = () => {
         if (!chainId) return;
         const activeChain: ChainType | undefined = CHAINS[chainId];
         setActiveChain(activeChain)
-        setChain(chainsBaseConfig[ChainIdToRenChain[chainId]!]);
+        setDestinationChain(chainsBaseConfig[ChainIdToRenChain[chainId]!]);
         const onCorrectChain = needToSwitchChain(chainId);
         // console.log(onCorrectChain);
         // if (!onCorrectChain) Toast.info("you are currently on an unsupported chain")
-    }, [chainId, needToSwitchChain, setChain]);
+    }, [chainId, needToSwitchChain, setDestinationChain]);
 
     useEffect(() => {
         const checkIfClickedOutside = (e: Event) => {

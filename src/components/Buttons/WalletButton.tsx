@@ -6,7 +6,7 @@ import { UilSpinner } from "@iconscout/react-unicons";
 import { useGlobalState } from "../../context/useGlobalState";
 
 interface IWalletButton {
-  chain: any;
+  destinationChain: any;
   asset: any;
   buttonState: Tab;
   isSufficentBalance: boolean;
@@ -17,7 +17,7 @@ interface IWalletButton {
   error: boolean;
 }
 const WalletButton = ({
-  chain,
+  destinationChain,
   asset,
   buttonState,
   isSufficentBalance,
@@ -31,14 +31,14 @@ const WalletButton = ({
   const { pendingTransaction } = useGlobalState();
 
   const getButtonText = useCallback(
-    (chain: any, library: boolean, buttonState: Tab) => {
+    (destinationChain: any, library: boolean, buttonState: Tab) => {
       if (!library) return "Connect Wallet";
       else if (pendingTransaction) return "Transaction pending";
       else if (!needsToSwitchChain)
-        return `Switch to ${chain.fullName} network`;
+        return `Switch to ${destinationChain.fullName} network`;
       else if (!isSufficentBalance && text !== "") return "Insufficent funds";
       else if (!isAssetApproved && text !== "")
-        return `Approve ${asset.Icon} on ${chain.fullName}`;
+        return `Approve ${asset.Icon} on ${destinationChain.fullName}`;
       else return `${buttonState.tabName} ${text} ${asset.Icon}`;
     },
     [
@@ -76,7 +76,7 @@ const WalletButton = ({
       disabled={error}
       onClick={execute}
     >
-      <span>{getButtonText(chain, active, buttonState)}</span>
+      <span>{getButtonText(destinationChain, active, buttonState)}</span>
       {pendingTransaction && (
         <UilSpinner className={" h-6 w-6 animate-spin text-white"} />
       )}
