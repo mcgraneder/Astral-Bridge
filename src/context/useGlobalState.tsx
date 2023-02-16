@@ -32,6 +32,8 @@ type GlobalContextType = {
   setPendingTransaction: Dispatch<SetStateAction<boolean>>;
   chain: any;
   setChain: any;
+  toChain: any;
+  setToChain: any;
 };
 
 export type MulticallReturn = {
@@ -54,6 +56,8 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
   const [pendingTransaction, setPendingTransaction] = useState<boolean>(false);
   const [fetchingBalances, setFetchingBalances] = useState<boolean>(false);
   const [chain, setChain] = useState<any>(chainsBaseConfig.Ethereum);
+  const [toChain, setToChain] = useState<any>(chainsBaseConfig.Bitcoin);
+
   const [assetBalances, setAssetBalances] = useState<{
     [x: string]: MulticallReturn | undefined;
   }>({});
@@ -89,7 +93,6 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
 
   useEffect(() => {
     if (!active || !account || !chain) return;
-    // console.log("heyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy")
       memoizedFetchBalances();
     const interval: NodeJS.Timer = setInterval(memoizedFetchBalances, 50000);
     return () => clearInterval(interval);
@@ -105,6 +108,8 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
         setPendingTransaction,
         chain,
         setChain,
+        toChain,
+        setToChain
       }),
       [
         memoizedFetchBalances,
@@ -114,6 +119,8 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
         setPendingTransaction,
         chain,
         setChain,
+        toChain,
+        setToChain
       ]
     );
   return (

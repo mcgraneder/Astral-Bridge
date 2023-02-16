@@ -46,9 +46,9 @@ export const createGateway = async (
     fromChain = (fromChainInstance.chain as BitcoinBaseChain).GatewayAddress();
   }
 
-  const toChain = getCatalogMintContractObject(
-    toChainInstance.chain as Bitcoin,
-    gatewayParams.tokenAddress,
+  const toChain = getConytactObject(
+    toChainInstance.chain as Ethereum,
+    gatewayParams.tokenAddress
   );
 
   return await renJS.gateway({
@@ -58,7 +58,7 @@ export const createGateway = async (
   });
 };
 
-const getConytacyObject = (chain: Ethereum, symbol: string) => {
+const getConytactObject = (chain: Ethereum, symbol: string) => {
   return chain.Contract({
     to: "0x96081a4e7C3617a4d7dAc9AC84D97255d63773d2",
     method: "deposit",
