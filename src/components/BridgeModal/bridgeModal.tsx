@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled, { css } from "styled-components";
 import ToggleButtonContainer from "./components/ToggleButton";
-import Dropdown from "./components/Dropdown";
+import Dropdown from './components/Dropdown';
 import WalletInputForm from "./components/WalletInput";
 import BalanceDisplay from "../NativeBalanceDisplay/BalanceDisplay";
 import { useWeb3React } from "@web3-react/core";
@@ -26,6 +26,8 @@ import {
 } from "../../utils/networksConfig";
 import { Chain } from "@renproject/chains";
 import BridegButton from '../Buttons/BridgeButton';
+import BridgeToggleButton from './components/BridgeToggleButton';
+import { Dispatch, SetStateAction } from 'react';
 import {
   WhiteListedLegacyAssets,
   Asset,
@@ -39,25 +41,37 @@ export type Tab = {
   contractFunc?: any;
 };
 
-const TABS: Tab[] = [
+const BRIDGE_TABS: Tab[] = [
   {
-    tabName: "Deposit",
+    tabName: "Native Bridge",
     tabNumber: 0,
     side: "left",
   },
   {
-    tabName: "Withdraw",
+    tabName: "ERC20 Bridge",
     tabNumber: 1,
     side: "right",
   },
 ];
 
+const TABS: Tab[] = [
+  {
+    tabName: "Bridge",
+    tabNumber: 0,
+    side: "left",
+  },
+  {
+    tabName: "Release",
+    tabNumber: 1,
+    side: "right",
+  },
+];
 export const BridgeModalContainer = styled.div`
   max-width: 480px;
   color: White;
   background-color: rgb(15, 25, 55);
   text-align: right;
-  padding: 12px 18px;
+  /* padding: 12px 18px; */
   border: 1px solid rgb(57, 62, 82);
   border-radius: 20px;
   box-shadow: 0px 10px 150px 5px rgba(75, 135, 220, 0.03);
@@ -70,7 +84,6 @@ export const MintFormContainer = styled.div`
   margin-top: 10px;
   padding-bottom: 20px;
   margin-bottom: 10px;
-  padding-top: 20px;
   background: rgb(34, 53, 83);
   border: 1px solid rgb(34, 43, 68);
   border-radius: 10px;
@@ -89,27 +102,6 @@ export const MinFormToggleButtonContainer = styled.div`
   }
 `;
 
-export const MintToggleButton = styled.div`
-
-   
-    width: 50%;
-    height: 100%;
-    border-top-${(props) => props.side}-radius: 10px;
-    border-right: 1.5px solid rgb(14, 22, 39);
-    background: ${(props) =>
-      props.active ? "rgb(15, 25, 55)" : "rgb(34, 53, 83)"};
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid ${(props) =>
-      props.active ? "rgb(75,135,220)" : "rgb(34, 53, 83)"};
-    color: ${(props) => (props.active ? "rgb(75,135,220)" : "White")};
-    &:hover {
-        cursor: pointer;
-    }
-
-`;
-
 export const InfoContainer = styled.div`
   margin-left: 20px;
   margin-right: 20px;
@@ -126,6 +118,12 @@ export const InfoContainer = styled.div`
     `}
 `;
 
+export const DropdownWrapper = styled.div`
+
+  height: ${(props) => props.isVisible ? "130px" : "85px"};
+  transition: height 0.2s ease;
+`;
+
 const NETWORK: RenNetwork = RenNetwork.Testnet;
 
 interface IWalletModal {
@@ -135,6 +133,9 @@ interface IWalletModal {
   text: string;
   setText: any;
   buttonState: Tab;
+  setButtonState: Dispatch<SetStateAction<Tab>>;
+  bridgeState: Tab;
+  setBridgeState: Dispatch<SetStateAction<Tab>>;
 }
 
 const BridgeModal = ({
@@ -144,6 +145,9 @@ const BridgeModal = ({
   text,
   setText,
   buttonState,
+  setButtonState,
+  bridgeState,
+  setBridgeState
 }: IWalletModal) => {
   const [isSufficentBalance, setIsSufficientBalance] = useState<boolean>(true);
   const [walletBalance, setWalletBalance] = useState<any>(0);
@@ -198,72 +202,88 @@ const BridgeModal = ({
   return (
     <div className="mt-[60px] mb-[40px]">
       <BridgeModalContainer>
-        <Dropdown
-          text={asset.fullName}
-          dropDownType={"currency"}
-          Icon={asset.Icon}
-          type={buttonState.tabName}
-          setType={setWalletAssetType}
-          setShowTokenModal={setShowTokenModal}
-          setChainType={() => setChainType("from")}
+        <BridgeToggleButton
+          activeButton={bridgeState}
+          tabs={BRIDGE_TABS}
+          setActiveButton={setBridgeState}
         />
-        {WhiteListedLegacyAssets.includes(asset.Icon) && (
-          <Dropdown
-            text={fromChain.fullName}
-            dropDownType={"chain"}
-            Icon={fromChain.Icon}
-            type={"FromChain"}
-            setType={setWalletAssetType}
-            setShowTokenModal={setShowTokenModal}
-            setChainType={() => setChainType("from")}
-          />
-        )}
+        <div className="px-[18px] pb-[12px]">
+          <DropdownWrapper isVisible={bridgeState.tabName !== "Native Bridge"}>
+            <Dropdown
+              text={asset.fullName}
+              dropDownType={"currency"}
+              Icon={asset.Icon}
+              type={buttonState.tabName}
+              setType={setWalletAssetType}
+              setShowTokenModal={setShowTokenModal}
+              setChainType={() => setChainType("from")}
+              isVisible={true}
+            />
 
-        <Dropdown
-          text={destinationChain.fullName}
-          dropDownType={"chain"}
-          Icon={destinationChain.Icon}
-          type={"To"}
-          setType={setWalletAssetType}
-          setShowTokenModal={setShowTokenModal}
-          setChainType={() => setChainType("destination")}
-        />
+            <Dropdown
+              text={fromChain.fullName}
+              dropDownType={"chain"}
+              Icon={fromChain.Icon}
+              type={"FromChain"}
+              setType={setWalletAssetType}
+              setShowTokenModal={setShowTokenModal}
+              setChainType={() => setChainType("from")}
+              isVisible={true}
+            />
 
-        <BalanceDisplay
-          asset={asset}
-          isNative={false}
-          buttonState={buttonState.tabName}
-        />
-        <MintFormContainer>
-          <WalletInputForm
-            setAmount={setText}
-            amount={text}
-            isMax={isMax}
-            setIsMax={setIsMax}
-            walletBalance={walletBalance}
+            <Dropdown
+              text={destinationChain.fullName}
+              dropDownType={"chain"}
+              Icon={destinationChain.Icon}
+              type={"To"}
+              setType={setWalletAssetType}
+              setShowTokenModal={setShowTokenModal}
+              setChainType={() => setChainType("destination")}
+              isVisible={bridgeState.tabName !== "Native Bridge"}
+            />
+          </DropdownWrapper>
+          <BalanceDisplay
+            asset={asset}
+            isNative={false}
             buttonState={buttonState.tabName}
           />
-          {text !== "" && (
-            <FeeData
-              text={text}
-              defaultGasPrice={defaultGasPrice}
-              asset={asset}
+          <MintFormContainer>
+            <ToggleButtonContainer
+              activeButton={buttonState}
+              tabs={TABS}
+              setActiveButton={setButtonState}
+              isVisible={bridgeState.tabName === "Native Bridge"}
             />
-          )}
+            <WalletInputForm
+              setAmount={setText}
+              amount={text}
+              isMax={isMax}
+              setIsMax={setIsMax}
+              walletBalance={walletBalance}
+              buttonState={buttonState.tabName}
+            />
+            {text !== "" && (
+              <FeeData
+                text={text}
+                defaultGasPrice={defaultGasPrice}
+                asset={asset}
+              />
+            )}
 
-          <div className="mt-6 mb-1 flex items-center justify-center px-5">
-            <BridegButton
-              chain={destinationChain}
-              asset={asset}
-              buttonState={buttonState}
-              isSufficentBalance={isSufficentBalance}
-              needsToSwitchChain={needsToSwitchChain}
-              execute={execute}
-              text={text}
-              error={error}
-            />
-          </div>
-        </MintFormContainer>
+            <div className="mt-6 mb-1 flex items-center justify-center px-5">
+              <BridegButton
+                chain={destinationChain}
+                asset={asset}
+                buttonState={buttonState}
+                isSufficentBalance={isSufficentBalance}
+                needsToSwitchChain={needsToSwitchChain}
+                execute={execute}
+                text={text}
+                error={error}
+              />
+            </div>
+          </MintFormContainer>
+        </div>
       </BridgeModalContainer>
     </div>
   );

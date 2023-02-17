@@ -44,7 +44,7 @@ const configMap: EthereumBaseChain["configMap"] = {
       chainName: "Optimism Görli",
       nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
       rpcUrls: [
-        "https://goerli.optimism.io",
+        "https://tame-long-star.optimism-goerli.discover.quiknode.pro/5d05bc8495456390edb46149f821d20042c35f89/",
         "https://opt-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
         "wss://opt-goerli.g.alchemy.com/v2/${ALCHEMY_API_KEY}",
       ],

@@ -1,5 +1,41 @@
-import { MinFormToggleButtonContainer, MintToggleButton, Tab } from '../bridgeModal';
+import { Tab } from '../bridgeModal';
 import { MintFormText2 } from '../../CSS/WalletModalStyles';
+import styled from "styled-components"
+
+export const MinFormToggleButtonContainer = styled.div`
+  height: ${(props) => (props.isVisible ? "40px" : "0px")};
+  transition: height 0.2s ease;
+  display: flex;
+  margin-bottom: 25px;
+  background: rgb(15, 25, 55);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+
+  &:hover {
+    background: rgb(34, 43, 68);
+  }
+`;
+
+export const MintToggleButton = styled.div`
+
+   
+    width: 50%;
+    height: 100%;
+    border-top-${(props) => props.side}-radius: 10px;
+    border-right: 1.5px solid rgb(14, 22, 39);
+    background: ${(props) =>
+      props.active ? "rgb(15, 25, 55)" : "rgb(34, 53, 83)"};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid ${(props) =>
+      props.active ? "rgb(75,135,220)" : "rgb(34, 53, 83)"};
+    color: ${(props) => (props.active ? "rgb(75,135,220)" : "White")};
+    &:hover {
+        cursor: pointer;
+    }
+
+`;
 
 interface IToggleButton {
     side: string;
@@ -12,6 +48,7 @@ interface IToggleContainer {
     activeButton: Tab;
     tabs: Tab[];
     setActiveButton: React.Dispatch<React.SetStateAction<Tab>>;
+    isVisible: boolean
 }
 const ToggleButton = ({ side, text, active, onClick }: IToggleButton) => {
     return (
@@ -20,12 +57,12 @@ const ToggleButton = ({ side, text, active, onClick }: IToggleButton) => {
         </MintToggleButton>
     );
 }
-const ToggleButtonContainer = ({ activeButton, tabs, setActiveButton }: IToggleContainer) => {
+const ToggleButtonContainer = ({ activeButton, tabs, setActiveButton, isVisible }: IToggleContainer) => {
     const tabSelect = (index: number): void => setActiveButton(tabs[index] as Tab)
 
     return (
-        <MinFormToggleButtonContainer>
-            {tabs.map((tab: Tab, index: number) => {
+        <MinFormToggleButtonContainer isVisible={isVisible}>
+            {isVisible && tabs.map((tab: Tab, index: number) => {
                 return <ToggleButton key={index} side={tab.side} text={tab.tabName} active={activeButton.tabNumber == index} onClick={() => tabSelect(index)} />;
             })}
         </MinFormToggleButtonContainer>

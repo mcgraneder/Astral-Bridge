@@ -110,7 +110,6 @@ const AssetListModal = ({
       } else if (type === "chain" && chainType === "from") {
         setFromChain(option);
       } else if (type === "chain" && chainType === "destination") {
-        console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
         setDestinationChain(option);
       }
       setSearchTerm("");

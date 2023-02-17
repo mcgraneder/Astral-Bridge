@@ -2,16 +2,13 @@ import { Asset, Chain } from "@renproject/chains";
 import { Gateway } from "@renproject/ren";
 import { supportedAssets } from "../utils/assetsConfig";
 import { chainsConfig } from "../utils/chainsConfig";
-import {
-  getDefaultChains,
-  ChainInstanceMap,
-  pickChains,
-} from "../utils/networksConfig";
+import { ChainInstanceMap, pickChains } from "../utils/networksConfig";
+import { getDefaultChains, ChainInstance } from "../bridgeGateway/chainUtils";
 import { RenNetwork } from "@renproject/utils";
 import { useWeb3React } from "@web3-react/core";
 import RenJS from "@renproject/ren";
-import { Bitcoin } from '@renproject/chains-bitcoin';
-import { Ethereum } from '../bridgeGateway/Ethereum';
+import { Bitcoin } from "@renproject/chains-bitcoin";
+import { Ethereum } from "../bridgeGateway/Ethereum";
 import {
   useEffect,
   useState,
@@ -39,6 +36,7 @@ type GatewayContextType = {
     fromChain: Chain,
     destinationChain: Chain
   ) => Promise<RenJS | undefined>;
+  renJs: RenJS | null;
 };
 
 const GatewayContext = createContext({} as GatewayContextType);
@@ -60,20 +58,20 @@ function GatewayProvider({ children }: GatewayProviderProps) {
   const [gateway, setGateway] = useState<Gateway | null>(null);
 
   const initProvider = useCallback(
-    async (
-      fromChain: Chain,
-      destinationChain: Chain
-    ): Promise<RenJS | undefined> => {
+    async (fromChain: Chain, toChain: Chain): Promise<RenJS | undefined> => {
       if (!library) {
         return;
       }
 
-      const renJs = new RenJS(RenNetwork.Testnet).withChains(Bitcoin, Ethereum);
-      console.log(renJs)
+      const chains = Object.values(defaultChains).filter((chain) => {
+        return chain.chain.chain != fromChain || chain.chain.chain != toChain;
+      });
+      const supported = chains.map((chain: ChainInstance) => chain.chain);
+      const renJs = new RenJS(RenNetwork.Testnet).withChains(...supported);
       setRenJs(renJs);
       return renJs;
     },
-    [library]
+    [library, defaultChains]
   );
 
   //   useEffect(() => {
@@ -116,7 +114,8 @@ function GatewayProvider({ children }: GatewayProviderProps) {
         getIoTypeFromPath,
         defaultChains,
         gateway,
-        initProvider
+        initProvider,
+        renJs,
       }}
     >
       {children}

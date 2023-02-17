@@ -11,7 +11,7 @@ import { ChainIdToRenChain } from "../connection/chains";
 import { Chain, Asset } from "@renproject/chains";
 import API from "../constants/Api";
 import { SetStateAction, Dispatch } from 'react';
-import { chainsBaseConfig } from "../utils/chainsConfig";
+import { chainsBaseConfig, ChainConfig } from '../utils/chainsConfig';
 import { ChainBaseConfig } from '../constants/Addresses';
 import { GasPriceType } from "../components/TxConfirmationModalFlow/TransactionConfirmationModal/TransactionConfirmationModal";
 import { get } from "../services/axios";
@@ -35,9 +35,9 @@ type GlobalContextType = {
   fetchingBalances: boolean;
   pendingTransaction: boolean;
   setPendingTransaction: Dispatch<SetStateAction<boolean>>;
-  fromChain: any;
+  fromChain: ChainConfig;
   setFromChain: any;
-  destinationChain: any;
+  destinationChain: ChainConfig;
   setDestinationChain: any;
   chainType: string;
   setChainType: Dispatch<SetStateAction<string>>;
@@ -98,11 +98,11 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     setTimeout(() => setFetchingBalances(false), 500);
   }, [account, chainId, setFetchingBalances, fromChain]);
 
-  // useEffect(() => {
-  //   if (fetchedStoredChain || !chainId) return;
-  //   setFromChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!]);
-  //   setFetchStoredChain(true);
-  // }, [fetchedStoredChain, chainId]);
+  useEffect(() => {
+    if (fetchedStoredChain || !chainId) return;
+    setFromChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!]);
+    setFetchStoredChain(true);
+  }, [fetchedStoredChain, chainId]);
 
   useEffect(() => {
     if (!active || !account || !fromChain) return;

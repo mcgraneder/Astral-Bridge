@@ -30,7 +30,7 @@ const ethereumMainnetConfig: EVMNetworkConfig = {
 };
 
 
-const goerliConfig: EVMNetworkConfig = {
+export const goerliConfig: EVMNetworkConfig = {
   selector: "Goerli",
 
   nativeAsset: { name: "Görli Ether", symbol: "gETH", decimals: 18 },
