@@ -100,7 +100,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
 
   useEffect(() => {
     if (fetchedStoredChain || !chainId) return;
-    setFromChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!]);
+    setDestinationChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!]);
     setFetchStoredChain(true);
   }, [fetchedStoredChain, chainId]);
 
@@ -109,7 +109,12 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
       memoizedFetchBalances();
     const interval: NodeJS.Timer = setInterval(memoizedFetchBalances, 50000);
     return () => clearInterval(interval);
-  }, [memoizedFetchBalances, account, destinationChain]);
+  }, [memoizedFetchBalances, active, destinationChain]);
+
+  useEffect(() => {
+    if (!chainId) return
+    setTimeout(() =>  setDestinationChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!]), 2000)
+  }, [chainId])
 
 
     const ProvRet = useMemo(
