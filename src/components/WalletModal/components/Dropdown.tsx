@@ -9,6 +9,7 @@ interface IDropdown {
   type: string;
   setType: any;
   setShowTokenModal: any;
+  setChainType: (type: string) => void;
 }
 const Dropdown = ({
   text,
@@ -17,11 +18,13 @@ const Dropdown = ({
   type,
   setType,
   setShowTokenModal,
+  setChainType
 }: IDropdown) => {
   // console.log("iconnnnnn", Icon);
   const on = () => {
     setType(dropDownType);
     setShowTokenModal(true);
+    setChainType("destination")
   };
   return (
     <div

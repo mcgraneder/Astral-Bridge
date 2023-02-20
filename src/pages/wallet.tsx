@@ -28,6 +28,8 @@ const BlockPage: NextPage = () => {
     side: "left",
   });
 
+  console.log(asset)
+
   const chainFilter = [...LeacyChains, ...EVMChains];
   const assetFilter = [...whiteListedEVMAssets, ...WhiteListedLegacyAssets];
   return (

@@ -44,8 +44,13 @@ type AuthContextType = {
     reset: () => void;
     errorMessage: string;
     needToSwitchChain: (id: number) => boolean;
-    switchNetwork: (id: number) => Promise<void>;
-    pendingChain: number | undefined;
+    switchNetwork: (id: number) => Promise<{
+    switched: boolean;
+    errorCode?: undefined;
+} | {
+    switched: boolean;
+    errorCode: any;
+}>;
     isSwitchingChain: boolean;
     hasSigned: boolean;
     setHasSigned: Dispatch<SetStateAction<boolean>>;
@@ -180,7 +185,6 @@ function AuthProvider({ children }: AuthProviderProps) {
         const { ethereum } = window;
         const hexChainId = `0x${network.toString(16)}`;
         const chainInfo = CHAINS[network]
-        setPendingChain(network)
     
         try {
           await ethereum?.request({
@@ -188,8 +192,7 @@ function AuthProvider({ children }: AuthProviderProps) {
             params: [{ chainId: hexChainId }],
           });
           setWalletError(false)
-     
-          return { switched: true };
+    
         } catch (error: any) {
           if (error.code === 4902) {
             // TODO: get new chain params
@@ -212,7 +215,6 @@ function AuthProvider({ children }: AuthProviderProps) {
               });
               setWalletError(false)
 
-              return { switched: true };
             } catch (addError: any) {
               // handle "add" error
               setConnecting(false)
@@ -238,7 +240,8 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     const switchNetwork =
       async (id: number) => {
-        const { errorCode } = await _switchNetwork(id);
+        const result = await _switchNetwork(id);
+        return result
       }
 
     return (
@@ -261,7 +264,6 @@ function AuthProvider({ children }: AuthProviderProps) {
                 errorMessage,
                 needToSwitchChain,
                 switchNetwork,
-                pendingChain,
                 isSwitchingChain,
                 hasSigned,
                 setHasSigned	

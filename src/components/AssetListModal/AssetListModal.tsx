@@ -108,6 +108,7 @@ const AssetListModal = ({
 
   const setSelectedToken = React.useCallback(
     (option: any, type: string) => {
+      console.log(chainType)
       if (type === "currency") {
         setAsset(option);
       } else if (type === "chain" && chainType === "from") {

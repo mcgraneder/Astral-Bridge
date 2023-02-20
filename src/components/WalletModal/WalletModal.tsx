@@ -159,17 +159,30 @@ const WalletModal = ({
   const { toggleConfirmationModal } = useTransactionFlow();
   const { defaultGasPrice } = useGasPriceState();
   const { approve } = useApproval();
-  const { setDestinationChain, pendingTransaction, destinationChain, assetBalances } = useGlobalState();
+  const {
+    setDestinationChain,
+    pendingTransaction,
+    destinationChain,
+    assetBalances,
+    setChainType,
+  } = useGlobalState();
 
-  const needsToSwitchChain = ChainIdToRenChain[chainId!] === destinationChain.fullName;
+  const needsToSwitchChain =
+    ChainIdToRenChain[chainId!] === destinationChain.fullName;
   const error = !needsToSwitchChain
     ? false
     : text === "" || Number(text) == 0 || !isSufficentBalance;
   // console.log(error);
 
-      useEffect(() => setText(""), [buttonState, pendingTransaction, destinationChain, setText]);
+  useEffect(
+    () => setText(""),
+    [buttonState, pendingTransaction, destinationChain, setText]
+  );
 
-
+  const setChainT = useCallback(
+    (type: string) => setChainType(type),
+    [setChainType]
+  );
   useEffect(() => {
     if (!asset || !account) return;
     (async () => {
@@ -217,15 +230,16 @@ const WalletModal = ({
   const execute = useCallback(() => {
     const bridgeAddress = BridgeDeployments[destinationChain.fullName];
     const tokenAddress =
-      chainAdresses[destinationChain.fullName]?.assets[asset.Icon]?.tokenAddress!;
+      chainAdresses[destinationChain.fullName]?.assets[asset.Icon]
+        ?.tokenAddress!;
 
     if (!needsToSwitchChain) {
-      switchNetwork(
-        NETWORK === RenNetwork.Testnet
-          ? destinationChain.testnetChainId
-          : destinationChain.mainnetChainId
-      );
-      setDestinationChain(chainsBaseConfig[ChainIdToRenChain[destinationChain.testnetChainId]!]);
+      switchNetwork(destinationChain.testnetChainId!).then((result: any) => {
+        setDestinationChain(
+          chainsBaseConfig[ChainIdToRenChain[destinationChain.testnetChainId!]!]
+        );
+      });
+      
     } else if (!isAssetApproved) {
       approve(tokenAddress, text, bridgeAddress!);
       setIsAssetApproved(true);
@@ -252,6 +266,7 @@ const WalletModal = ({
           type={buttonState.tabName}
           setType={setWalletAssetType}
           setShowTokenModal={setShowTokenModal}
+          setChainType={() => {}}
         />
         <Dropdown
           text={destinationChain.fullName}
@@ -260,6 +275,7 @@ const WalletModal = ({
           type={buttonState.tabName}
           setType={setWalletAssetType}
           setShowTokenModal={setShowTokenModal}
+          setChainType={setChainT}
         />
         <BalanceDisplay
           asset={asset}

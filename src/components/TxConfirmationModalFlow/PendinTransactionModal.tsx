@@ -60,8 +60,9 @@ function PendingTransactionModal({
   asset
 }: PendingTransactionModalProps) {
   const { width } = useViewport();
-  const { chain } = useGlobalState()
+  const { fromChain: chain } = useGlobalState()
 
+  console.log(asset)
   return (
     <>
       {width > 0 && width >= Breakpoints.sm1 ? (

@@ -77,7 +77,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
   const { account, chainId, active } = useWeb3React();
 
   const memoizedFetchBalances = useCallback(async () => {
-    if (!account || !chainId || !fromChain) return;
+    if (!account || !chainId || !destinationChain) return;
     setFetchingBalances(true);
     const tokensResponse = await get<{
       result: {
@@ -86,7 +86,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     }>(API.ren.balancesOf, {
       params: {
         of: account,
-        chainName: fromChain.fullName,
+        chainName: destinationChain.fullName,
       },
     });
 
@@ -96,7 +96,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     }
     setAssetBalances(tokensResponse.result.multicall);
     setTimeout(() => setFetchingBalances(false), 500);
-  }, [account, chainId, setFetchingBalances, fromChain]);
+  }, [account, chainId, setFetchingBalances, destinationChain]);
 
   useEffect(() => {
     if (fetchedStoredChain || !chainId) return;
@@ -105,11 +105,11 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
   }, [fetchedStoredChain, chainId]);
 
   useEffect(() => {
-    if (!active || !account || !fromChain) return;
+    if (!active || !destinationChain) return;
       memoizedFetchBalances();
     const interval: NodeJS.Timer = setInterval(memoizedFetchBalances, 50000);
     return () => clearInterval(interval);
-  }, [memoizedFetchBalances, account, active, fromChain]);
+  }, [memoizedFetchBalances, account, destinationChain]);
 
 
     const ProvRet = useMemo(
