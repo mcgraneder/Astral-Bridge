@@ -182,6 +182,29 @@ export const chainsBaseConfig: Record<Chain, ChainBaseConfig> = {
   Catalog: unsetChainConfig,
 };
 
+export const EVMChains = [
+  Chain.Ethereum,
+  Chain.Arbitrum,
+  Chain.Avalanche,
+  Chain.Polygon,
+  Chain.Optimism,
+  Chain.Kava,
+  Chain.Moonbeam,
+  Chain.BinanceSmartChain,
+  Chain.Fantom,
+];
+
+export const LeacyChains = [
+  Chain.Bitcoin,
+  Chain.BitcoinCash,
+  Chain.DigiByte,
+  Chain.Zcash,
+  Chain.Terra,
+  Chain.Filecoin,
+  Chain.Dogecoin,
+];
+
+
 const getChainColorConfig = (chain: Chain) => {
   const color = chainsColors[chain];
   return color.primary;

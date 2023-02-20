@@ -12,6 +12,7 @@ import TokenSelectDropdown from "./ChainSelector";
 import { useViewport } from '../../hooks/useViewport';
 import { useRouter } from 'next/router';
 import { useGlobalState } from "../../context/useGlobalState";
+import Link from 'next/link';
 
 export const Wrapper = styled.div`
     display: flex;
@@ -62,16 +63,16 @@ interface INavbar {
 
 }
 
-const ROUTES: string[] = ["Bridge", "Wallet", "Trade", "History"];
+const ROUTES: string[] = ["bridge", "wallet", "trade", "history"];
 
 const NavLinks = ({ routes }: { routes: string[] }) => {
     return (
         <>
-            {routes.map((route: string) => {
+            {routes.map((route: string, index: number) => {
                 return (
-                    <div key={route} className='hidden md:flex flex-row items-center gap-2'>
+                    <Link href={`./${ROUTES[index]}`} key={route} className='hidden md:flex flex-row items-center gap-2'>
                         <span className='my-2 w-full rounded-xl px-4 py-2 text-center hover:cursor-pointer hover:bg-black hover:bg-opacity-20'>{route}</span>
-                    </div>
+                    </Link>
                 );
             })}
         </>

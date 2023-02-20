@@ -62,7 +62,6 @@ function GatewayProvider({ children }: GatewayProviderProps) {
       if (!library) {
         return;
       }
-
       const chains = Object.values(defaultChains).filter((chain) => {
         return chain.chain.chain != fromChain || chain.chain.chain != toChain;
       });
@@ -74,28 +73,29 @@ function GatewayProvider({ children }: GatewayProviderProps) {
     [library, defaultChains]
   );
 
-  //   useEffect(() => {
-  //     if (!defaultChains || library) {
-  //       return;
-  //     }
-  //     const initProvider = async () => {
-  //       const chainsArray = Object.values(defaultChains).map((chain) => {
-  //         //@ts-ignore
-  //         // chain.chain.withSigner(library.getSigner());
-  //         return chain.chain;
-  //       });
-  //       const renJs = new RenJS(RenNetwork.Testnet).withChains(...chainsArray);
-  //       return renJs;
-  //     };
-  //     initProvider()
-  //       .then((renJs) => {
-  //         setRenJs(renJs)})
-  //       .catch((error) => {
-  //         console.error("gateway renJs error", error);
-  //         setError(error);
-  //       });
-  //       console.log(renJs)
-  //   }, [defaultChains, library]);
+    useEffect(() => {
+      if (!defaultChains || library) {
+        return;
+      }
+      const initProvider = async () => {
+        const chainsArray = Object.values(defaultChains).map((chain) => {
+          //@ts-ignore
+          // chain.chain.withSigner(library.getSigner());
+          return chain.chain;
+        });
+        const renJs = new RenJS(RenNetwork.Testnet).withChains(...chainsArray);
+        console.log(renJs)
+        return renJs;
+      };
+      initProvider()
+        .then((renJs) => {
+          setRenJs(renJs)})
+        .catch((error) => {
+          console.error("gateway renJs error", error);
+          setError(error);
+        });
+        console.log(renJs)
+    }, [defaultChains, library, renJs]);
 
   const getIoTypeFromPath = (path: string) => {
     if (path === "deposit") {

@@ -7,9 +7,10 @@ import { useGlobalState } from "../context/useGlobalState";
 import { useWeb3React } from "@web3-react/core";
 import TransactionFlowModals from "../components/TxConfirmationModalFlow/index";
 import { Tab } from "../components/WalletModal/WalletModal";
-import { assetsBaseConfig } from "../utils/assetsConfig";
+import { assetsBaseConfig, WhiteListedLegacyAssets, whiteListedEVMAssets } from '../utils/assetsConfig';
 import BridgeModal from '../components/BridgeModal/bridgeModal';
 import { useGateway } from "../context/useGatewayState";
+import { LeacyChains, EVMChains } from '../utils/chainsConfig';
 type AssetType = "chain" | "currency";
 
 const defaultButtonState: Tab = {
@@ -49,6 +50,16 @@ const BlockPage: NextPage = () => {
         setAsset={setAsset}
         walletAssetType={walletAssetType}
         buttonState={defaultButtonState}
+        assetFilter={
+          bridgeState.tabName === "Native Bridge"
+            ? WhiteListedLegacyAssets
+            : whiteListedEVMAssets
+        }
+        chainFilter={
+          bridgeState.tabName !== "Native Bridge"
+            ? LeacyChains
+            : EVMChains
+        }
       />
       <TransactionFlowModals
         text={text}

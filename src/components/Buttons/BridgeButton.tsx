@@ -11,7 +11,7 @@ interface IWalletButton {
   buttonState: Tab;
   isSufficentBalance: boolean;
   needsToSwitchChain: boolean;
-  execute: () => void;
+  setGatewayStep: React.Dispatch<React.SetStateAction<boolean>>;
   text: string;
   error: boolean;
 }
@@ -21,7 +21,7 @@ const BridegButton = ({
   buttonState,
   isSufficentBalance,
   needsToSwitchChain,
-  execute,
+  setGatewayStep,
   text,
   error,
 }: IWalletButton) => {
@@ -63,7 +63,7 @@ const BridegButton = ({
     <PrimaryButton
       className={`x-50 w-full justify-center rounded-2xl border ${getButtonColour()} py-[14px] text-center text-[17px] font-semibold hover:cursor-pointer`}
       disabled={error}
-      onClick={execute}
+      onClick={() => setGatewayStep(true)}
     >
       <span>{getButtonText(chain, active, buttonState)}</span>
       {pendingTransaction && (

@@ -39,6 +39,8 @@ interface IAssetModal {
   setAsset: any;
   walletAssetType: any;
   buttonState: Tab;
+  assetFilter: Asset[];
+  chainFilter: Chain[];
 }
 
 const createAvailabilityFilter =
@@ -58,19 +60,20 @@ const AssetListModal = ({
   setAsset,
   walletAssetType,
   buttonState,
+  assetFilter,
+  chainFilter
 }: IAssetModal) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { assetBalances, setDestinationChain, setFromChain, chainType } =
     useGlobalState();
+
   const close = useCallback((): void => {
     setShowTokenModal(false);
     setSearchTerm("");
   }, [setSearchTerm, setShowTokenModal]);
 
   const available =
-    walletAssetType === "chain"
-      ? undefined
-      : [...whiteListedEVMAssets, ...WhiteListedLegacyAssets];
+    walletAssetType === "chain" ? [...chainFilter] : [...assetFilter];
 
   const availabilityFilter = React.useMemo(
     () => createAvailabilityFilter(available, walletAssetType),
@@ -119,7 +122,7 @@ const AssetListModal = ({
   );
 
   const handleCurrencyChange = useCallback(
-    (currency: string, option: AssetConfig): void => {
+    (currency: string, option: Partial<AssetConfig>): void => {
       setSelectedToken(option, "currency");
       if (WhiteListedLegacyAssets.includes(option.Icon as Asset))
         setFromChain(chainsBaseConfig[option.fullName as Chain]);

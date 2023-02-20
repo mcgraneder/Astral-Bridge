@@ -11,7 +11,8 @@ import { useWeb3React } from "@web3-react/core";
 import { get } from "../services/axios";
 import TransactionFlowModals from "../components/TxConfirmationModalFlow/index";
 import { Tab } from "../components/WalletModal/WalletModal";
-import { assetsBaseConfig } from "../utils/assetsConfig";
+import { assetsBaseConfig, whiteListedEVMAssets, WhiteListedLegacyAssets } from '../utils/assetsConfig';
+import { EVMChains, LeacyChains } from "../utils/chainsConfig";
 
 type AssetType = "chain" | "currency";
 
@@ -26,6 +27,9 @@ const BlockPage: NextPage = () => {
     tabNumber: 0,
     side: "left",
   });
+
+  const chainFilter = [...LeacyChains, ...EVMChains];
+  const assetFilter = [...whiteListedEVMAssets, ...WhiteListedLegacyAssets];
   return (
     <>
       <AssetListModal
@@ -34,6 +38,8 @@ const BlockPage: NextPage = () => {
         setAsset={setAsset}
         walletAssetType={walletAssetType}
         buttonState={buttonState}
+        assetFilter={assetFilter}
+        chainFilter={chainFilter}
       />
       <TransactionFlowModals
         text={text}
