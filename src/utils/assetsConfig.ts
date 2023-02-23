@@ -22,7 +22,7 @@ export type AssetRateConfig = {
     rateSymbol?: string;
 };
 
-type AssetBaseConfig = AssetIconsConfig & AssetLabelsConfig & AssetRateConfig & {};
+export type AssetBaseConfig = AssetIconsConfig & AssetLabelsConfig & AssetRateConfig & {};
 
 const unsetAssetConfig: AssetBaseConfig = {
     Icon: null,

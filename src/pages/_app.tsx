@@ -30,14 +30,14 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       <AuthProvider>
         <NotificationProvider>
           <GlobalStateProvider>
-            <GasStateProvider>
-              <GatewayProvider>
+            <GatewayProvider>
+              <GasStateProvider>
                 <TransactionFlowStateProvider>
                   <ToastContainer {...toastConfig} />
                   <Component {...pageProps} />
                 </TransactionFlowStateProvider>
-              </GatewayProvider>
-            </GasStateProvider>
+              </GasStateProvider>
+            </GatewayProvider>
           </GlobalStateProvider>
         </NotificationProvider>
       </AuthProvider>

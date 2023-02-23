@@ -79,7 +79,7 @@ export const AssetRotator: FunctionComponent<ChainAssetRotatorProps> = ({ classN
     return (
         <div className={className}>
             <Fade in={show} timeout={{ enter: 500, exit: 100 }}>
-                { asset && <Icon chainName={asset} className={"h-[180px] w-[180px] hover:h-[200px] hover:w-[200px] hover:cursor-pointer"} onMouseEnter={toggleRotaator} onMouseLeave={toggleRotaator} /> }
+                { asset && <Icon chainName={asset} className={"h-[200px] w-[200px] hover:h-[200px] hover:w-[200px] hover:cursor-pointer"} onMouseEnter={toggleRotaator} onMouseLeave={toggleRotaator} /> }
             </Fade>
             {children}
         </div>

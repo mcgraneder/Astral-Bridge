@@ -7,8 +7,8 @@ if (typeof window === "undefined") {
 } else DOMAIN = window.location.origin;
 
 const SigVerifierBaseUrl = isProduction()
-  ? "http://localhost:5000/api/auth"
-  : "http://localhost:5000/api/auth"; // "http://localhost:4000";
+  ? "http://localhost:8000/api/auth"
+  : "http://localhost:8000/api/auth"; // "http://localhost:4000";
 
 
   const OwlOracleBaseUrl = "https://www.etherchain.org/api";
@@ -20,6 +20,8 @@ const API = {
     balancesOf: `http://localhost:4000/balancesOf`,
     bridgeTokens: `http://localhost:4000/bridgeTokens`,
     getTokenApproval: `http://localhost:4000/getTokenApproval`,
+    queryRenTx: "http://localhost:4000/queryRenTx",
+    submitMintRenTx: "http://localhost:4000/submitMintRenTx",
   },
   coinGecko: {
     price: `${CoinGeckoBaseUrl}/simple/price`,

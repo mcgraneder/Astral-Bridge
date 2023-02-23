@@ -7,7 +7,7 @@ import BalanceDisplay from "../NativeBalanceDisplay/BalanceDisplay";
 import { useWeb3React } from "@web3-react/core";
 import { ChainIdToRenChain, CHAINS } from "../../connection/chains";
 import { useAuth } from "../../context/useWalletAuth";
-import { RenNetwork } from "@renproject/utils";
+import { RenNetwork, utils } from "@renproject/utils";
 import { useGlobalState } from "../../context/useGlobalState";
 import { get } from "../../services/axios";
 import API from "../../constants/Api";
@@ -29,11 +29,14 @@ import BridegButton from '../Buttons/BridgeButton';
 import BridgeToggleButton from './components/BridgeToggleButton';
 import { Dispatch, SetStateAction } from 'react';
 import ConfirmationStep from "./steps/GatewayStep";
+import { submitGatewayInTx } from '../../bridgeGateway/ren';
+import { Gateway } from '@renproject/ren';
 import {
   WhiteListedLegacyAssets,
   Asset,
   whiteListedEVMAssets,
 } from "../../utils/assetsConfig";
+import { useGateway } from "../../context/useGatewayState";
 
 export type Tab = {
   tabName: string;
@@ -136,6 +139,8 @@ interface IWalletModal {
   setButtonState: Dispatch<SetStateAction<Tab>>;
   bridgeState: Tab;
   setBridgeState: Dispatch<SetStateAction<Tab>>;
+  gateway: Gateway<any, any> | null;
+  setAsset: any;
 }
 
 const BridgeModal = ({
@@ -148,8 +153,10 @@ const BridgeModal = ({
   setButtonState,
   bridgeState,
   setBridgeState,
+  gateway,
+  setAsset
 }: IWalletModal) => {
-  const [gatewayStep, setGatewayStep] = useState<boolean>(true);
+  const [gatewayStep, setGatewayStep] = useState<boolean>(false);
   const [isSufficentBalance, setIsSufficientBalance] = useState<boolean>(true);
   const [walletBalance, setWalletBalance] = useState<any>(0);
   const [isMax, setIsMax] = useState<boolean>(false);
@@ -157,6 +164,7 @@ const BridgeModal = ({
   const { chainId, account } = useWeb3React();
   const { toggleConfirmationModal } = useTransactionFlow();
   const { defaultGasPrice } = useGasPriceState();
+  const { setListenGatewayTx } = useGateway()
   const {
     setDestinationChain,
     pendingTransaction,
@@ -169,8 +177,10 @@ const BridgeModal = ({
 
   const toggleGatewayStep = useCallback((w: any) => setGatewayStep(!w), []);
 
+  console.log(assetBalances)
   const needsToSwitchChain =
     ChainIdToRenChain[chainId!] === destinationChain.fullName;
+    
   const error = !needsToSwitchChain
     ? false
     : text === "" || Number(text) == 0 || !isSufficentBalance;
@@ -194,19 +204,26 @@ const BridgeModal = ({
     })();
   }, [text, setIsSufficientBalance, asset, assetBalances, buttonState]);
 
-  const execute = useCallback(() => {
-    const bridgeAddress = BridgeDeployments[destinationChain.fullName];
-    const tokenAddress =
-      chainAdresses[destinationChain.fullName]?.assets[asset.Icon]
-        ?.tokenAddress!;
-  setGatewayStep(false)
-  }, [asset, destinationChain, setGatewayStep]);
+  const execute = useCallback(async() => {
+    
+    if (gateway == null) return
+    if (WhiteListedLegacyAssets.includes(asset.Icon as Asset)) {
+      setGatewayStep(true)
+    }
+    // console.log(gateway);
+    // await gateway.initialize();
+    // // const gHash = utils.toURLBase64(Uint8Array.from(gateway.gHash));
+
+    // const gatewayTx = await submitGatewayInTx(gateway)
+    setListenGatewayTx(true)
+
+  }, [gateway, asset, setListenGatewayTx]);
 
   if (gatewayStep) {
     return (
       <div className="mt-[60px] mb-[40px]">
         <BridgeModalContainer>
-          <ConfirmationStep close={toggleGatewayStep} />
+          <ConfirmationStep close={toggleGatewayStep} gateway={gateway} />
         </BridgeModalContainer>
       </div>
     );
@@ -218,6 +235,7 @@ const BridgeModal = ({
             activeButton={bridgeState}
             tabs={BRIDGE_TABS}
             setActiveButton={setBridgeState}
+            setAsset={setAsset}
           />
           <div className="px-[18px] pb-[12px]">
             <DropdownWrapper
@@ -294,6 +312,7 @@ const BridgeModal = ({
                   setGatewayStep={setGatewayStep}
                   text={text}
                   error={error}
+                  execute={execute}
                 />
               </div>
             </MintFormContainer>

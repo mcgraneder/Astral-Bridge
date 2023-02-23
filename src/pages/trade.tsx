@@ -7,10 +7,15 @@ import { useGlobalState } from "../context/useGlobalState";
 import { useWeb3React } from "@web3-react/core";
 import TransactionFlowModals from "../components/TxConfirmationModalFlow/index";
 import { Tab } from "../components/WalletModal/WalletModal";
-import { assetsBaseConfig, WhiteListedLegacyAssets, whiteListedEVMAssets } from '../utils/assetsConfig';
-import BridgeModal from '../components/BridgeModal/bridgeModal';
-import { GatewayProvider, useGateway } from "../context/useGatewayState";
-import { LeacyChains, EVMChains } from '../utils/chainsConfig';
+import {
+  assetsBaseConfig,
+  WhiteListedLegacyAssets,
+  whiteListedEVMAssets,
+} from "../utils/assetsConfig";
+import BridgeModal from "../components/BridgeModal/bridgeModal";
+import { useGateway } from "../context/useGatewayState";
+import { LeacyChains, EVMChains } from "../utils/chainsConfig";
+import DexModal from "../components/TradeModal/TradeModal";
 type AssetType = "chain" | "currency";
 
 const defaultButtonState: Tab = {
@@ -29,11 +34,11 @@ const BlockPage: NextPage = () => {
   const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [walletAssetType, setWalletAssetType] = useState<AssetType>("chain");
- const { asset, setAsset, gateway } = useGateway()
-   const [buttonState, setButtonState] = useState<Tab>(defaultButtonState);
+  const [asset, setAsset] = useState<any>(assetsBaseConfig.BTC);
+  const [buttonState, setButtonState] = useState<Tab>(defaultButtonState);
   const { fromChain, destinationChain, chainType } = useGlobalState();
-   const [gatewayChains, setGatewayChains] = useState<any>(null);
-  const { library, account } = useWeb3React()
+  const [gatewayChains, setGatewayChains] = useState<any>(null);
+  const { library, account } = useWeb3React();
 
   // useEffect(() => {
   //   if (!fromChain || !destinationChain) return;
@@ -41,8 +46,7 @@ const BlockPage: NextPage = () => {
   //     .catch((error: Error) => console.error(error));
   // }, [fromChain, destinationChain, initProvider]);
 
- if (!asset) return
-  else return (
+  return (
     <>
       <AssetListModal
         setShowTokenModal={setShowTokenModal}
@@ -56,7 +60,11 @@ const BlockPage: NextPage = () => {
             : whiteListedEVMAssets
         }
         chainFilter={
-          bridgeState.tabName !== "Native Bridge" ? EVMChains : LeacyChains
+          bridgeState.tabName !== "Native Bridge"
+            ? chainType === "from"
+              ? LeacyChains
+              : EVMChains
+            : EVMChains
         }
       />
       <TransactionFlowModals
@@ -66,19 +74,7 @@ const BlockPage: NextPage = () => {
       />
 
       <Layout>
-        <BridgeModal
-          setShowTokenModal={setShowTokenModal}
-          setWalletAssetType={setWalletAssetType}
-          asset={asset}
-          text={text}
-          setText={setText}
-          buttonState={buttonState}
-          setButtonState={setButtonState}
-          bridgeState={bridgeState}
-          setBridgeState={setBridgeState}
-          gateway={gateway}
-          setAsset={setAsset}
-        />
+        <DexModal/>
         <BottomNavBar />
       </Layout>
     </>

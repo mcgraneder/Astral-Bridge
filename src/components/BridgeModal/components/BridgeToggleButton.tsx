@@ -1,6 +1,7 @@
 import { Tab } from "../bridgeModal";
 import { MintFormText2 } from "../../CSS/WalletModalStyles";
 import styled from "styled-components";
+import { assetsBaseConfig } from '../../../utils/assetsConfig';
 
 export const MinFormToggleButtonContainer = styled.div`
   height: 40px;
@@ -45,6 +46,7 @@ interface IToggleContainer {
   activeButton: Tab;
   tabs: Tab[];
   setActiveButton: React.Dispatch<React.SetStateAction<Tab>>;
+  setAsset: any;
 }
 const ToggleButton = ({ side, text, active, onClick }: IToggleButton) => {
   return (
@@ -57,9 +59,14 @@ const BridgeToggleButton = ({
   activeButton,
   tabs,
   setActiveButton,
+  setAsset
 }: IToggleContainer) => {
-  const tabSelect = (index: number): void =>
+  
+  const tabSelect = (index: number): void => {
+    if (index == 1) setAsset(assetsBaseConfig.DAI)
+    else setAsset(assetsBaseConfig.BTC)
     setActiveButton(tabs[index] as Tab);
+  }
 
   return (
     <MinFormToggleButtonContainer>

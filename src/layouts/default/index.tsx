@@ -31,6 +31,7 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
     background: ${({ isDarkMode }) => (isDarkMode ? "linear-gradient(rgba(7, 8, 22, 0) 0%, rgb(7 8 22 / 100%) 45%)" : "linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%)")};
     z-index: 10;
     pointer-events: none;
+    height: 2000px;
   
     /* @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
         height: 100vh;
@@ -46,7 +47,7 @@ const GlowContainer = styled.div`
     bottom: 0;
     width: 100%;
     overflow-y: hidden;
-    height: calc(100vh - ${100}px);
+    height: 100%;
    
 `;
 

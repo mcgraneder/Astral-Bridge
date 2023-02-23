@@ -14,6 +14,7 @@ interface IWalletButton {
   setGatewayStep: React.Dispatch<React.SetStateAction<boolean>>;
   text: string;
   error: boolean;
+  execute: () => Promise<void>;
 }
 const BridegButton = ({
   chain,
@@ -24,6 +25,7 @@ const BridegButton = ({
   setGatewayStep,
   text,
   error,
+  execute
 }: IWalletButton) => {
   const { active } = useWeb3React();
   const { pendingTransaction } = useGlobalState();
@@ -62,8 +64,8 @@ const BridegButton = ({
   return (
     <PrimaryButton
       className={`x-50 w-full justify-center rounded-2xl border ${getButtonColour()} py-[14px] text-center text-[17px] font-semibold hover:cursor-pointer`}
-      disabled={error}
-      onClick={() => setGatewayStep(true)}
+      disabled={false}
+      onClick={execute}
     >
       <span>{getButtonText(chain, active, buttonState)}</span>
       {pendingTransaction && (

@@ -5,6 +5,9 @@ import { TopRowNavigation } from "../../WalletConnectModal/WalletConnectModal";
 import { Icon } from "../../Icons/AssetLogs/Icon";
 import { assetsBaseConfig } from "../../../utils/assetsConfig";
 import PrimaryButton from "../../PrimaryButton/PrimaryButton";
+import { Gateway, GatewayTransaction } from "@renproject/ren";
+import { useGateway } from "../../../context/useGatewayState";
+import ChainTx from "./ChainTransaction";
 
 export const GatewaySection = styled.div`
   padding-bottom: 10px;
@@ -85,8 +88,15 @@ export const FeesSection = styled.div`
   padding-right: 10px;
 `;
 
-const ConfirmationStep = ({ close }: { close: (w: any) => void }) => {
+const ConfirmationStep = ({
+  close,
+  gateway,
+}: {
+  close: (w: any) => void;
+  gateway: Gateway<any, any> | null;
+}) => {
   const [asset, setAsset] = useState(assetsBaseConfig.BTC);
+  const { transactions, memoizedOnTxReceivedCb } = useGateway();
   return (
     <div className="px-[18px] py-[12px]">
       <TopRowNavigation
@@ -110,7 +120,7 @@ const ConfirmationStep = ({ close }: { close: (w: any) => void }) => {
           <div className="my-3 mt-5 flex flex-row items-center justify-center gap-2">
             <div className="max-w-[82%] rounded-full border-tertiary bg-secondary px-4 py-2">
               <div className="overflow-hidden text-[16px] text-blue-600">
-                3K2GeVWqxAUUzufRmQH4kRrBzdQSTnWuXN
+                {gateway?.gatewayAddress}
               </div>
             </div>
             <div className="flex items-center justify-center rounded-full border-tertiary bg-secondary px-2 py-2">
@@ -169,6 +179,22 @@ const ConfirmationStep = ({ close }: { close: (w: any) => void }) => {
           </FeeDetailsTextContainer>
         </DetailsSection>
       </FeesSection>
+
+      <div className="p-5">
+        {transactions
+          // .filter((confirmingTx: GatewayTransaction) => {
+          //   return confirmingTx.in.progress.status === "confirming";
+          // })
+          .map((transaction: GatewayTransaction, index: number) => {
+           return (
+                <ChainTx
+                  key={index}
+                  transaction={transaction}
+                  handleSubmit={memoizedOnTxReceivedCb}
+                />
+              );
+          })}
+      </div>
     </div>
   );
 };
