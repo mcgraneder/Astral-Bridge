@@ -65,7 +65,7 @@ const useEcecuteTransaction = (): ExecuteTxType => {
           `Successfully approved asset ${asset.Icon} on ${chain.fullName}`
         );
       } catch (error) {
-        // console.log(error);
+        console.log(error);
         toggleRejectedModal();
       }
     },
