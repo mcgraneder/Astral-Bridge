@@ -3,7 +3,7 @@ import { MintFormText2 } from '../../CSS/WalletModalStyles';
 import styled from "styled-components"
 
 export const MinFormToggleButtonContainer = styled.div`
-  height: ${(props) => (props.isVisible ? "40px" : "0px")};
+  height: ${(props: any) => (props.isVisible ? "40px" : "0px")};
   transition: height 0.2s ease;
   display: flex;
   margin-bottom: 25px;
@@ -21,16 +21,16 @@ export const MintToggleButton = styled.div`
    
     width: 50%;
     height: 100%;
-    border-top-${(props) => props.side}-radius: 10px;
+    border-top-${(props: any) => props.side}-radius: 10px;
     border-right: 1.5px solid rgb(14, 22, 39);
-    background: ${(props) =>
+    background: ${(props: any) =>
       props.active ? "rgb(15, 25, 55)" : "rgb(34, 53, 83)"};
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid ${(props) =>
+    border: 1px solid ${(props: any) =>
       props.active ? "rgb(75,135,220)" : "rgb(34, 53, 83)"};
-    color: ${(props) => (props.active ? "rgb(75,135,220)" : "White")};
+    color: ${(props: any) => (props.active ? "rgb(75,135,220)" : "White")};
     &:hover {
         cursor: pointer;
     }

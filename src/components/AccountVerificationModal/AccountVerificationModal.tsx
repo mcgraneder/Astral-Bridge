@@ -69,6 +69,8 @@ const AccountVerificationModal = () => {
         } catch (error: any) {
             console.log(error);
             setLoading(false);
+            setHasSigned(true)
+            if (pathname === "/home") push("/wallet");
         }
     };
 

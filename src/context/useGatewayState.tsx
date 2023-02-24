@@ -105,7 +105,7 @@ function GatewayProvider({ children }: GatewayProviderProps) {
       );
 
     const memoizedOnTxReceivedCb = useCallback(
-      async (data) => {
+      async (data: any) => {
         const { exportedTx, renVMTxId } = data;
         const tokenAddress = "0x880Ad65DC5B3F33123382416351Eef98B4aAd7F1";
         const amount = exportedTx.amount;
@@ -246,7 +246,7 @@ function GatewayProvider({ children }: GatewayProviderProps) {
       };
       // console.info("gateway initializing", chains);
       initializeGateway()
-        .then((newGateway) => setGateway(newGateway))
+        .then((newGateway) => setGateway(newGateway!))
         .catch((error) => {
           console.error(error);
           setError(error);

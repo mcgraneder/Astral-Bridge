@@ -36,7 +36,7 @@ export const BridgeModalWrapper = styled.div`
 
 export const ChainSelector = styled.div`
   margin-top: 10px;
-  margin-bottom: ${(props) => props.marginbottom};
+  margin-bottom: ${(props: any) => props.marginbottom};
   margin-left: 10px;
   margin-right: 10px;
   // padding: 3px;
@@ -75,8 +75,8 @@ export const ChainSelectorIcon = styled.img`
   display: flex;
   justify-content: left;
   align-items: center;
-  width: ${(props) => props.width};
-  height: ${(props) => props.width};
+  width: ${(props: any) => props.width};
+  height: ${(props: any) => props.width};
   line-height: 20px;
   border-radius: 50%;
 
@@ -115,7 +115,7 @@ export const BalanceContainer = styled.div`
     // height: 60px;
     // width: 100%;
     display: flex;
-    align-items center;
+    align-items: center;
     justify-content: center;
     background: transaprent;
     border: 1px solid rgb(34,43,68);
@@ -126,7 +126,7 @@ export const MintFormWrapper = styled.div`
   height: 100%;
   width: 100%;
   padding-top: 10px;
-  padding-bottom: ${(props) => props.paddingBottom};
+  padding-bottom: ${(props: any) => props.paddingBottom};
   // display: inline;
   // display: flex;
   // margin-left: 5px;
@@ -166,7 +166,7 @@ export const ButtonWrapper = styled.div`
   margin: 0 auto;
   // padding-left: 20px;
   // padding-right: 20px;
-  width: ${(props) => props.width};
+  width: ${(props: any) => props.width};
 `;
 
 export const MintFormmWrapper = styled.div`
@@ -189,8 +189,8 @@ export const MintFormIcon = styled.img`
   display: flex;
   justify-content: left;
   align-items: center;
-  width: ${(props) => props.width};
-  height: ${(props) => props.width};
+  width: ${(props: any) => props.width};
+  height: ${(props: any) => props.width};
   line-height: 30px;
 
   // float: left;
@@ -225,7 +225,7 @@ export const MinFormToggleButtonContainer = styled.div`
   height: 40px;
   // width: 100%;
   display: flex;
-  margin-bottom: ${(props) => props.marginB};
+  margin-bottom: ${(props: any) => props.marginB};
   background: rgb(27, 32, 52);
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
@@ -240,17 +240,17 @@ export const MintToggleButton = styled.div`
    
     width: 50%;
     height: 100%;
-    border-top-${(props) => props.side}-radius: 10px;
+    border-top-${(props: any) => props.side}-radius: 10px;
     border-right: 1.5px solid rgb(14, 22, 39);
-    background: ${(props) =>
+    background: ${(props: any) =>
       props.active ? "rgb(14, 22, 39)" : "rgb(27,32,52)"};
     font-size: 18px;
     font-weight: bold;
     // font-family: 'Open Sans', sans-serif;
-    border: 1px solid ${(props) =>
+    border: 1px solid ${(props: any) =>
       props.active ? "rgb(75,135,220)" : "rgb(27,32,52)"};
     // border-bottom: 1.5px solid rgb(75,135,220);
-    color: ${(props) => (props.active ? "rgb(75,135,220)" : "rgb(77,82,102)")};
+    color: ${(props: any) => (props.active ? "rgb(75,135,220)" : "rgb(77,82,102)")};
     &:hover {
 
         cursor: pointer
@@ -262,17 +262,17 @@ export const ReleaseToggleButton = styled.div`
    
     width: 50%;
     height: 100%;
-    border-top-${(props) => props.side}-radius: 10px;
+    border-top-${(props: any) => props.side}-radius: 10px;
     border-right: 1.5px solid rgb(14, 22, 39);
-    background: ${(props) =>
+    background: ${(props: any) =>
       !props.active ? "rgb(14, 22, 39)" : "rgb(27,32,52)"};
     font-size: 18px;
     font-weight: bold;
     font-family: 'Open Sans', sans-serif;
-    border: 1px solid ${(props) =>
+    border: 1px solid ${(props: any) =>
       !props.active ? "rgb(75,135,220)" : "rgb(27,32,52)"};
     // border-bottom: 1.5px solid rgb(75,135,220);
-    color: ${(props) => (!props.active ? "rgb(75,135,220)" : "rgb(77,82,102)")};
+    color: ${(props: any) => (!props.active ? "rgb(75,135,220)" : "rgb(77,82,102)")};
 
     &:hover {
 
@@ -361,8 +361,8 @@ export const ArrowLogo12 = styled.img`
 
 export const Balancetext = styled.div`
   font-family: "SuisseIntl", "Helvetica", "Arial", sans-serif;
-  font-size: ${(props) => props.size};
+  font-size: ${(props: any) => props.size};
   text-align: center;
   font-weight: 100;
-  color: ${(props) => props.colour};
+  color: ${(props: any) => props.colour};
 `;

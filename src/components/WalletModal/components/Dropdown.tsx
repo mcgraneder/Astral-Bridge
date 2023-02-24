@@ -33,7 +33,7 @@ const Dropdown = ({
     >
       <div className="flex items-center justify-center gap-2">
         <div className="h-6 w-6">
-          <AssetIcon chainName={Icon} className="h-6 w-6" />
+          <AssetIcon chainName={Icon as string} className="h-6 w-6" />
         </div>
         {dropDownType === "currency" ? (
           type === "Deposit" ? (

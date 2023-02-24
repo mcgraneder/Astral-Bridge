@@ -21,14 +21,14 @@ export const MintToggleButton = styled.div`
    
     width: 50%;
     height: 100%;
-    border-top-${(props) => props.side}-radius: 20px;
-    background: ${(props) =>
+    border-top-${(props: any) => props.side}-radius: 20px;
+    background: ${(props: any) =>
       props.active ? "rgb(15, 25, 55)" : "rgb(34, 53, 83)"};
     display: flex;
     align-items: center;
     justify-content: center;
     border-bottom: none;
-    color: ${(props) => (props.active ? "rgb(75,135,220)" : "gray")};
+    color: ${(props: any) => (props.active ? "rgb(75,135,220)" : "gray")};
     &:hover {
         cursor: pointer;
     }
@@ -61,7 +61,7 @@ const BridgeToggleButton = ({
   setActiveButton,
   setAsset
 }: IToggleContainer) => {
-  
+
   const tabSelect = (index: number): void => {
     if (index == 1) setAsset(assetsBaseConfig.DAI)
     else setAsset(assetsBaseConfig.BTC)

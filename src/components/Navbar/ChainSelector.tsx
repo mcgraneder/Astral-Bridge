@@ -4,7 +4,6 @@ import styled from "styled-components";
 import { CHAINS, ChainType, ChainIdToRenChain } from '../../connection/chains';
 import { useWeb3React } from "@web3-react/core";
 import { useAuth } from "../../context/useWalletAuth";
-import { Toast } from "../Notification/Toast";
 import { Breakpoints } from "../../constants/Breakpoints";
 import { useViewport } from "../../hooks/useViewport";
 import BottomSheetOptions from "../BottomSheet/BottomSheetOptions";
@@ -107,7 +106,7 @@ const ChainSelectorButton = ({ setIsMenuOpen, activeChain }: { setIsMenuOpen: Re
         </div>
     );
 };
-const ChainSelector = ({ chain, currentChain, switchNetwork }: { chain: ChainType; currentChain: number | undefined; switchNetwork: (id: number) => Promise<void> }) => {
+const ChainSelector = ({ chain, currentChain, switchNetwork }: { chain: ChainType; currentChain: number | undefined; switchNetwork: any }) => {
     return (
         <div className='flex flex-row items-center gap-3 rounded-lg px-2 py-2 hover:cursor-pointer hover:bg-tertiary' onClick={() => switchNetwork(chain.id)}>
             <div className='flex h-full'>

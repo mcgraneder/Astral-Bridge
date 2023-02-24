@@ -73,7 +73,7 @@ export const useGateway = (
       const initializeGateway = async () => {
         newGateway = await createGateway(
           renJs,
-          { asset, from, to, tokenAddress, amount, fromAddress, toAddress },
+          { asset, from, to, amount, fromAddress, toAddress },
           chains
         );
         return newGateway;

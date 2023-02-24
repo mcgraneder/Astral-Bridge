@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Chain } from "@renproject/chains";
 import { isDefined } from './useGatewayTrnasactionProcessor';
+import BigNumber from 'bignumber.js';
 import {
   ChainTransactionStatus,
   InputChainTransaction,
@@ -34,7 +35,7 @@ export const useRenVMChainTransactionStatusUpdater = ({
   }, []);
 
   const trackProgress = useCallback(
-    (progress) => {
+    (progress: any) => {
       setError(null);
       console.info(`tx: newStatus`, progress);
       setStatus(progress.status);

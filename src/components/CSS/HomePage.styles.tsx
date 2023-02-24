@@ -13,13 +13,13 @@ export const colours = {
 
 
 export const StyledTitle = styled.div`
-    font-size: ${(props) => props.size}px;
-    text-align: ${(props) => props.align};
+    font-size: ${(props: any) => props.size}px;
+    text-align: ${(props: any) => props.align};
 
     padding: 5px;
-    margin-bottom: ${(props) => props.margin}px;
-    font-weight: ${(props) => props.weight};
-    font-style: ${(props) => props.styleds};
+    margin-bottom: ${(props: any) => props.margin}px;
+    font-weight: ${(props: any) => props.weight};
+    font-style: ${(props: any) => props.styleds};
 
     max-width: 800px;
     margin: 0 auto;
@@ -40,9 +40,9 @@ export const StyledTitle = styled.div`
     }
 `;
 export const StyledSubTitle = styled.div`
-    font-size: ${(props) => props.size}px;
+    font-size: ${(props: any) => props.size}px;
     text-align: center;
-    color: ${(props) => (props.color ? props.color : colours.primary)};
+    color: ${(props: any) => (props.color ? props.color : colours.primary)};
     padding: 5px;
     margin-bottom: 20px;
     background-color: transparent;
@@ -59,7 +59,8 @@ export const StyledSubTitle = styled.div`
 `;
 export const Wrapper = styled.div`
 
-    height ${(props) => props.space}px;
+    //@ts-ignore
+    /* height ${(props: any) => props.space}px; */
 `;
 
 

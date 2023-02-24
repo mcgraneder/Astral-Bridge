@@ -28,7 +28,7 @@ export const NavMenu = styled.div`
     align-items: center;
     // margin: 10px;
     font-family: "Open Sans", sans-serif;
-    opacity: ${(props) => (props.visible ? "1" : "1")};
+    opacity: ${(props: any) => (props.visible ? "1" : "1")};
 `;
 
 export const NavItem = styled.div`
@@ -41,7 +41,7 @@ export const NavItem = styled.div`
     justify-content: center;
     // border: 3.5px solid rgb(14, 22, 39);
     // float: left;
-    margin-left: ${(props) => props.marginL};
+    margin-left: ${(props: any) => props.marginL};
 `;
 
 export const NavLogoContainer = styled.div`
@@ -59,7 +59,7 @@ export const NavLogoContainer = styled.div`
 
 export const NavButton = styled.div`
     display: inline;
-    // background: ${(props) => props.color};
+    // background: ${(props: any) => props.color};
     width: 70px;
     // border-radius: 18px;
     // height: 93%;
@@ -69,7 +69,7 @@ export const NavButton = styled.div`
     // font-weight: bold;
     font-size: 17px;
     text-decoration: none;
-    // border: 2px solid ${(props) => props.bbcolour};
+    // border: 2px solid ${(props: any) => props.bbcolour};
 
     &:hover {
         cursor: pointer;
@@ -85,7 +85,7 @@ export const NavMenu2 = styled.div`
     align-items: center;
     padding-right: 30px;
     text-align: center;
-   / // justify-content: center;
+    // justify-content: center;
     
     
     // line-height: 50px;
@@ -124,7 +124,7 @@ export const NavButton2Container = styled.div`
 
 export const NavButton2 = styled.img`
     display: inline;
-    // background: ${(props) => props.color};
+    // background: ${(props: any) => props.color};
     width: 18px;
     height: 18px;
     // margin-left: 15px;
@@ -136,7 +136,7 @@ export const NavButton2 = styled.img`
     // font-weight: bold;
     font-size: 17px;
     text-decoration: none;
-    // border: 2px solid ${(props) => props.bbcolour};
+    // border: 2px solid ${(props: any) => props.bbcolour};
 
     &:hover {
         cursor: pointer;

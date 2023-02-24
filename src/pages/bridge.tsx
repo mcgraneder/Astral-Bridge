@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { NextPage } from "next";
 import { Layout } from "../layouts";
 import AssetListModal from "../components/AssetListModal/AssetListModal";
@@ -11,6 +11,7 @@ import { assetsBaseConfig, WhiteListedLegacyAssets, whiteListedEVMAssets } from 
 import BridgeModal from '../components/BridgeModal/bridgeModal';
 import { GatewayProvider, useGateway } from "../context/useGatewayState";
 import { LeacyChains, EVMChains } from '../utils/chainsConfig';
+import { useNotification } from '../context/useNotificationState';
 type AssetType = "chain" | "currency";
 
 const defaultButtonState: Tab = {
@@ -24,7 +25,7 @@ const defaultBridgeState: Tab = {
   tabNumber: 0,
   side: "left",
 };
-const BlockPage: NextPage = () => {
+const BridgePage: NextPage = () => {
   const [bridgeState, setBridgeState] = useState<Tab>(defaultBridgeState);
   const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
@@ -40,9 +41,29 @@ const BlockPage: NextPage = () => {
   //   initProvider(fromChain.Icon as Chain, destinationChain.Icon as Chain)
   //     .catch((error: Error) => console.error(error));
   // }, [fromChain, destinationChain, initProvider]);
+  const dispatch = useNotification();
 
- if (!asset) return
-  else return (
+  const HandleNewNotification = useCallback(
+    (title: string, message: string): void => {
+      dispatch({
+        type: "info",
+        message: message,
+        title: title,
+        position: "topR" || "topR",
+        success: true,
+      });
+    },
+    [dispatch]
+  );
+
+ useEffect(() => {
+   HandleNewNotification(
+     "REN VM ERROR",
+     "Ren bridge is currently disabled so briding is unavaiable"
+   );
+ }, [])
+
+  return (
     <>
       <AssetListModal
         setShowTokenModal={setShowTokenModal}
@@ -91,4 +112,4 @@ const BlockPage: NextPage = () => {
 //   },
 // });
 
-export default BlockPage;
+export default BridgePage;

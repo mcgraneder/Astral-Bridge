@@ -19,7 +19,7 @@ const Banner = styled.div<{ isDarkMode: boolean }>`
 
     box-shadow: 0px 10px 24px rgba(51, 53, 72, 0.04);
 
-    background: ${({ isDarkMode }) => (isDarkMode ? `url(${meshSrc}), ${DARK_MODE_GRADIENT}` : `url(${meshSrc}), linear-gradient(93.06deg, #FF00C7 2.66%, #FF9FFB 98.99%);`)};
+    background: ${({ isDarkMode }: any) => (isDarkMode ? `url(${meshSrc}), ${DARK_MODE_GRADIENT}` : `url(${meshSrc}), linear-gradient(93.06deg, #FF00C7 2.66%, #FF9FFB 98.99%);`)};
 
     @media screen and (min-width: ${BREAKPOINTS.lg}px) {
         height: 140px;

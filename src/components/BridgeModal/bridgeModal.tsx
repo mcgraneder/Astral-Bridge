@@ -123,7 +123,7 @@ export const InfoContainer = styled.div`
 `;
 
 export const DropdownWrapper = styled.div`
-  height: ${(props) => (props.isVisible ? "130px" : "85px")};
+  height: ${(props: any) => (props.isVisible ? "130px" : "85px")};
   transition: height 0.2s ease;
 `;
 
@@ -255,7 +255,7 @@ const BridgeModal = ({
               <Dropdown
                 text={fromChain.fullName}
                 dropDownType={"chain"}
-                Icon={fromChain.Icon}
+                Icon={fromChain.Icon as any}
                 type={"FromChain"}
                 setType={setWalletAssetType}
                 setShowTokenModal={setShowTokenModal}
@@ -266,7 +266,7 @@ const BridgeModal = ({
               <Dropdown
                 text={destinationChain.fullName}
                 dropDownType={"chain"}
-                Icon={destinationChain.Icon}
+                Icon={destinationChain.Icon as any}
                 type={"To"}
                 setType={setWalletAssetType}
                 setShowTokenModal={setShowTokenModal}

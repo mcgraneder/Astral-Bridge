@@ -20,8 +20,8 @@ export const MintFormIcon = styled.img`
     display: flex;
     justify-content: left;
     align-items: center;
-    width: ${(props) => props.width};
-    height: ${(props) => props.width};
+    width: ${(props: any) => props.width};
+    height: ${(props: any) => props.width};
     line-height: 30px;
 
     // float: left;
@@ -71,15 +71,15 @@ export const MintToggleButton = styled.div`
    
     width: 50%;
     height: 100%;
-    border-top-${(props) => props.side}-radius: 10px;
+    border-top-${(props: any) => props.side}-radius: 10px;
     border-right: 1.5px solid rgb(14, 22, 39);
-    background: ${(props) => (props.active ? "rgb(14, 22, 39)" : "rgb(27,32,52)")};
+    background: ${(props: any) => (props.active ? "rgb(14, 22, 39)" : "rgb(27,32,52)")};
     font-size: 18px;
     font-weight: bold;
     // font-family: 'Open Sans', sans-serif;
-    border: 1px solid ${(props) => (props.active ? "rgb(75,135,220)" : "rgb(27,32,52)")};
+    border: 1px solid ${(props: any) => (props.active ? "rgb(75,135,220)" : "rgb(27,32,52)")};
     // border-bottom: 1.5px solid rgb(75,135,220);
-    color: ${(props) => (props.active ? "rgb(75,135,220)" : "White")};
+    color: ${(props: any) => (props.active ? "rgb(75,135,220)" : "White")};
     &:hover {
 
         cursor: pointer
@@ -91,15 +91,15 @@ export const ReleaseToggleButton = styled.div`
    
     width: 50%;
     height: 100%;
-    border-top-${(props) => props.side}-radius: 10px;
+    border-top-${(props: any) => props.side}-radius: 10px;
     border-right: 1.5px solid rgb(14, 22, 39);
-    background: ${(props) => (!props.active ? "rgb(14, 22, 39)" : "rgb(27,32,52)")};
+    background: ${(props: any) => (!props.active ? "rgb(14, 22, 39)" : "rgb(27,32,52)")};
     font-size: 18px;
     font-weight: bold;
     font-family: 'Open Sans', sans-serif;
-    border: 1px solid ${(props) => (!props.active ? "rgb(75,135,220)" : "rgb(27,32,52)")};
+    border: 1px solid ${(props: any) => (!props.active ? "rgb(75,135,220)" : "rgb(27,32,52)")};
     // border-bottom: 1.5px solid rgb(75,135,220);
-    color: ${(props) => (!props.active ? "rgb(75,135,220)" : "White")};
+    color: ${(props: any) => (!props.active ? "rgb(75,135,220)" : "White")};
 
     &:hover {
 
@@ -183,7 +183,7 @@ export const WalletInput = styled.input`
 
 export const Dropdown = styled.div`
     position: absolute;
-    top: ${(props) => props.height};
+    top: ${(props: any) => props.height};
     left: 4%;
     border-radius: 10px;
     width: 455px;
@@ -220,7 +220,7 @@ export const StatusTextWrapper = styled.div`
     // justify-content: center;
     // background: White;
     margin-top: 10px;
-    margin-bottom: ${(props) => props.marginB};
+    margin-bottom: ${(props: any) => props.marginB};
     padding-left: 10px;
 `;
 

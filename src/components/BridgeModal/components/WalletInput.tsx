@@ -28,7 +28,7 @@ const WalletInputForm = ({
   walletBalance,
   buttonState,
 }: IWalletInput) => {
-  const preventMinus = (e): void => {
+  const preventMinus = (e: any): void => {
     if (e.code === "Minus") e.preventDefault();
   };
 

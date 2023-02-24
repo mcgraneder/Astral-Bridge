@@ -4,15 +4,15 @@ import { Icon as AssetIcon } from "../../Icons/AssetLogs/Icon";
 import styled from "styled-components"
 
 export const DropDownContainer = styled.div`
-  margin: ${(props) => (props.isVisible ? "8px 0px" : "0px")};
+  margin: ${(props: any) => (props.isVisible ? "8px 0px" : "0px")};
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-radius: 6px;
-  border: ${(props) => (props.isVisible ? "1px solid rgb(75 85 99);" : "none")};
+  border: ${(props: any) => (props.isVisible ? "1px solid rgb(75 85 99);" : "none")};
   background-color: rgb(34 53 83);
   padding: 0px 12px;
-  height: ${(props) => (props.isVisible ? "38px" : "0px")};
+  height: ${(props: any) => (props.isVisible ? "38px" : "0px")};
   transition: height 0.2s ease;
 
   &:hover {
@@ -53,7 +53,7 @@ const Dropdown = ({
         }`}
       >
         <div className="h-6 w-6">
-          <AssetIcon chainName={Icon} className="h-6 w-6" />
+          <AssetIcon chainName={Icon as string} className="h-6 w-6" />
         </div>
         {dropDownType === "currency" ? (
           <span className="text-[15px]">Move {text}</span>

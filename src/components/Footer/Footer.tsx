@@ -14,14 +14,14 @@ export const GreenCircle = styled.div`
 `;
 export default function Footer({ visible }: { visible: boolean}) {
     const { library, chainId } = useWeb3React();
-    const [blockNumber, setBlockNumber] = React.useState();
+    const [blockNumber, setBlockNumber] = React.useState<number | null>();
 
     useEffect(() => {
         if (library) {
             let stale = false;
             library
                 .getBlockNumber()
-                .then((blockNumber) => {
+                .then((blockNumber: any) => {
                     if (!stale) {
                         setBlockNumber(blockNumber);
                     }
@@ -32,7 +32,7 @@ export default function Footer({ visible }: { visible: boolean}) {
                     }
                 });
 
-            const updateBlockNumber = (blockNumber) => {
+            const updateBlockNumber = (blockNumber: any) => {
                 setBlockNumber(blockNumber);
             };
             library.on("block", updateBlockNumber);

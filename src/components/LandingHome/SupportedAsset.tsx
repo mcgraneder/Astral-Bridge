@@ -3,7 +3,7 @@ import styled from "styled-components";
 import AssetItem from "./AssetItem";
 
 export const SupportedAssetsContainer = styled.div`
-  max-width: ${(props) => props.maxWidth};
+  max-width: ${(props: any) => props.maxWidth};
   // width: 100%;
   display: flex;
   box-sizing: border-box;
@@ -35,9 +35,9 @@ export const SupportedAssetsWrapper = styled.div`
 
 export const CurrencysContainer = styled.div`
   flex-grow: 5;
-  border-right: ${(props) => (props.border ? "2px solid #c1c2c4" : "none")};
-  padding-right: ${(props) => props.paddingR};
-  padding-left: ${(props) => props.paddingL};
+  border-right: ${(props: any) => (props.border ? "2px solid #c1c2c4" : "none")};
+  padding-right: ${(props: any) => props.paddingR};
+  padding-left: ${(props: any) => props.paddingL};
   display: block;
   // max-width: 430px;
 
@@ -67,7 +67,7 @@ export const CurrenciesList = styled.ul`
   list-style-type: none;
 `;
 
-const SupportedAssets = ({ type }) => {
+const SupportedAssets = ({ type }: any) => {
   if (type === "LEGACY") {
     return (
       <SupportedAssetsContainer maxWidth={"1050px"}>

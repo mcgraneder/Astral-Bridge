@@ -10,8 +10,8 @@ export const CurrencyItemContainer = styled.div`
   align-items: center;
   text-align: -webkit-match-parent;
   list-style-type: none;
-  padding-left: ${(props) => props.marginL};
-  padding-right: ${(props) => props.marginR};
+  padding-left: ${(props: any) => props.marginL};
+  padding-right: ${(props: any) => props.marginR};
 
   @media (max-width: 630px) {
     width: 100px;
@@ -50,15 +50,15 @@ export const CurrencyTitle = styled.p`
   margin-inline-end: 0px;
 `;
 
-const getOptions = (mode) => {
+const getOptions = (mode: any) => {
   const options =
     mode === "chain"
       ? Object.values(chainsBaseConfig)
       : Object.values(assetsBaseConfig);
-  return options;
+  return options as any;
 };
 
-const createAvailabilityFilter = (available, walletAssetType: string) => (option) => {
+const createAvailabilityFilter = (available: any, walletAssetType: string) => (option: any) => {
   if (!available) {
     return true;
   }
@@ -67,7 +67,7 @@ const createAvailabilityFilter = (available, walletAssetType: string) => (option
      : (available).includes(option.Icon);
 };
 
-const AssetItem = ({ assetType, type }) => {
+const AssetItem = ({ assetType, type }: any) => {
   const available =
     assetType === "currency"
       ? supportedAssets
@@ -87,11 +87,10 @@ const AssetItem = ({ assetType, type }) => {
 return (
     
   <>
-    {getOptions(assetType)
-      .filter(
+    {getOptions(assetType).filter(
         type === "LEGACY" ? LegacyavailabilityFilter : EvmavailabilityFilter
       )
-      .map((option, index) => {
+      .map((option: any, index: any) => {
         if (option.Icon === "Terra") return
         // if (option.Icon === "ROOK" || option.Icon === "GLMR" || option.Icon === "EURT" || option.icon === "DAI") return
         return (

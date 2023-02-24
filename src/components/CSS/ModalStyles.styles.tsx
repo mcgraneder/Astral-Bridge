@@ -1,4 +1,4 @@
-import styles from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Backdrop = styled.div`
     position: fixed;

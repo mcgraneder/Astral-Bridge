@@ -72,11 +72,13 @@ const AssetListModal = ({
     setSearchTerm("");
   }, [setSearchTerm, setShowTokenModal]);
 
-  const available =
-    walletAssetType === "chain" ? [...chainFilter] : [...assetFilter];
+  const available = useCallback(
+    () => (walletAssetType === "chain" ? [...chainFilter] : [...assetFilter]),
+    [assetFilter, chainFilter, walletAssetType]
+  );
 
   const availabilityFilter = React.useMemo(
-    () => createAvailabilityFilter(available, walletAssetType),
+    () => createAvailabilityFilter(available(), walletAssetType),
     [available, walletAssetType]
   );
 
@@ -162,7 +164,7 @@ const AssetListModal = ({
               value={searchTerm}
               name={"search"}
               type={"text"}
-              onChange={(e) => setSearchTerm(e.currentTarget.value)}
+              onChange={(e: any) => setSearchTerm(e.currentTarget.value)}
             />
           </TokenInputContainer>
           <div className="my-2 flex flex-row items-center justify-start gap-2">
@@ -205,7 +207,7 @@ const AssetListModal = ({
                     }
                   >
                     <div className="flex items-center justify-center gap-4">
-                      <Icon chainName={asset.Icon} className="h-8 w-8" />
+                      <Icon chainName={asset.Icon as string} className="h-8 w-8" />
                       <div className="flex flex-col items-start justify-start text-center">
                         <span className="text-[16px] font-semibold leading-tight">
                           {asset.fullName}

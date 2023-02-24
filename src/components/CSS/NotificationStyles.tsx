@@ -68,7 +68,7 @@ const CloseWrapperStyled = styled.div`
 `;
 
 const BarStyled = styled.div`
-  background-color: ${(props) => props.colour};
+  background-color: ${(props: any) => props.colour};
   bottom: 0;
   height: 3.5px;
   left: 0;
@@ -88,7 +88,7 @@ const NotificationStyled = styled.div`
   overflow: hidden;
   z-index: 9999;
 
-  animation: ${(props) => (!props.isClosing ? opneRight : openLeft)} 0.65s;
+  animation: ${(props: any) => (!props.isClosing ? opneRight : openLeft)} 0.65s;
 `;
 
 const NotificationStyles = {

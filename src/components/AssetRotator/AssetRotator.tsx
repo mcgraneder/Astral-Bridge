@@ -46,7 +46,7 @@ export const supportedAssets =
         
 
 
-export const AssetRotator: FunctionComponent<ChainAssetRotatorProps> = ({ className, children }) => {
+export const AssetRotator: FunctionComponent<ChainAssetRotatorProps> = ({ className }) => {
     const timeout = 3000;
     const offset = timeout / 3;
     const [ai, setAi] = useState(0);
@@ -73,7 +73,7 @@ export const AssetRotator: FunctionComponent<ChainAssetRotatorProps> = ({ classN
             clearTimeout(hideTick);
         };
        
-    }, [assetsCount, ai, hover]);
+    }, [assetsCount, ai, hover, offset]);
 
     const asset = supportedAssets[ai];
     return (
@@ -81,7 +81,6 @@ export const AssetRotator: FunctionComponent<ChainAssetRotatorProps> = ({ classN
             <Fade in={show} timeout={{ enter: 500, exit: 100 }}>
                 { asset && <Icon chainName={asset} className={"h-[200px] w-[200px] hover:h-[200px] hover:w-[200px] hover:cursor-pointer"} onMouseEnter={toggleRotaator} onMouseLeave={toggleRotaator} /> }
             </Fade>
-            {children}
         </div>
     );
 };

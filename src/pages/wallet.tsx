@@ -16,7 +16,7 @@ import { EVMChains, LeacyChains } from "../utils/chainsConfig";
 
 type AssetType = "chain" | "currency";
 
-const BlockPage: NextPage = () => {
+const WalletPage: NextPage = () => {
   
   const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
@@ -71,4 +71,4 @@ const BlockPage: NextPage = () => {
 //   },
 // });
 
-export default BlockPage;
+export default WalletPage;

@@ -28,14 +28,12 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
     bottom: 0;
     width: 100%;
     min-height: 300px;
-    background: ${({ isDarkMode }) => (isDarkMode ? "linear-gradient(rgba(7, 8, 22, 0) 0%, rgb(7 8 22 / 100%) 45%)" : "linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%)")};
+    background: ${({ isDarkMode }: any) => (isDarkMode ? "linear-gradient(rgba(7, 8, 22, 0) 0%, rgb(7 8 22 / 100%) 45%)" : "linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%)")};
     z-index: 10;
     pointer-events: none;
     height: 2000px;
   
-    /* @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
-        height: 100vh;
-    } */
+
 `;
 
 const GlowContainer = styled.div`
@@ -67,7 +65,7 @@ const ChainGlow = styled.div`
     position: absolute;
     top: -400px;
     bottom: 0;
-    background: ${(props) => `radial-gradient(92.04% 92.04% at 50% 0%, ${props.colour} 0%, rgba(166, 151, 255, 0) 100%)`};
+    background: ${(props: any) => `radial-gradient(92.04% 92.04% at 50% 0%, ${props.colour} 0%, rgba(166, 151, 255, 0) 100%)`};
     filter: blur(70px);
     opacity: 0.95;
     max-width: 1250px;

@@ -103,12 +103,12 @@ const ConfirmationStep = ({
         isRightDisplay={true}
         isLeftDisplay={true}
         title={"Ren Gateway"}
-        close={close}
+        close={close as any}
       />
       <GatewaySection>
         <GatewaySectionWrapper>
           <div className="mt-5 mb-4 flex flex-col items-center justify-center gap-2">
-            <Icon chainName={asset.Icon} className={"h-24 w-24"} />
+            <Icon chainName={asset.Icon as string} className={"h-24 w-24"} />
           </div>
           <div className="flex flex-col items-center justify-center text-[25px]">
             <span>Send BTC to</span>
@@ -190,7 +190,6 @@ const ConfirmationStep = ({
                 <ChainTx
                   key={index}
                   transaction={transaction}
-                  handleSubmit={memoizedOnTxReceivedCb}
                 />
               );
           })}

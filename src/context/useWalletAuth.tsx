@@ -28,32 +28,32 @@ interface AuthProviderProps {
 }
 
 type AuthContextType = {
-    disconnect: () => void;
-    connectOn: (w: WalletInfo) => void;
-    error: boolean;
-    setWalletError: Dispatch<SetStateAction<boolean>>;
-    openWalletModal: boolean;
-    setOpenWalletModal: Dispatch<SetStateAction<boolean>>;
-    connecting: boolean;
-    setConnecting: Dispatch<SetStateAction<boolean>>;
-    pendingWallet: AbstractConnector | undefined;
-    setPendingWallet: Dispatch<SetStateAction<AbstractConnector | undefined>>;
-    toggleErrorModal: () => void;
-    toggleConecting: () => void;
-    toggleWalletModal: () => void;
-    reset: () => void;
-    errorMessage: string;
-    needToSwitchChain: (id: number) => boolean;
-    switchNetwork: (id: number) => Promise<{
-    switched: boolean;
-    errorCode?: undefined;
-} | {
-    switched: boolean;
-    errorCode: any;
-}>;
-    isSwitchingChain: boolean;
-    hasSigned: boolean;
-    setHasSigned: Dispatch<SetStateAction<boolean>>;
+  disconnect: () => void;
+  connectOn: (w: WalletInfo) => void;
+  error: boolean;
+  setWalletError: Dispatch<SetStateAction<boolean>>;
+  openWalletModal: boolean;
+  setOpenWalletModal: Dispatch<SetStateAction<boolean>>;
+  connecting: boolean;
+  setConnecting: Dispatch<SetStateAction<boolean>>;
+  pendingWallet: AbstractConnector | undefined;
+  setPendingWallet: Dispatch<SetStateAction<AbstractConnector | undefined>>;
+  toggleErrorModal: () => void;
+  toggleConecting: () => void;
+  toggleWalletModal: () => void;
+  reset: () => void;
+  errorMessage: string;
+  needToSwitchChain: (id: number) => boolean;
+  switchNetwork: (id: number) => Promise<
+    | {
+        switched: boolean;
+        errorCode: any;
+      }
+    | undefined
+  >;
+  isSwitchingChain: boolean;
+  hasSigned: boolean;
+  setHasSigned: Dispatch<SetStateAction<boolean>>;
 };
 
 const AuthContext = createContext({} as AuthContextType);

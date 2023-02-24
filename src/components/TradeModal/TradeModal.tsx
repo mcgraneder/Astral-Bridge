@@ -9,11 +9,11 @@ import { UilAngleDown } from '@iconscout/react-unicons';
 
 export const TokenAmountWrapper = styled.div`
   // width: 100%;
-  height: ${(props) => props.height};
+  height: ${(props: any) => props.height};
   background: rgb(34, 53, 83);
   border: 1.5px solid rgb(27, 32, 52);
   border-radius: 15px;
-  margin-top: ${(props) => props.marginTop};
+  margin-top: ${(props: any) => props.marginTop};
   padding-left: 15px;
   padding-right: 20px;
 
@@ -25,24 +25,24 @@ export const TokenAmountWrapper = styled.div`
 export const TokenAmount = styled.div`
   font-family: "Open Sans", sans-serif;
   height: 100%;
-  font-size: ${(props) => props.size};
+  font-size: ${(props: any) => props.size};
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
-  float: ${(props) => props.float};
+  float: ${(props: any) => props.float};
   color: White;
-  line-height: ${(props) => props.lineHeight};
+  line-height: ${(props: any) => props.lineHeight};
   margin-left: 5px;
 `;
 
 export const ImgWrapper = styled.div`
-  padding-top: ${(props) => props.padding};
-  padding-bottom: ${(props) => props.paddingBottom};
+  padding-top: ${(props: any) => props.padding};
+  padding-bottom: ${(props: any) => props.paddingBottom};
   display: flex;
   align-items: center;
   justify-content: center;
-  float: ${(props) => props.float};
+  float: ${(props: any) => props.float};
 `;
 
 export const ErrorText = styled.div`
@@ -75,7 +75,7 @@ export const UniswapIcon = styled.img`
 
 export const ArrowDownContainer = styled.div`
   position: absolute;
-  top: ${(props) => (props.swapState === true ? "45%" : "36.5%")};
+  top: ${(props: any) => (props.swapState === true ? "45%" : "36.5%")};
   left: 45%;
   // color: White;
   background: White;
@@ -131,7 +131,7 @@ export const DisclaimerContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #adadad
+    color: #adadad;
     font-weight: bold;
 `;
 
@@ -158,7 +158,7 @@ export const TokenSelectButton = styled.div`
   font-family: "Open Sans", sans-serif;
   display: flex;
   align-items: center;
-  background: ${(props) => props.color};
+  background: ${(props: any) => props.color};
   color: rgb(255, 255, 255);
   cursor: pointer;
   border-radius: 16px;

@@ -9,15 +9,7 @@ export const loadingAnimation = keyframes`
   }
 `;
 
-export const loadingOpacityMixin = css<{ $loading: boolean }>`
-  filter: ${({ $loading }) => ($loading ? "grayscale(1)" : "none")};
-  opacity: ${({ $loading }) => ($loading ? "0.4" : "1")};
-  transition: opacity 0.2s ease-in-out;
-`;
 
-export const LoadingOpacityContainer = styled.div<{ $loading: boolean }>`
-  ${loadingOpacityMixin}
-`;
 
 export const LoadingBubble = styled.div`
   border-radius: 12px;
@@ -38,7 +30,7 @@ export const LoadingBubble = styled.div`
 export const GlowingText = styled.span`
   font-size: 35px;
   animation-fill-mode: both;
-  background: ${(props) =>
+  background: ${(props: any) =>
     props.loading
       ? `linear-gradient(
     to left,

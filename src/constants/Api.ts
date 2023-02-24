@@ -8,7 +8,7 @@ if (typeof window === "undefined") {
 
 const SigVerifierBaseUrl = isProduction()
   ? "http://localhost:8000/api/auth"
-  : "http://localhost:8000/api/auth"; // "http://localhost:4000";
+  : "http://localhost:8000/api/auth"; // "https://astral-sol.onrender.com";
 
 
   const OwlOracleBaseUrl = "https://www.etherchain.org/api";
@@ -17,11 +17,11 @@ const SigVerifierBaseUrl = isProduction()
 const API = {
   ren: {
     verify: `${SigVerifierBaseUrl}/verify`,
-    balancesOf: `http://localhost:4000/balancesOf`,
-    bridgeTokens: `http://localhost:4000/bridgeTokens`,
-    getTokenApproval: `http://localhost:4000/getTokenApproval`,
-    queryRenTx: "http://localhost:4000/queryRenTx",
-    submitMintRenTx: "http://localhost:4000/submitMintRenTx",
+    balancesOf: `https://astral-sol.onrender.com/balancesOf`,
+    bridgeTokens: `https://astral-sol.onrender.com/bridgeTokens`,
+    getTokenApproval: `https://astral-sol.onrender.com/getTokenApproval`,
+    queryRenTx: "https://astral-sol.onrender.com/queryRenTx",
+    submitMintRenTx: "https://astral-sol.onrender.com/submitMintRenTx",
   },
   coinGecko: {
     price: `${CoinGeckoBaseUrl}/simple/price`,

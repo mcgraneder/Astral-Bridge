@@ -40,7 +40,7 @@ const useChainTransactionStatusUpdater = ({
   }, []);
 
   const trackProgress = useCallback(
-    (progress) => {
+    (progress: any) => {
       setError(null);
       setStatus(progress.status);
       setTarget(progress.target);

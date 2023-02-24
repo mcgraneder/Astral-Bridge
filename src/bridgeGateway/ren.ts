@@ -1,19 +1,9 @@
-import { Catalog, EVMNetworkConfig } from "@renproject/chains";
-import { MockProvider } from "@renproject/mock-provider";
-import { RenVMProvider } from "@renproject/provider";
+
 import RenJS, { Gateway } from "@renproject/ren";
 import { RenNetwork } from "@renproject/utils";
-import { ethers } from "ethers";
-import { Dispatch, SetStateAction } from "react";
 
-import API from "../constants/Apis";
-import { ErrorCodes } from "../constants/Errors";
-import { Token } from "../types/misc";
 import { isProduction } from "../utils/misc";
-import { get } from "./axios";
-import { MINT_GAS_UNIT_COST } from "./gasFeeMarketData";
-
-export type GatewayCallbackEventTypes = "progress" | "submitted";
+type GatewayCallbackEventTypes = "progress" | "submitted";
 
 const network = isProduction() ? RenNetwork.Mainnet : RenNetwork.Testnet;
 

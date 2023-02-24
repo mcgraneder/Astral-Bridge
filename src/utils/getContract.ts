@@ -36,25 +36,25 @@ const getContract = (
   return new Contract(address, ABI, getProviderOrSigner(library, account) as any);
 };
 
-export const returnContract = <contract extends Contract = Contract>(
-  tokenddress: string | undefined,
-  ABI: any,
-  withSignerIfPossible = true
-): contract | null => {
-  //wont work
-  const { library: provider, account: address, chainId } = useWeb3React();
-  if (!tokenddress || !ABI || !provider || !chainId) return null;
-  try {
-    return getContract(
-      tokenddress,
-      ABI,
-      provider,
-      withSignerIfPossible && address ? address : undefined
-    ) as contract;
-  } catch (error) {
-    console.error("Failed to get contract", error);
-    return null;
-  }
-};
+// export const returnContract = <contract extends Contract = Contract>(
+//   tokenddress: string | undefined,
+//   ABI: any,
+//   withSignerIfPossible = true
+// ): contract | null => {
+//   //wont work
+//   const { library: provider, account: address, chainId } = useWeb3React();
+//   if (!tokenddress || !ABI || !provider || !chainId) return null;
+//   try {
+//     return getContract(
+//       tokenddress,
+//       ABI,
+//       provider,
+//       withSignerIfPossible && address ? address : undefined
+//     ) as contract;
+//   } catch (error) {
+//     console.error("Failed to get contract", error);
+//     return null;
+//   }
+// };
 
 export default getContract;

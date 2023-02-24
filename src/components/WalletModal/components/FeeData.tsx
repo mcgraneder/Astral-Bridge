@@ -28,7 +28,7 @@ const FeeData = ({
           <UilPump className={"h-[18px] w-[18px] text-blue-500"} />
           <div>Estimated network fee: </div>
           <span className="text-gray-400">
-            {defaultGasPrice && toFixed(shiftBN(defaultGasPrice.networkFee, -18), 6)}{" "}{" "}
+            {defaultGasPrice && toFixed(shiftBN(defaultGasPrice.networkFee!, -18), 6)}{" "}{" "}
             <span className="text-grey-600">{CHAINS[chainId!]?.symbol!}</span>
           </span>
         </div>

@@ -29,7 +29,7 @@ const defaultBridgeState: Tab = {
   tabNumber: 0,
   side: "left",
 };
-const BlockPage: NextPage = () => {
+const TradePage: NextPage = () => {
   const [bridgeState, setBridgeState] = useState<Tab>(defaultBridgeState);
   const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
@@ -87,4 +87,4 @@ const BlockPage: NextPage = () => {
 //   },
 // });
 
-export default BlockPage;
+export default TradePage;
