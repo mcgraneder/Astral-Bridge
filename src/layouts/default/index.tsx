@@ -2,16 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Navbar from "../../components/Navbar/Navbar";
 import WalletConnect from "../../components/WalletConnectModal/WalletConnectModal";
-import { useAuth } from '../../context/useWalletAuth';
-import BottomNavBar from '../../components/Navbar/BottomNavBar';
-import { useViewport } from '../../hooks/useViewport';
+import { useAuth } from "../../context/useWalletAuth";
+import BottomNavBar from "../../components/Navbar/BottomNavBar";
+import { useViewport } from "../../hooks/useViewport";
 import AccountVerificationModal from "../../components/AccountVerificationModal/AccountVerificationModal";
-import styled from "styled-components"
+import styled from "styled-components";
 import { Z_INDEX } from "../../components/theme/zIndex";
 import AccountDetailsModal from "../../components/AccountDetailsModal/AccountDetailsModal";
-import { ChainColor, chainsColors } from '../../utils/chainColours';
-import { useWeb3React } from '@web3-react/core';
-import { ChainIdToRenChain } from '../../connection/chains';
+import { ChainColor, chainsColors } from "../../utils/chainColours";
+import { useWeb3React } from "@web3-react/core";
+import { ChainIdToRenChain } from "../../connection/chains";
 import Footer from "../../components/Footer/Footer";
 import NetworkWarning from "../../components/NetworkWarning/NetworkWarning";
 import AppLoader from "./AppLoader";
@@ -91,7 +91,7 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
   const [showAccount, setShowAccount] = useState<boolean>(false);
   const [chainColour, setChainColour] = useState<string | null>(null);
   const { toggleWalletModal } = useAuth();
-  const { loading } = useGlobalState()
+  const { loading } = useGlobalState();
   const { chainId } = useWeb3React();
   const { pathname } = useRouter();
   const toggleAccoundDetailsModal = (): void => setShowAccount(!showAccount);
@@ -101,7 +101,6 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
     const colour = chainsColors[ChainIdToRenChain[chainId]!];
     setChainColour(colour.primary);
   }, [chainId]);
-
 
   return (
     <>
@@ -141,6 +140,5 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
     </>
   );
 }
-
 
 export default DefaultLayout;

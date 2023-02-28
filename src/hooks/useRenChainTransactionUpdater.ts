@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { Chain } from "@renproject/chains";
 import { isDefined } from './useGatewayTrnasactionProcessor';
 import BigNumber from 'bignumber.js';
 import {

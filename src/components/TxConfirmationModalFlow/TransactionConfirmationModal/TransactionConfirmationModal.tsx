@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import { TopRowNavigation } from "../../WalletConnectModal/WalletConnectModal";
 import { FormWrapper } from "../../WalletConnectModal/WalletConnectModal";
 import { Backdrop } from "../../WalletConnectModal/WalletConnectModal";
-import { UilTimes, UilAngleDown } from "@iconscout/react-unicons";
+import { UilAngleDown } from "@iconscout/react-unicons";
 import PrimaryButton from "../../PrimaryButton/PrimaryButton";
 import useFetchAssetPrice from "../../../hooks/useFetchAssetPrice";
 import GasOptionsModal from "./components/AdvancedOptions/GasOptionsModal";
@@ -30,6 +30,7 @@ import ProtocolBanner from "./components/GasOptionSummary";
 import BottomSheetOptions from "../../BottomSheet/BottomSheet";
 import { Breakpoints } from "../../../constants/Breakpoints";
 import { useViewport } from "../../../hooks/useViewport";
+import { Ethereum } from '../../../bridgeGateway/Ethereum';
 
 interface IAssetModal {
   toggleConfirmationModal: () => void;
@@ -162,7 +163,7 @@ const TxConfirmationModal = ({
   const { executeTransaction: exec } = useEcecuteTransaction();
   const { init } = useApproval();
   const { width } = useViewport();
-  const { destinationChain } = useGlobalState();
+  const { destinationChain, fromChain } = useGlobalState();
   const { assetPrice } = useFetchAssetPrice(asset);
   const {
     defaultGasPrice,
@@ -184,6 +185,23 @@ const TxConfirmationModal = ({
     gasLimit: defaultGasPrice?.gasLimit!,
     networkFee: defaultGasPrice?.networkFee!,
   });
+
+    const updateGasOverride = useCallback(
+      (newEntry: Partial<GP> | Partial<AdvancedGasOverride>, type: string) => {
+        if (type === "Basic") {
+          setBasicGasOverride({
+            ...basicGasOverride,
+            ...newEntry,
+          });
+        } else {
+          setAdvancedGasOverride({
+            ...advancedGasOveride,
+            ...newEntry,
+          });
+        }
+      },
+      [basicGasOverride, advancedGasOveride]
+    );
 
   const estimateGasLimit = useCallback(async (): Promise<ethers.BigNumber> => {
     const bridgeAddress = BridgeDeployments[destinationChain.fullName];
@@ -234,23 +252,6 @@ const TxConfirmationModal = ({
     setCustomtGasPrice(undefined);
   }, [toggleConfirmationModal, setCustomtGasPrice]);
 
-  const updateGasOverride = useCallback(
-    (newEntry: Partial<GP> | Partial<AdvancedGasOverride>, type: string) => {
-      if (type === "Basic") {
-        setBasicGasOverride({
-          ...basicGasOverride,
-          ...newEntry,
-        });
-      } else {
-        setAdvancedGasOverride({
-          ...advancedGasOveride,
-          ...newEntry,
-        });
-      }
-    },
-    [basicGasOverride, advancedGasOveride]
-  );
-
   const executeTransaction = useCallback(
     async (
       transactionType: string,
@@ -267,12 +268,10 @@ const TxConfirmationModal = ({
       const bridgeContract = init(bridgeAddress!, RenBridgeABI);
 
       const optionalParams =
-        customGasPrice && customGasPrice?.overrideType === "Basic"
+        customGasPrice && customGasPrice?.overrideType === "Basic" && fromChain.Icon === Ethereum.chain
           ? {
-              gasLimit: customGasPrice.gasLimit!,
-              gasPrice: new BigNumber(customGasPrice?.gasPrice!)
-                .shiftedBy(9)
-                .toString(),
+              gasLimit: customGasPrice.gasLimit!.toString(),
+              gasPrice: customGasPrice?.gasPrice!.toString(),
             }
           : {};
       if (transactionType === "Deposit") {
@@ -291,7 +290,7 @@ const TxConfirmationModal = ({
         );
       }
     },
-    [account, exec, init, toggleConfirmationModal, customGasPrice]
+    [account, exec, init, toggleConfirmationModal, customGasPrice, fromChain]
   );
 
   return (

@@ -1,30 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
 import styled, { css } from "styled-components";
-import BtcIcon from "../../../public/svgs/assets/renBTC.svg";
-import EthIcon from "../../../public/svgs/chains/ethereum.svg";
-
-import { UilAngleDown, UilSpinner } from '@iconscout/react-unicons';
-import { MintFormTextWrapper2, MintFormText2 } from "../CSS/WalletModalStyles";
 import ToggleButtonContainer from "./components/ToggleButton";
 import Dropdown from "./components/Dropdown";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import WalletInputForm from "./components/WalletInput";
 import BalanceDisplay from "../NativeBalanceDisplay/BalanceDisplay";
 import { useWeb3React } from "@web3-react/core";
-import { ChainIdToRenChain, CHAINS } from "../../connection/chains";
+import { ChainIdToRenChain } from "../../connection/chains";
 import { useAuth } from "../../context/useWalletAuth";
 import { RenNetwork } from "@renproject/utils";
-import { MulticallReturn, useGlobalState } from "../../context/useGlobalState";
+import { useGlobalState } from "../../context/useGlobalState";
 import { get } from "../../services/axios";
 import API from "../../constants/Api";
-import { ethers } from "ethers";
-import {
-  MINT_GAS_UNIT_COST,
-  NetReturn,
-} from "../../utils/market/getMarketGasData";
-import { UilPump } from "@iconscout/react-unicons";
-import { Icon } from "../Icons/AssetLogs/Icon";
-import { useNotification } from "../../context/useNotificationState";
 import WalletButton from "../Buttons/WalletButton";
 import { useTransactionFlow } from "../../context/useTransactionFlowState";
 import { useApproval } from "../../hooks/useApproval";
@@ -32,9 +19,9 @@ import { BridgeDeployments } from "../../constants/deployments";
 import { chainAdresses } from "../../constants/Addresses";
 import BigNumber from "bignumber.js";
 import { chainsBaseConfig } from "../../utils/chainsConfig";
-import { toFixed } from "../../utils/misc";
 import { useGasPriceState } from "../../context/useGasPriceState";
 import FeeData from "./components/FeeData";
+
 export type Tab = {
   tabName: string;
   tabNumber: number;

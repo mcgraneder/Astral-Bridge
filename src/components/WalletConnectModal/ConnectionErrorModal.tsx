@@ -1,5 +1,4 @@
 import React from "react";
-import { useWeb3React } from "@web3-react/core";
 import { useViewport } from "../../hooks/useViewport";
 import { FormWrapper } from "./WalletConnectModal";
 import { TopRowNavigation } from "./WalletConnectModal";
@@ -20,6 +19,7 @@ interface ConnectionErrorModalProps {
 }
 
 const ConnectionErrorModalInner = ({ close, setConnecting, toggleWalletModal, pendingWallet, connectOn, message }: ConnectionErrorModalProps) => {
+
     const backToWalletModal = (): void => {
         toggleWalletModal();
         close();
@@ -34,23 +34,44 @@ const ConnectionErrorModalInner = ({ close, setConnecting, toggleWalletModal, pe
     };
 
     return (
-        <>
-            <TopRowNavigation isRightDisplay={true} isLeftDisplay={true} backFunction={backToWalletModal} close={close} />
-            <div className='my-4 flex flex-col items-center justify-center  px-2'>
-                <UilExclamationTriangle className={"h-20 w-20 text-red-500"} />
-            </div>
-            <div className='my-2 flex flex-col items-center gap-2 text-center'>
-                <span className=' text-[17px] font-semibold'>Error connecting</span>
-                <span className='text-[15px] text-gray-500'>{message}</span>
-            </div>
-            {message !== ERROR_MESSSAGES["REQUEST_PENDING"] ? (
-                <div className='mt-8 mb-2 flex items-center justify-center'>
-                    <PrimaryButton className={"w-full justify-center rounded-lg bg-blue-500 py-4 text-center"} onClick={connect}>
-                        Try again
-                    </PrimaryButton>
-                </div>
-            ) : null}
-        </>
+      <>
+        <TopRowNavigation
+          isRightDisplay={true}
+          isLeftDisplay={true}
+          backFunction={backToWalletModal}
+          close={close}
+        />
+        <div className="my-4 flex flex-col items-center justify-center  px-2">
+          <UilExclamationTriangle className={"h-20 w-20 text-red-500"} />
+        </div>
+        <div className="my-2 flex flex-col items-center gap-2 text-center">
+          <span className=" text-[17px] font-semibold">Error connecting</span>
+          <span className="text-[15px] text-gray-500">{message}</span>
+        </div>
+        {message !== ERROR_MESSSAGES["REQUEST_PENDING"] &&
+        message !== ERROR_MESSSAGES["NO_PROVIDER"] ? (
+          <div className="mt-8 mb-2 flex items-center justify-center">
+            <PrimaryButton
+              className={
+                "w-full justify-center rounded-lg bg-blue-500 py-4 text-center"
+              }
+              onClick={connect}
+            >
+              Try again
+            </PrimaryButton>
+          </div>
+        ) : (
+          <div className="focus-visible:ring-primary flex w-full items-center justify-center rounded-lg bg-blue-500 py-4 px-5 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2">
+            <a
+              href="https://www.bing.com/ck/a?!&&p=115f4954ff3b300cJmltdHM9MTY3NzU0MjQwMCZpZ3VpZD0xODZmYmI1ZC0xODIyLTYzMGQtMTYzNS1hOTNiMTk5OTYyZWImaW5zaWQ9NTQyOA&ptn=3&hsh=3&fclid=186fbb5d-1822-630d-1635-a93b199962eb&psq=metamask&u=a1aHR0cHM6Ly9tZXRhbWFzay5pby9kb3dubG9hZC8&ntb=1"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              get Metamask
+            </a>
+          </div>
+        )}
+      </>
     );
 };
 

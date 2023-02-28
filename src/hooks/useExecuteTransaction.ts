@@ -1,10 +1,8 @@
 import { useCallback } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { useTransactionFlow } from "../context/useTransactionFlowState";
-import { GP, useGlobalState } from "../context/useGlobalState";
+import { useGlobalState } from "../context/useGlobalState";
 import { useNotification } from "../context/useNotificationState";
-import getContract from "../utils/getContract";
-import { MINT_GAS_UNIT_COST } from "../utils/market/getMarketGasData";
 
 type ExecuteTxType = {
   executeTransaction: (
@@ -45,15 +43,6 @@ const useEcecuteTransaction = (): ExecuteTxType => {
       togglePendingModal();
 
       try {
-        // const overrideParams =
-        //   activeGasPriceType.gasLimit !== null
-        //     ? {
-        //         gasLimit: activeGasPriceType.gasLimit,
-        //         gasPrice: activeGasPriceType.gasPrice,
-        //       }
-        //     : {};
-
-        //     console.log(overrideParams)
         const tx = await contractFn(...args);
 
         setTimeout(() => toggleSubmittedModal(), 250);

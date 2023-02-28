@@ -6,13 +6,11 @@ import {
   AssetBaseConfig,
 } from "../utils/assetsConfig";
 import { chainsConfig, isEthereumBaseChain } from '../utils/chainsConfig';
-import { ChainInstanceMap, pickChains } from "../utils/networksConfig";
-import { getDefaultChains, ChainInstance } from '../bridgeGateway/chainUtils';
+import { ChainInstanceMap } from "../utils/networksConfig";
+import { getDefaultChains } from '../bridgeGateway/chainUtils';
 import { RenNetwork } from "@renproject/utils";
 import { useWeb3React } from "@web3-react/core";
 import RenJS from "@renproject/ren";
-import { Bitcoin } from "@renproject/chains-bitcoin";
-import { Ethereum } from "../bridgeGateway/Ethereum";
 import {
   useEffect,
   useState,
@@ -25,9 +23,6 @@ import {
 } from "react";
 import { useGlobalState } from "./useGlobalState";
 import { createGateway } from "../utils/gatewayUtils";
-import useGatewayListener from '../hooks/useGatewayListener';
-import useChainTransactionStatusUpdater from '../hooks/useGatewayTrnasactionProcessor';
-import BigNumber from 'bignumber.js';
 import { get, post } from "../services/axios";
 import API from "../constants/Api";
 
@@ -259,7 +254,7 @@ function GatewayProvider({ children }: GatewayProviderProps) {
         newGateway.eventEmitter.removeListener("transaction", addTransaction);
       }
     };
-  }, [account, asset, destinationChain, fromChain, renJs, library]);
+  }, [account, asset, destinationChain, fromChain, renJs, library, addTransaction]);
 
   const getIoTypeFromPath = (path: string) => {
     if (path === "deposit") {

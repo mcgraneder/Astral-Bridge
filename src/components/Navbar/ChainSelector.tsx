@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { UilAngleDown, UilSpinner } from "@iconscout/react-unicons";
+import { UilAngleDown } from "@iconscout/react-unicons";
 import styled from "styled-components";
 import { CHAINS, ChainType, ChainIdToRenChain } from '../../connection/chains';
 import { useWeb3React } from "@web3-react/core";

@@ -1,5 +1,4 @@
 import { UilAngleDown } from "@iconscout/react-unicons";
-import BtcIcon from "../../../../public/svgs/assets/renBTC.svg";
 import { Icon as AssetIcon } from "../../Icons/AssetLogs/Icon";
 import styled from "styled-components"
 

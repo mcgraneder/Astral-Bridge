@@ -1,6 +1,5 @@
 import { useWeb3React } from "@web3-react/core";
 import { Contract, ethers } from 'ethers';
-import { useTranslation } from "next-i18next";
 import { useCallback } from "react";
 import { ERC20ABI } from "@renproject/chains-ethereum/contracts";
 import getContract from "../utils/getContract";
@@ -53,7 +52,7 @@ export const useApproval = () => {
         }
       }
     },
-    [chainId, init]
+    [init, setPendingTransaction, togglePendingModal, toggleRejectedModal, toggleSubmittedModal]
   );
 
   return { approve, init };

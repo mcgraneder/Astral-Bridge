@@ -3,9 +3,8 @@ import { useWeb3React } from '@web3-react/core';
 import { ethers } from "ethers";
 import { toFixed } from "../../utils/misc";
 import { useGlobalState } from "../../context/useGlobalState";
-import { CHAINS, ChainIdToRenChain } from "../../connection/chains";
+import { CHAINS } from "../../connection/chains";
 import { GlowingText } from "../CSS/SkeletomStyles";
-import { fetchPrice } from "../../utils/market/fetchAssetPrice";
 import useFetchAssetPrice from '../../hooks/useFetchAssetPrice';
 
 interface ITokenDisplay {
@@ -68,14 +67,18 @@ const BalanceDisplay = ({
   isNative,
 }: {
   asset: any;
-  buttonState: string;
   isNative: boolean;
+  buttonState?: string;
 }) => {
   const [balance, setBalance] = useState<string | undefined>(undefined);
   const [assetBalance, setAssetBalance] = useState<number>(0);
   const { library, account, chainId } = useWeb3React();
-  const { assetBalances, fetchingBalances, destinationChain: chain } = useGlobalState();
-  const { assetPrice } = useFetchAssetPrice(asset)
+  const {
+    assetBalances,
+    fetchingBalances,
+    destinationChain: chain,
+  } = useGlobalState();
+  const { assetPrice } = useFetchAssetPrice(asset);
 
   useEffect(() => {
     if (!library || !account) return;
@@ -110,7 +113,7 @@ const BalanceDisplay = ({
 
     setAssetBalance(formattedBalance);
   }, [assetBalances, buttonState, asset]);
-  
+
   return (
     <BalanceDisplayInner
       asset={asset}

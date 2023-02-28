@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import NotificationStyles from "../CSS/NotificationStyles";
 import { CheckCircle, X, AlertCircle } from "react-feather";
 import styled from "styled-components";
-import { NotificationProps } from '../../context/useNotificationState';
 import { UilTimes } from "@iconscout/react-unicons"
 
 export const CloseIcon = styled(X)`

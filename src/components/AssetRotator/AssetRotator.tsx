@@ -1,8 +1,12 @@
 import React, { useState, useEffect, FunctionComponent } from "react";
 import { Asset } from "@renproject/chains";
 import { Icon } from "../Icons/AssetLogs/Icon";
-import { Fade } from "@material-ui/core"
+import styled from "styled-components"
 
+const Fade = styled.div`
+  opacity: ${(props: any) => (props.visible ? "1" : "0")};
+  transition: opacity 0.3s ease-in-out;
+`;
 
 
 type ChainAssetRotatorProps = {
@@ -78,7 +82,7 @@ export const AssetRotator: FunctionComponent<ChainAssetRotatorProps> = ({ classN
     const asset = supportedAssets[ai];
     return (
         <div className={className}>
-            <Fade in={show} timeout={{ enter: 500, exit: 100 }}>
+            <Fade visible={show}>
                 { asset && <Icon chainName={asset} className={"h-[200px] w-[200px] hover:h-[200px] hover:w-[200px] hover:cursor-pointer"} onMouseEnter={toggleRotaator} onMouseLeave={toggleRotaator} /> }
             </Fade>
         </div>

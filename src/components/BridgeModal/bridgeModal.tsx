@@ -5,36 +5,19 @@ import Dropdown from './components/Dropdown';
 import WalletInputForm from "./components/WalletInput";
 import BalanceDisplay from "../NativeBalanceDisplay/BalanceDisplay";
 import { useWeb3React } from "@web3-react/core";
-import { ChainIdToRenChain, CHAINS } from "../../connection/chains";
-import { useAuth } from "../../context/useWalletAuth";
-import { RenNetwork, utils } from "@renproject/utils";
+import { ChainIdToRenChain } from "../../connection/chains";
 import { useGlobalState } from "../../context/useGlobalState";
-import { get } from "../../services/axios";
-import API from "../../constants/Api";
-import WalletButton from "../Buttons/WalletButton";
-import { useTransactionFlow } from "../../context/useTransactionFlowState";
-import { useApproval } from "../../hooks/useApproval";
-import { BridgeDeployments } from "../../constants/deployments";
-import { chainAdresses } from "../../constants/Addresses";
 import BigNumber from "bignumber.js";
-import { chainsBaseConfig } from "../../utils/chainsConfig";
 import { useGasPriceState } from "../../context/useGasPriceState";
 import FeeData from "./components/FeeData";
-import {
-  pickChains,
-  supportedEthereumChains,
-} from "../../utils/networksConfig";
-import { Chain } from "@renproject/chains";
 import BridegButton from '../Buttons/BridgeButton';
 import BridgeToggleButton from './components/BridgeToggleButton';
 import { Dispatch, SetStateAction } from 'react';
 import ConfirmationStep from "./steps/GatewayStep";
-import { submitGatewayInTx } from '../../bridgeGateway/ren';
 import { Gateway } from '@renproject/ren';
 import {
   WhiteListedLegacyAssets,
   Asset,
-  whiteListedEVMAssets,
 } from "../../utils/assetsConfig";
 import { useGateway } from "../../context/useGatewayState";
 
@@ -127,8 +110,6 @@ export const DropdownWrapper = styled.div`
   transition: height 0.2s ease;
 `;
 
-const NETWORK: RenNetwork = RenNetwork.Testnet;
-
 interface IWalletModal {
   setShowTokenModal: any;
   setWalletAssetType: any;
@@ -160,18 +141,14 @@ const BridgeModal = ({
   const [isSufficentBalance, setIsSufficientBalance] = useState<boolean>(true);
   const [walletBalance, setWalletBalance] = useState<any>(0);
   const [isMax, setIsMax] = useState<boolean>(false);
-  const { switchNetwork } = useAuth();
-  const { chainId, account } = useWeb3React();
-  const { toggleConfirmationModal } = useTransactionFlow();
+  const { chainId } = useWeb3React();
   const { defaultGasPrice } = useGasPriceState();
   const { setListenGatewayTx } = useGateway()
   const {
-    setDestinationChain,
     pendingTransaction,
     destinationChain,
     assetBalances,
     fromChain,
-    setFromChain,
     setChainType,
   } = useGlobalState();
 

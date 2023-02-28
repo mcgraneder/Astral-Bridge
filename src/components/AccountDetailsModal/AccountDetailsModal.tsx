@@ -118,7 +118,7 @@ const AccountDetailsModalIner = ({
         account={account}
         toggleAccoundDetailsModal={toggleAccoundDetailsModal}
       />
-      {/* <BalanceDisplay asset={"ETH"} isNative={true}/> */}
+      <BalanceDisplay asset={"ETH"} isNative={true}/>
       <div className="mt-4 flex items-center justify-center">
         <PrimaryButton
           className={

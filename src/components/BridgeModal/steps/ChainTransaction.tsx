@@ -6,7 +6,6 @@ import useChainTransactionSubmitter from '../../../hooks/useTransactionSubmitter
 import { useRenVMChainTransactionStatusUpdater } from '../../../hooks/useRenChainTransactionUpdater';
 
 import {
-  ChainTransactionProgress,
   TxSubmitter,
   TxWaiter,
 } from "@renproject/utils";

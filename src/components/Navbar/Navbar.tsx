@@ -1,7 +1,6 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import LogoIcon from "../../../public/svgs/assets/RenIconHome.svg";
-import EthereumIcon from "../../../public/svgs/chains/ethereum.svg";
 import { UilSearch } from '@iconscout/react-unicons';
 import { UilSpinner, UilAngleDown } from "@iconscout/react-unicons";
 import { useWeb3React } from "@web3-react/core";

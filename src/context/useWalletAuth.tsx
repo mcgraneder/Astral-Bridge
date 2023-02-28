@@ -7,22 +7,6 @@ import { WalletInfo } from "../connection/wallets";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 import { CHAINS, ChainType } from '../connection/chains';
 
-const Networks = {
-    mainnet: 0x1,
-    ropsten: 0x3,
-    rinkeby: 0x4,
-    goerli: 0x5,
-    kovan: 0x2a,
-    ren: 0x47ee,
-    avalanche: 0xa86a,
-    arbitrum: 0xa4b1,
-    bsc: 0x38,
-    polygon: 0x89,
-    optimism: 0xa,
-    gnosis: 0x64,
-    fantom: 0xfa,
-};
-
 interface AuthProviderProps {
     children: React.ReactNode;
 }
@@ -67,7 +51,7 @@ export const ERROR_MESSSAGES: { [x: string]: string } = {
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
-    const { library, activate, deactivate, active: connected, active, chainId, account } = useWeb3React();
+    const { library, activate, deactivate, active: connected, active, account } = useWeb3React();
 
     const [error, setWalletError] = useState<boolean>(false);
     const [errorMessage, setErrorMessage] = useState<string>(ERROR_MESSSAGES["USER_REJECTED"] as string)
@@ -92,7 +76,7 @@ function AuthProvider({ children }: AuthProviderProps) {
                 active && localStorage.getItem("authToken")
             ) setHasSigned(false);
          }
-    }, [active, error, account])
+    }, [active, error, account, activeSession, errorMessage])
 
     useEffect(() => {
         setTimeout(() => {

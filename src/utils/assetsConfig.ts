@@ -1,7 +1,4 @@
 import { Chain } from "@renproject/chains";
-import { getAssetChainsConfig, CustomSvgIconComponent } from './chainsConfig';
-import { Icon } from "../components/Icons/AssetLogs/Icon";
-
 
 export type AssetIconsConfig = {
     Icon: string | null;

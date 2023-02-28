@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Backdrop } from "../WalletConnectModal/WalletConnectModal";
-import { UilTimes, UilArrowLeft, UilSpinnerAlt } from "@iconscout/react-unicons";
+import { UilTimes, UilSpinnerAlt } from "@iconscout/react-unicons";
 import MetamaskIcon from "../../../public/svgs/metamask-fox.svg";
 import styled from "styled-components";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
-import { get, post } from "../../services/axios";
 import axios from "axios";
 import { useAuth } from "../../context/useWalletAuth";
 import { useWeb3React } from "@web3-react/core";

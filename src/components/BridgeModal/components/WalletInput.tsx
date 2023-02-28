@@ -1,4 +1,4 @@
-import React, { ReactEventHandler, useCallback } from "react";
+import React, { useCallback } from "react";
 import { UilWallet } from "@iconscout/react-unicons";
 import {
   FromContainer,
@@ -6,9 +6,7 @@ import {
   WalletInput,
   MaxOption,
   ForumIcon,
-  ForumImg,
 } from "../../CSS/WalletModalStyles";
-import { MapPin } from "react-feather";
 
 const maxDecimals = 6;
 

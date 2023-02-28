@@ -5,7 +5,7 @@ import { FormWrapper } from "../WalletConnectModal/WalletConnectModal";
 import { TopRowNavigation } from "../WalletConnectModal/WalletConnectModal";
 import { Breakpoints } from "../../constants/Breakpoints";
 import BottomSheetOptions from "../BottomSheet/BottomSheetOptions";
-import { UilSpinner, UilExclamationTriangle } from '@iconscout/react-unicons';
+import { UilExclamationTriangle } from '@iconscout/react-unicons';
 import PrimaryButton from '../PrimaryButton/PrimaryButton';
 
 interface PendingTransactionModalProps {

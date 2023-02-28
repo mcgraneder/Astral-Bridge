@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { StyledContainer } from "../CSS/TradeModalStyles";
 import EthereumLogo from "../../../public/svgs/assets/renETH.svg";
-import { Settings, ChevronDown, ArrowDown } from "react-feather";
+import { Settings, ChevronDown } from "react-feather";
 // import UniswapLogoPink from "../../../public/svgs/";
 // import UniswapLogo from "../../../public/svgs/assets/uniswapPink.svg";
 import { UilAngleDown } from '@iconscout/react-unicons';

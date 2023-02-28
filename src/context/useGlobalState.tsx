@@ -12,14 +12,8 @@ import { Chain, Asset } from "@renproject/chains";
 import API from "../constants/Api";
 import { SetStateAction, Dispatch } from 'react';
 import { chainsBaseConfig, ChainConfig } from '../utils/chainsConfig';
-import { ChainBaseConfig } from '../constants/Addresses';
 import { get } from "../services/axios";
-import { ethers } from 'ethers';
-import { fetchNetworkFeeData, NetReturn } from '../utils/market/getMarketGasData';
-import { useGasPrices } from "../hooks/usGasPrices";
 import { ChainInstanceMap, getDefaultChains } from "../utils/networksConfig";
-import { supportedAssets } from "../utils/assetsConfig";
-import { chainsConfig } from "../utils/chainsConfig";
 import { RenNetwork } from '@renproject/utils';
 
 interface GlobalStateProviderProps {
@@ -60,8 +54,6 @@ export type GP = {
 const GlobalStateContext = createContext({} as GlobalContextType);
 
 function GlobalStateProvider({ children }: GlobalStateProviderProps) {
-    const allAssets = supportedAssets;
-    const allChains = Object.keys(chainsConfig);
     const defaultChains = getDefaultChains(RenNetwork.Testnet);
   const [loading, setLoading] = useState<boolean>(true);  
 

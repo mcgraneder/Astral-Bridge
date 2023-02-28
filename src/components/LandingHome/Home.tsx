@@ -10,6 +10,7 @@ import meshSrc from "../../../public/images/Mesh.png";
 import Image from "next/image";
 import GreenDot from "../Icons/GreenDot";
 import SupportedAssets from "./SupportedAsset";
+import Link from "next/link";
 
 const DARK_MODE_GRADIENT =
   "radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%)";
@@ -56,7 +57,7 @@ const ProtocolBanner = () => {
 
 const Home = () => {
     return (
-      <div className="backdrop-blur-lg text-white text-bold">
+      <div className="text-bold text-white backdrop-blur-lg">
         <div className="my-0 mx-auto mb-8 mt-4 flex items-center justify-center">
           <AssetRotator />
         </div>
@@ -71,14 +72,13 @@ const Home = () => {
             </span>
           </StyledSubTitle>
           <div className="mt-8 mb-2 flex items-center justify-center">
-            <PrimaryButton
-              className={
-                "w-full max-w-[290px] justify-center rounded-2xl bg-blue-500 py-4 text-center"
-              }
-              onClick={() => {}}
+            <Link
+              href={"/about"}
+              passHref
+              className="focus-visible:ring-primary flex w-[290px] items-center justify-center rounded-lg bg-blue-500 py-4 px-5 text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             >
-              Learn More
-            </PrimaryButton>
+              <span>Learn More</span>
+            </Link>
           </div>
         </div>
 

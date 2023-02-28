@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
-import { supportedAssets, WhiteListedLegacyAssets, assetsBaseConfig } from '../../utils/assetsConfig';
+import { supportedAssets, assetsBaseConfig } from '../../utils/assetsConfig';
 import { chainsBaseConfig, EVMChains, LeacyChains } from '../../utils/chainsConfig';
 import { Icon } from "../Icons/AssetLogs/Icon";
 
@@ -68,10 +68,11 @@ const createAvailabilityFilter = (available: any, walletAssetType: string) => (o
 };
 
 const AssetItem = ({ assetType, type }: any) => {
-  const available =
-    assetType === "currency"
+  
+  const available = useMemo(() =>{
+    return assetType === "currency"
       ? supportedAssets
-      : [...EVMChains, ...LeacyChains];
+      : [...EVMChains, ...LeacyChains]}, [assetType])
 
   const LegacyavailabilityFilter = React.useMemo(
     () => createAvailabilityFilter(available, "chain"),

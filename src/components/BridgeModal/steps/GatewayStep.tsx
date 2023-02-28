@@ -5,9 +5,8 @@ import { TopRowNavigation } from "../../WalletConnectModal/WalletConnectModal";
 import { Icon } from "../../Icons/AssetLogs/Icon";
 import { assetsBaseConfig } from "../../../utils/assetsConfig";
 import PrimaryButton from "../../PrimaryButton/PrimaryButton";
-import { Gateway, GatewayTransaction } from "@renproject/ren";
+import { Gateway } from "@renproject/ren";
 import { useGateway } from "../../../context/useGatewayState";
-import ChainTx from "./ChainTransaction";
 
 export const GatewaySection = styled.div`
   padding-bottom: 10px;
@@ -117,7 +116,7 @@ const ConfirmationStep = ({
             <span>Minimum amount: 0.000128 BTC</span>
           </div>
 
-          <div className="my-3 mt-5 flex flex-row items-center justify-center gap-2">
+          {/* <div className="my-3 mt-5 flex flex-row items-center justify-center gap-2">
             <div className="max-w-[82%] rounded-full border-tertiary bg-secondary px-4 py-2">
               <div className="overflow-hidden text-[16px] text-blue-600">
                 {gateway?.gatewayAddress}
@@ -126,7 +125,7 @@ const ConfirmationStep = ({
             <div className="flex items-center justify-center rounded-full border-tertiary bg-secondary px-2 py-2">
               <Copy className="h-6 w-6" />
             </div>
-          </div>
+          </div> */}
           <div className="my-3 flex flex-row items-center justify-center gap-2">
             <div className="max-w-[82%] rounded-full border-tertiary bg-secondary px-4 py-2">
               <div className="flex items-center justify-center gap-2 overflow-hidden text-[16px] text-gray-500">
@@ -144,7 +143,7 @@ const ConfirmationStep = ({
       </GatewaySection>
       <div className="mt-1 mb-5 flex items-center justify-center px-5">
         <PrimaryButton
-          className={`x-50 w-full justify-center rounded-2xl border border-blue-600 bg-blue-500 py-[14px] text-center text-[17px] font-semibold hover:cursor-pointer`}
+          className={`x-50 w-full justify-center rounded-2xl border border-gray-600 bg-gray-500 py-[14px] text-center text-[17px] font-semibold hover:cursor-pointer`}
         >
           Mint
         </PrimaryButton>
@@ -180,7 +179,7 @@ const ConfirmationStep = ({
         </DetailsSection>
       </FeesSection>
 
-      <div className="p-5">
+      {/* <div className="p-5">
         {transactions
           // .filter((confirmingTx: GatewayTransaction) => {
           //   return confirmingTx.in.progress.status === "confirming";
@@ -193,7 +192,7 @@ const ConfirmationStep = ({
                 />
               );
           })}
-      </div>
+      </div> */}
     </div>
   );
 };

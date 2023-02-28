@@ -46,6 +46,6 @@ const useGatewayListener = (
     return () => {
       gateway.eventEmitter.removeAllListeners();
     };
-  }, [gateway, active]);
+  }, [gateway, active, cb]);
 };
 export default useGatewayListener;

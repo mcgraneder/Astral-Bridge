@@ -9,15 +9,9 @@ import {
   NetworkConfig,
   NetworksConfig
 } from "./networksConfig";
-import { SvgIconProps } from "@material-ui/core";
-import { SvgIconComponent } from "@material-ui/icons";
 import { chainsColors } from "./chainColours";
 
 
-export type CustomSvgIconComponent =
-    //@ts-ignore
-  | FunctionComponent<SvgIconProps>
-  | SvgIconComponent;
 
 
 export type ChainIconsConfig = {

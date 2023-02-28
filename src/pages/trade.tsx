@@ -1,90 +1,53 @@
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { NextPage } from "next";
 import { Layout } from "../layouts";
-import AssetListModal from "../components/AssetListModal/AssetListModal";
 import BottomNavBar from "../components/WalletModal/components/BottomNavbar";
 import { useGlobalState } from "../context/useGlobalState";
-import { useWeb3React } from "@web3-react/core";
-import TransactionFlowModals from "../components/TxConfirmationModalFlow/index";
-import { Tab } from "../components/WalletModal/WalletModal";
-import {
-  assetsBaseConfig,
-  WhiteListedLegacyAssets,
-  whiteListedEVMAssets,
-} from "../utils/assetsConfig";
-import BridgeModal from "../components/BridgeModal/bridgeModal";
-import { useGateway } from "../context/useGatewayState";
-import { LeacyChains, EVMChains } from "../utils/chainsConfig";
 import DexModal from "../components/TradeModal/TradeModal";
-type AssetType = "chain" | "currency";
+import UserInfoModal from '../components/UserInformationModal/UserInformationModal';
 
-const defaultButtonState: Tab = {
-  tabName: "Bridge",
-  tabNumber: 0,
-  side: "left",
-};
-
-const defaultBridgeState: Tab = {
-  tabName: "Native Bridge",
-  tabNumber: 0,
-  side: "left",
-};
 const TradePage: NextPage = () => {
-  const [bridgeState, setBridgeState] = useState<Tab>(defaultBridgeState);
-  const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
-  const [text, setText] = useState<string>("");
-  const [walletAssetType, setWalletAssetType] = useState<AssetType>("chain");
-  const [asset, setAsset] = useState<any>(assetsBaseConfig.BTC);
-  const [buttonState, setButtonState] = useState<Tab>(defaultButtonState);
-  const { fromChain, destinationChain, chainType } = useGlobalState();
-  const [gatewayChains, setGatewayChains] = useState<any>(null);
-  const { library, account } = useWeb3React();
+  const [showWarning, setShowWarning] = useState<boolean>(false);
+  const { loading } = useGlobalState();
 
-  // useEffect(() => {
-  //   if (!fromChain || !destinationChain) return;
-  //   initProvider(fromChain.Icon as Chain, destinationChain.Icon as Chain)
-  //     .catch((error: Error) => console.error(error));
-  // }, [fromChain, destinationChain, initProvider]);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const warning = localStorage.getItem("tradePageWarning");
+    console.log("warning", warning);
+    if (warning !== "true") setShowWarning(true);
+  }, []);
+
+  const closeWarning = useCallback(() => {
+    setShowWarning(false);
+    localStorage.setItem("tradePageWarning", "true");
+  }, []);
 
   return (
     <>
-      <AssetListModal
-        setShowTokenModal={setShowTokenModal}
-        visible={showTokenModal}
-        setAsset={setAsset}
-        walletAssetType={walletAssetType}
-        buttonState={defaultButtonState}
-        assetFilter={
-          bridgeState.tabName === "Native Bridge"
-            ? WhiteListedLegacyAssets
-            : whiteListedEVMAssets
-        }
-        chainFilter={
-          bridgeState.tabName !== "Native Bridge"
-            ? chainType === "from"
-              ? LeacyChains
-              : EVMChains
-            : EVMChains
-        }
-      />
-      <TransactionFlowModals
-        text={text}
-        buttonState={defaultButtonState}
-        asset={asset}
-      />
-
+      {!loading && (
+        <UserInfoModal
+          open={showWarning}
+          close={closeWarning}
+          message={
+            <span>
+              This page is not yet functional and I have only scaffolded out some basic CSS
+              as a placeholder for ppl who visit this demo app
+              <br />
+              <br />
+              I am currently working on the cross chain DEX contracts which will alow users to trade their
+              bridged sythetic Ren assets amoung AMMs deployed all all of the chains supported by this app
+              
+            </span>
+          }
+        />
+      )}
       <Layout>
-        <DexModal/>
+        <DexModal />
         <BottomNavBar />
       </Layout>
     </>
   );
 };
 
-// export const getStaticProps = async ({ locale }: any) => ({
-//   props: {
-//     ...(await serverSideTranslations(locale, ["common", "errors"])),
-//   },
-// });
 
 export default TradePage;
