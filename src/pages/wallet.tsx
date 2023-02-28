@@ -34,22 +34,21 @@ const WalletPage: NextPage = () => {
   const assetFilter = [...whiteListedEVMAssets, ...WhiteListedLegacyAssets];
   return (
     <>
-      <AssetListModal
-        setShowTokenModal={setShowTokenModal}
-        visible={showTokenModal}
-        setAsset={setAsset}
-        walletAssetType={walletAssetType}
-        buttonState={buttonState}
-        assetFilter={assetFilter}
-        chainFilter={chainFilter}
-      />
-      <TransactionFlowModals
-        text={text}
-        buttonState={buttonState}
-        asset={asset}
-      />
-
       <Layout>
+        <AssetListModal
+          setShowTokenModal={setShowTokenModal}
+          visible={showTokenModal}
+          setAsset={setAsset}
+          walletAssetType={walletAssetType}
+          buttonState={buttonState}
+          assetFilter={assetFilter}
+          chainFilter={chainFilter}
+        />
+        <TransactionFlowModals
+          text={text}
+          buttonState={buttonState}
+          asset={asset}
+        />
         <WalletModal
           setShowTokenModal={setShowTokenModal}
           setWalletAssetType={setWalletAssetType}

@@ -41,6 +41,7 @@ type GlobalContextType = {
   chainType: string;
   setChainType: Dispatch<SetStateAction<string>>;
   defaultChains: ChainInstanceMap;
+  loading: boolean
 };
 
 export type MulticallReturn = {
@@ -62,6 +63,8 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     const allAssets = supportedAssets;
     const allChains = Object.keys(chainsConfig);
     const defaultChains = getDefaultChains(RenNetwork.Testnet);
+  const [loading, setLoading] = useState<boolean>(true);  
+
   const [fetchedStoredChain, setFetchStoredChain] = useState<boolean>(false);
   const [pendingTransaction, setPendingTransaction] = useState<boolean>(false);
   const [fetchingBalances, setFetchingBalances] = useState<boolean>(false);
@@ -115,6 +118,14 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     setTimeout(() =>  setDestinationChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!]), 2000)
   }, [chainId])
 
+    useEffect(() => {
+      const interval: NodeJS.Timeout = setTimeout(
+        () => setLoading(false),
+        3800
+      );
+      return () => clearTimeout(interval);
+    }, []);
+
 
     const ProvRet = useMemo(
       () => ({
@@ -129,7 +140,8 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
         setDestinationChain,
         chainType,
         setChainType,
-        defaultChains
+        defaultChains,
+        loading
       }),
       [
         memoizedFetchBalances,
@@ -143,7 +155,8 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
         setDestinationChain,
         chainType,
         setChainType,
-        defaultChains
+        defaultChains,
+        loading
       ]
     );
   return (

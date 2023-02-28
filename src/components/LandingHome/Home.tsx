@@ -57,12 +57,7 @@ const ProtocolBanner = () => {
 const Home = () => {
     return (
       <div className="backdrop-blur-lg text-white text-bold">
-        <StyledSubTitle size={20}>
-          <span className="text-white text-[25px]">
-            Welcome to Astral Bridge
-          </span>
-        </StyledSubTitle>
-        <div className="my-0 mx-auto mb-8 mt-20 flex items-center justify-center">
+        <div className="my-0 mx-auto mb-8 mt-4 flex items-center justify-center">
           <AssetRotator />
         </div>
         <div>
@@ -78,17 +73,16 @@ const Home = () => {
           <div className="mt-8 mb-2 flex items-center justify-center">
             <PrimaryButton
               className={
-                "w-full max-w-[350px] justify-center rounded-2xl bg-gradient-to-r from-blue-500 to-blue-300 py-4 text-center"
+                "w-full max-w-[290px] justify-center rounded-2xl bg-blue-500 py-4 text-center"
               }
               onClick={() => {}}
             >
-              Connect Wallet
+              Learn More
             </PrimaryButton>
           </div>
         </div>
-        <div className="my-6 flex items-center justify-center">Learn More</div>
 
-        <div className="relative my-20 flex flex-col gap-6">
+        <div className="relative mb-8 mt-12 flex flex-col gap-6">
           {/* <ProtocolBanner/> */}
           {/* <div className="bg-darkBackground w-[1200px] h-full absolute"/> */}
           <SupportedAssets type={"LEGACY"} />
