@@ -40,6 +40,7 @@ const Dropdown = ({
 }: IDropdown) => {
   // console.log("iconnnnnn", Icon);
   const on = () => {
+    
     setType(dropDownType);
     setShowTokenModal(true);
     setChainType()

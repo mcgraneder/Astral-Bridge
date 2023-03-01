@@ -4,7 +4,6 @@ import { Layout } from "../layouts";
 import AssetListModal from "../components/AssetListModal/AssetListModal";
 import BottomNavBar from "../components/WalletModal/components/BottomNavbar";
 import { useGlobalState } from "../context/useGlobalState";
-import TransactionFlowModals from "../components/TxConfirmationModalFlow/index";
 import { Tab } from "../components/WalletModal/WalletModal";
 import { WhiteListedLegacyAssets, whiteListedEVMAssets } from '../utils/assetsConfig';
 import BridgeModal from '../components/BridgeModal/bridgeModal';
@@ -73,7 +72,7 @@ const BridgePage: NextPage = () => {
           }
         />
       )}
-      {loading && (
+      {!loading && (
         <AssetListModal
           setShowTokenModal={setShowTokenModal}
           visible={showTokenModal}
@@ -88,13 +87,6 @@ const BridgePage: NextPage = () => {
           chainFilter={
             bridgeState.tabName !== "Native Bridge" ? EVMChains : LeacyChains
           }
-        />
-      )}
-      {loading && (
-        <TransactionFlowModals
-          text={text}
-          buttonState={defaultButtonState}
-          asset={asset}
         />
       )}
 
