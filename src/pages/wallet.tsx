@@ -38,7 +38,6 @@ const WalletPage: NextPage = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const warning = localStorage.getItem("walletPageWarning");
-    console.log("warning", warning);
     if (warning !== "true") setShowWarning(true);
   }, []);
 
@@ -61,9 +60,9 @@ const WalletPage: NextPage = () => {
               used to trade in this app.
               <br />
               <br />
-              I am going to make a faucet so users can get ren synth tokens as I have 
-              quite a few. For now i had lifted button restrictions so users can see a typical
-              tx flow
+              Therefore to show off the apps functionality I have left some Ren
+              BTC, DAI and USDT in my bridge contract which you can use to use
+              and test the deposit and withdrawal functionality on this page.
               <br />
               <br />
               Sorry for the inconvienience as I am paitentily waiting for the
@@ -88,6 +87,7 @@ const WalletPage: NextPage = () => {
           text={text}
           buttonState={buttonState}
           asset={asset}
+          setText={setText}
         />
       )}
       <Layout>

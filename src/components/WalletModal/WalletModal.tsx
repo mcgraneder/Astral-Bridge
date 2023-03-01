@@ -156,11 +156,9 @@ const WalletModal = ({
 
   const needsToSwitchChain =
     ChainIdToRenChain[chainId!] === destinationChain.fullName;
-  // const error = !needsToSwitchChain
-  //   ? false
-  //   : text === "" || Number(text) == 0 || !isSufficentBalance;
-  const error = false
-  // console.log(error);
+  const error = !needsToSwitchChain
+    ? false
+    : text === "" || Number(text) == 0 || !isSufficentBalance;
 
   useEffect(
     () => setText(""),

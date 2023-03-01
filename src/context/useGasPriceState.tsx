@@ -112,8 +112,6 @@ function GasStateProvider({ children }: GasStateProviderProps) {
       rapid: gasData.maxFeePerGas.multipliedBy(1),
     };
 
-    console.log(Number(gasData.lastBaseFeePerGas));
-
     return { gasData: gasData, fees: fees };
   };
 

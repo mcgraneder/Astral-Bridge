@@ -188,7 +188,6 @@ function GatewayProvider({ children }: GatewayProviderProps) {
     initProvider()
       .then((renJs) => {
         setRenJs(renJs);
-        console.log(renJs);
       })
       .catch((error) => {
         console.error("gateway renJs error", error);

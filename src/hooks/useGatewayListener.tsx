@@ -14,7 +14,7 @@ const useGatewayListener = (
     gateway.on("transaction", (tx) => {
       (async () => {
         const renVMTxId = tx.hash;
-        console.log(tx)
+
         // only check for already processed tx if asset is not gETH
         if (gateway.params.asset !== "gETH") {
           let queryRenTxResponse = null;
@@ -27,13 +27,13 @@ const useGatewayListener = (
           }
 
           const { status, data } = queryRenTxResponse;
-          console.log(status)
+         
           if (status !== 404 && data.result.txStatus !== "ready") return;
         }
 
         await tx.in.wait(0);
         const exported = tx.in.progress.transaction;
-        console.log(exported)
+      
 
         cb({
           exportedTx: exported,

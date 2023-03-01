@@ -90,9 +90,10 @@ interface TxFlowProps {
   text: string;
   buttonState: Tab;
   asset: any;
+  setText: any;
 }
 
-function TransactionFlowModals({ text, buttonState, asset }: TxFlowProps) {
+function TransactionFlowModals({ text, buttonState, asset, setText }: TxFlowProps) {
   const {
     pending,
     togglePendingModal,
@@ -115,6 +116,7 @@ function TransactionFlowModals({ text, buttonState, asset }: TxFlowProps) {
             asset={asset}
             transactionType={buttonState.tabName}
             buttonState={buttonState}
+            setText={setText}
           />
         )}
         {pending && (

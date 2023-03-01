@@ -39,6 +39,7 @@ interface IAssetModal {
   asset: any;
   transactionType: string;
   buttonState: Tab;
+  setText: any;
 }
 
 interface IAssetModalInner {
@@ -158,6 +159,7 @@ const TxConfirmationModal = ({
   asset,
   transactionType,
   buttonState,
+  setText
 }: IAssetModal) => {
   const { account, library } = useWeb3React();
   const { executeTransaction: exec } = useEcecuteTransaction();
@@ -214,18 +216,17 @@ const TxConfirmationModal = ({
       RenBridgeABI,
       await library.getSigner()
     );
-    // const gasEstimate =
-    //   buttonState.tabName === "Deposit"
-    //     ? await bridgeContract.estimateGas.transferFrom?.(
-    //         "0",
-    //         tokenAddress!
-    //       )
-    //     : await bridgeContract.estimateGas.transfer?.(
-    //         account!,
-    //         "0",
-    //         tokenAddress!
-    //       );
-    const gasEstimate = ethers.BigNumber.from(118845);
+    const gasEstimate =
+      buttonState.tabName === "Deposit"
+        ? await bridgeContract.estimateGas.transferFrom?.(
+            "0",
+            tokenAddress!
+          )
+        : await bridgeContract.estimateGas.transfer?.(
+            account!,
+            "0",
+            tokenAddress!
+          );
 
     return gasEstimate as ethers.BigNumber;
   }, [destinationChain, library, account, buttonState, asset]);
@@ -294,6 +295,7 @@ const TxConfirmationModal = ({
           bridgeContract?.transfer
         );
       }
+      setText("")
     },
     [account, exec, init, toggleConfirmationModal, customGasPrice, fromChain]
   );

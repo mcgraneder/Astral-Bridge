@@ -88,6 +88,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
       setFetchingBalances(false);
       throw new Error("Multicall Failed");
     }
+
     setAssetBalances(tokensResponse.result.multicall);
     setTimeout(() => setFetchingBalances(false), 500);
   }, [account, chainId, setFetchingBalances, destinationChain]);

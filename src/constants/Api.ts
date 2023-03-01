@@ -8,7 +8,7 @@ if (typeof window === "undefined") {
 
 const SigVerifierBaseUrl = isProduction()
   ? "http://localhost:8000/api/auth"
-  : "http://localhost:8000/api/auth"; // "https://astral-sol.onrender.com";
+  : "http://localhost:8000/api/auth"; // "http://loclahost:4000";
 
 
   const OwlOracleBaseUrl = "https://www.etherchain.org/api";

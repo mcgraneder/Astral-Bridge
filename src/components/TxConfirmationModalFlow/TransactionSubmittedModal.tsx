@@ -29,7 +29,7 @@ const TxSubmittedInner = ({
       <TopRowNavigation
         isRightDisplay={true}
         isLeftDisplay={true}
-        title={"Error"}
+        title={"Success"}
         close={close}
       />
       <div className="my-4 flex flex-col items-center justify-center  px-2">
