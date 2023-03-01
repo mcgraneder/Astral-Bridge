@@ -148,7 +148,7 @@ const WalletModal = ({
   const { approve } = useApproval();
   const {
     setDestinationChain,
-    pendingTransaction,
+    setPendingTransaction,
     destinationChain,
     assetBalances,
     setChainType,
@@ -164,7 +164,7 @@ const WalletModal = ({
 
   useEffect(
     () => setText(""),
-    [buttonState, pendingTransaction, destinationChain, setText]
+    [buttonState, destinationChain, setText]
   );
 
   const setChainT = useCallback(
@@ -230,6 +230,7 @@ const WalletModal = ({
     } else if (!isAssetApproved) {
       approve(tokenAddress, text, bridgeAddress!);
       setIsAssetApproved(true);
+      setPendingTransaction(false)
     } else toggleConfirmationModal();
   }, [
     approve,
@@ -241,6 +242,7 @@ const WalletModal = ({
     text,
     toggleConfirmationModal,
     setDestinationChain,
+    setPendingTransaction
   ]);
 
   return (
