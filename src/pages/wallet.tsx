@@ -54,19 +54,16 @@ const WalletPage: NextPage = () => {
           close={closeWarning}
           message={
             <span>
-              The core Ren Bridge protocol which i use in this app is currently
-              under maintenence has been halted for the time being. Therefore
-              new users will not be able to get the syntethic ren ERC20 assets
+              As the Ren protocol is currently
+              under maintenence and has been halted,
+              new users will not be able to get the bridged ren ERC20 synth assets
               used to trade in this app.
               <br />
               <br />
               Therefore to show off the apps functionality I have left some Ren
               BTC, DAI and USDT in my bridge contract which you can use to use
               and test the deposit and withdrawal functionality on this page.
-              <br />
-              <br />
-              Sorry for the inconvienience as I am paitentily waiting for the
-              Ren protocol to go live again
+             
             </span>
           }
         />

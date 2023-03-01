@@ -55,15 +55,9 @@ const BridgePage: NextPage = () => {
           message={
             <span>
               This page is used to bridge native assets between blockchains in
-              return to a 1:1 Synetheic Ren asset Peg. Since the Ren protocol is
+              return for Ren assets so that they can be withdrawn from the wallet page. Since the Ren protocol is
               under maintenence I have blocked the features and briging services
               hosted on this page.
-              <br />
-              <br />
-              Navigate to the wallet page if you want to try test out how users
-              can withdraw bridged tokens to their wallet and deposit bridged
-              tokens from thir wallet to my contract in order to burn the ren
-              syth assets for their orginal tokens
               <br />
               <br />
               Again Sorry for the inconvienience as I am paitentily waiting for
