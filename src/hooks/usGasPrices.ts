@@ -57,7 +57,7 @@ export const useGasPrices = (): IUseGasPrice => {
     
     try {
       gasPriceData = await fetchNetworkFeeData(chainId!);
-      console.log("heyyyyyyyyyyyyyyyyyyyyy", gasPriceData);
+     
       setGasPrice(gasPriceData);
     } catch (error: any) {
       console.error(error);

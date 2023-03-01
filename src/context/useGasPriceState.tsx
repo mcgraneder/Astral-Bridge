@@ -97,9 +97,6 @@ function GasStateProvider({ children }: GasStateProviderProps) {
     undefined
   );
 
-  useEffect(() => {
-    console.log(customGasPrice);
-  }, [customGasPrice]);
 
   const fetchNetworkFeeData = async (
     chainId: number

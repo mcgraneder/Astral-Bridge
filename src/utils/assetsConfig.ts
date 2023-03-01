@@ -430,7 +430,6 @@ export const assetsConfig = Object.fromEntries(
   ])
 ) as Record<Asset, AssetConfig>;
 
-console.log("assetsConfig", assetsConfig);
 
 export const getAssetConfig = (asset: Asset | string) => {
   const config = assetsConfig[asset as Asset];
@@ -547,4 +546,3 @@ export const WhiteListedLegacyAssets = [
   Asset.ZEC,
 ];
 
-console.log("supportedAssets", supportedAssets);

@@ -11,7 +11,7 @@ import {
 } from "@renproject/utils";
 
 export const isTxSubmittable = (tx: TxSubmitter | TxWaiter | undefined) => {
-    console.log(tx?.progress.status)
+ 
   return tx && tx.submit && tx.progress.status === ChainTransactionStatus.Ready;
 };
 

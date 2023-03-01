@@ -117,7 +117,7 @@ function GatewayProvider({ children }: GatewayProviderProps) {
         if (!submitMintResponse) {
          console.log("error")
         }
-        console.log(submitMintResponse)
+      
 
        
           pushPendingTx({
@@ -232,8 +232,7 @@ function GatewayProvider({ children }: GatewayProviderProps) {
           },
           allChains as Partial<ChainInstanceMap>
         );
-        console.log(newGateway);
-        console.info("gateway created", newGateway);
+     
         newGateway.on("transaction", addTransaction);
         // console.info("gateway transaction listener added");
         // (window as any).gateway = newGateway;

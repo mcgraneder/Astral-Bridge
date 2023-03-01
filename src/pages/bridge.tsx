@@ -38,7 +38,7 @@ const BridgePage: NextPage = () => {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const warning = localStorage.getItem("bridgePageWarning");
-    console.log("warning", warning);
+  
     if (warning !== "true") setShowWarning(true);
   }, []);
 

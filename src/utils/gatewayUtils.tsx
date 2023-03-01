@@ -37,7 +37,7 @@ export const createGateway = async (
   chains: PartialChainInstanceMap,
   partialTx?: PartialChainTransaction | null
 ): Promise<Gateway> => {
-  console.log("gatewayyyyyyyyy paramsssssss", chains[gatewayParams.from])
+
   if (!gatewayParams.from || !gatewayParams.to) {
     throw new Error(`Missing gateway field.`);
   }

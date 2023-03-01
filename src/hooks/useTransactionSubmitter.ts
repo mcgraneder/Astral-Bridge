@@ -77,7 +77,7 @@ export const useChainTransactionSubmitter = ({
           setSubmittingDone(true);
           await wait();
           setDone(true);
-          console.log("submiteddddddddddddddddd")
+         
         } catch (error: any) {
           console.error(`tx: submitting error`, error);
           setErrorSubmitting(error);
@@ -98,7 +98,7 @@ export const useChainTransactionSubmitter = ({
   useEffect(() => {
    
     if (Boolean(autoSubmit)) {
-         console.log(";llllllllllllllllllllllllllllllllllllll");
+      
       console.info(`tx: automatic submit`);
       handleSubmit().catch((error) => {
         console.info(`tx: automatic submit failed`);

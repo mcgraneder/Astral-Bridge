@@ -153,8 +153,6 @@ const BridgeModal = ({
   } = useGlobalState();
 
   const toggleGatewayStep = useCallback((w: any) => setGatewayStep(!w), []);
-
-  console.log(assetBalances)
   const needsToSwitchChain =
     ChainIdToRenChain[chainId!] === destinationChain.fullName;
     

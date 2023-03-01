@@ -41,12 +41,12 @@ export const useBalance = (chain: any, asset: any) => {
         false
       );
       const decimals: number = asset.decimals;
-      console.log(tokenContract);
+    
       if (tokenContract !== null) {
         tokenContract.balanceOf(address).then((balance: ethers.BigNumber) => {
           const formattedBalance = ethers.utils.formatUnits(balance, decimals);
           setBalance(formattedBalance);
-          console.log(formattedBalance);
+       
         });
       }
     },

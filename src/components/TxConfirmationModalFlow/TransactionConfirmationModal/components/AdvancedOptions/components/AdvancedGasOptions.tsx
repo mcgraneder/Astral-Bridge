@@ -114,7 +114,7 @@ const AdvancedOptions = ({
       const networkFee = new BigNumber(gasLimit!).multipliedBy(
         Number(baseFee!) * Number(priorityFee)
       );
-      console.log(networkFee.toString());
+    
       updateAdvancedGasOverride(
         {
           maxPriorityFee: new BigNumber(e.target.value).shiftedBy(9),
