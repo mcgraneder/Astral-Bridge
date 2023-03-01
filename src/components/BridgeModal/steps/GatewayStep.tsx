@@ -6,7 +6,6 @@ import { Icon } from "../../Icons/AssetLogs/Icon";
 import { assetsBaseConfig } from "../../../utils/assetsConfig";
 import PrimaryButton from "../../PrimaryButton/PrimaryButton";
 import { Gateway } from "@renproject/ren";
-import { useGateway } from "../../../context/useGatewayState";
 
 export const GatewaySection = styled.div`
   padding-bottom: 10px;
@@ -95,7 +94,6 @@ const ConfirmationStep = ({
   gateway: Gateway<any, any> | null;
 }) => {
   const [asset, setAsset] = useState(assetsBaseConfig.BTC);
-  const { transactions, memoizedOnTxReceivedCb } = useGateway();
   return (
     <div className="px-[18px] py-[12px]">
       <TopRowNavigation

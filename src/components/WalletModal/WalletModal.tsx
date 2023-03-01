@@ -19,8 +19,8 @@ import { BridgeDeployments } from "../../constants/deployments";
 import { chainAdresses } from "../../constants/Addresses";
 import BigNumber from "bignumber.js";
 import { chainsBaseConfig } from "../../utils/chainsConfig";
-import { useGasPriceState } from "../../context/useGasPriceState";
 import FeeData from "./components/FeeData";
+import useMarketGasData from '../../hooks/useMarketGasData';
 
 export type Tab = {
   tabName: string;
@@ -144,7 +144,7 @@ const WalletModal = ({
   const { switchNetwork } = useAuth();
   const { chainId, account } = useWeb3React();
   const { toggleConfirmationModal } = useTransactionFlow();
-  const { defaultGasPrice } = useGasPriceState();
+  const { defaultGasPrice } = useMarketGasData();
   const { approve } = useApproval();
   const {
     setDestinationChain,

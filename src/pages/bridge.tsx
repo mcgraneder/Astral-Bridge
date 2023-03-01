@@ -7,9 +7,9 @@ import { useGlobalState } from "../context/useGlobalState";
 import { Tab } from "../components/WalletModal/WalletModal";
 import { WhiteListedLegacyAssets, whiteListedEVMAssets } from '../utils/assetsConfig';
 import BridgeModal from '../components/BridgeModal/bridgeModal';
-import { useGateway } from "../context/useGatewayState";
 import { LeacyChains, EVMChains } from '../utils/chainsConfig';
 import UserInfoModal from "../components/UserInformationModal/UserInformationModal";
+import { useGatewayProvider } from "../hooks/useGatewayProvider";
 
 type AssetType = "chain" | "currency";
 
@@ -30,7 +30,7 @@ const BridgePage: NextPage = () => {
   const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [walletAssetType, setWalletAssetType] = useState<AssetType>("chain");
-  const { asset, setAsset, gateway } = useGateway();
+  const { asset, setAsset, gateway } = useGatewayProvider();
   const [buttonState, setButtonState] = useState<Tab>(defaultButtonState);
   const {loading } = useGlobalState();
 

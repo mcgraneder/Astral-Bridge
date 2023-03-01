@@ -1,7 +1,5 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useState,
 } from "react";
@@ -52,9 +50,6 @@ export type customGP = (Partial<GP> & Partial<AdvancedGasOverride>) & {
 
 type GasTypeConvert = Partial<NetworkFeeReturnType> & Partial<Fees>;
 
-interface GasStateProviderProps {
-  children: React.ReactNode;
-}
 
 type GasContextType = {
   networkGasData: gasPriceData | undefined;
@@ -64,8 +59,6 @@ type GasContextType = {
   customGasPrice: customGP | undefined;
   setCustomtGasPrice: Dispatch<SetStateAction<customGP | undefined>>;
 };
-
-const GasStateContext = createContext({} as GasContextType);
 
 const convertBNType = (object: { [x: string]: any }): GasTypeConvert => {
   const keys = Object.keys(object);
@@ -82,10 +75,10 @@ const convertBNType = (object: { [x: string]: any }): GasTypeConvert => {
 };
 
 export const shiftBN = (bigNumber: BigNumber, decimals: number): string => {
-    return bigNumber.shiftedBy(decimals).toString()
-}
+  return bigNumber.shiftedBy(decimals).toString();
+};
 
-function GasStateProvider({ children }: GasStateProviderProps) {
+function useMarketGasData(): GasContextType {
   const { chainId } = useWeb3React();
   const [networkGasData, setNetworkGasData] = useState<
     gasPriceData | undefined
@@ -97,13 +90,14 @@ function GasStateProvider({ children }: GasStateProviderProps) {
     undefined
   );
 
-
   const fetchNetworkFeeData = async (
     chainId: number
   ): Promise<gasPriceData> => {
     const chainProviderUrl = CHAINS[chainId]?.rpcUrls[0];
     const provider = new ethers.providers.JsonRpcProvider(chainProviderUrl);
-    const gasData = convertBNType(await provider.getFeeData()) as NetworkFeeReturnType;
+    const gasData = convertBNType(
+      await provider.getFeeData()
+    ) as NetworkFeeReturnType;
 
     const fees: Fees = {
       slow: gasData.lastBaseFeePerGas.multipliedBy(1),
@@ -136,24 +130,14 @@ function GasStateProvider({ children }: GasStateProviderProps) {
     fetchMarketDataGasPrices();
   }, [fetchMarketDataGasPrices]);
 
-  return (
-    <GasStateContext.Provider
-      value={{
+  return{
         networkGasData,
         fetchMarketDataGasPrices,
         defaultGasPrice,
         setDefaultGasPrice,
         customGasPrice,
         setCustomtGasPrice,
-      }}
-    >
-      {children}
-    </GasStateContext.Provider>
-  );
+      }
 }
 
-const useGasPriceState = () => {
-  return useContext(GasStateContext);
-};
-
-export { GasStateProvider, useGasPriceState };
+export default useMarketGasData

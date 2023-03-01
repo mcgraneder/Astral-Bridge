@@ -4,7 +4,7 @@ import { Icon } from "../../Icons/AssetLogs/Icon";
 import { toFixed } from "../../../utils/misc";
 import { CHAINS } from "../../../connection/chains";
 import { useWeb3React } from "@web3-react/core";
-import { customGP, shiftBN } from '../../../context/useGasPriceState';
+import { customGP, shiftBN } from '../../../hooks/useMarketGasData';
 
 interface IFeeData {
   text: string;

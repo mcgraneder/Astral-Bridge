@@ -4,16 +4,12 @@ import Navbar from "../../components/Navbar/Navbar";
 import WalletConnect from "../../components/WalletConnectModal/WalletConnectModal";
 import { useAuth } from "../../context/useWalletAuth";
 import BottomNavBar from "../../components/Navbar/BottomNavBar";
-import { useViewport } from "../../hooks/useViewport";
 import AccountVerificationModal from "../../components/AccountVerificationModal/AccountVerificationModal";
 import styled from "styled-components";
-import { Z_INDEX } from "../../components/theme/zIndex";
 import AccountDetailsModal from "../../components/AccountDetailsModal/AccountDetailsModal";
-import { ChainColor, chainsColors } from "../../utils/chainColours";
+import { chainsColors } from "../../utils/chainColours";
 import { useWeb3React } from "@web3-react/core";
 import { ChainIdToRenChain } from "../../connection/chains";
-import Footer from "../../components/Footer/Footer";
-import NetworkWarning from "../../components/NetworkWarning/NetworkWarning";
 import AppLoader from "./AppLoader";
 import { useGlobalState } from "../../context/useGlobalState";
 

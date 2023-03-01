@@ -5,7 +5,7 @@ import { TopRowNavigation } from "./WalletConnectModal";
 import { Breakpoints } from "../../constants/Breakpoints";
 import BottomSheetOptions from "../BottomSheet/BottomSheetOptions";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
-import { ERROR_MESSSAGES } from '../../context/useWalletAuth';
+import { ERROR_MESSSAGES } from "../../context/useWalletAuth";
 import { UilExclamationTriangle } from "@iconscout/react-unicons";
 import { AbstractConnector } from "@web3-react/abstract-connector";
 

@@ -8,8 +8,6 @@ import { ToastContainerProps, ToastContainer } from "react-toastify";
 import { GlobalStateProvider } from "../context/useGlobalState";
 import NotificationProvider from "../context/useNotificationState";
 import { TransactionFlowStateProvider } from "../context/useTransactionFlowState";
-import { GasStateProvider } from "../context/useGasPriceState";
-import { GatewayProvider } from "../context/useGatewayState";
 
 const toastConfig = {
   autoClose: 6000,
@@ -30,14 +28,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       <AuthProvider>
         <NotificationProvider>
           <GlobalStateProvider>
-            <GatewayProvider>
-              <GasStateProvider>
-                <TransactionFlowStateProvider>
-                  <ToastContainer {...toastConfig} />
-                  <Component {...pageProps} />
-                </TransactionFlowStateProvider>
-              </GasStateProvider>
-            </GatewayProvider>
+            <TransactionFlowStateProvider>
+              <ToastContainer {...toastConfig} />
+              <Component {...pageProps} />
+            </TransactionFlowStateProvider>
           </GlobalStateProvider>
         </NotificationProvider>
       </AuthProvider>

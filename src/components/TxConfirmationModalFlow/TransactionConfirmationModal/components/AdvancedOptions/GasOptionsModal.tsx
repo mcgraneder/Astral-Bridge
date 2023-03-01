@@ -7,14 +7,15 @@ import styled from "styled-components";
 import BigNumber from "bignumber.js";
 import GasLimitInput from "./components/GasLimitInput";
 import {
-  useGasPriceState,
   customGP,
   GP,
   AdvancedGasOverride,
-} from "../../../../../context/useGasPriceState";
+  gasPriceData,
+} from "../../../../../hooks/useMarketGasData";
 import BasicOptions from "./components/BasicGasOptions";
 import ToggleButtonContainer from "./components/ToggleButton";
 import AdvancedOptions from "./components/AdvancedGasOptions";
+import useMarketGasData from '../../../../../hooks/useMarketGasData';
 
 const TABS: Tab[] = [
   {
@@ -70,6 +71,10 @@ interface IAssetModal {
   advancedGasOverride: customGP;
   minGasLimit: string;
   showTopRow: boolean
+   setCustomtGasPrice: React.Dispatch<
+    React.SetStateAction<customGP | undefined>>;
+  fetchMarketDataGasPrices: () => Promise<void>;
+  networkGasData: gasPriceData | undefined
 }
 
 const GasOptionsModal = ({
@@ -78,10 +83,11 @@ const GasOptionsModal = ({
   updateGasOverride,
   advancedGasOverride,
   minGasLimit,
-  showTopRow
+  showTopRow,
+  setCustomtGasPrice,
+  fetchMarketDataGasPrices,
+  networkGasData
 }: IAssetModal) => {
-  const { fetchMarketDataGasPrices, networkGasData, setCustomtGasPrice } =
-    useGasPriceState();
 
   const [buttonError, setButtonError] = useState<boolean>(false);  
   const [activeButton, setActiveButton] = useState<Tab>({

@@ -5,9 +5,9 @@ import {
   assetsBaseConfig,
   AssetBaseConfig,
 } from "../utils/assetsConfig";
-import { chainsConfig, isEthereumBaseChain } from '../utils/chainsConfig';
+import { chainsConfig, isEthereumBaseChain } from "../utils/chainsConfig";
 import { ChainInstanceMap } from "../utils/networksConfig";
-import { getDefaultChains } from '../bridgeGateway/chainUtils';
+import { getDefaultChains } from "../bridgeGateway/chainUtils";
 import { RenNetwork } from "@renproject/utils";
 import { useWeb3React } from "@web3-react/core";
 import RenJS from "@renproject/ren";
@@ -19,16 +19,9 @@ import {
   Dispatch,
   SetStateAction,
   useContext,
-  useRef
 } from "react";
-import { useGlobalState } from "./useGlobalState";
+import { useGlobalState } from "../context/useGlobalState";
 import { createGateway } from "../utils/gatewayUtils";
-import { get, post } from "../services/axios";
-import API from "../constants/Api";
-
-interface GatewayProviderProps {
-  children: React.ReactNode;
-}
 
 type GatewayContextType = {
   gateway: Gateway | null;
@@ -53,15 +46,13 @@ type GatewayContextType = {
   >;
 };
 
-const GatewayContext = createContext({} as GatewayContextType);
-
 export enum GatewayIOType {
   lockAndMint = "lockAndMint",
   burnAndMint = "burnAndMint",
   burnAndRelease = "burnAndRelease",
 }
 
-function GatewayProvider({ children }: GatewayProviderProps) {
+function useGatewayProvider(): GatewayContextType {
   const allAssets = supportedAssets;
   const allChains = Object.keys(chainsConfig);
   const defaultChains = getDefaultChains(RenNetwork.Testnet);
@@ -176,9 +167,7 @@ function GatewayProvider({ children }: GatewayProviderProps) {
     addTransaction,
   ]);
 
-  return (
-    <GatewayContext.Provider
-      value={{
+  return {
         setGateway,
         allAssets,
         allChains,
@@ -191,15 +180,7 @@ function GatewayProvider({ children }: GatewayProviderProps) {
         setListenGatewayTx,
         transactions,
         setTransactions,
-      }}
-    >
-      {children}
-    </GatewayContext.Provider>
-  );
+      }
 }
 
-const useGateway = () => {
-  return useContext(GatewayContext);
-};
-
-export { GatewayProvider, useGateway };
+export { useGatewayProvider };

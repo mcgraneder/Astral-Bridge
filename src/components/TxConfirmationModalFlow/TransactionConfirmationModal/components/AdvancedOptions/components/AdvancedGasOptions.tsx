@@ -8,20 +8,11 @@ import {
   customGP,
   GP,
   shiftBN,
-} from "../../../../../../context/useGasPriceState";
-
-type ADError = {
-  maxFeeError: boolean;
-  priorityFeeError: boolean;
-};
+} from "../../../../../../hooks/useMarketGasData";
 
 type Message = {
   title: string;
   message: string;
-};
-type ADErrorMessage = {
-  maxFeeError: Message;
-  priorityFeeError: Message;
 };
 
 interface IAdvancedOptions {

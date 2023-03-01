@@ -15,6 +15,7 @@ import {
 import { EVMChains, LeacyChains } from "../utils/chainsConfig";
 import UserInfoModal from "../components/UserInformationModal/UserInformationModal";
 import { formatHighValues } from '../utils/misc';
+import useMarketGasData from "../hooks/useMarketGasData";
 
 type AssetType = "chain" | "currency";
 
@@ -31,6 +32,13 @@ const WalletPage: NextPage = () => {
   });
 
   const { loading } = useGlobalState();
+  const {
+    defaultGasPrice,
+    customGasPrice,
+    setCustomtGasPrice,
+    networkGasData,
+    fetchMarketDataGasPrices,
+  } = useMarketGasData();
 
   const chainFilter = [...LeacyChains, ...EVMChains];
   const assetFilter = [...whiteListedEVMAssets, ...WhiteListedLegacyAssets];
@@ -54,16 +62,14 @@ const WalletPage: NextPage = () => {
           close={closeWarning}
           message={
             <span>
-              As the Ren protocol is currently
-              under maintenence and has been halted,
-              new users will not be able to get the bridged ren ERC20 synth assets
-              used to trade in this app.
+              As the Ren protocol is currently under maintenence and has been
+              halted, new users will not be able to get the bridged ren ERC20
+              synth assets used to trade in this app.
               <br />
               <br />
               Therefore to show off the apps functionality I have left some Ren
               BTC, DAI and USDT in my bridge contract which you can use to use
               and test the deposit and withdrawal functionality on this page.
-             
             </span>
           }
         />
@@ -85,6 +91,11 @@ const WalletPage: NextPage = () => {
           buttonState={buttonState}
           asset={asset}
           setText={setText}
+          defaultGasPrice={defaultGasPrice}
+          customGasPrice={customGasPrice}
+          setCustomtGasPrice={setCustomtGasPrice}
+          networkGasData={networkGasData}
+          fetchMarketDataGasPrices={fetchMarketDataGasPrices}
         />
       )}
       <Layout>

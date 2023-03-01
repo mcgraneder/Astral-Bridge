@@ -8,7 +8,6 @@ import { useWeb3React } from "@web3-react/core";
 import { ChainIdToRenChain } from "../../connection/chains";
 import { useGlobalState } from "../../context/useGlobalState";
 import BigNumber from "bignumber.js";
-import { useGasPriceState } from "../../context/useGasPriceState";
 import FeeData from "./components/FeeData";
 import BridegButton from '../Buttons/BridgeButton';
 import BridgeToggleButton from './components/BridgeToggleButton';
@@ -19,9 +18,7 @@ import {
   WhiteListedLegacyAssets,
   Asset,
 } from "../../utils/assetsConfig";
-import { useGateway } from "../../context/useGatewayState";
-import { assetChainsArray } from '../../utils/chainsConfig';
-import { assetsBaseConfig } from '../../utils/assetsConfig';
+import useMarketGasData from '../../hooks/useMarketGasData';
 
 export type Tab = {
   tabName: string;
@@ -144,8 +141,7 @@ const BridgeModal = ({
   const [walletBalance, setWalletBalance] = useState<any>(0);
   const [isMax, setIsMax] = useState<boolean>(false);
   const { chainId } = useWeb3React();
-  const { defaultGasPrice } = useGasPriceState();
-  const { setListenGatewayTx } = useGateway()
+  const { defaultGasPrice } = useMarketGasData();
   const {
     pendingTransaction,
     destinationChain,
@@ -187,9 +183,8 @@ const BridgeModal = ({
     if (WhiteListedLegacyAssets.includes(asset.Icon as Asset)) {
       setGatewayStep(true)
     }
-    setListenGatewayTx(true)
 
-  }, [gateway, asset, setListenGatewayTx]);
+  }, [gateway, asset]);
 
   if (gatewayStep) {
     return (

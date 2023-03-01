@@ -4,7 +4,7 @@ import {
   customGP,
   GP,
   shiftBN,
-} from "../../../../../../context/useGasPriceState";
+} from "../../../../../../hooks/useMarketGasData";
 import styled, { css } from "styled-components";
 import BigNumber from "bignumber.js";
 import { toFixed } from "../../../../../../utils/misc";

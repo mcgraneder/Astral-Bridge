@@ -17,12 +17,6 @@ import useEcecuteTransaction from "../../../hooks/useExecuteTransaction";
 import { useWeb3React } from "@web3-react/core";
 import RenBridgeABI from "../../../constants/ABIs/RenBridgeABI.json";
 import { useApproval } from "../../../hooks/useApproval";
-import {
-  useGasPriceState,
-  customGP,
-  AdvancedGasOverride,
-} from "../../../context/useGasPriceState";
-import { GP, shiftBN } from "../../../context/useGasPriceState";
 import AssetSummary from "./components/AssetSummary";
 import FeeSummary from "./components/FeeSummary";
 import TransactionSummary from "./components/TransactionSummary";
@@ -31,16 +25,14 @@ import BottomSheetOptions from "../../BottomSheet/BottomSheet";
 import { Breakpoints } from "../../../constants/Breakpoints";
 import { useViewport } from "../../../hooks/useViewport";
 import { Ethereum } from "../../../bridgeGateway/Ethereum";
+import useMarketGasData, {
+  GP,
+  shiftBN,
+  AdvancedGasOverride,
+  customGP,
+  gasPriceData,
+} from "../../../hooks/useMarketGasData";
 
-interface IAssetModal {
-  toggleConfirmationModal: () => void;
-  confirmation: boolean;
-  text: string;
-  asset: any;
-  transactionType: string;
-  buttonState: Tab;
-  setText: any;
-}
 
 interface IAssetModalInner {
   advancedOptions: boolean;
@@ -67,6 +59,11 @@ interface IAssetModalInner {
     asset: any
   ) => Promise<void>;
   showTopRow: boolean;
+  setCustomtGasPrice: React.Dispatch<
+    React.SetStateAction<customGP | undefined>
+  >;
+  fetchMarketDataGasPrices: () => Promise<void>;
+  networkGasData: gasPriceData | undefined;
 }
 
 const TxModalInner = ({
@@ -86,6 +83,9 @@ const TxModalInner = ({
   fee,
   showTopRow,
   executeTransaction,
+  setCustomtGasPrice,
+  networkGasData,
+  fetchMarketDataGasPrices,
 }: IAssetModalInner) => {
   return (
     <>
@@ -97,6 +97,9 @@ const TxModalInner = ({
           advancedGasOverride={advancedGasOveride}
           minGasLimit={gasMinLimit}
           showTopRow={showTopRow}
+          setCustomtGasPrice={setCustomtGasPrice}
+          networkGasData={networkGasData}
+          fetchMarketDataGasPrices={fetchMarketDataGasPrices}
         />
       ) : (
         <>
@@ -152,6 +155,23 @@ const TxModalInner = ({
   );
 };
 
+interface IAssetModal {
+  toggleConfirmationModal: () => void;
+  confirmation: boolean;
+  text: string;
+  asset: any;
+  transactionType: string;
+  buttonState: Tab;
+  setText: any;
+  defaultGasPrice: customGP | undefined;
+  customGasPrice: customGP | undefined;
+  setCustomtGasPrice: React.Dispatch<
+    React.SetStateAction<customGP | undefined>
+  >;
+  networkGasData: gasPriceData | undefined;
+  fetchMarketDataGasPrices: () => Promise<void>;
+}
+
 const TxConfirmationModal = ({
   toggleConfirmationModal,
   confirmation,
@@ -159,7 +179,12 @@ const TxConfirmationModal = ({
   asset,
   transactionType,
   buttonState,
-  setText
+  setText,
+  defaultGasPrice,
+  customGasPrice,
+  setCustomtGasPrice,
+  networkGasData,
+  fetchMarketDataGasPrices,
 }: IAssetModal) => {
   const { account, library } = useWeb3React();
   const { executeTransaction: exec } = useEcecuteTransaction();
@@ -167,12 +192,7 @@ const TxConfirmationModal = ({
   const { width } = useViewport();
   const { destinationChain, fromChain } = useGlobalState();
   const { assetPrice } = useFetchAssetPrice(asset);
-  const {
-    defaultGasPrice,
-    customGasPrice,
-    setCustomtGasPrice,
-    networkGasData,
-  } = useGasPriceState();
+  const [fee, setFee] = useState<string | number>("0");
 
   const [gasMinLimit, setMinGasLimit] = useState<string>("0");
   const [advancedOptions, setAdvancedOptions] = useState<boolean>(false);
@@ -201,6 +221,7 @@ const TxConfirmationModal = ({
           ...newEntry,
         });
       }
+      console.log(advancedGasOveride);
     },
     [basicGasOverride, advancedGasOveride]
   );
@@ -218,17 +239,14 @@ const TxConfirmationModal = ({
     );
     const gasEstimate =
       buttonState.tabName === "Deposit"
-        ? await bridgeContract.estimateGas.transferFrom?.(
-            "1",
-            tokenAddress!
-          )
+        ? await bridgeContract.estimateGas.transferFrom?.("1", tokenAddress!)
         : await bridgeContract.estimateGas.transfer?.(
             account!,
             "1",
             tokenAddress!
           );
 
-          console.log(Number(gasEstimate))
+    console.log(Number(gasEstimate));
     return gasEstimate as ethers.BigNumber;
   }, [destinationChain, library, account, buttonState, asset]);
 
@@ -243,9 +261,13 @@ const TxConfirmationModal = ({
     });
   }, []);
 
-  const fee = customGasPrice
-    ? toFixed(shiftBN(customGasPrice.networkFee!, -18), 6)
-    : toFixed(shiftBN(defaultGasPrice?.networkFee!, -18), 6);
+  useEffect(() => {
+    if (!defaultGasPrice) return;
+    const tfee = customGasPrice
+      ? toFixed(shiftBN(customGasPrice.networkFee!, -18), 6)
+      : toFixed(shiftBN(defaultGasPrice?.networkFee!, -18), 6);
+    setFee(tfee);
+  }, [defaultGasPrice, customGasPrice, setFee]);
 
   const toggleAdvancedOptions = useCallback((): void => {
     setAdvancedOptions((w: any) => !w);
@@ -296,9 +318,17 @@ const TxConfirmationModal = ({
           bridgeContract?.transfer
         );
       }
-      setText("")
+      setText("");
     },
-    [account, exec, init, toggleConfirmationModal, customGasPrice, fromChain, setText]
+    [
+      account,
+      exec,
+      init,
+      toggleConfirmationModal,
+      customGasPrice,
+      fromChain,
+      setText,
+    ]
   );
 
   return (
@@ -323,6 +353,9 @@ const TxConfirmationModal = ({
               fee={fee}
               showTopRow={true}
               executeTransaction={executeTransaction}
+              setCustomtGasPrice={setCustomtGasPrice}
+              networkGasData={networkGasData}
+              fetchMarketDataGasPrices={fetchMarketDataGasPrices}
             />
           </FormWrapper>
         </Backdrop>
@@ -352,6 +385,9 @@ const TxConfirmationModal = ({
             fee={fee}
             showTopRow={false}
             executeTransaction={executeTransaction}
+            setCustomtGasPrice={setCustomtGasPrice}
+            networkGasData={networkGasData}
+            fetchMarketDataGasPrices={fetchMarketDataGasPrices}
           />
         </BottomSheetOptions>
       )}

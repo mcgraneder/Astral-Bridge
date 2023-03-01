@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { WalletInput, WalletInputWrapper } from "../GasOptionsModal";
-import { customGP } from "../../../../../../context/useGasPriceState";
+import { customGP } from "../../../../../../hooks/useMarketGasData";
 import TitleRow from '../../Title';
 
 export type EMessageType = {

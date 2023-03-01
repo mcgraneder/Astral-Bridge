@@ -8,6 +8,7 @@ import TransactionRejectedModal from "./TransactionRejectedModal";
 import TransactionSubmittedModal from "./TransactionSubmittedModal";
 import { useTransactionFlow } from "../../context/useTransactionFlowState";
 import { Tab } from "../WalletModal/WalletModal";
+import { customGP, gasPriceData } from '../../hooks/useMarketGasData';
 
 export const Backdrop = styled.div`
   position: fixed;
@@ -91,9 +92,16 @@ interface TxFlowProps {
   buttonState: Tab;
   asset: any;
   setText: any;
+  defaultGasPrice: customGP | undefined;
+  customGasPrice: customGP | undefined;
+  setCustomtGasPrice: React.Dispatch<
+    React.SetStateAction<customGP | undefined>
+  >;
+  networkGasData: gasPriceData | undefined;
+  fetchMarketDataGasPrices: () => Promise<void>;
 }
 
-function TransactionFlowModals({ text, buttonState, asset, setText }: TxFlowProps) {
+function TransactionFlowModals({ text, buttonState, asset, setText, defaultGasPrice, customGasPrice, setCustomtGasPrice, networkGasData, fetchMarketDataGasPrices  }: TxFlowProps) {
   const {
     pending,
     togglePendingModal,
@@ -117,6 +125,11 @@ function TransactionFlowModals({ text, buttonState, asset, setText }: TxFlowProp
             transactionType={buttonState.tabName}
             buttonState={buttonState}
             setText={setText}
+            defaultGasPrice={defaultGasPrice}
+            customGasPrice={customGasPrice}
+            setCustomtGasPrice={setCustomtGasPrice}
+            networkGasData={networkGasData}
+            fetchMarketDataGasPrices={fetchMarketDataGasPrices}
           />
         )}
         {pending && (
