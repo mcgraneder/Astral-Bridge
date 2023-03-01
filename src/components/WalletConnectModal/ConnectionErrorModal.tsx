@@ -16,7 +16,7 @@ interface ConnectionErrorModalProps {
     pendingWallet: AbstractConnector | undefined;
     connectOn: (provider1: any) => void;
     message: string;
-}
+} 
 
 const ConnectionErrorModalInner = ({ close, setConnecting, toggleWalletModal, pendingWallet, connectOn, message }: ConnectionErrorModalProps) => {
 
@@ -75,8 +75,7 @@ const ConnectionErrorModalInner = ({ close, setConnecting, toggleWalletModal, pe
     );
 };
 
-function ConnectionErrorModal({ close, setConnecting, toggleWalletModal, pendingWallet, connectOn, message }: ConnectionErrorModalProps) {
-    const { width } = useViewport();
+function ConnectionErrorModal({ close, setConnecting, toggleWalletModal, pendingWallet, connectOn, message, width }: ConnectionErrorModalProps & { width: any }) {
 
     return (
         <>

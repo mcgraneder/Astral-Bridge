@@ -149,6 +149,7 @@ const WalletModal = ({
   const {
     setDestinationChain,
     setPendingTransaction,
+    pendingTransaction,
     destinationChain,
     assetBalances,
     setChainType,
@@ -158,7 +159,7 @@ const WalletModal = ({
     ChainIdToRenChain[chainId!] === destinationChain.fullName;
   const error = !needsToSwitchChain
     ? false
-    : text === "" || Number(text) == 0 || !isSufficentBalance;
+    : text === "" || Number(text) == 0 || !isSufficentBalance || pendingTransaction;
 
   useEffect(
     () => setText(""),
@@ -227,9 +228,12 @@ const WalletModal = ({
         );
       });
     } else if (!isAssetApproved) {
-      approve(tokenAddress, text, bridgeAddress!);
-      setIsAssetApproved(true);
-      setPendingTransaction(false)
+      setPendingTransaction(true);
+      approve(tokenAddress, text, bridgeAddress!).then(() => {
+        setIsAssetApproved(true);
+        setPendingTransaction(false);
+      });
+      
     } else toggleConfirmationModal();
   }, [
     approve,

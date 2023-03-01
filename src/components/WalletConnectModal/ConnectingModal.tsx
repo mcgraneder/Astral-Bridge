@@ -8,8 +8,9 @@ import BottomSheetOptions from "../BottomSheet/BottomSheetOptions";
 import { UilCheckCircle, UilSpinner } from "@iconscout/react-unicons";
 
 interface ConnectingModalProps {
-    close: () => void;
-    open: boolean;
+  close: () => void;
+  open: boolean;
+  width: any;
 }
 
 interface IconProps {
@@ -46,9 +47,8 @@ const ConnectingModalInner = ({ active, close }: { active: boolean; close: () =>
     );
 };
 
-function ConnectingModal({ close, open }: ConnectingModalProps) {
+function ConnectingModal({ close, open, width }: ConnectingModalProps) {
     const { active } = useWeb3React();
-    const { width } = useViewport();
 
     return (
         <>

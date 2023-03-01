@@ -25,6 +25,7 @@ interface WalletSelectProps {
     setConnecting: React.Dispatch<React.SetStateAction<boolean>>;
     connectOn: (provider1: any) => void;
     setPendingWallet: React.Dispatch<any>;
+    width: any
 }
 
 interface WalletSelectInnerProps {
@@ -56,10 +57,10 @@ const WalletSelectModalInner = ({ connect, active, toggleWalletModal, deactivate
     const provider = localStorage.getItem("provider");
     return (
         <>
-            <TopRowNavigation isRightDisplay={true} isLeftDisplay={true} close={toggleWalletModal} title={"Connect a wallet"} />
+            <TopRowNavigation isRightDisplay={true} isLeftDisplay={true} close={toggleWalletModal} title={"Connect"} />
             <div className='mt-4 flex flex-col justify-center gap-3 px-2'>
                 <WalletOption connect={connect} provider={provider} active={active} />
-                <div className='my-2 px-4 text-left text-[16px] text-gray-400'>By connecting a wallet, you agree to Uniswap Labs’ Terms of Service and consent to its Privacy Policy.</div>
+                <div className='my-2 px-4 text-left text-[16px] text-gray-400'>By connecting a wallet, you agree to Astrals’ Terms of Service and consent to its Privacy Policy.</div>
             </div>
             {active ? (
                 <div className='mt-2 mb-2 flex items-center justify-center'>
@@ -73,10 +74,9 @@ const WalletSelectModalInner = ({ connect, active, toggleWalletModal, deactivate
     );
 };
 
-const WalletSelectModal = ({ toggleWalletModal, setConnecting, connectOn, setPendingWallet }: WalletSelectProps) => {
+const WalletSelectModal = ({ toggleWalletModal, setConnecting, connectOn, setPendingWallet, width }: WalletSelectProps) => {
     const { active, deactivate } = useWeb3React();
     const { push } = useRouter()
-    const { width } = useViewport();
 
     const disconnect = () => {
         deactivate()
