@@ -84,7 +84,6 @@ function GatewayProvider({ children }: GatewayProviderProps) {
     );
     const [pendingTxs, setPendingTxs] = useState<any[]>([]);
     const addTransaction = useCallback((newTx: GatewayTransaction) => {
-      console.info("gateway detected tx:", newTx.hash, newTx);
       setTransactions((txs) => {
         const index = txs.findIndex((tx) => tx.hash === newTx.hash);
         if (index >= 0) {
@@ -198,7 +197,6 @@ function GatewayProvider({ children }: GatewayProviderProps) {
   useEffect(() => {
     if(!library) return
     // setGateway(null); // added
-    console.info("gateway useEffect gateway init");
     let newGateway: Gateway | null = null;
     if (renJs && (fromChain || destinationChain) !== null) {
       const initializeGateway = async () => {
@@ -248,7 +246,6 @@ function GatewayProvider({ children }: GatewayProviderProps) {
 
     return () => {
       if (newGateway) {
-        console.info("gateway removing listeners");
         newGateway.eventEmitter.removeListener("transaction", addTransaction);
       }
     };

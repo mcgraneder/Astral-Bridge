@@ -48,16 +48,13 @@ export const createGateway = async (
   }
 
   const { asset, nonce } = gatewayParams;
-  console.info("gatewayParams", gatewayParams);
   let fromChain;
   if (isEthereumBaseChain(gatewayParams.from)) {
     const ethereum = fromChainInstance.chain as unknown as EthereumBaseChain;
-    console.info("resolving from chain", gatewayParams);
+
     if (partialTx) {
-      console.info("resolved from paritalTx", gatewayParams);
       fromChain = ethereum.Transaction(partialTx);
     } else if (gatewayParams.fromAddress) {
-      console.info("resolved from fromAddress", gatewayParams);
       fromChain = fromChain = ethereum.Account({
         account: gatewayParams.fromAddress,
         amount: gatewayParams.amount,

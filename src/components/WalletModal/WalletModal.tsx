@@ -189,6 +189,7 @@ const WalletModal = ({
         setIsAssetApproved(true);
       else setIsAssetApproved(false);
     })();
+   
   }, [asset, account, buttonState.tabName, destinationChain.fullName]);
 
   useEffect(() => {

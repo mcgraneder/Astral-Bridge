@@ -38,7 +38,7 @@ const WalletButton = ({
         return `Switch to ${destinationChain.fullName} network`;
       else if (!isSufficentBalance && text !== "") return "Insufficent funds";
       else if (!isAssetApproved && text !== "")
-        return `Approve ${asset.Icon} on ${destinationChain.fullName}`;
+        return `Approve ${asset.Icon} first`;
       else return `${buttonState.tabName} ${text} ${asset.Icon}`;
     },
     [

@@ -219,15 +219,16 @@ const TxConfirmationModal = ({
     const gasEstimate =
       buttonState.tabName === "Deposit"
         ? await bridgeContract.estimateGas.transferFrom?.(
-            "0",
+            "1",
             tokenAddress!
           )
         : await bridgeContract.estimateGas.transfer?.(
             account!,
-            "0",
+            "1",
             tokenAddress!
           );
 
+          console.log(Number(gasEstimate))
     return gasEstimate as ethers.BigNumber;
   }, [destinationChain, library, account, buttonState, asset]);
 
@@ -297,7 +298,7 @@ const TxConfirmationModal = ({
       }
       setText("")
     },
-    [account, exec, init, toggleConfirmationModal, customGasPrice, fromChain]
+    [account, exec, init, toggleConfirmationModal, customGasPrice, fromChain, setText]
   );
 
   return (
