@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react"
-import { useWeb3React } from '@web3-react/core';
+import { useState, useEffect } from "react";
+import { useWeb3React } from "@web3-react/core";
 import { ethers } from "ethers";
 import { toFixed } from "../../utils/misc";
 import { useGlobalState } from "../../context/useGlobalState";
 import { CHAINS } from "../../connection/chains";
 import { GlowingText } from "../CSS/SkeletomStyles";
-import useFetchAssetPrice from '../../hooks/useFetchAssetPrice';
+import useFetchAssetPrice from "../../hooks/useFetchAssetPrice";
 
 interface ITokenDisplay {
   asset: any;
@@ -34,7 +34,7 @@ const BalanceDisplayInner = ({
   fetchingBalances,
   assetPrice,
   isNative,
-  chain
+  chain,
 }: ITokenDisplay) => {
   return (
     <div className="my-5 flex flex-col items-center rounded-lg border border-tertiary p-2 text-center">
@@ -128,4 +128,4 @@ const BalanceDisplay = ({
   );
 };
 
-export default BalanceDisplay
+export default BalanceDisplay;

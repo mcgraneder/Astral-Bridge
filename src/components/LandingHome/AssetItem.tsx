@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { supportedAssets, assetsBaseConfig } from '../../utils/assetsConfig';
 import { chainsBaseConfig, EVMChains, LeacyChains } from '../../utils/chainsConfig';
@@ -68,14 +68,13 @@ const createAvailabilityFilter = (available: any, walletAssetType: string) => (o
 };
 
 const AssetItem = ({ assetType, type }: any) => {
-  
-  const available = useMemo(() =>{
+  const available = useCallback(() =>{
     return assetType === "currency"
       ? supportedAssets
       : [...EVMChains, ...LeacyChains]}, [assetType])
 
   const LegacyavailabilityFilter = React.useMemo(
-    () => createAvailabilityFilter(available, "chain"),
+    () => createAvailabilityFilter(available(), "chain"),
     [available]
   );
 

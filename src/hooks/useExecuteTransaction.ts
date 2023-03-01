@@ -50,8 +50,8 @@ const useEcecuteTransaction = (): ExecuteTxType => {
         setPendingTransaction(false);
 
         HandleNewNotification(
-          "Approval Success",
-          `Successfully approved asset ${asset.Icon} on ${chain.fullName}`
+          "Transaction Success",
+          `Successfully transacted with asset ${asset.Icon} on ${chain.fullName}`
         );
       } catch (error) {
         console.log(error);

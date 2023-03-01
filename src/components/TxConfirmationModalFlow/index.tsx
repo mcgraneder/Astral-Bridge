@@ -5,9 +5,9 @@ import TxConfirmationModal from "./TransactionConfirmationModal/TransactionConfi
 import PendingTransactionModal from "./PendinTransactionModal";
 
 import TransactionRejectedModal from "./TransactionRejectedModal";
-import TransactionSubmittedModal from './TransactionSubmittedModal';
+import TransactionSubmittedModal from "./TransactionSubmittedModal";
 import { useTransactionFlow } from "../../context/useTransactionFlowState";
-import { Tab } from '../WalletModal/WalletModal';
+import { Tab } from "../WalletModal/WalletModal";
 
 export const Backdrop = styled.div`
   position: fixed;
@@ -92,8 +92,7 @@ interface TxFlowProps {
   asset: any;
 }
 
-function TransactionFlowModals({ text, buttonState, asset}: TxFlowProps) {
-
+function TransactionFlowModals({ text, buttonState, asset }: TxFlowProps) {
   const {
     pending,
     togglePendingModal,

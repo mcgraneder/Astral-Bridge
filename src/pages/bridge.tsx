@@ -10,8 +10,8 @@ import { WhiteListedLegacyAssets, whiteListedEVMAssets } from '../utils/assetsCo
 import BridgeModal from '../components/BridgeModal/bridgeModal';
 import { useGateway } from "../context/useGatewayState";
 import { LeacyChains, EVMChains } from '../utils/chainsConfig';
-import { useNotification } from '../context/useNotificationState';
 import UserInfoModal from "../components/UserInformationModal/UserInformationModal";
+
 type AssetType = "chain" | "currency";
 
 const defaultButtonState: Tab = {
@@ -34,31 +34,6 @@ const BridgePage: NextPage = () => {
   const { asset, setAsset, gateway } = useGateway();
   const [buttonState, setButtonState] = useState<Tab>(defaultButtonState);
   const {loading } = useGlobalState();
-  const dispatch = useNotification();
-
-  const HandleNewNotification = useCallback(
-    (title: string, message: string): void => {
-      dispatch({
-        type: "info",
-        message: message,
-        title: title,
-        position: "topR" || "topR",
-        success: true,
-      });
-    },
-    [dispatch]
-  );
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const warning = localStorage.getItem("bridgePageWarning");
-    if (warning !== "true") {
-      HandleNewNotification(
-        "REN VM ERROR",
-        "Ren bridge is currently disabled so briding is unavaiable"
-      );
-    }
-  }, [showWarning, HandleNewNotification]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;

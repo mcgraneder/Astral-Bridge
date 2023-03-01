@@ -36,7 +36,7 @@ const WalletButton = ({
       else if (pendingTransaction) return "Transaction pending";
       else if (!needsToSwitchChain)
         return `Switch to ${destinationChain.fullName} network`;
-      else if (!isSufficentBalance && text !== "") return "Insufficent funds";
+      // else if (!isSufficentBalance && text !== "") return "Insufficent funds";
       else if (!isAssetApproved && text !== "")
         return `Approve ${asset.Icon} on ${destinationChain.fullName}`;
       else return `${buttonState.tabName} ${text} ${asset.Icon}`;
@@ -45,29 +45,29 @@ const WalletButton = ({
       isSufficentBalance,
       needsToSwitchChain,
       text,
-      pendingTransaction,
+      // pendingTransaction,
       asset,
       isAssetApproved,
     ]
   );
 
   const getButtonColour = useCallback(() => {
-    if (!active)
-      return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
-    else if (!needsToSwitchChain || text === "")
-      return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
-    else if (pendingTransaction || text === "" || Number(text) == 0)
-      return "bg-gray-500 hover:bg-gary-600 border border-gray-400 hover:border-gray-500";
-    else if (!isSufficentBalance && text !== "")
-      return "bg-red-500 hover:bg-red-600 border border-red-400 hover:border-red-500";
-    else
+    // if (!active)
+    //   return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
+    // else if (!needsToSwitchChain || text === "")
+    //   return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
+    // else if (pendingTransaction || text === "" || Number(text) == 0)
+    //   return "bg-gray-500 hover:bg-gary-600 border border-gray-400 hover:border-gray-500";
+    // else if (!isSufficentBalance && text !== "")
+    //   return "bg-red-500 hover:bg-red-600 border border-red-400 hover:border-red-500";
+    // else
       return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
   }, [
-    isSufficentBalance,
-    needsToSwitchChain,
-    text,
-    pendingTransaction,
-    active,
+    // isSufficentBalance,
+    // needsToSwitchChain,
+    // text,
+    // pendingTransaction,
+    // active,
   ]);
 
   return (

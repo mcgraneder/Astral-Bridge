@@ -30,7 +30,7 @@ import ProtocolBanner from "./components/GasOptionSummary";
 import BottomSheetOptions from "../../BottomSheet/BottomSheet";
 import { Breakpoints } from "../../../constants/Breakpoints";
 import { useViewport } from "../../../hooks/useViewport";
-import { Ethereum } from '../../../bridgeGateway/Ethereum';
+import { Ethereum } from "../../../bridgeGateway/Ethereum";
 
 interface IAssetModal {
   toggleConfirmationModal: () => void;
@@ -186,44 +186,46 @@ const TxConfirmationModal = ({
     networkFee: defaultGasPrice?.networkFee!,
   });
 
-    const updateGasOverride = useCallback(
-      (newEntry: Partial<GP> | Partial<AdvancedGasOverride>, type: string) => {
-        if (type === "Basic") {
-          setBasicGasOverride({
-            ...basicGasOverride,
-            ...newEntry,
-          });
-        } else {
-          setAdvancedGasOverride({
-            ...advancedGasOveride,
-            ...newEntry,
-          });
-        }
-      },
-      [basicGasOverride, advancedGasOveride]
-    );
+  const updateGasOverride = useCallback(
+    (newEntry: Partial<GP> | Partial<AdvancedGasOverride>, type: string) => {
+      if (type === "Basic") {
+        setBasicGasOverride({
+          ...basicGasOverride,
+          ...newEntry,
+        });
+      } else {
+        setAdvancedGasOverride({
+          ...advancedGasOveride,
+          ...newEntry,
+        });
+      }
+    },
+    [basicGasOverride, advancedGasOveride]
+  );
 
   const estimateGasLimit = useCallback(async (): Promise<ethers.BigNumber> => {
     const bridgeAddress = BridgeDeployments[destinationChain.fullName];
     const tokenAddress =
-      chainAdresses[destinationChain.fullName]?.assets[asset.Icon]?.tokenAddress!;
+      chainAdresses[destinationChain.fullName]?.assets[asset.Icon]
+        ?.tokenAddress!;
 
     const bridgeContract = new ethers.Contract(
       bridgeAddress!,
       RenBridgeABI,
       await library.getSigner()
     );
-    const gasEstimate =
-      buttonState.tabName === "Deposit"
-        ? await bridgeContract.estimateGas.transferFrom?.(
-            "10000",
-            tokenAddress!
-          )
-        : await bridgeContract.estimateGas.transfer?.(
-            account!,
-            "10000",
-            tokenAddress!
-          );
+    // const gasEstimate =
+    //   buttonState.tabName === "Deposit"
+    //     ? await bridgeContract.estimateGas.transferFrom?.(
+    //         "0",
+    //         tokenAddress!
+    //       )
+    //     : await bridgeContract.estimateGas.transfer?.(
+    //         account!,
+    //         "0",
+    //         tokenAddress!
+    //       );
+    const gasEstimate = ethers.BigNumber.from(118845);
 
     return gasEstimate as ethers.BigNumber;
   }, [destinationChain, library, account, buttonState, asset]);
@@ -263,12 +265,15 @@ const TxConfirmationModal = ({
       const txAmount = new BigNumber(amount).shiftedBy(asset.decimals);
       const bridgeAddress = BridgeDeployments[destinationChain.fullName];
       const tokenAddress =
-        chainAdresses[destinationChain.fullName]?.assets[asset.Icon]?.tokenAddress!;
+        chainAdresses[destinationChain.fullName]?.assets[asset.Icon]
+          ?.tokenAddress!;
 
       const bridgeContract = init(bridgeAddress!, RenBridgeABI);
 
       const optionalParams =
-        customGasPrice && customGasPrice?.overrideType === "Basic" && fromChain.Icon === Ethereum.chain
+        customGasPrice &&
+        customGasPrice?.overrideType === "Basic" &&
+        fromChain.Icon === Ethereum.chain
           ? {
               gasLimit: customGasPrice.gasLimit!.toString(),
               gasPrice: customGasPrice?.gasPrice!.toString(),
@@ -322,7 +327,9 @@ const TxConfirmationModal = ({
         <BottomSheetOptions
           hideCloseIcon={false}
           open={true}
-          setOpen={advancedOptions ? toggleAdvancedOptions : toggleConfirmationModal}
+          setOpen={
+            advancedOptions ? toggleAdvancedOptions : toggleConfirmationModal
+          }
           title={advancedOptions ? "Gas Settings" : "Transaction Summary"}
         >
           <TxModalInner

@@ -156,9 +156,10 @@ const WalletModal = ({
 
   const needsToSwitchChain =
     ChainIdToRenChain[chainId!] === destinationChain.fullName;
-  const error = !needsToSwitchChain
-    ? false
-    : text === "" || Number(text) == 0 || !isSufficentBalance;
+  // const error = !needsToSwitchChain
+  //   ? false
+  //   : text === "" || Number(text) == 0 || !isSufficentBalance;
+  const error = false
   // console.log(error);
 
   useEffect(
@@ -226,7 +227,6 @@ const WalletModal = ({
           chainsBaseConfig[ChainIdToRenChain[destinationChain.testnetChainId!]!]
         );
       });
-      
     } else if (!isAssetApproved) {
       approve(tokenAddress, text, bridgeAddress!);
       setIsAssetApproved(true);
