@@ -20,6 +20,8 @@ import {
   Asset,
 } from "../../utils/assetsConfig";
 import { useGateway } from "../../context/useGatewayState";
+import { assetChainsArray } from '../../utils/chainsConfig';
+import { assetsBaseConfig } from '../../utils/assetsConfig';
 
 export type Tab = {
   tabName: string;
@@ -179,17 +181,12 @@ const BridgeModal = ({
     })();
   }, [text, setIsSufficientBalance, asset, assetBalances, buttonState]);
 
+
   const execute = useCallback(async() => {
-    
     if (gateway == null) return
     if (WhiteListedLegacyAssets.includes(asset.Icon as Asset)) {
       setGatewayStep(true)
     }
-    // console.log(gateway);
-    // await gateway.initialize();
-    // // const gHash = utils.toURLBase64(Uint8Array.from(gateway.gHash));
-
-    // const gatewayTx = await submitGatewayInTx(gateway)
     setListenGatewayTx(true)
 
   }, [gateway, asset, setListenGatewayTx]);

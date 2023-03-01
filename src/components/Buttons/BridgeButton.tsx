@@ -43,7 +43,8 @@ const BridegButton = ({
   );
 
   const getButtonColour = useCallback(() => {
-    if (!active)
+    if (error && active) return "bg-gray-500 hover:bg-gary-600 border border-gray-400 hover:border-gray-500";
+    else if (!active)
       return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
     else if (!needsToSwitchChain || text === "")
       return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
@@ -64,7 +65,7 @@ const BridegButton = ({
   return (
     <PrimaryButton
       className={`x-50 w-full justify-center rounded-2xl border ${getButtonColour()} py-[14px] text-center text-[17px] font-semibold hover:cursor-pointer`}
-      disabled={false}
+      disabled={error}
       onClick={execute}
     >
       <span>{getButtonText(chain, active, buttonState)}</span>

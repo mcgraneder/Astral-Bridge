@@ -62,7 +62,6 @@ export const createGateway = async (
         anyoneCanSubmit,
       });
     } else {
-      console.info("resolved from account", gatewayParams);
       fromChain = ethereum.Account({
         amount: gatewayParams.amount,
         convertUnit,
@@ -78,7 +77,6 @@ export const createGateway = async (
   let toChain;
   if (isEthereumBaseChain(gatewayParams.to)) {
     const ethereumChain = toChainInstance.chain as unknown as Ethereum;
-    console.info("resolving toAddress", gatewayParams);
     toChain = getCMintContractObject(toChainInstance.chain);
   } else if (isDepositBaseChain(gatewayParams.to)) {
     if (!gatewayParams.toAddress) {
@@ -90,9 +88,6 @@ export const createGateway = async (
   } else {
     throw new Error(`Unknown chain "to": ${gatewayParams.to}`);
   }
-
-  console.info("creating gateway with fromChain", fromChain);
-  console.info("creating gateway with toChain", toChain);
   return await renJS.gateway({
     asset,
     from: fromChain,

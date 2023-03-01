@@ -54,6 +54,7 @@ export const BoxItemContainer = styled.div`
   flex-basis: 0;
   width: 100%;
   align-items: center;
+
 `;
 
 interface INavbar {
@@ -61,7 +62,7 @@ interface INavbar {
   toggleAccoundDetailsModal: () => void;
 }
 
-const ROUTES: string[] = ["bridge", "wallet", "trade", "history"];
+const ROUTES: string[] = ["bridge", "wallet"];
 
 const NavLinks = ({ routes }: { routes: string[] }) => {
   return (
@@ -73,7 +74,7 @@ const NavLinks = ({ routes }: { routes: string[] }) => {
             key={route}
             className="hidden flex-row items-center gap-2 md:flex"
           >
-            <span className="my-2 w-full rounded-xl px-4 py-2 text-center hover:cursor-pointer hover:bg-black hover:bg-opacity-20">
+            <span className="my-2 w-full text-[18px] rounded-xl px-4 py-2 text-center hover:cursor-pointer hover:bg-black hover:bg-opacity-20">
               {route}
             </span>
           </Link>

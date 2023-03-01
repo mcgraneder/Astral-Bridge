@@ -35,9 +35,6 @@ type GatewayContextType = {
   setGateway: Dispatch<SetStateAction<Gateway<any, any> | null>>;
   allAssets: string[];
   allChains: string[];
-  getIoTypeFromPath: (
-    path: string
-  ) => GatewayIOType.lockAndMint | GatewayIOType.burnAndRelease;
   defaultChains: ChainInstanceMap;
   renJs: RenJS | null;
   asset: any;
@@ -54,7 +51,6 @@ type GatewayContextType = {
       }>[]
     >
   >;
-  memoizedOnTxReceivedCb: (data: any) => Promise<void>;
 };
 
 const GatewayContext = createContext({} as GatewayContextType);
@@ -71,98 +67,23 @@ function GatewayProvider({ children }: GatewayProviderProps) {
   const defaultChains = getDefaultChains(RenNetwork.Testnet);
   const { fromChain, destinationChain } = useGlobalState();
 
-    const pendingTxIntervalRef = useRef<any>(null);
-
   const [listenGatewayTx, setListenGatewayTx] = useState<boolean>(false);
   const { library, account } = useWeb3React();
   const [renJs, setRenJs] = useState<RenJS | null>(null);
-  const [error, setError] = useState(null);
   const [gateway, setGateway] = useState<Gateway | null>(null);
   const [asset, setAsset] = useState<AssetBaseConfig>(assetsBaseConfig.BTC);
-    const [transactions, setTransactions] = useState<Array<GatewayTransaction>>(
-      []
-    );
-    const [pendingTxs, setPendingTxs] = useState<any[]>([]);
-    const addTransaction = useCallback((newTx: GatewayTransaction) => {
-      setTransactions((txs) => {
-        const index = txs.findIndex((tx) => tx.hash === newTx.hash);
-        if (index >= 0) {
-          return txs.splice(index, 1, newTx);
-        }
-        return [...txs, newTx];
-      });
-    }, []);
-
-      const pushPendingTx = useCallback(
-        (obj: any) => setPendingTxs((txs) => [...txs, obj]),
-        []
-      );
-
-    const memoizedOnTxReceivedCb = useCallback(
-      async (data: any) => {
-        const { exportedTx, renVMTxId } = data;
-        const tokenAddress = "0x880Ad65DC5B3F33123382416351Eef98B4aAd7F1";
-        const amount = exportedTx.amount;
-
-        const submitMintResponse = await post(API.ren.submitMintRenTx, {
-          token: tokenAddress,
-          amount,
-          to: account!,
-          chain: "Ethereum",
-          txHash: exportedTx.txHash,
-          txIndex: exportedTx.txindex,
-        });
-
-        if (!submitMintResponse) {
-         console.log("error")
-        }
-      
-
-       
-          pushPendingTx({
-            token: "0x880Ad65DC5B3F33123382416351Eef98B4aAd7F1",
-            renVMTxId,
-            amount,
-            type: "deposit",
-          });
-          // setListenGatewayTx(false);
-          // setTokenAmount("0");
-          // setCurrentStep(3);
-
-          // setTimeout(() => {
-          //   if (selectedToken?.symbol === "BTC") pushFlow("txPending");
-          //   setSubmitted(true);
-          // }, 1500);
-        
-      },
-      [
-        account,
-        pushPendingTx
-      ]
-    );
-
-    
-  useEffect(() => {
-    const intervalCb = async () => {
-      if (!pendingTxs.length) {
-        clearInterval(pendingTxIntervalRef.current);
-        return;
+  const [transactions, setTransactions] = useState<Array<GatewayTransaction>>(
+    []
+  );
+  const addTransaction = useCallback((newTx: GatewayTransaction) => {
+    setTransactions((txs) => {
+      const index = txs.findIndex((tx) => tx.hash === newTx.hash);
+      if (index >= 0) {
+        return txs.splice(index, 1, newTx);
       }
-
-      pendingTxs.forEach(async (_tx) => {
-        const response = await get<any>(API.ren.queryRenTx, {
-          params: { txHash: _tx.renVMTxId },
-        });
-        if (response?.result.txStatus === "done") {
-
-        }
-          // memoizedOnTxReceivedCb(_tx, response.result);
-      });
-    };
-
-    pendingTxIntervalRef.current = setInterval(intervalCb, 5000);
-    return () => clearInterval(pendingTxIntervalRef.current);
-  }, [pendingTxs]);
+      return [...txs, newTx];
+    });
+  }, []);
 
   useEffect(() => {
     console.info("gateway useEffect renJs and provider");
@@ -177,8 +98,10 @@ function GatewayProvider({ children }: GatewayProviderProps) {
         destinationChain.fullName as Chain
       ];
 
-      if (isEthereumBaseChain(fromChain.fullName as Chain)) f?.chain?.withSigner?.(library.getSigner())
-      if (isEthereumBaseChain(destinationChain.fullName as Chain)) d?.chain?.withSigner?.(library.getSigner())
+      if (isEthereumBaseChain(fromChain.fullName as Chain))
+        f?.chain?.withSigner?.(library.getSigner());
+      if (isEthereumBaseChain(destinationChain.fullName as Chain))
+        d?.chain?.withSigner?.(library.getSigner());
 
       const chainsArray = new Array(f.chain, d.chain);
       const renJs = new RenJS(RenNetwork.Testnet).withChains(...chainsArray);
@@ -190,12 +113,11 @@ function GatewayProvider({ children }: GatewayProviderProps) {
       })
       .catch((error) => {
         console.error("gateway renJs error", error);
-        setError(error);
       });
   }, [destinationChain, fromChain, library]);
 
   useEffect(() => {
-    if(!library) return
+    if (!library) return;
     // setGateway(null); // added
     let newGateway: Gateway | null = null;
     if (renJs && (fromChain || destinationChain) !== null) {
@@ -207,15 +129,14 @@ function GatewayProvider({ children }: GatewayProviderProps) {
           destinationChain.fullName as Chain
         ];
 
-        const allChains = getDefaultChains(RenNetwork.Testnet)
-        if (!f || !d) return
-        renJs.withChains(f.chain, d.chain)
+        const allChains = getDefaultChains(RenNetwork.Testnet);
+        if (!f || !d) return;
+        renJs.withChains(f.chain, d.chain);
 
-              if (isEthereumBaseChain(fromChain.fullName as Chain))
-                f?.chain?.withSigner?.(library.getSigner());
-              if (isEthereumBaseChain(destinationChain.fullName as Chain))
-                d?.chain?.withSigner?.(library.getSigner());
-
+        if (isEthereumBaseChain(fromChain.fullName as Chain))
+          f?.chain?.withSigner?.(library.getSigner());
+        if (isEthereumBaseChain(destinationChain.fullName as Chain))
+          d?.chain?.withSigner?.(library.getSigner());
 
         newGateway = await createGateway(
           renJs,
@@ -229,18 +150,14 @@ function GatewayProvider({ children }: GatewayProviderProps) {
           },
           allChains as Partial<ChainInstanceMap>
         );
-     
+
         newGateway.on("transaction", addTransaction);
-        // console.info("gateway transaction listener added");
-        // (window as any).gateway = newGateway;
         return newGateway;
       };
-      // console.info("gateway initializing", chains);
       initializeGateway()
         .then((newGateway) => setGateway(newGateway!))
         .catch((error) => {
           console.error(error);
-          setError(error);
         });
     }
 
@@ -249,15 +166,15 @@ function GatewayProvider({ children }: GatewayProviderProps) {
         newGateway.eventEmitter.removeListener("transaction", addTransaction);
       }
     };
-  }, [account, asset, destinationChain, fromChain, renJs, library, addTransaction]);
-
-  const getIoTypeFromPath = (path: string) => {
-    if (path === "deposit") {
-      return GatewayIOType.lockAndMint;
-    } else {
-      return GatewayIOType.burnAndRelease;
-    }
-  };
+  }, [
+    account,
+    asset,
+    destinationChain,
+    fromChain,
+    renJs,
+    library,
+    addTransaction,
+  ]);
 
   return (
     <GatewayContext.Provider
@@ -265,7 +182,6 @@ function GatewayProvider({ children }: GatewayProviderProps) {
         setGateway,
         allAssets,
         allChains,
-        getIoTypeFromPath,
         defaultChains,
         gateway,
         renJs,
@@ -275,7 +191,6 @@ function GatewayProvider({ children }: GatewayProviderProps) {
         setListenGatewayTx,
         transactions,
         setTransactions,
-        memoizedOnTxReceivedCb,
       }}
     >
       {children}

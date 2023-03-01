@@ -63,7 +63,7 @@ const BridgeToggleButton = ({
 }: IToggleContainer) => {
 
   const tabSelect = (index: number): void => {
-    if (index == 1) setAsset(assetsBaseConfig.DAI)
+    if (index == 1) setAsset(assetsBaseConfig.DAI_Goerli)
     else setAsset(assetsBaseConfig.BTC)
     setActiveButton(tabs[index] as Tab);
   }

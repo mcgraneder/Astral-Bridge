@@ -52,6 +52,8 @@ const WalletButton = ({
   );
 
   const getButtonColour = useCallback(() => {
+    if (error && active)
+      return "bg-gray-500 hover:bg-gary-600 border border-gray-400 hover:border-gray-500";
     if (!active)
       return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
     else if (!needsToSwitchChain || text === "")
