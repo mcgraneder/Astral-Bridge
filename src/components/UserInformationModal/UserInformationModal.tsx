@@ -87,20 +87,6 @@ function UserInfoModal({ close, open, message }: PendingTransactionModalProps) {
 
   return (
     <>
-      {/* {width > 0 && width >= Breakpoints.sm1 ? (
-        <FormWrapper>
-          <UserInfoModalInner active={active} close={close} />
-        </FormWrapper>
-      ) : (
-        <BottomSheetOptions
-          hideCloseIcon
-          open={open}
-          setOpen={() => null}
-          title={"Pending"}
-        >
-          <UserInfoModalInner active={active} close={close} />
-        </BottomSheetOptions> */}
-      {/* )} */}
       <Backdrop visible={open}>
         <FormWrapper>
           <UserInfoModalInner close={close} message={message} />
