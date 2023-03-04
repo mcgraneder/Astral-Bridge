@@ -94,6 +94,11 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
   }, [account, chainId, setFetchingBalances, destinationChain]);
 
   useEffect(() => {
+    if (!chainId) return;
+    setDestinationChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!]);
+  }, [chainId]);
+
+  useEffect(() => {
     if (fetchedStoredChain || !chainId) return;
     setDestinationChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!]);
     setFetchStoredChain(true);
@@ -105,11 +110,6 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     const interval: NodeJS.Timer = setInterval(memoizedFetchBalances, 50000);
     return () => clearInterval(interval);
   }, [memoizedFetchBalances, active, destinationChain]);
-
-  useEffect(() => {
-    if (!chainId) return
-    setTimeout(() =>  setDestinationChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!]), 2000)
-  }, [chainId])
 
     useEffect(() => {
       const interval: NodeJS.Timeout = setTimeout(
