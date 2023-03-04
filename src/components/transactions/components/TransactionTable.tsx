@@ -20,8 +20,7 @@ const GridContainer = styled.div`
   /* justify-content: center; */
   align-items: center;
   border: 1px solid rgb(48, 63, 88);
-  max-height: 550px;
-  height: 550px;
+
 `;
 
 const TokenDataContainer = styled.div`
