@@ -8,8 +8,7 @@
 import { useEffect } from "react";
 import styled from "styled-components";
 import TransactionsTable from "./components/TransactionTable";
-import { UilAngleDown } from "@iconscout/react-unicons";
-import SearchBar from "./components/SearchBar";
+import TransactionFilterButtons from './components/TransactionFilterButton';
 
 export const MAX_WIDTH_MEDIA_BREAKPOINT = "1200px";
 export const XLARGE_MEDIA_BREAKPOINT = "960px";
@@ -90,24 +89,8 @@ const Transactions = () => {
 
       <FiltersWrapper>
         <div className="flex gap-2">
-          <div className="flex items-center gap-2 rounded-xl border-tertiary bg-blue-600 py-2 px-4 text-white">
-            <span>Ethereum</span>
-            <UilAngleDown />
-          </div>
-          <div className="flex items-center gap-2 rounded-xl border-tertiary bg-blue-600 py-2 px-4 text-white">
-            <span>Deposits</span>
-            <UilAngleDown />
-          </div>
-          <div className="flex items-center gap-2 rounded-xl border-tertiary bg-blue-600 py-2 px-4 text-white">
-            <span>Pending</span>
-            <UilAngleDown />
-          </div>
+           <TransactionFilterButtons/>
 
-          <div className="flex items-center gap-2 rounded-xl border-tertiary bg-blue-600 py-2 px-4 text-white">
-            <span>1D</span>
-            <UilAngleDown />
-          </div>
-          <SearchBar/>
         </div>
       </FiltersWrapper>
       {/* <TokenTable / */}

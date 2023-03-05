@@ -167,8 +167,9 @@ export default function TransactionsTable() {
         },
       });
       if (!transactionsResponse) return;
+      console.log(transactionsResponse)
       const cache: any = {};
-      cache["wqKTxW9NW8fCmitVFiS4"] = transactionsResponse.txs;
+      cache[accountId] = transactionsResponse.txs;
       sessionStorage.setItem("user-transactions", JSON.stringify(cache));
       setTransactions(transactionsResponse.txs);
     } catch (err) {
@@ -176,6 +177,7 @@ export default function TransactionsTable() {
     }
     setFetchingState("FETCHED");
   }, [accountId, setFetchingState, setTransactions]);
+
 
   useEffect(() => {
     fetchTxs();
@@ -190,7 +192,7 @@ export default function TransactionsTable() {
     const txns = sessionStorage.getItem("user-transactions");
     if (accountId && txns) {
       const cache = JSON.parse(txns);
-      if (Object.keys(cache).length > 0 && cache[accountId].length > 0) {
+      if (Object.keys(cache).length > 0 && cache[accountId] && cache[accountId].length > 0) {
         setTransactions(cache[accountId]);
         //  setError(null);
         setFetchingState("FETCHED_CACHED");
@@ -198,7 +200,7 @@ export default function TransactionsTable() {
     }
   }, [accountId, setFetchingState, setTransactions]);
 
-  if (transactions.length === 0 || loading)
+  if (!transactions || loading)
     return (
       <GridContainer>
         <HeaderRow />
@@ -248,7 +250,7 @@ export default function TransactionsTable() {
         )}
       </GridContainer>
     );
-  else if (filteredTransaction && filteredTransaction !== null)
+  else if (transactions && filteredTransaction && filteredTransaction !== null)
     return (
       <>
         <GridContainer>

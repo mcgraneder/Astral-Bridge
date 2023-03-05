@@ -42,7 +42,7 @@ type GlobalContextType = {
   loading: boolean;
   setEncryptedId: Dispatch<SetStateAction<string | null>>;
   encryptedId: string | null;
-  transactions: any[];
+  transactions: any[] | undefined;
   setTransactions: any;
   loadedTxs: any;
   setLoadedTxs: any;
@@ -78,7 +78,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     chainsBaseConfig.Ethereum
   );
   const [chainType, setChainType] = useState<string>("from");
-  const [transactions, setTransactions] = useState<any[]>([]);
+  const [transactions, setTransactions] = useState<any[] | undefined>(undefined);
   const [loadedTxs, setLoadedTxs] = useState<any>(false);
   const [filteredTransaction, setFilteredTransaction] = useState<UserTxType | null>(null)
 

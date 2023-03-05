@@ -93,24 +93,40 @@ const InputDrowdownSkeleton = ({ searchTerm }: { searchTerm: string }) => {
   return (
     <div className="absolute top-0 left-0 -z-10 w-full rounded-lg border  border-gray-500 bg-darkBackground px-4 pt-[45px] pb-2">
       {searchTerm !== "" ? (
-        <div className="flex items-center  gap-2 px-1 py-4">
-          <span>You currently have no transactions.</span>
+        <div className="flex items-center justify-center  gap-2 px-1 py-4">
+          <span className="text-gray-400">You currently have no transactions.</span>
         </div>
       ) : (
-        [1, 2, 3].map((item, index) => {
+        <>
+        <div className="flex items-center justify-start px-2 pt-2">
+                <span className="text-gray-400 text-sm">
+                  start typing to search
+                </span>
+              </div>
+        {[1, 2, 3, 4].map((item, index) => {
           return (
-            <div key={index} className="flex items-center  gap-2 px-1 py-4">
-              <div className="flex items-center justify-center">
-                <span className="h-8 w-8 rounded-full bg-tertiary" />
-              </div>
-              <div className="flex w-[90%] flex-col items-center justify-center gap-2">
+            <div
+              key={index}
+              className="grid grid-cols-3 items-center   gap-2 overflow-hidden py-4 pr-2 pl-2"
+            >
+              <div className="flex items-center justify-start gap-2 text-sm">
+                <span className="h-6 w-6 rounded-full bg-tertiary" />
                 <span className="h-4 w-full rounded-full bg-tertiary" />
+              </div>
+              <div className="flex items-center text-start text-sm w-full">
                 <span className="h-4 w-full rounded-full bg-tertiary" />
               </div>
+              <div className="flex items-center justify-start text-sm">
+                <span className="h-4 w-full rounded-full bg-tertiary" />
+              </div>
+              
+              
             </div>
           );
-        })
+        })}
+        </>
       )}
+      
     </div>
   );
 };
@@ -158,7 +174,7 @@ const InputDropdown = ({
     [setFilteredTransaction]
   );
 
-  if (transactions.length === 0 || searchTerm === "")
+  if (transactions.length == 0 || searchTerm === "")
     return (
       <InputDrowdownSkeleton
         searchTerm={searchTerm}
