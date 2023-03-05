@@ -1,0 +1,28 @@
+const ErrorCodes = {
+  metamaskNotFound: "errors:metamask/notFound",
+  invalidBody: "errors:api/invalidBody",
+  apiFailed: "errors:api/requestFailed",
+  catIdNotFound: "errors:catId/catIdNotFound",
+  invalidCatId: "errors:catId/invalidCatId",
+  catIdTaken: "errors:catId/alreadyTaken",
+  minCatIdLen: "errors:catId/length",
+  emailTaken: "errors:email/alreadyTaken",
+  signNotMatched: "errors:metamask/signMismatch",
+  invalidEmail: "errors:email/invalidEmail",
+  invalidAccountId: "errors:account/invalidAccountId",
+  invalidAddress: "errors:input/invalidAddress",
+  invalidInput: "errors:input/invalidInput",
+  txAlreadyExists: "errors:api/txAlreadyExists",
+  switchToRenChain: "errors:metamask/switchToRenChain",
+  switchToMainnet: "errors:metamask/switchToMainnet",
+  onlyWithdrawToYourAccount: "errors:tx/onlyWithdrawToYourAccount",
+  increaseTxAmount: "errors:tx/increaseTxAmount",
+  txFailed: "errors:tx/txFailed",
+  captchaFailed: "errors:captcha/failed",
+  waitlistNotFound: "errors:waitlist/notFound",
+  waitlistAccessPending: "errors:waitlist/accessPending",
+  insufficientFunds: "errors:input/insufficientFunds",
+  invalidSignature: "errors:tx/invalidSignature",
+};
+
+export default ErrorCodes

@@ -1,11 +1,9 @@
 import { isProduction } from "../utils/misc";
 
 let DOMAIN = "";
-if (typeof window === "undefined") {
-  if (isProduction()) DOMAIN = "https://app.catalog.fi";
-  else DOMAIN = "https://app-dev.catalog.fi";
-} else DOMAIN = window.location.origin;
-
+if (typeof window !== "undefined") {
+ DOMAIN = window.location.origin;
+} 
 const SigVerifierBaseUrl = isProduction()
   ? "http://localhost:8000/api/auth"
   : "http://localhost:8000/api/auth"; // "http://loclahost:4000";
@@ -14,7 +12,12 @@ const SigVerifierBaseUrl = isProduction()
   const OwlOracleBaseUrl = "https://www.etherchain.org/api";
   const CoinGeckoBaseUrl = "https://api.coingecko.com/api/v3";
 
+  const NextBaseUrl = `${DOMAIN}/api`
 const API = {
+    next: {
+    user: `${NextBaseUrl}/user`,
+    depositTx: `${NextBaseUrl}/depositTx`,
+  },
   ren: {
     verify: `${SigVerifierBaseUrl}/verify`,
     balancesOf: `https://astral-sol.onrender.com/balancesOf`,
