@@ -26,7 +26,7 @@ import { createGateway } from "../utils/gatewayUtils";
 type GatewayContextType = {
   gateway: Gateway | null;
   setGateway: Dispatch<SetStateAction<Gateway<any, any> | null>>;
-  defaultChains: ChainInstanceMap;
+  // defaultChains: ChainInstanceMap;
   renJs: RenJS | null;
   asset: any;
   setAsset: any;
@@ -53,7 +53,7 @@ export enum GatewayIOType {
 function useGatewayProvider(): GatewayContextType {
   // const allAssets = supportedAssets;
   // const allChains = Object.keys(chainsConfig);
-  const defaultChains = getDefaultChains(RenNetwork.Testnet);
+  // const defaultChains = getDefaultChains(RenNetwork.Testnet);
   const { fromChain, destinationChain } = useGlobalState();
 
   const [listenGatewayTx, setListenGatewayTx] = useState<boolean>(false);
@@ -167,7 +167,7 @@ function useGatewayProvider(): GatewayContextType {
 
   return {
         setGateway,
-        defaultChains,
+        // defaultChains,
         gateway,
         renJs,
         asset,

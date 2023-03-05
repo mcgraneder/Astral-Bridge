@@ -38,7 +38,7 @@ type GlobalContextType = {
   setDestinationChain: any;
   chainType: string;
   setChainType: Dispatch<SetStateAction<string>>;
-  defaultChains: ChainInstanceMap;
+  // defaultChains: ChainInstanceMap;
   loading: boolean;
   setEncryptedId: Dispatch<SetStateAction<string | null>>;
   encryptedId: string | null;
@@ -66,7 +66,7 @@ export type GP = {
 const GlobalStateContext = createContext({} as GlobalContextType);
 
 function GlobalStateProvider({ children }: GlobalStateProviderProps) {
-  const defaultChains = getDefaultChains(RenNetwork.Testnet);
+  // const defaultChains = getDefaultChains(RenNetwork.Testnet);
   const [loading, setLoading] = useState<boolean>(true);
   const { disconnect } = useAuth()
   const [encryptedId, setEncryptedId] = useState<string | null>(null);
@@ -156,7 +156,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
       setDestinationChain,
       chainType,
       setChainType,
-      defaultChains,
+      // defaultChains,
       loading,
       encryptedId,
       setEncryptedId,
@@ -179,7 +179,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
       setDestinationChain,
       chainType,
       setChainType,
-      defaultChains,
+      // defaultChains,
       loading,
       encryptedId,
       setEncryptedId,
