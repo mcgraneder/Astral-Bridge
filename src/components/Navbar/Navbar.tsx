@@ -12,8 +12,6 @@ import { useViewport } from "../../hooks/useViewport";
 import { useRouter } from "next/router";
 import { useGlobalState } from "../../context/useGlobalState";
 import Link from "next/link";
-import { get, post } from "../../services/axios";
-import API from "../../constants/Api";
 
 export const Wrapper = styled.div`
   display: flex;
@@ -104,17 +102,6 @@ export const Navbar = ({
   }, [active]);
 
   const Icon = provider ? walletIcon[provider] : undefined;
-
-  const testGet = async() => {
-    console.log("hy")
-    // const address = "0x13480Ea818fE2F27b82DfE7DCAc3Fd3E63A94113";
-    // const response = await get(API.next.user, { params: { address } });
-    const data = {
-      address: "0x081B3edA60f50631E5e966ED75bf6598cF69ee3C",
-    };
-    const response = await post(API.next.user, data);
-    console.log(response)
-  }
   return (
     <Wrapper>
       <Nav>
@@ -150,7 +137,9 @@ export const Navbar = ({
             <div className="mr-5 flex  h-full items-center">
               <PrimaryButton
                 className="mt-[2px] bg-blue-500 py-[6px] hover:bg-blue-600"
-                onClick={testGet}
+                onClick={
+                  !active ? toggleWalletModal : toggleAccoundDetailsModal
+                }
               >
                 {pendingTransaction ? (
                   <>
