@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { post } from "../../services/axios";
 import ErrorCodes from "../../constants/errorCodes";
 import { useGlobalState } from "../../context/useGlobalState";
+import { ResponseData } from '../../pages/api/user';
 
 export const FormWrapper = styled.div`
   position: fixed;
@@ -73,19 +74,18 @@ const AccountVerificationModal = () => {
     //   });
 
       const userData = { address: account!}
-      const response = await post(API.next.user, userData);
+      const response = await post<ResponseData>(API.next.user, userData);
       console.log(response);
       if (!response) {
         disconnect();
         throw new Error(ErrorCodes.apiFailed);
       }
 
-      const { data, errorCode } = response as any;
+      const { data, errorCode } = response;
       if (errorCode) {
         disconnect();
         return;
       }
-      console.log(data)
       setEncryptedId(data.accountId)
       console.log(data.accountId)
     //   localStorage.setItem("authToken", data.data.token);

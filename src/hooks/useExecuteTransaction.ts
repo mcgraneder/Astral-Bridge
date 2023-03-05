@@ -6,6 +6,8 @@ import { useNotification } from "../context/useNotificationState";
 import { patch, post } from "../services/axios";
 import API from '../constants/Api';
 import { BigNumber } from "bignumber.js";
+import { TxType } from "../pages/api/walletTx";
+import { ResponseData } from '../pages/api/user';
 
 type ExecuteTxType = {
   executeTransaction: (
@@ -13,7 +15,8 @@ type ExecuteTxType = {
     chain: any,
     args: any[],
     amount: string,
-    contractFn: any,
+    transactionType: string,
+    contractFn: any
   ) => Promise<void>;
 };
 const useEcecuteTransaction = (): ExecuteTxType => {
@@ -42,33 +45,37 @@ const useEcecuteTransaction = (): ExecuteTxType => {
       chain: any,
       args: any[],
       amount: string,
-      contractFn: any,
+      transactionType: string,
+      contractFn: any
     ): Promise<void> => {
       if (!library || !account) return;
       togglePendingModal();
-      const formattedAmount = new BigNumber(amount).shiftedBy(-asset.decimals)
+      const formattedAmount = new BigNumber(amount).shiftedBy(-asset.decimals);
       try {
         const tx = await contractFn(...args);
-        console.log(tx)
-        const transactionResponse = await post(API.next.depositTx, {
+        const transactionResponse = await post<ResponseData>(
+          API.next.depositTx,
+          {
             Id: "2",
             account: account,
+            type: transactionType === "Deposit" ? "deposit" : "withdraw",
             chain: chain.fullName,
             amount: formattedAmount,
             txHash: tx.hash,
             currency: asset.Icon,
-            encryptedId: "wqKTxW9NW8fCmitVFiS4"
-          }) as any;
+            encryptedId: encryptedId,
+          }
+        );
+        if (!transactionResponse) return;
 
-          console.log(transactionResponse)
         const txId = transactionResponse.txId;
         setTimeout(() => toggleSubmittedModal(), 250);
         await tx.wait(1);
 
-         await patch(API.next.depositTx, {
-            encryptedId: "wqKTxW9NW8fCmitVFiS4",
-            txId: txId,
-          });
+        await patch(API.next.depositTx, {
+          encryptedId: encryptedId,
+          txId: txId,
+        });
         setPendingTransaction(false);
 
         HandleNewNotification(
@@ -88,6 +95,7 @@ const useEcecuteTransaction = (): ExecuteTxType => {
       toggleRejectedModal,
       setPendingTransaction,
       HandleNewNotification,
+      encryptedId
     ]
   );
 

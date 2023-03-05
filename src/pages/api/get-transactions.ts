@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import Collections from "../../services/Collections";
 import ErrorCodes from "../../constants/errorCodes";
-import { TxType, TxStatus } from "./depositTx";
+import { TxType, TxStatus } from "./walletTx";
 import Firebase from "../../services/firebase-admin";
 
 type ResponseData = {

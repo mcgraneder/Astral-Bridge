@@ -50,7 +50,7 @@ async function handler(
     await userDocRef.collection(Collections.txs).doc(txId).update(dataToUpdate);
     res.status(200).json({ success: true });
   } else if (req.method === "POST") {
-    const { Id, account, chain, amount, txHash, currency } = req.body;
+    const { Id, account, chain, amount, txHash, currency, type } = req.body;
 
     const renVMTxIdDocSnapshot = await userDocRef
       .collection(Collections.txs)
@@ -63,14 +63,14 @@ async function handler(
 
     const txDoc = await userDocRef.collection(Collections.txs).add({
       date: Date.now(),
-      type: TxType.deposit,
+      type: type,
       txHash: txHash,
       status: TxStatus.pending,
       account: account,
       chain: chain,
       Id: Id,
       amount: amount,
-      currency: currency,
+      currency: currency
     });
     res.status(200).json({ success: true, txId: txDoc.id });
     return;

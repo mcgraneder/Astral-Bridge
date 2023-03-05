@@ -3,6 +3,7 @@ import Identicon from "../../Identicon/Identicon";
 import { StyledTokenRow } from "./HeaderRow";
 import { UilExclamationTriangle, UilSpinnerAlt, UilCheckCircle } from '@iconscout/react-unicons';
 import { formatTime } from '../../../utils/date';
+import { UserTxType } from './TransactionTable';
 
 const Spinner = () => {
     return <UilSpinnerAlt className={" h-5 w-5 animate-spin text-gray-400"} />;
@@ -18,10 +19,10 @@ export interface RowData {
     amount: string;
 }
 
-const TransactionRow = (data: any) => {
+const TransactionRow = (data: UserTxType) => {
  
-   const UTC = Math.floor(data.date / 1000);
-    const date = formatTime(UTC, 0)
+    const date = formatTime(Math.floor(data.date / 1000).toString(), 0)
+
     const getColour = (status: string): string => {
         if (status === "pending") return "text-gray-400"
         else if (status === "completed") return "text-green-500"
@@ -33,7 +34,7 @@ const TransactionRow = (data: any) => {
       else return <UilExclamationTriangle className={"h-5 w-5 text-red-500"}/>;
     };
     const statusColour = getColour(data.status)
-    const StatusIcon = getIcon(data.status)
+
   return (
     <StyledTokenRow>
       <div className="">

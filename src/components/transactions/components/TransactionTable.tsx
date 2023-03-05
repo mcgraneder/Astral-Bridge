@@ -109,7 +109,7 @@ export default function TransactionsTable() {
         txs: UserTxType[];
       } | null>(API.next.gettransactions, {
         params: {
-          accountId: "wqKTxW9NW8fCmitVFiS4",
+          accountId,
           limit: 100,
         },
       });
@@ -124,7 +124,6 @@ export default function TransactionsTable() {
     setFetchingState("FETCHED");
   }, [accountId]);
 
-  useEffect(() => console.log(transactions),[transactions])
   useEffect(() => {
     fetchTxs();
     const intervalId: NodeJS.Timer = setInterval(
@@ -152,7 +151,7 @@ export default function TransactionsTable() {
       <GridContainer>
         <HeaderRow />
         <div className="w-full border-[0.5px] border-gray-800" />
-        {transactions.map((data: RowData) => {
+        {transactions.map((data: UserTxType) => {
           if (transactions.length === 0) return;
           return <TransactionRow key={data.Id} {...data} />;
         })}

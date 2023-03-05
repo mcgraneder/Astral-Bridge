@@ -92,7 +92,7 @@ export const Navbar = ({
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { account, active } = useWeb3React();
   const { width } = useViewport();
-  const { pendingTransaction } = useGlobalState();
+  const { pendingTransaction, encryptedId } = useGlobalState();
   const activePath = router.pathname;
 
   useEffect(() => {

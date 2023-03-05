@@ -79,9 +79,7 @@ function useAuth(): AuthContextType {
   const [pendingWallet, setPendingWallet] = useState<
     AbstractConnector | undefined
   >();
-  const [pendingChain, setPendingChain] = useState<number | undefined>(
-    undefined
-  );
+
   const [isSwitchingChain, setIsSwitchingChain] = useState<boolean>(false);
   const [hasSigned, setHasSigned] = useState<boolean>(true);
   const [activeSession, setActiveSession] = useState<boolean>(false);

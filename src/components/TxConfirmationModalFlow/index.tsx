@@ -9,6 +9,7 @@ import TransactionSubmittedModal from "./TransactionSubmittedModal";
 import { useTransactionFlow } from "../../context/useTransactionFlowState";
 import { Tab } from "../WalletModal/WalletModal";
 import { customGP, gasPriceData } from '../../hooks/useMarketGasData';
+import { useGlobalState } from "../../context/useGlobalState";
 
 export const Backdrop = styled.div`
   position: fixed;
@@ -101,7 +102,17 @@ interface TxFlowProps {
   fetchMarketDataGasPrices: () => Promise<void>;
 }
 
-function TransactionFlowModals({ text, buttonState, asset, setText, defaultGasPrice, customGasPrice, setCustomtGasPrice, networkGasData, fetchMarketDataGasPrices  }: TxFlowProps) {
+function TransactionFlowModals({
+  text,
+  buttonState,
+  asset,
+  setText,
+  defaultGasPrice,
+  customGasPrice,
+  setCustomtGasPrice,
+  networkGasData,
+  fetchMarketDataGasPrices,
+}: TxFlowProps) {
   const {
     pending,
     togglePendingModal,
@@ -112,6 +123,8 @@ function TransactionFlowModals({ text, buttonState, asset, setText, defaultGasPr
     submitted,
     toggleSubmittedModal,
   } = useTransactionFlow();
+
+  const { destinationChain } = useGlobalState();
 
   return (
     <>
@@ -145,6 +158,8 @@ function TransactionFlowModals({ text, buttonState, asset, setText, defaultGasPr
           <TransactionSubmittedModal
             close={toggleSubmittedModal}
             open={submitted}
+            asset={asset}
+            chain={destinationChain}
           />
         )}
         {rejected && (

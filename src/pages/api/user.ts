@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import ErrorCodes from "../../constants/errorCodes";
 import Firebase from "../../services/firebase-admin";
 
-type ResponseData = {
+export type ResponseData = {
   [x: string]: any;
   errorCode?: string;
 };
@@ -90,12 +90,13 @@ export default async function handler(
           const newUserDoc = await userRef.add({
             accountId: address,
           });
+          const userData = userSnapshot.docs[0]!.data();
 
           throw new AccountError(
             {
               new: true,
               data: {
-                address: address,
+                data: userData,
                 accountId: newUserDoc.id,
               },
             },
