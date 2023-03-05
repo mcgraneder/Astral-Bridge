@@ -81,49 +81,21 @@ const NoTokenDisplay = styled.div`
 //     </GridContainer>
 //   );
 // }
-
-const DummyData: RowData[] = [
-  {
-    account: "0x123453...6789108",
-    Id: "1",
-    date: "30s ago",
-    type: "Deposit",
-    chain: "Ethereum",
-    amount: "0.253 ETH",
-    status: "Pending",
-    currency: "ETH",
-  },
-  {
-    account: "0x123453...6789108",
-    Id: "2",
-    date: "30 minutes ago",
-    type: "Approval",
-    chain: "BinanceSmartChain",
-    amount: "0.253 ETH",
-    status: "Failed",
-    currency: "ETH",
-  },
-  {
-    account: "0x123453...6789108",
-    Id: "3",
-    date: "5 days ago",
-    type: "Deposit",
-    chain: "Avalanche",
-    amount: "0.253 ETH",
-    status: "Completed",
-    currency: "DAI",
-  },
-  {
-    account: "0x123453...6789108",
-    Id: "4",
-    date: "10 days ago",
-    type: "Withdrawal",
-    chain: "Polygon",
-    amount: "0.253 ETH",
-    status: "Completed",
-    currency: "USDT",
-  },
-];
+export type UserTxType = {
+  Id: string
+  account: string
+  amount: string
+  chain: string
+  Ethereum: string
+  currency: string
+  BTC: string
+  date: number;
+  status: string
+  completed: string
+  txHash: string
+  type: string
+  deposit: string
+};
 export default function TransactionsTable() {
   const { encryptedId: accountId, pendingTransaction } = useGlobalState();
   const { account } = useWeb3React();
@@ -131,34 +103,36 @@ export default function TransactionsTable() {
   const [fetchingState, setFetchingState] = useState<any>("FETCHING");
 
   const fetchTxs = useCallback(async () => {
-    if (!account) return;
-
+    if (!accountId) return;
     try {
-      const transactions = (await get(API.next.gettransactions, {
+      const transactionsResponse = await get<{
+        txs: UserTxType[];
+      } | null>(API.next.gettransactions, {
         params: {
           accountId: "wqKTxW9NW8fCmitVFiS4",
           limit: 100,
         },
-      })) as Array<any>;
-      console.log(transactions);
+      });
+      if (!transactionsResponse) return;
       const cache: any = {};
-      cache["wqKTxW9NW8fCmitVFiS4"] = transactions.txs;
+      cache["wqKTxW9NW8fCmitVFiS4"] = transactionsResponse.txs;
       sessionStorage.setItem("user-transactions", JSON.stringify(cache));
-      setTransactions(transactions.txs);
+      setTransactions(transactionsResponse.txs);
     } catch (err) {
       //  setError("notifications.somethingWentWrongTryLater");
     }
     setFetchingState("FETCHED");
-  }, [account]);
+  }, [accountId]);
 
+  useEffect(() => console.log(transactions),[transactions])
   useEffect(() => {
     fetchTxs();
     const intervalId: NodeJS.Timer = setInterval(
       fetchTxs,
-      pendingTransaction ? 1000 : 5000
+      pendingTransaction ? 3000 : 20000
     );
     return () => clearInterval(intervalId);
-  }, [account, fetchTxs, pendingTransaction]);
+  }, [accountId, fetchTxs, pendingTransaction]);
 
   useEffect(() => {
     const txns = sessionStorage.getItem("user-transactions");
@@ -170,7 +144,8 @@ export default function TransactionsTable() {
         setFetchingState("FETCHED_CACHED");
       }
     }
-  }, [account]);
+  }, [accountId]);
+
   if (transactions.length == 0) return <></>;
   else
     return (
@@ -179,7 +154,7 @@ export default function TransactionsTable() {
         <div className="w-full border-[0.5px] border-gray-800" />
         {transactions.map((data: RowData) => {
           if (transactions.length === 0) return;
-          return <TransactionRow key={data.Id} {...transactions} />;
+          return <TransactionRow key={data.Id} {...data} />;
         })}
       </GridContainer>
     );

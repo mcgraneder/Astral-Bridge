@@ -2,12 +2,13 @@ import { Icon } from "../../Icons/AssetLogs/Icon";
 import Identicon from "../../Identicon/Identicon";
 import { StyledTokenRow } from "./HeaderRow";
 import { UilExclamationTriangle, UilSpinnerAlt, UilCheckCircle } from '@iconscout/react-unicons';
+import { formatTime } from '../../../utils/date';
 
 const Spinner = () => {
     return <UilSpinnerAlt className={" h-5 w-5 animate-spin text-gray-400"} />;
 }
 export interface RowData {
-    account: string;
+    txHash: string;
     Id: string;
     date: string;
     type: string;
@@ -19,6 +20,8 @@ export interface RowData {
 
 const TransactionRow = (data: any) => {
  
+   const UTC = Math.floor(data.date / 1000);
+    const date = formatTime(UTC, 0)
     const getColour = (status: string): string => {
         if (status === "pending") return "text-gray-400"
         else if (status === "completed") return "text-green-500"
@@ -29,36 +32,39 @@ const TransactionRow = (data: any) => {
       else if (status === "completed") return <UilCheckCircle className={"h-5 w-5 text-green-500"}/>
       else return <UilExclamationTriangle className={"h-5 w-5 text-red-500"}/>;
     };
-    const statusColour = getColour(data[0].status)
-    const StatusIcon = getIcon(data[0].status)
+    const statusColour = getColour(data.status)
+    const StatusIcon = getIcon(data.status)
   return (
     <StyledTokenRow>
       <div className="">
-        <span>{data[0].Id}</span>
+        <span>{data.Id}</span>
       </div>
       <div className="flex items-center gap-2 text-blue-600">
         <Identicon size={18} />
-        <span>{data[0].account.substring(0, 18)}</span>
+        <span>{`${data.txHash.substring(0, 12)}...${data.txHash.substring(
+          data.txHash.length - 12,
+          data.txHash.length
+        )}`}</span>
       </div>
       <div className="">
-        <span>{data[0].date}</span>
+        <span>{date}</span>
       </div>
       <div className="">
-        <span>{data[0].type}</span>
+        <span>{data.type}</span>
       </div>
       <div className="flex items-center gap-2">
-        <Icon chainName={data[0].chain} className="h-5 w-5" />
+        <Icon chainName={data.chain} className="h-5 w-5" />
         <span>
-          {data[0].chain === "BinanceSmartChain" ? "Binance" : data[0].chain}
+          {data.chain === "BinanceSmartChain" ? "Binance" : data.chain}
         </span>
       </div>
       <div className="flex items-center gap-2">
-        <span>{data[0].amount}</span>
-        <Icon chainName={data[0].currency} className="h-5 w-5" />
+        <span>{data.amount}</span>
+        <Icon chainName={data.currency} className="h-5 w-5" />
       </div>
       <div className="flex items-center gap-2">
-        {getIcon(data[0].status)}
-        <span className={`${statusColour}`}>{data[0].status}</span>
+        {getIcon(data.status)}
+        <span className={`${statusColour}`}>{data.status}</span>
       </div>
     </StyledTokenRow>
   );

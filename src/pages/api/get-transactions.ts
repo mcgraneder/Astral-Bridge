@@ -22,66 +22,20 @@ const initializeVariables = (
 };
 
 
-// const checkTransactionType = async (
-//   txDocsRef: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
-//   userRef: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>
-// ) => {
-//   const txs: any[] = [];
-//   const txDocs = txDocsRef.docs;
+const checkTransactionType = async (
+  txDocsRef: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
+  userRef: FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>
+) => {
+  const txs: any[] = [];
+  const txDocs = txDocsRef.docs;
 
-//   for (const tx of txDocs) {
-//     const data = tx.data();
-//     const { status, type, timestamp } = data;
-//     if (status === TxStatus.initiated || status === TxStatus.cancelled)
-//       continue;
-
-//     let txObj: any = { status, type, timestamp, txId: tx.id };
-
-//     if (type === TxType.transfer) {
-//       const { to, from, amount, fiatAmount, token, received, tokenAddress } =
-//         data;
-
-//       txObj = await checkReceivedOrSentInTransfer(
-//         txObj,
-//         received,
-//         userRef,
-//         to,
-//         from
-//       );
-//       txObj = { ...txObj, amount, fiatAmount, token, received, tokenAddress };
-//     } else if (type === TxType.swap) {
-//       const {
-//         sellAmount,
-//         sellToken,
-//         sellFiatAmount,
-//         buyAmount,
-//         buyToken,
-//         buyFiatAmount,
-//       } = data;
-//       txObj = {
-//         ...txObj,
-//         sellAmount,
-//         sellToken,
-//         sellFiatAmount,
-//         buyAmount,
-//         buyToken,
-//         buyFiatAmount,
-//       };
-//     } else {
-//       // withdraw and deposit
-//       const { token, amount, fiatAmount, renVMTxId, tokenAddress } = data;
-//       txObj = { ...txObj, token, amount, fiatAmount, renVMTxId, tokenAddress };
-//     }
-//     if (type === TxType.withdraw || type === TxType.deposit) {
-//       if (txObj.renVMTxId) {
-//         txs.push(txObj);
-//       }
-//     } else {
-//       txs.push(txObj);
-//     }
-//   }
-//   return txs;
-// };
+  for (const tx of txDocs) {
+    const data = tx.data();
+    const { status, type, timestamp } = data;
+    txs.push(data);
+  }
+  return txs;
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -117,15 +71,7 @@ export default async function handler(
       .limit(limit)
       .get();
 
-    // const txs = await checkTransactionType(txDocsRef, userRef);
-    const txs = txDocsRef.docs.map(
-      (
-        doc: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>
-      ) => {
-        console.log(doc.data())
-        return doc.data();
-      }
-    );
+    const txs = await checkTransactionType(txDocsRef, userRef);
 
     res.status(200).json({ txs });
   }

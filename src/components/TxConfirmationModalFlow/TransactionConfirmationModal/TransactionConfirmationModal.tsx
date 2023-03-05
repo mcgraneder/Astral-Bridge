@@ -308,6 +308,7 @@ const TxConfirmationModal = ({
           asset,
           destinationChain,
           [txAmount.toString(), tokenAddress, optionalParams],
+          txAmount.toString(),
           bridgeContract?.transferFrom
         );
       } else if (transactionType === "Withdraw") {
@@ -315,6 +316,7 @@ const TxConfirmationModal = ({
           asset,
           destinationChain,
           [account, txAmount.toString(), tokenAddress, optionalParams],
+          txAmount.toString(),
           bridgeContract?.transfer
         );
       }

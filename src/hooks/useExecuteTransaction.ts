@@ -5,12 +5,14 @@ import { useGlobalState } from "../context/useGlobalState";
 import { useNotification } from "../context/useNotificationState";
 import { patch, post } from "../services/axios";
 import API from '../constants/Api';
+import { BigNumber } from "bignumber.js";
 
 type ExecuteTxType = {
   executeTransaction: (
     asset: any,
     chain: any,
     args: any[],
+    amount: string,
     contractFn: any,
   ) => Promise<void>;
 };
@@ -39,40 +41,31 @@ const useEcecuteTransaction = (): ExecuteTxType => {
       asset: any,
       chain: any,
       args: any[],
+      amount: string,
       contractFn: any,
     ): Promise<void> => {
       if (!library || !account) return;
       togglePendingModal();
-
+      const formattedAmount = new BigNumber(amount).shiftedBy(-asset.decimals)
       try {
-          const response = await post(API.next.depositTx, {
+        const tx = await contractFn(...args);
+        console.log(tx)
+        const transactionResponse = await post(API.next.depositTx, {
             Id: "2",
             account: account,
             chain: chain.fullName,
-            amount: "0.00133",
-            txHash: "0zsdh",
+            amount: formattedAmount,
+            txHash: tx.hash,
             currency: asset.Icon,
             encryptedId: "wqKTxW9NW8fCmitVFiS4"
           }) as any;
 
-        // console.log(response);
-        const txId = response.txId;
-
-        // setTimeout(async () => {
-        //   const response = await patch(API.next.depositTx, {
-        //     encryptedId: "wqKTxW9NW8fCmitVFiS4",
-        //     txId: txId,
-        //   });
-        //   console.log(response)
-        // }, 10000);
-        const tx = await contractFn(...args);
-
-        console.log(tx)
-
+          console.log(transactionResponse)
+        const txId = transactionResponse.txId;
         setTimeout(() => toggleSubmittedModal(), 250);
         await tx.wait(1);
 
-         const updateResponse = await patch(API.next.depositTx, {
+         await patch(API.next.depositTx, {
             encryptedId: "wqKTxW9NW8fCmitVFiS4",
             txId: txId,
           });
