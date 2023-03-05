@@ -83,6 +83,26 @@ const NavLinks = ({ routes }: { routes: string[] }) => {
     </>
   );
 };
+
+const InputDropdown = () => {
+  return (
+    <div className="pt-[45px] px-4 pb-2 absolute top-0 left-0 -z-10  w-full rounded-lg border border-gray-500 bg-darkBackground">
+      {[1, 2, 3].map((item, index) => {
+        return (
+          <div key={index} className="flex items-center  gap-2 px-1 py-4">
+            <div className="flex items-center justify-center">
+              <span className="h-8 w-8 rounded-full bg-tertiary" />
+            </div>
+            <div className="flex w-[90%] flex-col items-center justify-center gap-2">
+              <span className="h-4 w-full rounded-full bg-tertiary" />
+              <span className="h-4 w-full rounded-full bg-tertiary" />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
 export const Navbar = ({
   toggleWalletModal,
   toggleAccoundDetailsModal,
@@ -90,6 +110,7 @@ export const Navbar = ({
   const [provider, setProvider] = useState<any>(undefined);
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [dropDownActive, setDropdownActive] = useState<boolean>(false);
   const { account, active } = useWeb3React();
   const { width } = useViewport();
   const { pendingTransaction, encryptedId } = useGlobalState();
@@ -100,6 +121,10 @@ export const Navbar = ({
     const provider = localStorage.getItem("provider");
     setProvider(provider);
   }, [active]);
+
+  const handleFocus = () => {
+    setDropdownActive(true);
+  };
 
   const Icon = provider ? walletIcon[provider] : undefined;
   return (
@@ -113,17 +138,27 @@ export const Navbar = ({
             {activePath !== "/home" && <NavLinks routes={ROUTES} />}
           </BoxItemContainer>
           {activePath !== "/home" && (
-            <BoxItemContainer allignment={"flex-end"}>
-              <div className="mr-4 flex h-[45px] w-fit max-w-[90%] items-center justify-center rounded-lg border border-transparent bg-black bg-opacity-10 px-2 lg:w-full lg:border-gray-500">
+            <BoxItemContainer allignment={"center"}>
+              <div
+                className={`relative  flex h-[45px] w-fit max-w-[90%] items-center justify-center rounded-lg border border-transparent bg-darkBackground bg-opacity-40 px-2 lg:w-full lg:border-gray-500 ${
+                  dropDownActive && "border-b-0 bg-opacity-100"
+                }`}
+              >
                 <UilSearch className="text-grey-400 mr-2 h-6 w-6" />
                 {width >= 1000 && (
-                  <input
-                    value={searchTerm}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => () =>
-                      setSearchTerm(e.target.value)}
-                    className="placeholder:text-grey-400 flex-1 bg-transparent  text-[15px] font-medium tracking-wide outline-none"
-                    placeholder={"Search for tokens or transactions"}
-                  />
+                  <>
+                    <input
+                      value={searchTerm}
+                      onChange={(e) =>
+                        () =>
+                          setSearchTerm(e.target.value)}
+                      className="placeholder:text-grey-400 flex-1 bg-transparent  text-[15px] font-medium tracking-wide outline-none"
+                      placeholder={"Search transactions by token"}
+                      onFocus={handleFocus}
+                      onBlur={() => setDropdownActive(false)}
+                    />
+                    {dropDownActive && <InputDropdown/>}
+                  </>
                 )}
               </div>
             </BoxItemContainer>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import HeaderRow from "./HeaderRow";
 import { RowData } from "./TransactionRow";
 import TransactionRow from "./TransactionRow";
@@ -7,6 +7,8 @@ import { useGlobalState } from "../../../context/useGlobalState";
 import API from "../../../constants/Api";
 import { get } from "../../../services/axios";
 import { useWeb3React } from "@web3-react/core";
+import { StyledTokenRow } from './HeaderRow';
+import { loadingAnimation } from '../../CSS/SkeletomStyles';
 
 export const MAX_WIDTH_MEDIA_BREAKPOINT = "1200px";
 
@@ -96,11 +98,49 @@ export type UserTxType = {
   type: string
   deposit: string
 };
+
+export const GlowingText = styled.div`
+  font-size: 35px;
+  width: 100%;
+  height: 80%;
+  border-radius: 12px;
+  animation-fill-mode: both;
+  background: ${(props: any) =>
+    props.loading
+      ? `linear-gradient(
+    to left,
+    rgb(62, 68, 82) 25%,
+    rgb(100, 102, 116) 50%,
+    rgb(62, 68, 82) 75%
+  )`
+      : "white"};
+  will-change: background-position;
+  background-size: 400%;
+
+  color: transparent;
+
+  ${(props: any) =>
+    props.loading &&
+    css`
+      animation: ${loadingAnimation} 1s infinite;
+    `}
+`;
+
 export default function TransactionsTable() {
-  const { encryptedId: accountId, pendingTransaction } = useGlobalState();
+  const { encryptedId: accountId, pendingTransaction, transactions, setTransactions, loadedTxs, setLoadedTxs } = useGlobalState();
   const { account } = useWeb3React();
-  const [transactions, setTransactions] = useState<any[]>([]);
   const [fetchingState, setFetchingState] = useState<any>("FETCHING");
+  const [loading, setLoading] = useState<boolean>(loadedTxs == false ? true : false)
+
+  useEffect(() => {
+    if (loadedTxs) return
+    const loaderTimeout: NodeJS.Timeout = setTimeout(() => {
+      setLoading(false)
+      setLoadedTxs(true)
+    }, 2000)
+
+    return () => clearTimeout(loaderTimeout)
+  }, [])
 
   const fetchTxs = useCallback(async () => {
     if (!accountId) return;
@@ -122,7 +162,7 @@ export default function TransactionsTable() {
       //  setError("notifications.somethingWentWrongTryLater");
     }
     setFetchingState("FETCHED");
-  }, [accountId]);
+  }, [accountId, setFetchingState, setTransactions]);
 
   useEffect(() => {
     fetchTxs();
@@ -143,9 +183,57 @@ export default function TransactionsTable() {
         setFetchingState("FETCHED_CACHED");
       }
     }
-  }, [accountId]);
+  }, [accountId, setFetchingState, setTransactions]);
 
-  if (transactions.length == 0) return <></>;
+  if (transactions.length === 0 || loading) return (
+    <GridContainer>
+      <HeaderRow />
+      <div className="w-full border-[0.5px] border-gray-800" />
+      {["1", "2", "3", "5", "6", "1", "2", "3", "5", "6"].map(
+        (item: any, index: number) => {
+          return (
+            <StyledTokenRow key={index}>
+              <div className="mr-4">
+                <GlowingText loading={true}>
+                  <div className=" rounded-lg  p-3" />
+                </GlowingText>
+              </div>
+              <div className="flex w-[90%] items-center gap-2 text-blue-600">
+                <GlowingText loading={true}>
+                  <div className=" h-5 w-5 rounded-full" />
+                </GlowingText>
+              </div>
+              <div className="flex w-[90%] items-center gap-2">
+                <GlowingText loading={true}>
+                  <div className=" h-5 w-5 rounded-full" />
+                </GlowingText>
+              </div>
+              <div className="flex w-[90%] items-center gap-2">
+                <GlowingText loading={true}>
+                  <div className=" h-5 w-5 rounded-full" />
+                </GlowingText>
+              </div>
+              <div className="flex w-[80%] items-center gap-2">
+                <GlowingText loading={true}>
+                  <div className=" h-5 w-5 rounded-full" />
+                </GlowingText>
+              </div>
+              <div className="flex w-[90%] items-center gap-2">
+                <GlowingText loading={true}>
+                  <div className=" h-5 w-5 rounded-full" />
+                </GlowingText>
+              </div>
+              <div className="flex w-[90%] items-center gap-2">
+                <GlowingText loading={true}>
+                  <div className=" h-5 w-5 rounded-full" />
+                </GlowingText>
+              </div>
+            </StyledTokenRow>
+          );
+        }
+      )}
+    </GridContainer>
+  );
   else
     return (
       <GridContainer>

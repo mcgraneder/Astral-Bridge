@@ -41,6 +41,10 @@ type GlobalContextType = {
   loading: boolean;
   setEncryptedId: Dispatch<SetStateAction<string | null>>;
   encryptedId: string | null;
+  transactions: any[];
+  setTransactions: any;
+  loadedTxs: any;
+  setLoadedTxs: any
 };
 
 export type MulticallReturn = {
@@ -71,6 +75,8 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     chainsBaseConfig.Ethereum
   );
   const [chainType, setChainType] = useState<string>("from");
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [loadedTxs, setLoadedTxs] = useState<any>(false);
 
   const [assetBalances, setAssetBalances] = useState<{
     [x: string]: MulticallReturn | undefined;
@@ -150,6 +156,10 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
       loading,
       encryptedId,
       setEncryptedId,
+      transactions,
+      setTransactions,
+      loadedTxs,
+      setLoadedTxs,
     }),
     [
       memoizedFetchBalances,
@@ -167,6 +177,10 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
       loading,
       encryptedId,
       setEncryptedId,
+      transactions,
+      setTransactions,
+      loadedTxs,
+      setLoadedTxs,
     ]
   );
   return (
