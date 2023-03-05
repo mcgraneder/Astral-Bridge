@@ -71,14 +71,13 @@ export default async function handler(
       const userSnapshot = await userRef
         .where("accountId", "==", address)
         .get();
-        
       handleExistingUserGetResponse(userSnapshot, address);
       handleNewUserGetResponse(address);
     } else if (req.method === "POST") {
       const userSnapshot = await userRef
         .where("accountId", "==", address)
         .get();
-
+        
       handleExistingUserPostResponse(userSnapshot, address);
       if (userSnapshot.empty) {
         // CREATING NEW USER

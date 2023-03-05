@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import Collections from "../../services/Collections";
 import Firebase from "../../services/firebase-admin";
+import ErrorCodes from "../../constants/errorCodes";
 
 const TxStatus = {
-  initiated: "initiated",
+  pending: "pending",
   releaseTxPending: "releaseTxPending",
   queryRenTxPending: "queryRenTxPending",
   queryRelayTxPending: "queryRelayTxPending",
@@ -19,36 +20,6 @@ const TxType = {
   swap: "swap",
 };
 
-
-const ErrorCodes = {
-  metamaskNotFound: "errors:metamask/notFound",
-  invalidBody: "errors:api/invalidBody",
-  apiFailed: "errors:api/requestFailed",
-  catIdNotFound: "errors:catId/catIdNotFound",
-  invalidCatId: "errors:catId/invalidCatId",
-  catIdTaken: "errors:catId/alreadyTaken",
-  minCatIdLen: "errors:catId/length",
-  emailTaken: "errors:email/alreadyTaken",
-  signNotMatched: "errors:metamask/signMismatch",
-  invalidEmail: "errors:email/invalidEmail",
-  invalidAccountId: "errors:account/invalidAccountId",
-  invalidAddress: "errors:input/invalidAddress",
-  invalidInput: "errors:input/invalidInput",
-  txAlreadyExists: "errors:api/txAlreadyExists",
-  switchToRenChain: "errors:metamask/switchToRenChain",
-  switchToMainnet: "errors:metamask/switchToMainnet",
-  onlyWithdrawToYourAccount: "errors:tx/onlyWithdrawToYourAccount",
-  increaseTxAmount: "errors:tx/increaseTxAmount",
-  txFailed: "errors:tx/txFailed",
-  captchaFailed: "errors:captcha/failed",
-  waitlistNotFound: "errors:waitlist/notFound",
-  waitlistAccessPending: "errors:waitlist/accessPending",
-  insufficientFunds: "errors:input/insufficientFunds",
-  invalidSignature: "errors:tx/invalidSignature",
-};
-
-
-
 type ResponseData = {
   [x: string]: any;
   errorCode?: string;
@@ -58,15 +29,17 @@ async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  const { accountId } = req.body;
+  const { encryptedId } = req.body;
 
-  if (!accountId) {
-    res.status(400).json({ accountId, errorCode: ErrorCodes.invalidBody });
+  if (!encryptedId) {
+    res.status(400).json({ encryptedId, errorCode: ErrorCodes.invalidBody });
     return;
   }
 
   const { userRef } = await Firebase();
-  const userSnapshot = await userRef.doc(accountId).get();
+  const userSnapshot = await userRef.doc(encryptedId).get();
+
+  console.log(userSnapshot.exists);
 
   if (!userSnapshot.exists) {
     res.status(204).end();
@@ -86,30 +59,27 @@ async function handler(
     await userDocRef.collection(Collections.txs).doc(txId).update(dataToUpdate);
     res.status(200).json({ success: true });
   } else if (req.method === "POST") {
-    const {
-      renVMTxId = null,
-      accountId,
-      accountKey,
-      status,
-      ...rest
-    } = req.body;
+    const { Id, account, chain, amount, txHash, currency } = req.body;
 
-    // CHECK IF RENVMTXID ALREADY EXISTS
-    // const renVMTxIdDocSnapshot = await userDocRef
-    //   .collection(Collections.txs)
-    //   .where("renVMTxId", "==", renVMTxId)
-    //   .get();
-    // if (!renVMTxIdDocSnapshot.empty) {
-    //   res.status(200).json({ errorCode: ErrorCodes.txAlreadyExists });
-    //   return;
-    // }
+    const renVMTxIdDocSnapshot = await userDocRef
+      .collection(Collections.txs)
+      .where("txHash", "==", txHash)
+      .get();
+    if (!renVMTxIdDocSnapshot.empty) {
+      res.status(200).json({ errorCode: ErrorCodes.txAlreadyExists });
+      return;
+    }
 
     const txDoc = await userDocRef.collection(Collections.txs).add({
-      timestamp: Date.now(),
+      date: Date.now(),
       type: TxType.deposit,
-      renVMTxId,
-      status: TxStatus.initiated,
-      ...rest,
+      txHash: txHash,
+      status: TxStatus.pending,
+      account: account,
+      chain: chain,
+      Id: Id,
+      amount: amount,
+      currency: currency
     });
     res.status(200).json({ success: true, txId: txDoc.id });
     return;

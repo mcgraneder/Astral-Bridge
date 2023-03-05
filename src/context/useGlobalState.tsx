@@ -35,7 +35,9 @@ type GlobalContextType = {
   chainType: string;
   setChainType: Dispatch<SetStateAction<string>>;
   defaultChains: ChainInstanceMap;
-  loading: boolean
+  loading: boolean;
+  setEncryptedId: Dispatch<SetStateAction<string | null>>;
+  encryptedId: string | null;
 };
 
 export type MulticallReturn = {
@@ -57,6 +59,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     const defaultChains = getDefaultChains(RenNetwork.Testnet);
   const [loading, setLoading] = useState<boolean>(true);  
 
+  const [encryptedId, setEncryptedId] = useState<string | null>(null)
   const [fetchedStoredChain, setFetchStoredChain] = useState<boolean>(false);
   const [pendingTransaction, setPendingTransaction] = useState<boolean>(false);
   const [fetchingBalances, setFetchingBalances] = useState<boolean>(false);
@@ -134,7 +137,9 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
         chainType,
         setChainType,
         defaultChains,
-        loading
+        loading,
+        encryptedId,
+        setEncryptedId
       }),
       [
         memoizedFetchBalances,
@@ -149,7 +154,9 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
         chainType,
         setChainType,
         defaultChains,
-        loading
+        loading,
+        encryptedId,
+        setEncryptedId
       ]
     );
   return (

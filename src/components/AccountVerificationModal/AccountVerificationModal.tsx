@@ -11,6 +11,7 @@ import API from "../../constants/Api";
 import { useRouter } from "next/router";
 import { post } from "../../services/axios";
 import ErrorCodes from "../../constants/errorCodes";
+import { useGlobalState } from "../../context/useGlobalState";
 
 export const FormWrapper = styled.div`
   position: fixed;
@@ -48,6 +49,7 @@ const AccountVerificationModal = () => {
   const { library, account } = useWeb3React();
   const { pathname, push } = useRouter();
   const { hasSigned, setHasSigned, disconnect, connecting } = useAuth();
+  const { setEncryptedId } = useGlobalState()
 
   const close = () => {
     setHasSigned(true);
@@ -78,11 +80,13 @@ const AccountVerificationModal = () => {
         throw new Error(ErrorCodes.apiFailed);
       }
 
-      const { errorCode } = response as any;
+      const { data, errorCode } = response as any;
       if (errorCode) {
         disconnect();
         return;
       }
+      console.log(data)
+      setEncryptedId(data.accountId)
     //   localStorage.setItem("authToken", data.data.token);
       if (pathname === "/home") push("/wallet");
 
