@@ -14,9 +14,10 @@ const SigVerifierBaseUrl = isProduction()
 
   const NextBaseUrl = `${DOMAIN}/api`
 const API = {
-    next: {
+  next: {
     user: `${NextBaseUrl}/user`,
     depositTx: `${NextBaseUrl}/depositTx`,
+    gettransactions: `${NextBaseUrl}/get-transactions`,
   },
   ren: {
     verify: `${SigVerifierBaseUrl}/verify`,

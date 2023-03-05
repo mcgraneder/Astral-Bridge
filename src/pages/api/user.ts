@@ -30,7 +30,7 @@ const handleExistingUserGetResponse = (
     throw new AccountError(
       {
         exists: true,
-        data: { accountId: address, Id: userSnapshot.docs[0]!.id },
+        data: { data: userData, accountId: userSnapshot.docs[0]!.id },
       },
       200
     );
@@ -49,7 +49,10 @@ const handleExistingUserPostResponse = (
     // USER ALREADY EXISTS
     const userData = userSnapshot.docs[0]!.data();
     throw new AccountError(
-      { new: false, data: { data: userData, accountId: address } },
+      {
+        new: false,
+        data: { data: userData, accountId: userSnapshot.docs[0]!.id },
+      },
       200
     );
   }

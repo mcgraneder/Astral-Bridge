@@ -12,8 +12,6 @@ import { useViewport } from "../../hooks/useViewport";
 import { useRouter } from "next/router";
 import { useGlobalState } from "../../context/useGlobalState";
 import Link from "next/link";
-import { get, post } from "../../services/axios";
-import API from "../../constants/Api";
 
 export const Wrapper = styled.div`
   display: flex;
@@ -94,7 +92,7 @@ export const Navbar = ({
   const [searchTerm, setSearchTerm] = useState<string>("");
   const { account, active } = useWeb3React();
   const { width } = useViewport();
-  const { pendingTransaction, encryptedId } = useGlobalState();
+  const { pendingTransaction } = useGlobalState();
   const activePath = router.pathname;
 
   useEffect(() => {
@@ -104,26 +102,6 @@ export const Navbar = ({
   }, [active]);
 
   const Icon = provider ? walletIcon[provider] : undefined;
-
-  const testGet = async() => {
-    console.log("hy")
-    const address = {
-      address: account
-    }
-    // const response = await post(API.next.user, address);
-    // const { Id, account, chain, amount, txHash } = req.body;
-        const response = await post(API.next.depositTx, {
-          Id: "1",
-          account: account,
-          chain: "Ethereum",
-          amount: "0.123",
-          txHash: "0x12345",
-          currency: "ETH",
-          encryptedId: "ukzv9cVVflc6Slk6eMDV"
-        });
-
-      console.log(response);
-  }
   return (
     <Wrapper>
       <Nav>
@@ -159,7 +137,9 @@ export const Navbar = ({
             <div className="mr-5 flex  h-full items-center">
               <PrimaryButton
                 className="mt-[2px] bg-blue-500 py-[6px] hover:bg-blue-600"
-                onClick={testGet}
+                onClick={
+                  !active ? toggleWalletModal : toggleAccoundDetailsModal
+                }
               >
                 {pendingTransaction ? (
                   <>

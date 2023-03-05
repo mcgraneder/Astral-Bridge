@@ -1,9 +1,12 @@
+import { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import HeaderRow from "./HeaderRow";
-import { RowData } from './TransactionRow';
-import TransactionRow from './TransactionRow';
-
-
+import { RowData } from "./TransactionRow";
+import TransactionRow from "./TransactionRow";
+import { useGlobalState } from "../../../context/useGlobalState";
+import API from "../../../constants/Api";
+import { get } from "../../../services/axios";
+import { useWeb3React } from "@web3-react/core";
 
 export const MAX_WIDTH_MEDIA_BREAKPOINT = "1200px";
 
@@ -20,7 +23,6 @@ const GridContainer = styled.div`
   /* justify-content: center; */
   align-items: center;
   border: 1px solid rgb(48, 63, 88);
-
 `;
 
 const TokenDataContainer = styled.div`
@@ -123,33 +125,62 @@ const DummyData: RowData[] = [
   },
 ];
 export default function TransactionsTable() {
-  // TODO: consider moving prefetched call into app.tsx and passing it here, use a preloaded call & updated on interval every 60s
+  const { encryptedId: accountId, pendingTransaction } = useGlobalState();
+  const { account } = useWeb3React();
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [fetchingState, setFetchingState] = useState<any>("FETCHING");
 
-  /* loading and error state */
-//   if (loadingTokens) {
-//     return <LoadingTokenTable rowCount={PAGE_SIZE} />;
-//   } else if (!tokens) {
-//     return (
-//       <NoTokensState
-//         message={
-//           <>
-//             <AlertTriangle size={16} />
-//             <Trans>An error occurred loading tokens. Please try again.</Trans>
-//           </>
-//         }
-//       />
-//     );
-//   } else if (tokens?.length === 0) {
-//     return <NoTokensState message={<Trans>No tokens found</Trans>} />;
-//   } else {
+  const fetchTxs = useCallback(async () => {
+    if (!account) return;
+
+    try {
+      const transactions = (await get(API.next.gettransactions, {
+        params: {
+          accountId: "wqKTxW9NW8fCmitVFiS4",
+          limit: 100,
+        },
+      })) as Array<any>;
+      console.log(transactions);
+      const cache: any = {};
+      cache["wqKTxW9NW8fCmitVFiS4"] = transactions.txs;
+      sessionStorage.setItem("user-transactions", JSON.stringify(cache));
+      setTransactions(transactions.txs);
+    } catch (err) {
+      //  setError("notifications.somethingWentWrongTryLater");
+    }
+    setFetchingState("FETCHED");
+  }, [account]);
+
+  useEffect(() => {
+    fetchTxs();
+    const intervalId: NodeJS.Timer = setInterval(
+      fetchTxs,
+      pendingTransaction ? 1000 : 5000
+    );
+    return () => clearInterval(intervalId);
+  }, [account, fetchTxs, pendingTransaction]);
+
+  useEffect(() => {
+    const txns = sessionStorage.getItem("user-transactions");
+    if (accountId && txns) {
+      const cache = JSON.parse(txns);
+      if (Object.keys(cache).length > 0 && cache[accountId].length > 0) {
+        setTransactions(cache[accountId]);
+        //  setError(null);
+        setFetchingState("FETCHED_CACHED");
+      }
+    }
+  }, [account]);
+  if (transactions.length == 0) return <></>;
+  else
     return (
       <GridContainer>
-        <HeaderRow/>
-        <div className="w-full border-[0.5px] border-gray-800"/>
-        {DummyData.map((data: RowData) => {
-            return <TransactionRow key={data.Id} {...data}/>
+        <HeaderRow />
+        <div className="w-full border-[0.5px] border-gray-800" />
+        {transactions.map((data: RowData) => {
+          if (transactions.length === 0) return;
+          return <TransactionRow key={data.Id} {...transactions} />;
         })}
       </GridContainer>
     );
-  }
-
+}

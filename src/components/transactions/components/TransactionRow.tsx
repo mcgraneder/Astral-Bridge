@@ -17,47 +17,48 @@ export interface RowData {
     amount: string;
 }
 
-const TransactionRow = (data: RowData) => {
+const TransactionRow = (data: any) => {
+ 
     const getColour = (status: string): string => {
-        if (status === "Pending") return "text-gray-400"
-        else if (status === "Completed") return "text-green-500"
+        if (status === "pending") return "text-gray-400"
+        else if (status === "completed") return "text-green-500"
         else return "text-red-500"
     }
     const getIcon = (status: string) => {
-      if (status === "Pending") return <Spinner />;
-      else if (status === "Completed") return <UilCheckCircle className={"h-5 w-5 text-green-500"}/>
+      if (status === "pending") return <Spinner />;
+      else if (status === "completed") return <UilCheckCircle className={"h-5 w-5 text-green-500"}/>
       else return <UilExclamationTriangle className={"h-5 w-5 text-red-500"}/>;
     };
-    const statusColour = getColour(data.status)
-    const StatusIcon = getIcon(data.status)
+    const statusColour = getColour(data[0].status)
+    const StatusIcon = getIcon(data[0].status)
   return (
     <StyledTokenRow>
       <div className="">
-        <span>{data.Id}</span>
+        <span>{data[0].Id}</span>
       </div>
       <div className="flex items-center gap-2 text-blue-600">
         <Identicon size={18} />
-        <span>{data.account}</span>
+        <span>{data[0].account.substring(0, 18)}</span>
       </div>
       <div className="">
-        <span>{data.date}</span>
+        <span>{data[0].date}</span>
       </div>
       <div className="">
-        <span>{data.type}</span>
+        <span>{data[0].type}</span>
       </div>
       <div className="flex items-center gap-2">
-        <Icon chainName={data.chain} className="h-5 w-5" />
+        <Icon chainName={data[0].chain} className="h-5 w-5" />
         <span>
-          {data.chain === "BinanceSmartChain" ? "Binance" : data.chain}
+          {data[0].chain === "BinanceSmartChain" ? "Binance" : data[0].chain}
         </span>
       </div>
       <div className="flex items-center gap-2">
-        <span>{data.amount}</span>
-        <Icon chainName={data.currency} className="h-5 w-5" />
+        <span>{data[0].amount}</span>
+        <Icon chainName={data[0].currency} className="h-5 w-5" />
       </div>
       <div className="flex items-center gap-2">
-        {getIcon(data.status)}
-        <span className={`${statusColour}`}>{data.status}</span>
+        {getIcon(data[0].status)}
+        <span className={`${statusColour}`}>{data[0].status}</span>
       </div>
     </StyledTokenRow>
   );

@@ -3,17 +3,13 @@ import Collections from "../../services/Collections";
 import Firebase from "../../services/firebase-admin";
 import ErrorCodes from "../../constants/errorCodes";
 
-const TxStatus = {
+export const TxStatus = {
   pending: "pending",
-  releaseTxPending: "releaseTxPending",
-  queryRenTxPending: "queryRenTxPending",
-  queryRelayTxPending: "queryRelayTxPending",
   failed: "failed",
-  cancelled: "cancelled",
   completed: "completed",
 };
 
-const TxType = {
+export const TxType = {
   deposit: "deposit",
   withdraw: "withdraw",
   transfer: "transfer",
@@ -48,13 +44,8 @@ async function handler(
 
   const userDocRef = userSnapshot.ref;
   if (req.method === "PATCH") {
-    const { txId, accountId, accountKey, revert = null, ...rest } = req.body;
-    const dataToUpdate = { ...rest, revert };
-
-    if (revert === "MintGateway: signature already spent") {
-      dataToUpdate.status = TxStatus.completed;
-      dataToUpdate.revert = null;
-    }
+    const { txId } = req.body;
+    const dataToUpdate = { status: TxStatus.completed };
 
     await userDocRef.collection(Collections.txs).doc(txId).update(dataToUpdate);
     res.status(200).json({ success: true });

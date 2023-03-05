@@ -87,6 +87,7 @@ const AccountVerificationModal = () => {
       }
       console.log(data)
       setEncryptedId(data.accountId)
+      console.log(data.accountId)
     //   localStorage.setItem("authToken", data.data.token);
       if (pathname === "/home") push("/wallet");
 
