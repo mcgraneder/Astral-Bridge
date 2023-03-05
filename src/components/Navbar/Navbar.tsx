@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import styled from "styled-components";
 import LogoIcon from "../../../public/svgs/assets/RenIconHome.svg";
 import { UilSearch } from "@iconscout/react-unicons";
@@ -12,6 +12,12 @@ import { useViewport } from "../../hooks/useViewport";
 import { useRouter } from "next/router";
 import { useGlobalState } from "../../context/useGlobalState";
 import Link from "next/link";
+import { UserTxType } from "../transactions/components/TransactionTable";
+import API from "../../constants/Api";
+import { formatTime } from "../../utils/date";
+import { Icon } from "../Icons/AssetLogs/Icon";
+import { get } from "../../services/axios";
+import { Dispatch, SetStateAction } from "react";
 
 export const Wrapper = styled.div`
   display: flex;
@@ -54,7 +60,6 @@ export const BoxItemContainer = styled.div`
   flex-basis: 0;
   width: 100%;
   align-items: center;
-
 `;
 
 interface INavbar {
@@ -74,7 +79,7 @@ const NavLinks = ({ routes }: { routes: string[] }) => {
             key={route}
             className="hidden flex-row items-center gap-2 md:flex"
           >
-            <span className="my-2 w-full text-[18px] rounded-xl px-4 py-2 text-center hover:cursor-pointer hover:bg-black hover:bg-opacity-20">
+            <span className="my-2 w-full rounded-xl px-4 py-2 text-center text-[18px] hover:cursor-pointer hover:bg-black hover:bg-opacity-20">
               {route}
             </span>
           </Link>
@@ -84,36 +89,207 @@ const NavLinks = ({ routes }: { routes: string[] }) => {
   );
 };
 
-const InputDropdown = () => {
+const InputDrowdownSkeleton = ({ searchTerm }: { searchTerm: string }) => {
   return (
-    <div className="pt-[45px] px-4 pb-2 absolute top-0 left-0 -z-10  w-full rounded-lg border border-gray-500 bg-darkBackground">
-      {[1, 2, 3].map((item, index) => {
-        return (
-          <div key={index} className="flex items-center  gap-2 px-1 py-4">
-            <div className="flex items-center justify-center">
-              <span className="h-8 w-8 rounded-full bg-tertiary" />
+    <div className="absolute top-0 left-0 -z-10 w-full rounded-lg border  border-gray-500 bg-darkBackground px-4 pt-[45px] pb-2">
+      {searchTerm !== "" ? (
+        <div className="flex items-center  gap-2 px-1 py-4">
+          <span>You currently have no transactions.</span>
+        </div>
+      ) : (
+        [1, 2, 3].map((item, index) => {
+          return (
+            <div key={index} className="flex items-center  gap-2 px-1 py-4">
+              <div className="flex items-center justify-center">
+                <span className="h-8 w-8 rounded-full bg-tertiary" />
+              </div>
+              <div className="flex w-[90%] flex-col items-center justify-center gap-2">
+                <span className="h-4 w-full rounded-full bg-tertiary" />
+                <span className="h-4 w-full rounded-full bg-tertiary" />
+              </div>
             </div>
-            <div className="flex w-[90%] flex-col items-center justify-center gap-2">
-              <span className="h-4 w-full rounded-full bg-tertiary" />
-              <span className="h-4 w-full rounded-full bg-tertiary" />
-            </div>
-          </div>
-        );
-      })}
+          );
+        })
+      )}
     </div>
   );
-}
+};
+
+export const StyledTokenRow = styled.div<{
+  first?: boolean;
+  last?: boolean;
+  loading?: boolean;
+}>`
+  background-color: transparent;
+  display: grid;
+  grid-template-columns: 2fr 4fr 2fr 2fr;
+  padding: 16px;
+  width: 100%;
+`;
+
+const InputDropdown = ({
+  transactions,
+  searchTerm,
+  setFilteredTransaction,
+}: {
+  transactions: UserTxType[];
+  searchTerm: string;
+  setFilteredTransaction: any;
+}) => {
+  const handleSearch = (val: any) => {
+    if (!val) return;
+    return (
+      searchTerm === "" ||
+      val.currency.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      val.txHash.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  };
+
+  const trimAsset = (asset: string) => {
+    const trimmedText = asset.substring(asset.length - 6, asset.length);
+    if (trimmedText === "Goerli") return asset.substring(0, asset.length - 7);
+    else return asset;
+  };
+
+  const handleFilteredtTransaction = useCallback(
+    (transaction: UserTxType) => {
+      setFilteredTransaction(transaction);
+    },
+    [setFilteredTransaction]
+  );
+
+  if (transactions.length === 0 || searchTerm === "")
+    return (
+      <InputDrowdownSkeleton
+        searchTerm={searchTerm}
+      />
+    );
+  else
+    return (
+      <div className="absolute top-0 left-0 -z-10 w-full overflow-hidden rounded-lg  border border-gray-500 bg-darkBackground pt-[45px] pb-2">
+        {transactions
+          .filter((val) => {
+            return handleSearch(val);
+          })
+          .map((transaction: UserTxType, index: number) => {
+            const date = formatTime(
+              Math.floor(transaction.date / 1000).toString(),
+              0
+            );
+            const asset = trimAsset(transaction.currency);
+
+            return (
+              <Link
+                key={index}
+                href={"/transactions"}
+                passHref
+                onClick={() => handleFilteredtTransaction(transaction)}
+                className="grid grid-cols-3 items-center   gap-2 overflow-hidden py-4 pr-2 pl-4 hover:bg-backgroundSecondaryLight"
+              >
+                <div className="flex items-center justify-start gap-2 text-sm">
+                  <Icon chainName={transaction.currency} className="h-6 w-6" />
+                  <span>{`${transaction.amount} ${asset}`}</span>
+                </div>
+                <div className="text-start text-sm">
+                  <span>{date}</span>
+                </div>
+                <div className="justify-start text-sm">
+                  <span className="w-full overflow-hidden rounded-full text-[15px] text-blue-500">{`iD: ${transaction.txHash.substring(
+                    0,
+                    8
+                  )}...`}</span>
+                </div>
+              </Link>
+            );
+          })}
+      </div>
+    );
+};
+
+const TokenSearchBar = ({
+  width,
+  accountId,
+  setFilteredTransaction,
+}: {
+  width: number;
+  accountId: string | null;
+  setFilteredTransaction: Dispatch<SetStateAction<UserTxType | null>>;
+}) => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [dropDownActive, setDropdownActive] = useState<boolean>(false);
+  const [transactions, setTransactions] = useState<any[]>([]);
+
+  const fetchTxs = useCallback(async () => {
+    if (!accountId) return;
+    try {
+      const transactionsResponse = await get<{
+        txs: UserTxType[];
+      } | null>(API.next.gettransactions, {
+        params: {
+          accountId,
+          limit: 100,
+        },
+      });
+      console.log(transactionsResponse);
+      if (!transactionsResponse) return;
+      setTransactions(transactionsResponse.txs);
+    } catch (err) {
+      //  setError("notifications.somethingWentWrongTryLater");
+    }
+  }, [accountId, setTransactions]);
+
+  useEffect(() => {
+    console.log("fetching");
+    fetchTxs();
+  }, [accountId, fetchTxs]);
+
+  const handleOnBlur = useCallback(() => {
+    setTimeout(() => {
+      setDropdownActive(false);
+    }, 500);
+  }, []);
+
+  return (
+    <BoxItemContainer allignment={"center"}>
+      <div
+        className={`relative  flex h-[45px] w-fit max-w-[95%] items-center justify-center rounded-lg border border-transparent bg-darkBackground bg-opacity-40 px-2 lg:w-full lg:border-gray-500 ${
+          dropDownActive && "border-b-0 bg-opacity-100"
+        }`}
+      >
+        <UilSearch className="text-grey-400 mr-2 h-6 w-6" />
+        {width >= 1000 && (
+          <>
+            <input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="placeholder:text-grey-400 flex-1 bg-transparent  text-[15px] font-medium tracking-wide outline-none"
+              placeholder={"Search transactions by token"}
+              onFocus={() => setDropdownActive(true)}
+              onBlur={handleOnBlur}
+            />
+            {dropDownActive && (
+              <InputDropdown
+                transactions={transactions}
+                searchTerm={searchTerm}
+                setFilteredTransaction={setFilteredTransaction}
+              />
+            )}
+          </>
+        )}
+      </div>
+    </BoxItemContainer>
+  );
+};
 export const Navbar = ({
   toggleWalletModal,
   toggleAccoundDetailsModal,
 }: INavbar) => {
   const [provider, setProvider] = useState<any>(undefined);
   const router = useRouter();
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [dropDownActive, setDropdownActive] = useState<boolean>(false);
   const { account, active } = useWeb3React();
   const { width } = useViewport();
-  const { pendingTransaction, encryptedId } = useGlobalState();
+  const { pendingTransaction, encryptedId, setFilteredTransaction } =
+    useGlobalState();
   const activePath = router.pathname;
 
   useEffect(() => {
@@ -121,10 +297,6 @@ export const Navbar = ({
     const provider = localStorage.getItem("provider");
     setProvider(provider);
   }, [active]);
-
-  const handleFocus = () => {
-    setDropdownActive(true);
-  };
 
   const Icon = provider ? walletIcon[provider] : undefined;
   return (
@@ -138,30 +310,11 @@ export const Navbar = ({
             {activePath !== "/home" && <NavLinks routes={ROUTES} />}
           </BoxItemContainer>
           {activePath !== "/home" && (
-            <BoxItemContainer allignment={"center"}>
-              <div
-                className={`relative  flex h-[45px] w-fit max-w-[90%] items-center justify-center rounded-lg border border-transparent bg-darkBackground bg-opacity-40 px-2 lg:w-full lg:border-gray-500 ${
-                  dropDownActive && "border-b-0 bg-opacity-100"
-                }`}
-              >
-                <UilSearch className="text-grey-400 mr-2 h-6 w-6" />
-                {width >= 1000 && (
-                  <>
-                    <input
-                      value={searchTerm}
-                      onChange={(e) =>
-                        () =>
-                          setSearchTerm(e.target.value)}
-                      className="placeholder:text-grey-400 flex-1 bg-transparent  text-[15px] font-medium tracking-wide outline-none"
-                      placeholder={"Search transactions by token"}
-                      onFocus={handleFocus}
-                      onBlur={() => setDropdownActive(false)}
-                    />
-                    {dropDownActive && <InputDropdown/>}
-                  </>
-                )}
-              </div>
-            </BoxItemContainer>
+            <TokenSearchBar
+              width={width}
+              accountId={encryptedId}
+              setFilteredTransaction={setFilteredTransaction}
+            />
           )}
           <BoxItemContainer allignment={"flex-end"}>
             {activePath !== "/home" && (

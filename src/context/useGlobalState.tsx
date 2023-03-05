@@ -18,6 +18,7 @@ import { RenNetwork } from "@renproject/utils";
 import ErrorCodes from "../constants/errorCodes";
 import { ResponseData } from '../pages/api/user';
 import useAuth from '../hooks/useAuth';
+import { UserTxType } from '../components/transactions/components/TransactionTable';
 
 interface GlobalStateProviderProps {
   children: React.ReactNode;
@@ -44,7 +45,9 @@ type GlobalContextType = {
   transactions: any[];
   setTransactions: any;
   loadedTxs: any;
-  setLoadedTxs: any
+  setLoadedTxs: any;
+  filteredTransaction: UserTxType | null;
+  setFilteredTransaction: Dispatch<SetStateAction<UserTxType | null>>;
 };
 
 export type MulticallReturn = {
@@ -77,6 +80,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
   const [chainType, setChainType] = useState<string>("from");
   const [transactions, setTransactions] = useState<any[]>([]);
   const [loadedTxs, setLoadedTxs] = useState<any>(false);
+  const [filteredTransaction, setFilteredTransaction] = useState<UserTxType | null>(null)
 
   const [assetBalances, setAssetBalances] = useState<{
     [x: string]: MulticallReturn | undefined;
@@ -160,6 +164,8 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
       setTransactions,
       loadedTxs,
       setLoadedTxs,
+      filteredTransaction,
+      setFilteredTransaction,
     }),
     [
       memoizedFetchBalances,
@@ -181,6 +187,8 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
       setTransactions,
       loadedTxs,
       setLoadedTxs,
+      filteredTransaction,
+      setFilteredTransaction,
     ]
   );
   return (
