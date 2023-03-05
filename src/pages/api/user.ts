@@ -1,9 +1,6 @@
-import { ethers } from "ethers";
 import type { NextApiRequest, NextApiResponse } from "next";
-import Collections from "../../services/Collections";
 import ErrorCodes from "../../constants/errorCodes";
 import Firebase from "../../services/firebase-admin";
-import { post } from "../../services/axios";
 
 type ResponseData = {
   [x: string]: any;
@@ -20,7 +17,8 @@ class AccountError extends Error {
 }
 
 const handleNoAddressResponse = (address: string) => {
-  if (!address) throw new AccountError({ address, errorCode: ErrorCodes.invalidBody }, 400);
+  if (!address)
+    throw new AccountError({ address, errorCode: ErrorCodes.invalidBody }, 400);
 };
 
 const handleExistingUserGetResponse = (
@@ -29,7 +27,6 @@ const handleExistingUserGetResponse = (
 ) => {
   if (!userSnapshot.empty) {
     const userData = userSnapshot.docs[0]!.data();
-    const { accountId } = userData;
     throw new AccountError(
       {
         exists: true,
@@ -40,14 +37,9 @@ const handleExistingUserGetResponse = (
   }
 };
 
-
-const handleNewUserGetResponse = (
-  _address: string,
-  userSnapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>
-) => {
+const handleNewUserGetResponse = (_address: string) => {
   throw new AccountError({ exists: false, data: {} }, 200);
 };
-
 
 const handleExistingUserPostResponse = (
   userSnapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData>,
@@ -57,50 +49,56 @@ const handleExistingUserPostResponse = (
     // USER ALREADY EXISTS
     const userData = userSnapshot.docs[0]!.data();
     throw new AccountError(
-      { new: false, data: { accountId: address } },
+      { new: false, data: { data: userData, accountId: address } },
       200
     );
   }
 };
 
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<ResponseData>
+) {
   try {
-    const { address: queryAddress } = req.method === "GET" ? req.query : req.body;
+    const { address: queryAddress } =
+      req.method === "GET" ? req.query : req.body;
     const address = queryAddress;
 
     handleNoAddressResponse(address);
 
     const { userRef, db } = await Firebase();
     if (req.method === "GET") {
-      const userSnapshot = await userRef.where("accountId", "==", address).get();
+      const userSnapshot = await userRef
+        .where("accountId", "==", address)
+        .get();
+        
       handleExistingUserGetResponse(userSnapshot, address);
-      handleNewUserGetResponse(address, userSnapshot);
+      handleNewUserGetResponse(address);
     } else if (req.method === "POST") {
-    
-      const userSnapshot = await userRef.where("accountId", "==", address).get();
+      const userSnapshot = await userRef
+        .where("accountId", "==", address)
+        .get();
+
       handleExistingUserPostResponse(userSnapshot, address);
       if (userSnapshot.empty) {
         // CREATING NEW USER
         const { address } = req.body;
-        
 
         if (address) {
           const newUserDoc = await userRef.add({
             accountId: address,
           });
 
-           throw new AccountError(
-             {
-               new: true,
-               data: {
-                 address: address,
-                 accountId: newUserDoc.id
-
-               },
-             },
-             201
-           );
+          throw new AccountError(
+            {
+              new: true,
+              data: {
+                address: address,
+                accountId: newUserDoc.id,
+              },
+            },
+            201
+          );
         } else {
           handleNoAddressResponse(address);
         }
