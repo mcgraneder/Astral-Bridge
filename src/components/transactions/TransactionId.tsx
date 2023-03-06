@@ -1,8 +1,9 @@
 import { useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import TransactionsTable from "./components/TransactionTable";
-import TransactionFilterButtons from './components/TransactionFilterButton';
+import TransactionFilterButtons from "./components/TransactionFilterButton";
 import { TransactionFilterStateProvider } from "./TransactionsContext";
+import TransactionsIdTable from './components/TransactionIdTable';
 
 export const MAX_WIDTH_MEDIA_BREAKPOINT = "1200px";
 export const XLARGE_MEDIA_BREAKPOINT = "960px";
@@ -56,22 +57,22 @@ const FiltersWrapper = styled.div`
   }
 `;
 
-const Transactions = () => {
+const TransactionId = () => {
   return (
     <TransactionFilterStateProvider>
       <ExploreContainer>
         <TitleContainer>
-          <span className="text-3xl">Transactions</span>
+          <span className="text-3xl">TransactionId</span>
         </TitleContainer>
         <FiltersWrapper>
           <div className="flex gap-2">
             <TransactionFilterButtons />
           </div>
         </FiltersWrapper>
-        <TransactionsTable />
+        <TransactionsIdTable />
       </ExploreContainer>
     </TransactionFilterStateProvider>
   );
 };
 
-export default Transactions;
+export default TransactionId;

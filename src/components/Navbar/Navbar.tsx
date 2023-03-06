@@ -146,11 +146,9 @@ export const StyledTokenRow = styled.div<{
 const InputDropdown = ({
   transactions,
   searchTerm,
-  setFilteredTransaction,
 }: {
   transactions: UserTxType[];
   searchTerm: string;
-  setFilteredTransaction: any;
 }) => {
   const handleSearch = (val: any) => {
     if (!val) return;
@@ -166,13 +164,6 @@ const InputDropdown = ({
     if (trimmedText === "Goerli") return asset.substring(0, asset.length - 7);
     else return asset;
   };
-
-  const handleFilteredtTransaction = useCallback(
-    (transaction: UserTxType) => {
-      setFilteredTransaction(transaction);
-    },
-    [setFilteredTransaction]
-  );
 
   if (transactions.length == 0 || searchTerm === "")
     return (
@@ -197,9 +188,8 @@ const InputDropdown = ({
             return (
               <Link
                 key={index}
-                href={"/transactions"}
+                href={`/transactions/${transaction.txHash}`}
                 passHref
-                onClick={() => handleFilteredtTransaction(transaction)}
                 className="grid grid-cols-3 items-center   gap-2 overflow-hidden py-4 pr-2 pl-4 hover:bg-backgroundSecondaryLight"
               >
                 <div className="flex items-center justify-start gap-2 text-sm">
@@ -225,11 +215,9 @@ const InputDropdown = ({
 const TokenSearchBar = ({
   width,
   accountId,
-  setFilteredTransaction,
 }: {
   width: number;
   accountId: string | null;
-  setFilteredTransaction: Dispatch<SetStateAction<UserTxType | null>>;
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [dropDownActive, setDropdownActive] = useState<boolean>(false);
@@ -287,7 +275,6 @@ const TokenSearchBar = ({
               <InputDropdown
                 transactions={transactions}
                 searchTerm={searchTerm}
-                setFilteredTransaction={setFilteredTransaction}
               />
             )}
           </>
@@ -304,7 +291,7 @@ export const Navbar = ({
   const router = useRouter();
   const { account, active } = useWeb3React();
   const { width } = useViewport();
-  const { pendingTransaction, encryptedId, setFilteredTransaction } =
+  const { pendingTransaction, encryptedId } =
     useGlobalState();
   const activePath = router.pathname;
 
@@ -329,7 +316,6 @@ export const Navbar = ({
             <TokenSearchBar
               width={width}
               accountId={encryptedId}
-              setFilteredTransaction={setFilteredTransaction}
             />
           )}
           <BoxItemContainer allignment={"flex-end"}>

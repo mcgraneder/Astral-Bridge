@@ -18,6 +18,7 @@ const API = {
     user: `${NextBaseUrl}/user`,
     depositTx: `${NextBaseUrl}/depositTx`,
     gettransactions: `${NextBaseUrl}/get-transactions`,
+    gettransaction: `${NextBaseUrl}/get-transaction`,
   },
   ren: {
     verify: `${SigVerifierBaseUrl}/verify`,

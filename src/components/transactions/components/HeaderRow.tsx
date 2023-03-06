@@ -6,11 +6,7 @@ export const Cell = styled.div`
   align-items: center;
   justify-content: center;
 `;
-export const StyledTokenRow = styled.div<{
-  first?: boolean;
-  last?: boolean;
-  loading?: boolean;
-}>`
+export const StyledTokenRow = styled.div`
   background-color: transparent;
   display: grid;
   font-size: 16px;

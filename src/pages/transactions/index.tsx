@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
-import { Layout } from "../layouts";
-import Transactions from '../components/transactions/Transactions';
+import { Layout } from "../../layouts";
+import Transactions from '../../components/transactions/Transactions';
 
 const TransactionsPage: NextPage = () => {
   return (

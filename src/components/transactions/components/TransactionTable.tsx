@@ -143,10 +143,8 @@ export default function TransactionsTable() {
     setTransactions,
     loadedTxs,
     setLoadedTxs,
-    filteredTransaction,
-    setFilteredTransaction,
   } = useGlobalState();
-  const { filteredChain, filteredStatus, filteredType, clearFilters } =
+  const { filteredChain, filteredStatus, filteredType } =
     useTxFilterState();
   const [fetchingState, setFetchingState] = useState<any>("FETCHING");
   const [loading, setLoading] = useState<boolean>(
@@ -190,7 +188,7 @@ export default function TransactionsTable() {
     fetchTxs();
     const intervalId: NodeJS.Timer = setInterval(
       fetchTxs,
-      pendingTransaction ? 3000 : 20000
+      pendingTransaction ? 3000 : 30000
     );
     return () => clearInterval(intervalId);
   }, [accountId, fetchTxs, pendingTransaction]);
@@ -260,27 +258,6 @@ export default function TransactionsTable() {
           }
         )}
       </GridContainer>
-    );
-  else if (transactions && filteredTransaction && filteredTransaction !== null)
-    return (
-      <>
-        <GridContainer>
-          <HeaderRow />
-          <div className="w-full border-[0.5px] border-gray-800" />
-          <TransactionRow {...filteredTransaction} />
-        </GridContainer>
-        <div className="mt-8 mb-2 flex items-center justify-center">
-          <PrimaryButton
-            className={
-              "w-[200px] justify-center rounded-2xl bg-blue-500 py-[10px] text-center text-[17px] font-semibold"
-            }
-            onClick={() => setFilteredTransaction(null)}
-          >
-            <UilArrowLeft />
-            <span> back to all</span>
-          </PrimaryButton>
-        </div>
-      </>
     );
   else
     return (

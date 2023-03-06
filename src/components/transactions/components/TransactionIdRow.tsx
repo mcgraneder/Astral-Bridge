@@ -1,6 +1,6 @@
 import { Icon } from "../../Icons/AssetLogs/Icon";
 import Identicon from "../../Identicon/Identicon";
-import styled from "styled-components";
+import { StyledTokenRow } from "./HeaderRow";
 import {
   UilExclamationTriangle,
   UilSpinnerAlt,
@@ -8,19 +8,6 @@ import {
 } from "@iconscout/react-unicons";
 import { formatTime } from "../../../utils/date";
 import { UserTxType } from "./TransactionTable";
-import Link from "next/link";
-
-export const StyledTokenRow = styled(Link)`
-  background-color: transparent;
-  display: grid;
-  font-size: 16px;
-  grid-template-columns: 1fr 8fr 5fr 4fr 5fr 5fr 3fr;
-  line-height: 24px;
-  max-width: 1200px;
-  min-width: 390px;
-  padding: 15px 20px;
-  width: 100%;
-`;
 
 const Spinner = () => {
   return <UilSpinnerAlt className={" h-5 w-5 animate-spin text-gray-400"} />;
@@ -36,7 +23,7 @@ export interface RowData {
   amount: string;
 }
 
-const TransactionRow = (data: UserTxType) => {
+const TransactionIdRow = (data: UserTxType) => {
   const date = formatTime(Math.floor(data.date / 1000).toString(), 0);
 
   const getColour = (status: string): string => {
@@ -53,10 +40,7 @@ const TransactionRow = (data: UserTxType) => {
   const statusColour = getColour(data.status);
 
   return (
-    <StyledTokenRow
-      href={`/transactions/${data.txHash}`}
-      className={"hover:bg-hoverLightground"}
-    >
+    <StyledTokenRow>
       <div className="">
         <span>{data.Id}</span>
       </div>
@@ -91,4 +75,4 @@ const TransactionRow = (data: UserTxType) => {
   );
 };
 
-export default TransactionRow;
+export default TransactionIdRow;

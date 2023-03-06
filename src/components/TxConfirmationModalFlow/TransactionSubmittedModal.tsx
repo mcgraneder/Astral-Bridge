@@ -10,6 +10,7 @@ import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import { WALLETS, PROVIDERS } from '../../connection/wallets';
 import Link from "next/link";
 import { chainAdresses } from '../../constants/Addresses';
+import { useGlobalState } from "../../context/useGlobalState";
 
 interface TxSubmittedProps {
   close: () => void;
@@ -32,6 +33,7 @@ const TxSubmittedInner = ({
   addAsset: () => Promise<void>;
 }) => {
   const Icon = WALLETS[PROVIDERS.INJECTED!]!.icon;
+  const { filteredTransaction } = useGlobalState()
 
   return (
     <>
@@ -50,7 +52,7 @@ const TxSubmittedInner = ({
         </span>
       </div>
       <div
-        className="mx-auto my-0 mt-4 flex w-fit items-center justify-center gap-3 rounded-full bg-tertiary px-4 py-2 text-gray-400 hover:bg-lightTertiary hover:cursor-pointer"
+        className="mx-auto my-0 mt-4 flex w-fit items-center justify-center gap-3 rounded-full bg-tertiary px-4 py-2 text-gray-400 hover:cursor-pointer hover:bg-lightTertiary"
         onClick={addAsset}
       >
         <span>Add Token to Metamask</span>
@@ -58,11 +60,12 @@ const TxSubmittedInner = ({
       </div>
       <div className="mt-6 mb-2 flex items-center justify-center">
         <Link
-          href={"/transactions"}
+          href={`/transactions/${filteredTransaction}`}
           passHref
           className={
             "w-full justify-center rounded-2xl bg-blue-500 py-[15.5px] text-center text-[17px] font-semibold"
           }
+          onClick={close}
         >
           view transaction
         </Link>

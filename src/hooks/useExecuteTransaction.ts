@@ -21,7 +21,8 @@ type ExecuteTxType = {
 };
 const useEcecuteTransaction = (): ExecuteTxType => {
   const { library, account } = useWeb3React();
-  const { setPendingTransaction, encryptedId } = useGlobalState();
+  const { setPendingTransaction, encryptedId, setFilteredTransaction } =
+    useGlobalState();
   const { togglePendingModal, toggleSubmittedModal, toggleRejectedModal } =
     useTransactionFlow();
   const dispatch = useNotification();
@@ -53,6 +54,14 @@ const useEcecuteTransaction = (): ExecuteTxType => {
       const formattedAmount = new BigNumber(amount).shiftedBy(-asset.decimals);
       try {
         const tx = await contractFn(...args);
+        setFilteredTransaction(tx.hash)
+        library
+          .getTransaction(
+            tx.hash
+          )
+          .then((tx: any) => {
+            console.log(tx);
+          }); 
         const transactionResponse = await post<ResponseData>(
           API.next.depositTx,
           {

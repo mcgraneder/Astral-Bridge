@@ -46,8 +46,8 @@ type GlobalContextType = {
   setTransactions: any;
   loadedTxs: any;
   setLoadedTxs: any;
-  filteredTransaction: UserTxType | null;
-  setFilteredTransaction: Dispatch<SetStateAction<UserTxType | null>>;
+  filteredTransaction: string | null;
+  setFilteredTransaction: Dispatch<SetStateAction<string | null>>;
 };
 
 export type MulticallReturn = {
@@ -80,7 +80,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
   const [chainType, setChainType] = useState<string>("from");
   const [transactions, setTransactions] = useState<any[] | undefined>(undefined);
   const [loadedTxs, setLoadedTxs] = useState<any>(false);
-  const [filteredTransaction, setFilteredTransaction] = useState<UserTxType | null>(null)
+  const [filteredTransaction, setFilteredTransaction] = useState<string | null>(null)
 
   const [assetBalances, setAssetBalances] = useState<{
     [x: string]: MulticallReturn | undefined;

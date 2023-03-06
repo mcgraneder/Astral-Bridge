@@ -30,15 +30,15 @@ module.exports = {
         width: "width",
       },
       colors: {
-       
         tertiary: "rgb(48, 63, 88)",
         secondary: "rgb(34, 53, 83)",
         lightTertiary: "rgb(66, 87, 122)",
         darkBackground: "rgb(15, 25, 55)",
+        hoverLightground: "rgb(20, 32, 65)",
+
         extraDarkBackground: "rgb(12,18,43)",
         secondaryButtonColor: "rgb(28,44,81)",
-        backgroundSecondaryLight: "rgb(74, 107, 161)"
-        
+        backgroundSecondaryLight: "rgb(74, 107, 161)",
       },
       spacing: {
         "630px": "630px",
