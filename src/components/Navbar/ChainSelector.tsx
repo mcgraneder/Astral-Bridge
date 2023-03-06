@@ -94,16 +94,19 @@ const TokenSelectDropdown = () => {
 
 const ChainSelectorButton = ({ setIsMenuOpen, activeChain }: { setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>; activeChain: ChainType | undefined }) => {
     return (
-        <div
-            className=' flex items-center rounded-lg px-2 text-center hover:cursor-pointer hover:border-gray-500 hover:bg-black hover:bg-opacity-20'
-            onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-                e.stopPropagation();
-                setIsMenuOpen((o: boolean) => !o);
-            }}>
-            {activeChain && <activeChain.logo />}
-            <span className='hidden w-full text-center mlg:block'>{activeChain ? activeChain.chainName : "Unknown"}</span>
-            <UilAngleDown className={"h-5 w-5 mlg:h-8 mlg:w-8"} />
-        </div>
+      <div
+        className=" flex items-center rounded-lg bg-black bg-opacity-20 px-2 text-center hover:cursor-pointer hover:border-gray-500 hover:bg-black hover:bg-opacity-40"
+        onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+          e.stopPropagation();
+          setIsMenuOpen((o: boolean) => !o);
+        }}
+      >
+        {activeChain && <activeChain.logo />}
+        <span className="my-2 hidden w-full text-center mlg:block">
+          {activeChain ? activeChain.chainName : "Unknown"}
+        </span>
+        <UilAngleDown className={"h-5 w-5 mlg:h-8 mlg:w-8"} />
+      </div>
     );
 };
 const ChainSelector = ({ chain, currentChain, switchNetwork }: { chain: ChainType; currentChain: number | undefined; switchNetwork: any }) => {

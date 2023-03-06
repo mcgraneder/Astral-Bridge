@@ -77,9 +77,9 @@ const NavLinks = ({ routes }: { routes: string[] }) => {
           <Link
             href={`./${ROUTES[index]}`}
             key={route}
-            className="hidden flex-row items-center gap-2 md:flex"
+            className="hidden flex-row items-center gap-2 md:flex mx-1"
           >
-            <span className="my-2 w-full rounded-xl px-4 py-2 text-center text-[18px] hover:cursor-pointer hover:bg-black hover:bg-opacity-20">
+            <span className="my-2 w-full rounded-xl bg-black px-4 py-2 text-center text-[18px] hover:cursor-pointer hover:bg-black bg-opacity-20 hover:bg-opacity-40">
               {route}
             </span>
           </Link>
