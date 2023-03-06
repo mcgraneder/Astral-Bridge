@@ -90,13 +90,12 @@ export default async function handler(
           const newUserDoc = await userRef.add({
             accountId: address,
           });
-          const userData = userSnapshot.docs[0]!.data();
 
           throw new AccountError(
             {
               new: true,
               data: {
-                data: userData,
+                data: { address, accountId: newUserDoc.id},
                 accountId: newUserDoc.id,
               },
             },
@@ -111,5 +110,6 @@ export default async function handler(
     }
   } catch (responseObj: any) {
     res.status(responseObj.statusCode).json(responseObj.message);
+
   }
 }

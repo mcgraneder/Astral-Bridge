@@ -210,58 +210,75 @@ export default function TransactionsTable() {
         )}
       </GridContainer>
     );
-  else
-    return (
-      <GridContainer>
-        <HeaderRow />
-        <div className="w-full border-[0.5px] border-gray-800" />
-        {transactions
-          .filter((transaction) => {
-            console.log(filteredChain);
-            if (filteredChain === "All Chains") return transaction;
-            return transaction.chain === filteredChain;
-          })
-          .filter((transaction) => {
-            if (filteredStatus === "All Statuses") return transaction;
-            return (
-              transaction.status.toLowerCase() === filteredStatus.toLowerCase()
-            );
-          })
-          .filter((transaction) => {
-            if (filteredType === "All Types") return transaction;
-            const formattedStatus =
-              filteredType === "Deposits" || filteredType === "Approvals"
-                ? filteredType.substring(0, filteredType.length - 1)
-                : filteredType.substring(0, filteredType.length - 3);
-            console.log(transaction.type, filteredStatus);
-            return (
-              transaction.type.toLowerCase() === formattedStatus.toLowerCase()
-            );
-          })
-          .slice(_pageStart, _pageStart + 9)
-          .map((data: UserTxType) => {
-            if (transactions.length === 0) return;
-            return <TransactionRow key={data.Id} {...data} />;
-          })}
-        {Math.ceil(transactions.length / 10) > 1 && (
-          // <div></div>
-          <ReactPaginate
-            className="my-3 p-2 flex items-center justify-center gap-3 rounded-xl bg-hoverLightground"
-            breakLabel="..."
-            nextLabel={<UilAngleRightB />}
-            previousClassName={`${activePage === 0 && "text-gray-500"}`}
-            nextClassName={`${
-              activePage === Math.ceil(transactions.length / 10) - 1 &&
-              "text-gray-500"
-            }`}
-            pageClassName="w-6 h-6 flex items-center justify-center rounded-lg "
-            activeClassName="bg-blue-500"
-            forcePage={activePage}
-            onPageChange={onPageChange}
-            pageCount={Math.ceil(transactions.length / 10)}
-            previousLabel={<UilAngleLeftB />}
-          />
-        )}
-      </GridContainer>
-    );
+    else  if (transactions.length == 0)
+      return (
+        <GridContainer>
+          <HeaderRow />
+        <div className="my-4 flex justify-center">
+          <span className="text-gray-400">
+            You currently have no trasnactions.
+          </span>
+        </div>
+        </GridContainer>
+      );
+    else
+      return (
+        <GridContainer>
+          <HeaderRow />
+          <div className="w-full border-[0.5px] border-gray-800" />
+          {transactions
+            .filter((transaction) => {
+              console.log(filteredChain);
+              if (filteredChain === "All Chains") return transaction;
+              return transaction.chain === filteredChain;
+            })
+            .filter((transaction) => {
+              if (filteredStatus === "All Statuses") return transaction;
+              return (
+                transaction.status.toLowerCase() ===
+                filteredStatus.toLowerCase()
+              );
+            })
+            .filter((transaction) => {
+              if (filteredType === "All Types") return transaction;
+              const formattedStatus =
+                filteredType === "Deposits" || filteredType === "Approvals"
+                  ? filteredType.substring(0, filteredType.length - 1)
+                  : filteredType.substring(0, filteredType.length - 3);
+              console.log(transaction.type, filteredStatus);
+              return (
+                transaction.type.toLowerCase() === formattedStatus.toLowerCase()
+              );
+            })
+            .slice(_pageStart, _pageStart + 9)
+            .map((data: UserTxType) => {
+              if (transactions.length === 0)
+                <div className="mt-4 flex justify-center">
+                  <span className="text-gray-400">
+                    You currently have no trasnactions.
+                  </span>
+                </div>;
+              return <TransactionRow key={data.Id} {...data} />;
+            })}
+          {Math.ceil(transactions.length / 10) > 1 && (
+            // <div></div>
+            <ReactPaginate
+              className="my-3 flex items-center justify-center gap-3 rounded-xl bg-hoverLightground p-2"
+              breakLabel="..."
+              nextLabel={<UilAngleRightB />}
+              previousClassName={`${activePage === 0 && "text-gray-500"}`}
+              nextClassName={`${
+                activePage === Math.ceil(transactions.length / 10) - 1 &&
+                "text-gray-500"
+              }`}
+              pageClassName="w-6 h-6 flex items-center justify-center rounded-lg "
+              activeClassName="bg-blue-500"
+              forcePage={activePage}
+              onPageChange={onPageChange}
+              pageCount={Math.ceil(transactions.length / 10)}
+              previousLabel={<UilAngleLeftB />}
+            />
+          )}
+        </GridContainer>
+      );
 }

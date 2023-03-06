@@ -72,11 +72,11 @@ const TransactionId = () => {
               href={"/transactions"}
               passHref
               className={
-                "flex w-[200px] text-white items-center justify-center rounded-2xl bg-blue-500 py-2 text-center text-[17px] font-semibold"
+                "flex w-[215px] text-white items-center justify-center rounded-2xl bg-blue-500 py-2 text-center text-[17px] font-semibold"
               }
             >
               <UilArrowLeft />
-              <span> back to all</span>
+              <span> back to transactions </span>
             </Link>
           </div>
         </FiltersWrapper>
