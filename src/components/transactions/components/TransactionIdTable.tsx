@@ -183,18 +183,6 @@ export default function TransactionsIdTable() {
           <TransactionIdRow {...transaction[0]} />
           <TransactionBlockInfo/>
         </GridContainer>
-        <div className="mt-8 mb-2 flex items-center justify-center">
-          <Link
-          href={"/transactions"}
-          passHref
-            className={
-              "flex w-[200px] items-center justify-center rounded-2xl bg-blue-500 py-[10px] text-center text-[17px] font-semibold"
-            }
-          >
-            <UilArrowLeft />
-            <span> back to all</span>
-          </Link>
-        </div>
       </>
     );
 }

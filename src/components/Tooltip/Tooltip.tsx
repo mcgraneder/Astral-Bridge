@@ -71,7 +71,7 @@ const Tooltip = (props: TooltipProps) => {
           id="popper"
           ref={setPopperElement}
           style={styles.popper}
-          className={`text-grey-400 bg-black-600 z-10 hidden w-max max-w-xs rounded-lg px-4 py-3 text-sm font-medium tracking-wide ${contentWrapperClassName}`}
+          className={`text-gray-400 bg-tertiary z-10 hidden w-max max-w-xs rounded-lg px-4 py-3 text-sm font-medium tracking-wide ${contentWrapperClassName}`}
           {...attributes.popper}
         >
           {content}

@@ -24,7 +24,7 @@ export const BREAKPOINTS = {
 const ExploreContainer = styled.div`
   width: 100%;
   min-width: 320px;
-  padding: 68px 12px 0px;
+  padding: 50px 12px 0px;
 
   @media only screen and (max-width: 768px) {
     padding-top: 48px;
@@ -35,7 +35,7 @@ const ExploreContainer = styled.div`
   }
 `;
 const TitleContainer = styled.div`
-  margin-bottom: 32px;
+  margin-bottom: 10px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   margin-left: auto;
   margin-right: auto;

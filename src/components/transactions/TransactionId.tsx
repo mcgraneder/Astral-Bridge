@@ -4,6 +4,8 @@ import TransactionsTable from "./components/TransactionTable";
 import TransactionFilterButtons from "./components/TransactionFilterButton";
 import { TransactionFilterStateProvider } from "./TransactionsContext";
 import TransactionsIdTable from './components/TransactionIdTable';
+import Link from 'next/link';
+import { UilArrowLeft } from '@iconscout/react-unicons';
 
 export const MAX_WIDTH_MEDIA_BREAKPOINT = "1200px";
 export const XLARGE_MEDIA_BREAKPOINT = "960px";
@@ -25,7 +27,7 @@ export const BREAKPOINTS = {
 const ExploreContainer = styled.div`
   width: 100%;
   min-width: 320px;
-  padding: 68px 12px 0px;
+  padding: 50px 12px 0px;
 
   @media only screen and (max-width: 768px) {
     padding-top: 48px;
@@ -36,7 +38,7 @@ const ExploreContainer = styled.div`
   }
 `;
 const TitleContainer = styled.div`
-  margin-bottom: 32px;
+  margin-bottom: 10px;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   margin-left: auto;
   margin-right: auto;
@@ -65,8 +67,17 @@ const TransactionId = () => {
           <span className="text-3xl">TransactionId</span>
         </TitleContainer>
         <FiltersWrapper>
-          <div className="flex gap-2">
-            <TransactionFilterButtons />
+          <div className=" flex items-center justify-center">
+            <Link
+              href={"/transactions"}
+              passHref
+              className={
+                "flex w-[200px] text-white items-center justify-center rounded-2xl bg-blue-500 py-2 text-center text-[17px] font-semibold"
+              }
+            >
+              <UilArrowLeft />
+              <span> back to all</span>
+            </Link>
           </div>
         </FiltersWrapper>
         <TransactionsIdTable />
