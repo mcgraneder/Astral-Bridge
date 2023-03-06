@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import TransactionsTable from "./components/TransactionTable";
 import TransactionFilterButtons from './components/TransactionFilterButton';
+import { TransactionFilterStateProvider } from "./TransactionsContext";
 
 export const MAX_WIDTH_MEDIA_BREAKPOINT = "1200px";
 export const XLARGE_MEDIA_BREAKPOINT = "960px";
@@ -24,7 +25,6 @@ const ExploreContainer = styled.div`
   width: 100%;
   min-width: 320px;
   padding: 68px 12px 0px;
-
 
   @media only screen and (max-width: 768px) {
     padding-top: 48px;
@@ -57,42 +57,21 @@ const FiltersWrapper = styled.div`
 `;
 
 const Transactions = () => {
-  const [filteredChain, setFilteredChain] = useState<any>("All Chains")
-  const [filteredType, setFilteredType] = useState<any>("All Types");
-  const [filteredStatus, setFilteredStatus] = useState<any>("All Statuses");
-
-  const clearFilters = useCallback(() => {
-    setFilteredChain("All Chains");
-    setFilteredStatus("All Statuses");
-    setFilteredType("All Types");
-
-  }, [setFilteredChain, setFilteredStatus, setFilteredType]);
-
   return (
-    <ExploreContainer>
-      <TitleContainer>
-        <span className="text-3xl">Transactions</span>
-      </TitleContainer>
+    <TransactionFilterStateProvider>
+      <ExploreContainer>
+        <TitleContainer>
+          <span className="text-3xl">Transactions</span>
+        </TitleContainer>
 
-      <FiltersWrapper>
-        <div className="flex gap-2">
-          <TransactionFilterButtons
-            setFilteredChain={setFilteredChain}
-            setFilteredType={setFilteredType}
-            setFilteredStatus={setFilteredStatus}
-            filteredChain={filteredChain}
-            filteredStatus={filteredStatus}
-            filteredType={filteredType}
-            clearFilters={clearFilters}
-          />
-        </div>
-      </FiltersWrapper>
-      <TransactionsTable
-        filteredChain={filteredChain}
-        filteredStatus={filteredStatus}
-        filteredType={filteredType}
-      />
-    </ExploreContainer>
+        <FiltersWrapper>
+          <div className="flex gap-2">
+            <TransactionFilterButtons />
+          </div>
+        </FiltersWrapper>
+        <TransactionsTable />
+      </ExploreContainer>
+    </TransactionFilterStateProvider>
   );
 };
 

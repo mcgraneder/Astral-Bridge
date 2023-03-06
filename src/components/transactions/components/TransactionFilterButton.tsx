@@ -7,6 +7,7 @@ import { useViewport } from "../../../hooks/useViewport";
 import BottomSheetOptions from "../../BottomSheet/BottomSheetOptions";
 import GreenDot from "../../Icons/GreenDot";
 import { Icon } from "../../Icons/AssetLogs/Icon";
+import { useTxFilterState } from "../TransactionsContext";
 
 export const FormWrapper = styled.div`
   position: absolute;
@@ -40,27 +41,12 @@ export const TRANSACTION_CHAINS = [
   "Avalanche",
 ];
 
-interface TxFilterProps {
-  setFilteredChain: any;
-  setFilteredType: any;
-  setFilteredStatus: any;
-  filteredChain: any;
-  filteredStatus: any;
-  filteredType: any;
-  clearFilters: () => void;
-}
-const TransactionFilterButtons = ({
-  setFilteredChain,
-  setFilteredType,
-  setFilteredStatus,
-  filteredChain,
-  filteredStatus,
-  filteredType,
-  clearFilters,
-}: TxFilterProps) => {
+const TransactionFilterButtons = () => {
   const [isChainMenuOpen, setIsChainMenuOpen] = useState<boolean>(false);
   const [isStatusMenuOpen, setIsStatusMenuOpen] = useState<boolean>(false);
   const [isTypeMenuOpen, setIsTypeMenuOpen] = useState<boolean>(false);
+
+  const { filteredChain, filteredStatus, filteredType, clearFilters } = useTxFilterState()
 
   const { width } = useViewport();
   const ref = useRef<HTMLDivElement>(null);
@@ -137,7 +123,6 @@ const TransactionFilterButtons = ({
                   <ChainSelector
                     key={index}
                     chain={chain}
-                    setFilteredChain={setFilteredChain}
                     filteredChain={filteredChain}
                   />
                 );
@@ -151,7 +136,6 @@ const TransactionFilterButtons = ({
                   <TxTypeSelector
                     key={index}
                     txType={txType}
-                    setFilteredType={setFilteredType}
                     filteredType={filteredType}
                   />
                 );
@@ -165,7 +149,6 @@ const TransactionFilterButtons = ({
                   <TxStatusSelector
                     key={index}
                     status={status}
-                    setFilteredStatus={setFilteredStatus}
                     filteredStatus={filteredStatus}
                   />
                 );
@@ -185,7 +168,6 @@ const TransactionFilterButtons = ({
               <ChainSelector
                 key={index}
                 chain={chain}
-                setFilteredChain={setFilteredChain}
                 filteredChain={filteredChain}
               />
             );
@@ -198,13 +180,12 @@ const TransactionFilterButtons = ({
 
 const ChainSelector = ({
   chain,
-  setFilteredChain,
   filteredChain
 }: {
   chain: string;
-  setFilteredChain: any;
   filteredChain: any
 }) => {
+    const { setFilteredChain } = useTxFilterState()
   return (
     <div
       className=" flex flex-row items-center gap-3 rounded-lg px-2 py-2 hover:cursor-pointer hover:bg-tertiary"
@@ -227,13 +208,12 @@ const ChainSelector = ({
 
 const TxStatusSelector = ({
   status,
-  setFilteredStatus,
   filteredStatus
 }: {
   status: string;
-  setFilteredStatus: any;
   filteredStatus: any
 }) => {
+    const { setFilteredStatus  } = useTxFilterState()
   return (
     <div
       className=" flex flex-row items-center gap-3 rounded-lg px-2 py-2 hover:cursor-pointer hover:bg-tertiary"
@@ -256,13 +236,12 @@ const TxStatusSelector = ({
 
 const TxTypeSelector = ({
   txType,
-  setFilteredType,
   filteredType
 }: {
   txType: string;
-  setFilteredType: any;
   filteredType: any
 }) => {
+    const { setFilteredType } = useTxFilterState()
   return (
     <div
       className=" flex flex-row items-center gap-3 rounded-lg px-2 py-2 hover:cursor-pointer hover:bg-tertiary"

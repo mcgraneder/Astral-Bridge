@@ -11,6 +11,7 @@ import { StyledTokenRow } from './HeaderRow';
 import { loadingAnimation } from '../../CSS/SkeletomStyles';
 import PrimaryButton from "../../PrimaryButton/PrimaryButton";
 import { UilArrowLeft } from "@iconscout/react-unicons";
+import { useTxFilterState } from "../TransactionsContext";
 
 export const MAX_WIDTH_MEDIA_BREAKPOINT = "1200px";
 
@@ -134,11 +135,7 @@ interface TransactionTableProps {
   filteredType: any;
 }
 
-export default function TransactionsTable({
-  filteredChain,
-  filteredStatus,
-  filteredType,
-}: TransactionTableProps) {
+export default function TransactionsTable() {
   const {
     encryptedId: accountId,
     pendingTransaction,
@@ -149,7 +146,8 @@ export default function TransactionsTable({
     filteredTransaction,
     setFilteredTransaction,
   } = useGlobalState();
-  const { account } = useWeb3React();
+  const { filteredChain, filteredStatus, filteredType, clearFilters } =
+    useTxFilterState();
   const [fetchingState, setFetchingState] = useState<any>("FETCHING");
   const [loading, setLoading] = useState<boolean>(
     loadedTxs == false ? true : false
