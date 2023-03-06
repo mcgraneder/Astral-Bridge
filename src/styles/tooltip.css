@@ -1,0 +1,34 @@
+#arrow,
+#arrow::before {
+    @apply absolute w-2 h-2 bg-gray-600;
+}
+
+#arrow {
+    visibility: hidden;
+}
+
+#arrow::before {
+    visibility: visible;
+    content: "";
+    transform: rotate(45deg);
+}
+
+#popper[data-popper-placement^="top"]>#arrow {
+    bottom: -4px;
+}
+
+#popper[data-popper-placement^="bottom"]>#arrow {
+    top: -4px;
+}
+
+#popper[data-popper-placement^="left"]>#arrow {
+    right: -4px;
+}
+
+#popper[data-popper-placement^="right"]>#arrow {
+    left: -4px;
+}
+
+#popper[data-show] {
+    display: block;
+}

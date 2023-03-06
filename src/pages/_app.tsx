@@ -4,6 +4,11 @@ import { api } from "../utils/api";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
 import "../styles/globals.css";
+import "../styles/Accordian.css"
+import "../styles/AccordianItem.css";
+import "../styles/tooltip.css";
+
+
 import { ToastContainerProps, ToastContainer } from "react-toastify";
 import { GlobalStateProvider } from "../context/useGlobalState";
 import NotificationProvider from "../context/useNotificationState";
