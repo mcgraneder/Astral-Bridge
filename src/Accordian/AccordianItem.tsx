@@ -7,6 +7,9 @@ import { UilQuestionCircle, UilAngleDown, UilPump, UilLockAlt, UilSpinnerAlt } f
 import BigNumber from "bignumber.js";
 import { loadingAnimation } from '../components/CSS/SkeletomStyles';
 import styled, { css } from "styled-components"
+import { Chain } from '@renproject/chains';
+import { chainsBaseConfig } from '../utils/chainsConfig';
+import { CHAINS } from "../connection/chains";
 
 export const GlowingText = styled.span`
   font-size: 16px;
@@ -58,6 +61,8 @@ function AccordionItem({
   const maxBaseFee = new BigNumber(transaction.maxFeePerGas).shiftedBy(-9);
   const maxPriorityFee = new BigNumber(transaction.maxPriorityFeePerGas).shiftedBy(-9);
 
+const explorerLink =
+  CHAINS[chainsBaseConfig[transaction.chain! as Chain]!.testnetChainId!]?.explorerLink;
   return (
     <li className={` ${isOpen ? "active" : ""}`}>
       <div className="my-2 flex items-center justify-start">
@@ -90,12 +95,18 @@ function AccordionItem({
             {transaction.blockHash ? (
               <div className="flex items-center gap-2 text-blue-600">
                 <Tooltip content={"View on Etherscan"}>
-                  <span>{transaction.blockHash}</span>
+                  <a
+                    href={`${explorerLink}/block/${transaction.blockNumber}`}
+                    rel="noreferrer noopener"
+                    target="_blank"
+                  >
+                    {transaction.blockHash}
+                  </a>
                 </Tooltip>
 
                 <Tooltip content={"Copy Address"}>
                   <div className="flex h-[26px] w-[26px] justify-center rounded-full bg-tertiary">
-                    <CopyIcon text={"0z123456"} />
+                    <CopyIcon text={transaction.blockHash} />
                   </div>
                 </Tooltip>
               </div>
@@ -153,12 +164,18 @@ function AccordionItem({
             </div>
             <div className="flex items-center gap-2 text-blue-600">
               <Tooltip content={"View on Etherscan"}>
-                <span>{transaction.from}</span>
+                <a
+                  href={`${explorerLink}/address/${transaction.from}`}
+                  rel="noreferrer noopener"
+                  target="_blank"
+                >
+                  {transaction.from}
+                </a>
               </Tooltip>
 
               <Tooltip content={"Copy Address"}>
                 <div className="flex h-[26px] w-[26px] justify-center rounded-full bg-tertiary">
-                  <CopyIcon text={"0z123456"} />
+                  <CopyIcon text={transaction.from} />
                 </div>
               </Tooltip>
             </div>
@@ -172,12 +189,18 @@ function AccordionItem({
             </div>
             <div className="flex items-center gap-2 text-blue-600">
               <Tooltip content={"View on Etherscan"}>
-                <span>{transaction.to}</span>
+                <a
+                  href={`${explorerLink}/address/${transaction.to}`}
+                  rel="noreferrer noopener"
+                  target="_blank"
+                >
+                  {transaction.to}
+                </a>
               </Tooltip>
 
               <Tooltip content={"Copy Address"}>
                 <div className="flex h-[26px] w-[26px] justify-center rounded-full bg-tertiary">
-                  <CopyIcon text={"0z123456"} />
+                  <CopyIcon text={transaction.to} />
                 </div>
               </Tooltip>
             </div>

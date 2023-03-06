@@ -8,6 +8,10 @@ import {
 } from "@iconscout/react-unicons";
 import { formatTime } from "../../../utils/date";
 import { UserTxType } from "./TransactionTable";
+import Tooltip from "../../Tooltip/Tooltip";
+import { CHAINS } from "../../../connection/chains";
+import { chainsBaseConfig } from "../../../utils/chainsConfig";
+import { Chain } from "@renproject/chains";
 
 const Spinner = () => {
   return <UilSpinnerAlt className={" h-5 w-5 animate-spin text-gray-400"} />;
@@ -38,7 +42,9 @@ const TransactionIdRow = (data: UserTxType) => {
     else return <UilExclamationTriangle className={"h-5 w-5 text-red-500"} />;
   };
   const statusColour = getColour(data.status);
-
+  const explorerLink =
+    CHAINS[chainsBaseConfig[data.chain! as Chain]!.testnetChainId!]
+      ?.explorerLink;
   return (
     <StyledTokenRow>
       <div className="">
@@ -46,10 +52,16 @@ const TransactionIdRow = (data: UserTxType) => {
       </div>
       <div className="flex items-center gap-2 text-blue-600">
         <Identicon size={18} />
-        <span>{`${data.txHash.substring(0, 12)}...${data.txHash.substring(
-          data.txHash.length - 12,
-          data.txHash.length
-        )}`}</span>
+        <Tooltip content={"View on Explorer"}>
+          <a
+            href={`${explorerLink}/tx/${data.txHash}`}
+            rel="noreferrer noopener"
+            target={"_blank"}
+          >{`${data.txHash.substring(0, 12)}...${data.txHash.substring(
+            data.txHash.length - 12,
+            data.txHash.length
+          )}`}</a>
+        </Tooltip>
       </div>
       <div className="">
         <span>{date}</span>
