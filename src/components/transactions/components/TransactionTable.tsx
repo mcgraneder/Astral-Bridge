@@ -84,27 +84,12 @@ export default function TransactionsTable() {
     pendingTransaction,
     transactions,
     setTransactions,
-    loadedTxs,
-    setLoadedTxs,
   } = useGlobalState();
   const { filteredChain, filteredStatus, filteredType } =
     useTxFilterState();
     const [activePage, setActivePage] = useState(0);
-  const [loading, setLoading] = useState<boolean>(
-    loadedTxs == false ? true : false
-  );
+
   const _pageStart = activePage * 10;
-
-  useEffect(() => {
-    // setActivePage(0)
-    if (loadedTxs) return;
-    const loaderTimeout: NodeJS.Timeout = setTimeout(() => {
-      setLoading(false);
-      setLoadedTxs(true);
-    }, 2000);
-
-    return () => clearTimeout(loaderTimeout);
-  }, []);
 
   const fetchTxs = useCallback(async () => {
     if (!accountId) return;
@@ -159,7 +144,7 @@ export default function TransactionsTable() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  if (!transactions || loading)
+  if (!transactions)
     return (
     
       <GridContainer>

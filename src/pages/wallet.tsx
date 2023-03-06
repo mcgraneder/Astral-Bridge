@@ -67,9 +67,12 @@ const WalletPage: NextPage = () => {
               synth assets used to trade in this app.
               <br />
               <br />
-              Therefore to show off the apps functionality I have left some Ren
-              BTC, DAI and USDT in my bridge contract which you can use to use
-              and test the deposit and withdrawal functionality on this page.
+              Therefore to show off the apps functionality{" "}
+              <span className="text-orange-500">
+                I have left some Ren BTC, DAI and USDT in my bridge contract
+              </span>{" "}<span className="text-blue-400 font-semibold">{" "} on Ethereum & Binance chains </span>
+              which you can use to test the deposit and withdrawal
+              functionality on this page.
             </span>
           }
         />

@@ -21,6 +21,9 @@ import BigNumber from "bignumber.js";
 import { chainsBaseConfig } from "../../utils/chainsConfig";
 import FeeData from "./components/FeeData";
 import useMarketGasData from '../../hooks/useMarketGasData';
+import { ERC20ABI } from "@renproject/chains-ethereum/contracts";
+import useEcecuteTransaction from "../../hooks/useExecuteTransaction";
+import { ethers } from "ethers";
 
 export type Tab = {
   tabName: string;
@@ -145,7 +148,8 @@ const WalletModal = ({
   const { chainId, account } = useWeb3React();
   const { toggleConfirmationModal } = useTransactionFlow();
   const { defaultGasPrice } = useMarketGasData();
-  const { approve } = useApproval();
+  const { init } = useApproval();
+  const { executeTransaction: exec } = useEcecuteTransaction();
   const {
     setDestinationChain,
     setPendingTransaction,
@@ -159,12 +163,12 @@ const WalletModal = ({
     ChainIdToRenChain[chainId!] === destinationChain.fullName;
   const error = !needsToSwitchChain
     ? false
-    : text === "" || Number(text) == 0 || !isSufficentBalance || pendingTransaction;
+    : text === "" ||
+      Number(text) == 0 ||
+      !isSufficentBalance ||
+      pendingTransaction;
 
-  useEffect(
-    () => setText(""),
-    [buttonState, destinationChain, setText]
-  );
+  useEffect(() => setText(""), [buttonState, destinationChain, setText]);
 
   const setChainT = useCallback(
     (type: string) => setChainType(type),
@@ -190,7 +194,6 @@ const WalletModal = ({
         setIsAssetApproved(true);
       else setIsAssetApproved(false);
     })();
-   
   }, [asset, account, buttonState.tabName, destinationChain.fullName]);
 
   useEffect(() => {
@@ -215,37 +218,45 @@ const WalletModal = ({
     })();
   }, [text, setIsSufficientBalance, asset, assetBalances, buttonState]);
 
-  const execute = useCallback(() => {
+  const handleChainSwitchRequest = useCallback(() => {
+    switchNetwork(destinationChain.testnetChainId!).then((result: any) => {
+      setDestinationChain(
+        chainsBaseConfig[ChainIdToRenChain[destinationChain.testnetChainId!]!]
+      );
+    });
+  }, [destinationChain, setDestinationChain, switchNetwork]);
+
+  const handleApprovalRequest = useCallback(() => {
+    setPendingTransaction(true);
     const bridgeAddress = BridgeDeployments[destinationChain.fullName];
     const tokenAddress =
       chainAdresses[destinationChain.fullName]?.assets[asset.Icon]
         ?.tokenAddress!;
 
-    if (!needsToSwitchChain) {
-      switchNetwork(destinationChain.testnetChainId!).then((result: any) => {
-        setDestinationChain(
-          chainsBaseConfig[ChainIdToRenChain[destinationChain.testnetChainId!]!]
-        );
-      });
-    } else if (!isAssetApproved) {
-      setPendingTransaction(true);
-      approve(tokenAddress, text, bridgeAddress!).then(() => {
-        setIsAssetApproved(true);
-        setPendingTransaction(false);
-      });
-      
-    } else toggleConfirmationModal();
+    const tokenContract = init(tokenAddress, ERC20ABI, true);
+    exec(
+      asset,
+      destinationChain,
+      [bridgeAddress, ethers.constants.MaxUint256],
+      "Max uint256",
+      "Approval",
+      tokenContract?.approve
+    ).then(() => {
+      setIsAssetApproved(true);
+      setPendingTransaction(false);
+    });
+  }, [setPendingTransaction, init, exec, destinationChain, asset]);
+
+  const execute = useCallback(() => {
+    if (!needsToSwitchChain) handleChainSwitchRequest();
+    else if (!isAssetApproved) handleApprovalRequest();
+    else toggleConfirmationModal();
   }, [
-    approve,
-    asset,
-    destinationChain,
-    isAssetApproved,
-    needsToSwitchChain,
-    switchNetwork,
-    text,
+    handleChainSwitchRequest,
     toggleConfirmationModal,
-    setDestinationChain,
-    setPendingTransaction
+    handleApprovalRequest,
+    needsToSwitchChain,
+    isAssetApproved,
   ]);
 
   return (

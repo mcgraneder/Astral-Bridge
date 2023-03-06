@@ -38,14 +38,11 @@ type GlobalContextType = {
   setDestinationChain: any;
   chainType: string;
   setChainType: Dispatch<SetStateAction<string>>;
-  // defaultChains: ChainInstanceMap;
   loading: boolean;
   setEncryptedId: Dispatch<SetStateAction<string | null>>;
   encryptedId: string | null;
   transactions: any[] | undefined;
   setTransactions: any;
-  loadedTxs: any;
-  setLoadedTxs: any;
   filteredTransaction: string | null;
   setFilteredTransaction: Dispatch<SetStateAction<string | null>>;
 };
@@ -79,7 +76,6 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
   );
   const [chainType, setChainType] = useState<string>("from");
   const [transactions, setTransactions] = useState<any[] | undefined>(undefined);
-  const [loadedTxs, setLoadedTxs] = useState<any>(false);
   const [filteredTransaction, setFilteredTransaction] = useState<string | null>(null)
 
   const [assetBalances, setAssetBalances] = useState<{
@@ -162,8 +158,6 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
       setEncryptedId,
       transactions,
       setTransactions,
-      loadedTxs,
-      setLoadedTxs,
       filteredTransaction,
       setFilteredTransaction,
     }),
@@ -179,14 +173,12 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
       setDestinationChain,
       chainType,
       setChainType,
-      // defaultChains,
+
       loading,
       encryptedId,
       setEncryptedId,
       transactions,
       setTransactions,
-      loadedTxs,
-      setLoadedTxs,
       filteredTransaction,
       setFilteredTransaction,
     ]

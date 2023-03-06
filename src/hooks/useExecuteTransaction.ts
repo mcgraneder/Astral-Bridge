@@ -53,7 +53,11 @@ const useEcecuteTransaction = (): ExecuteTxType => {
     ): Promise<void> => {
       if (!library || !account) return;
       togglePendingModal();
-      const formattedAmount = new BigNumber(amount).shiftedBy(-asset.decimals);
+      const formattedAmount =
+        transactionType === "Approval"
+          ? amount
+          : new BigNumber(amount).shiftedBy(-asset.decimals);
+          
       try {
         const tx = await contractFn(...args);
         setFilteredTransaction(tx.hash);
@@ -64,7 +68,12 @@ const useEcecuteTransaction = (): ExecuteTxType => {
           {
             Id: "2",
             account: account,
-            type: transactionType === "Deposit" ? "deposit" : "withdraw",
+            type:
+              transactionType === "Deposit"
+                ? "deposit"
+                : transactionType === "Approval"
+                ? "approve"
+                : "withdraw",
             chain: chain.fullName,
             amount: formattedAmount,
             txHash: tx.hash,

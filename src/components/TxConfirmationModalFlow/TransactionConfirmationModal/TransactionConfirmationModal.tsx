@@ -285,7 +285,7 @@ const TxConfirmationModal = ({
       destinationChain: any,
       asset: any
     ): Promise<void> => {
-      toggleConfirmationModal();
+      if (transactionType !== "Approval") toggleConfirmationModal();
       const txAmount = new BigNumber(amount).shiftedBy(asset.decimals);
       const bridgeAddress = BridgeDeployments[destinationChain.fullName];
       const tokenAddress =

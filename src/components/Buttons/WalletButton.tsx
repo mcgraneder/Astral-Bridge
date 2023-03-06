@@ -36,9 +36,9 @@ const WalletButton = ({
       else if (pendingTransaction) return "Transaction pending";
       else if (!needsToSwitchChain)
         return `Switch to ${destinationChain.fullName} network`;
-      else if (!isSufficentBalance && text !== "") return "Insufficent funds";
-      else if (!isAssetApproved && text !== "")
+      else if (!isAssetApproved && buttonState.tabName !== "Withdraw")
         return `Approve ${asset.Icon} first`;
+      else if (!isSufficentBalance && text !== "") return "Insufficent funds";
       else return `${buttonState.tabName} ${text} ${asset.Icon}`;
     },
     [
@@ -52,16 +52,19 @@ const WalletButton = ({
   );
 
   const getButtonColour = useCallback(() => {
-    if (error && active)
-      return "bg-gray-500 hover:bg-gary-600 border border-gray-400 hover:border-gray-500";
     if (!active)
       return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
+    else if (!isAssetApproved)
+      return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
+    else if (!isSufficentBalance && text !== "")
+      return "bg-red-500 hover:bg-red-600 border border-red-400 hover:border-red-500";
+    if (error && active)
+      return "bg-gray-500 hover:bg-gary-600 border border-gray-400 hover:border-gray-500";
     else if (!needsToSwitchChain || text === "")
       return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
     else if (pendingTransaction || text === "" || Number(text) == 0)
       return "bg-gray-500 hover:bg-gary-600 border border-gray-400 hover:border-gray-500";
-    else if (!isSufficentBalance && text !== "")
-      return "bg-red-500 hover:bg-red-600 border border-red-400 hover:border-red-500";
+   
     else
       return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
   }, [
@@ -70,12 +73,15 @@ const WalletButton = ({
     text,
     pendingTransaction,
     active,
+    error,
+    isAssetApproved,
+    
   ]);
 
   return (
     <PrimaryButton
       className={`x-50 w-full justify-center rounded-2xl border ${getButtonColour()} py-[14px] text-center text-[17px] font-semibold hover:cursor-pointer`}
-      disabled={error}
+      disabled={isAssetApproved && error}
       onClick={execute}
     >
       <span>{getButtonText(destinationChain, active, buttonState)}</span>
