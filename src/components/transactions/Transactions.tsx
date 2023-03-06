@@ -1,11 +1,4 @@
-// import { Trace } from "@uniswap/analytics";
-// import { InterfacePageName } from "@uniswap/analytics-events";
-// import NetworkFilter from "components/Transactions/TokenTable/NetworkFilter";
-// import SearchBar from "components/Transactions/TokenTable/SearchBar";
-// import TimeSelector from "components/Transactions/TokenTable/TimeSelector";
-// import TokenTable from "components/Transactions/TokenTable/TokenTable";
-// import { MouseoverTooltip } from "components/Tooltip";
-import { useEffect } from "react";
+import { useEffect, useState, useCallback } from "react";
 import styled from "styled-components";
 import TransactionsTable from "./components/TransactionTable";
 import TransactionFilterButtons from './components/TransactionFilterButton';
@@ -48,24 +41,7 @@ const TitleContainer = styled.div`
   margin-right: auto;
   display: flex;
 `;
-const FiltersContainer = styled.div`
-  display: flex;
-  gap: 8px;
-  height: 40px;
 
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    order: 2;
-  }
-`;
-const SearchContainer = styled(FiltersContainer)`
-  margin-left: 8px;
-  width: 100%;
-
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    margin: 0px;
-    order: 1;
-  }
-`;
 const FiltersWrapper = styled.div`
   display: flex;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
@@ -81,6 +57,17 @@ const FiltersWrapper = styled.div`
 `;
 
 const Transactions = () => {
+  const [filteredChain, setFilteredChain] = useState<any>("All Chains")
+  const [filteredType, setFilteredType] = useState<any>("All Types");
+  const [filteredStatus, setFilteredStatus] = useState<any>("All Statuses");
+
+  const clearFilters = useCallback(() => {
+    setFilteredChain("All Chains");
+    setFilteredStatus("All Statuses");
+    setFilteredType("All Types");
+
+  }, [setFilteredChain, setFilteredStatus, setFilteredType]);
+
   return (
     <ExploreContainer>
       <TitleContainer>
@@ -89,12 +76,22 @@ const Transactions = () => {
 
       <FiltersWrapper>
         <div className="flex gap-2">
-           <TransactionFilterButtons/>
-
+          <TransactionFilterButtons
+            setFilteredChain={setFilteredChain}
+            setFilteredType={setFilteredType}
+            setFilteredStatus={setFilteredStatus}
+            filteredChain={filteredChain}
+            filteredStatus={filteredStatus}
+            filteredType={filteredType}
+            clearFilters={clearFilters}
+          />
         </div>
       </FiltersWrapper>
-      {/* <TokenTable / */}
-      <TransactionsTable />
+      <TransactionsTable
+        filteredChain={filteredChain}
+        filteredStatus={filteredStatus}
+        filteredType={filteredType}
+      />
     </ExploreContainer>
   );
 };

@@ -128,7 +128,17 @@ export const GlowingText = styled.div`
     `}
 `;
 
-export default function TransactionsTable() {
+interface TransactionTableProps {
+  filteredChain: any;
+  filteredStatus: any;
+  filteredType: any;
+}
+
+export default function TransactionsTable({
+  filteredChain,
+  filteredStatus,
+  filteredType,
+}: TransactionTableProps) {
   const {
     encryptedId: accountId,
     pendingTransaction,
@@ -167,7 +177,7 @@ export default function TransactionsTable() {
         },
       });
       if (!transactionsResponse) return;
-      console.log(transactionsResponse)
+      console.log(transactionsResponse);
       const cache: any = {};
       cache[accountId] = transactionsResponse.txs;
       sessionStorage.setItem("user-transactions", JSON.stringify(cache));
@@ -177,7 +187,6 @@ export default function TransactionsTable() {
     }
     setFetchingState("FETCHED");
   }, [accountId, setFetchingState, setTransactions]);
-
 
   useEffect(() => {
     fetchTxs();
@@ -192,7 +201,11 @@ export default function TransactionsTable() {
     const txns = sessionStorage.getItem("user-transactions");
     if (accountId && txns) {
       const cache = JSON.parse(txns);
-      if (Object.keys(cache).length > 0 && cache[accountId] && cache[accountId].length > 0) {
+      if (
+        Object.keys(cache).length > 0 &&
+        cache[accountId] &&
+        cache[accountId].length > 0
+      ) {
         setTransactions(cache[accountId]);
         //  setError(null);
         setFetchingState("FETCHED_CACHED");
@@ -276,10 +289,33 @@ export default function TransactionsTable() {
       <GridContainer>
         <HeaderRow />
         <div className="w-full border-[0.5px] border-gray-800" />
-        {transactions.map((data: UserTxType) => {
-          if (transactions.length === 0) return;
-          return <TransactionRow key={data.Id} {...data} />;
-        })}
+        {transactions
+          .filter((transaction) => {
+            console.log(filteredChain)
+            if (filteredChain === "All Chains") return transaction
+            return transaction.chain === filteredChain;
+          })
+          .filter((transaction) => {
+            if (filteredStatus === "All Statuses") return transaction
+            return (
+              transaction.status.toLowerCase() === filteredStatus.toLowerCase()
+            );
+          })
+          .filter((transaction) => {
+            if (filteredType === "All Types") return transaction
+            const formattedStatus =
+             filteredType === "Deposits" ||filteredType === "Approvals"
+                ?filteredType.substring(0,filteredType.length - 1)
+                :filteredType.substring(0,filteredType.length - 3);
+                console.log(transaction.type, filteredStatus)
+            return (
+              transaction.type.toLowerCase() === formattedStatus.toLowerCase()
+            );
+          })
+          .map((data: UserTxType) => {
+            if (transactions.length === 0) return;
+            return <TransactionRow key={data.Id} {...data} />;
+          })}
       </GridContainer>
     );
 }

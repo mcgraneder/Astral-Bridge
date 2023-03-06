@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { UilAngleDown } from "@iconscout/react-unicons";
 import styled from "styled-components";
-import { CHAINS, ChainType } from "../../../connection/chains";
 import { useWeb3React } from "@web3-react/core";
 import { Breakpoints } from "../../../constants/Breakpoints";
 import { useViewport } from "../../../hooks/useViewport";
 import BottomSheetOptions from "../../BottomSheet/BottomSheetOptions";
 import GreenDot from "../../Icons/GreenDot";
+import { Icon } from "../../Icons/AssetLogs/Icon";
 
 export const FormWrapper = styled.div`
   position: absolute;
@@ -25,24 +25,43 @@ export const FormWrapper = styled.div`
   box-shadow: 14px 19px 5px 0px rgba(0, 0, 0, 0.85);
 `;
 
-const getChainOptions = () => {
-  return Object.values(CHAINS);
-};
-
-const TRANSACTION_STATUSES = ["Completed", "Pending", "Failed", "All Statuses"];
-const TRANSACTION_TYPES = [
-  "Deposits",
-  "Withdrawals",
-  "Approvals",
-  "All transactions",
+const TRANSACTION_STATUSES = ["All Statuses", "Completed", "Pending", "Failed"];
+const TRANSACTION_TYPES = ["All Types", "Deposits", "Withdrawals", "Approvals"];
+export const TRANSACTION_CHAINS = [
+  "All Chains",
+  "Ethereum",
+  "Polygon",
+  "Arbitrum",
+  "Optimism",
+  "Fantom",
+  "Kava",
+  "BinanceSmartChain",
+  "Moonbeam",
+  "Avalanche",
 ];
 
-const TransactionFilterButtons = () => {
+interface TxFilterProps {
+  setFilteredChain: any;
+  setFilteredType: any;
+  setFilteredStatus: any;
+  filteredChain: any;
+  filteredStatus: any;
+  filteredType: any;
+  clearFilters: () => void;
+}
+const TransactionFilterButtons = ({
+  setFilteredChain,
+  setFilteredType,
+  setFilteredStatus,
+  filteredChain,
+  filteredStatus,
+  filteredType,
+  clearFilters,
+}: TxFilterProps) => {
   const [isChainMenuOpen, setIsChainMenuOpen] = useState<boolean>(false);
   const [isStatusMenuOpen, setIsStatusMenuOpen] = useState<boolean>(false);
   const [isTypeMenuOpen, setIsTypeMenuOpen] = useState<boolean>(false);
 
-  const { chainId } = useWeb3React();
   const { width } = useViewport();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -51,8 +70,8 @@ const TransactionFilterButtons = () => {
       if (!ref.current) return;
       if (!ref.current.contains(e.target as Node | null)) {
         setIsChainMenuOpen(false);
-        setIsStatusMenuOpen(false)
-        setIsTypeMenuOpen(false)
+        setIsStatusMenuOpen(false);
+        setIsTypeMenuOpen(false);
       }
     };
     document.addEventListener("click", checkIfClickedOutside);
@@ -73,7 +92,7 @@ const TransactionFilterButtons = () => {
         }}
         ref={ref}
       >
-        <span>Ethereum</span>
+        <span>{filteredChain}</span>
         <UilAngleDown />
       </div>
       <div
@@ -86,7 +105,7 @@ const TransactionFilterButtons = () => {
         }}
         ref={ref}
       >
-        <span>Deposits</span>
+        <span>{filteredType}</span>
         <UilAngleDown />
       </div>
       <div
@@ -99,34 +118,61 @@ const TransactionFilterButtons = () => {
         }}
         ref={ref}
       >
-        <span>Pending</span>
+        <span>{filteredStatus}</span>
         <UilAngleDown />
+      </div>
+      <div
+        className="flex items-center gap-2 rounded-xl border-tertiary bg-gray-600 py-2 px-4 text-white hover:cursor-pointer hover:bg-gray-500"
+        onClick={clearFilters}
+      >
+        <span>Clear Filters</span>
       </div>
 
       {width > 0 && width >= Breakpoints.sm1 ? (
-        <FormWrapper top={"49%"}>
-          {isChainMenuOpen &&
-            getChainOptions()
-              .filter((chain: ChainType) => chain.isTestnet)
-              .map((chain: ChainType, index: number) => {
+        <>
+          {isChainMenuOpen && (
+            <FormWrapper top={"49%"}>
+              {TRANSACTION_CHAINS.map((chain: string, index: number) => {
                 return (
                   <ChainSelector
                     key={index}
                     chain={chain}
-                    currentChain={chainId}
-                    switchNetwork={() => {}}
+                    setFilteredChain={setFilteredChain}
+                    filteredChain={filteredChain}
                   />
                 );
               })}
-          {isTypeMenuOpen &&
-            TRANSACTION_TYPES.map((txType: string, index: number) => {
-              return <TxTypeSelector key={index} txType={txType} />;
-            })}
-          {isStatusMenuOpen &&
-            TRANSACTION_STATUSES.map((status: string, index: number) => {
-              return <TxStatusSelector key={index} status={status} />;
-            })}
-        </FormWrapper>
+            </FormWrapper>
+          )}
+          {isTypeMenuOpen && (
+            <FormWrapper top={"38%"}>
+              {TRANSACTION_TYPES.map((txType: string, index: number) => {
+                return (
+                  <TxTypeSelector
+                    key={index}
+                    txType={txType}
+                    setFilteredType={setFilteredType}
+                    filteredType={filteredType}
+                  />
+                );
+              })}
+            </FormWrapper>
+          )}
+          {isStatusMenuOpen && (
+            <FormWrapper top={"38%"}>
+              {TRANSACTION_STATUSES.map((status: string, index: number) => {
+                return (
+                  <TxStatusSelector
+                    key={index}
+                    status={status}
+                    setFilteredStatus={setFilteredStatus}
+                    filteredStatus={filteredStatus}
+                  />
+                );
+              })}
+            </FormWrapper>
+          )}
+        </>
       ) : (
         <BottomSheetOptions
           hideCloseIcon
@@ -134,74 +180,99 @@ const TransactionFilterButtons = () => {
           setOpen={() => null}
           title={"Chain selection"}
         >
-          {getChainOptions()
-            .filter((chain: ChainType) => chain.isTestnet)
-            .map((chain: ChainType, index: number) => {
-              return (
-                <ChainSelector
-                  key={index}
-                  chain={chain}
-                  currentChain={chainId}
-                  switchNetwork={() => {}}
-                />
-              );
-            })}
+          {TRANSACTION_CHAINS.map((chain: string, index: number) => {
+            return (
+              <ChainSelector
+                key={index}
+                chain={chain}
+                setFilteredChain={setFilteredChain}
+                filteredChain={filteredChain}
+              />
+            );
+          })}
         </BottomSheetOptions>
       )}
     </>
   );
 };
 
-
 const ChainSelector = ({
   chain,
-  currentChain,
-  switchNetwork,
+  setFilteredChain,
+  filteredChain
 }: {
-  chain: ChainType;
-  currentChain: number | undefined;
-  switchNetwork: any;
+  chain: string;
+  setFilteredChain: any;
+  filteredChain: any
 }) => {
   return (
     <div
       className=" flex flex-row items-center gap-3 rounded-lg px-2 py-2 hover:cursor-pointer hover:bg-tertiary"
-      onClick={() => switchNetwork(chain.id)}
+      onClick={() => setFilteredChain(chain)}
     >
       <div className="flex h-full">
-        <chain.logo className={"h-5 w-5"} />
+        <Icon chainName={chain} className={"h-5 w-5"} />
       </div>
-      <span className="text-[15px] text-white">{chain.chainName}</span>
-      {currentChain && currentChain == chain.id && <GreenDot />}
+      <span
+        className={`text-[15px] ${
+          filteredChain === chain ? "text-white" : "text-gray-500"
+        }`}
+      >
+        {chain}
+      </span>
+      {filteredChain && filteredChain == chain && <GreenDot />}
     </div>
   );
 };
 
-const TxStatusSelector = ({ status }: { status: string }) => {
+const TxStatusSelector = ({
+  status,
+  setFilteredStatus,
+  filteredStatus
+}: {
+  status: string;
+  setFilteredStatus: any;
+  filteredStatus: any
+}) => {
   return (
     <div
       className=" flex flex-row items-center gap-3 rounded-lg px-2 py-2 hover:cursor-pointer hover:bg-tertiary"
-      onClick={() => {}}
+      onClick={() => setFilteredStatus(status)}
     >
       {/* <div className="flex h-full">
         <chain.logo className={"h-5 w-5"} />
       </div> */}
-      <span className="text-[15px] text-white">{status}</span>
-      {/* {currentChain && currentChain == chain.id && <GreenDot />} */}
+      <span
+        className={`text-[15px] ${
+          filteredStatus === status ? "text-white" : "text-gray-500"
+        }`}
+      >
+        {status}
+      </span>
+      {filteredStatus && filteredStatus == status && <GreenDot />}
     </div>
   );
 };
 
-const TxTypeSelector = ({ txType }: { txType: string }) => {
+const TxTypeSelector = ({
+  txType,
+  setFilteredType,
+  filteredType
+}: {
+  txType: string;
+  setFilteredType: any;
+  filteredType: any
+}) => {
   return (
     <div
       className=" flex flex-row items-center gap-3 rounded-lg px-2 py-2 hover:cursor-pointer hover:bg-tertiary"
-      onClick={() => {}}
+      onClick={() => setFilteredType(txType)}
     >
       {/* <div className="flex h-full">
         <chain.logo className={"h-5 w-5"} />
       </div> */}
-      <span className="text-[15px] text-white">{txType}</span>
-      {/* {currentChain && currentChain == chain.id && <GreenDot />} */}
+      <span className={`text-[15px] ${filteredType === txType ? "text-white" : "text-gray-500"}`}>{txType}</span>
+      { filteredType === txType && <GreenDot />}
     </div>
   );
 };
