@@ -1,17 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
 import styled, { css } from "styled-components";
 import HeaderRow from "./HeaderRow";
-import { RowData } from "./TransactionRow";
 import TransactionRow from "./TransactionRow";
 import { useGlobalState } from "../../../context/useGlobalState";
 import API from "../../../constants/Api";
 import { get } from "../../../services/axios";
-import { useWeb3React } from "@web3-react/core";
 import { StyledTokenRow } from './HeaderRow';
 import { loadingAnimation } from '../../CSS/SkeletomStyles';
-import PrimaryButton from "../../PrimaryButton/PrimaryButton";
-import { UilArrowLeft } from "@iconscout/react-unicons";
+import { UilAngleRightB, UilAngleLeftB } from "@iconscout/react-unicons";
 import { useTxFilterState } from "../TransactionsContext";
+import ReactPaginate from "react-paginate";
 
 export const MAX_WIDTH_MEDIA_BREAKPOINT = "1200px";
 
@@ -30,62 +28,7 @@ const GridContainer = styled.div`
   border: 1px solid rgb(48, 63, 88);
 `;
 
-const TokenDataContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  height: 100%;
-  width: 100%;
-`;
 
-const NoTokenDisplay = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  height: 60px;
-  color: black;
-  font-size: 16px;
-  font-weight: 500;
-  align-items: center;
-  padding: 0px 28px;
-  gap: 8px;
-`;
-
-// function NoTokensState({ message }: { message: ReactNode }) {
-//   return (
-//     <GridContainer>
-//       <HeaderRow />
-//       <NoTokenDisplay>{message}</NoTokenDisplay>
-//     </GridContainer>
-//   );
-// }
-
-// const LoadingRows = ({ rowCount }: { rowCount: number }) => (
-//   <>
-//     {Array(rowCount)
-//       .fill(null)
-//       .map((_, index) => {
-//         return (
-//           <LoadingRow
-//             key={index}
-//             first={index === 0}
-//             last={index === rowCount - 1}
-//           />
-//         );
-//       })}
-//   </>
-// );
-
-// function LoadingTokenTable({ rowCount = 20 }: { rowCount?: number }) {
-//   return (
-//     <GridContainer>
-//       <HeaderRow />
-//       <TokenDataContainer>
-//         <LoadingRows rowCount={rowCount} />
-//       </TokenDataContainer>
-//     </GridContainer>
-//   );
-// }
 export type UserTxType = {
   Id: string;
   account: string;
@@ -146,12 +89,14 @@ export default function TransactionsTable() {
   } = useGlobalState();
   const { filteredChain, filteredStatus, filteredType } =
     useTxFilterState();
-  const [fetchingState, setFetchingState] = useState<any>("FETCHING");
+    const [activePage, setActivePage] = useState(0);
   const [loading, setLoading] = useState<boolean>(
     loadedTxs == false ? true : false
   );
+  const _pageStart = activePage * 10;
 
   useEffect(() => {
+    // setActivePage(0)
     if (loadedTxs) return;
     const loaderTimeout: NodeJS.Timeout = setTimeout(() => {
       setLoading(false);
@@ -181,8 +126,8 @@ export default function TransactionsTable() {
     } catch (err) {
       //  setError("notifications.somethingWentWrongTryLater");
     }
-    setFetchingState("FETCHED");
-  }, [accountId, setFetchingState, setTransactions]);
+   
+  }, [accountId, setTransactions]);
 
   useEffect(() => {
     fetchTxs();
@@ -204,13 +149,19 @@ export default function TransactionsTable() {
       ) {
         setTransactions(cache[accountId]);
         //  setError(null);
-        setFetchingState("FETCHED_CACHED");
       }
     }
-  }, [accountId, setFetchingState, setTransactions]);
+  }, [accountId, setTransactions]);
+
+  
+  const onPageChange = (selectedItem: { selected: number }) => {
+    setActivePage(selectedItem.selected);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   if (!transactions || loading)
     return (
+    
       <GridContainer>
         <HeaderRow />
         <div className="w-full border-[0.5px] border-gray-800" />
@@ -266,31 +217,51 @@ export default function TransactionsTable() {
         <div className="w-full border-[0.5px] border-gray-800" />
         {transactions
           .filter((transaction) => {
-            console.log(filteredChain)
-            if (filteredChain === "All Chains") return transaction
+            console.log(filteredChain);
+            if (filteredChain === "All Chains") return transaction;
             return transaction.chain === filteredChain;
           })
           .filter((transaction) => {
-            if (filteredStatus === "All Statuses") return transaction
+            if (filteredStatus === "All Statuses") return transaction;
             return (
               transaction.status.toLowerCase() === filteredStatus.toLowerCase()
             );
           })
           .filter((transaction) => {
-            if (filteredType === "All Types") return transaction
+            if (filteredType === "All Types") return transaction;
             const formattedStatus =
-             filteredType === "Deposits" ||filteredType === "Approvals"
-                ?filteredType.substring(0,filteredType.length - 1)
-                :filteredType.substring(0,filteredType.length - 3);
-                console.log(transaction.type, filteredStatus)
+              filteredType === "Deposits" || filteredType === "Approvals"
+                ? filteredType.substring(0, filteredType.length - 1)
+                : filteredType.substring(0, filteredType.length - 3);
+            console.log(transaction.type, filteredStatus);
             return (
               transaction.type.toLowerCase() === formattedStatus.toLowerCase()
             );
           })
+          .slice(_pageStart, _pageStart + 9)
           .map((data: UserTxType) => {
             if (transactions.length === 0) return;
             return <TransactionRow key={data.Id} {...data} />;
           })}
+        {Math.ceil(transactions.length / 10) > 1 && (
+          // <div></div>
+          <ReactPaginate
+            className="my-3 p-2 flex items-center justify-center gap-3 rounded-xl bg-hoverLightground"
+            breakLabel="..."
+            nextLabel={<UilAngleRightB />}
+            previousClassName={`${activePage === 0 && "text-gray-500"}`}
+            nextClassName={`${
+              activePage === Math.ceil(transactions.length / 10) - 1 &&
+              "text-gray-500"
+            }`}
+            pageClassName="w-6 h-6 flex items-center justify-center rounded-lg "
+            activeClassName="bg-blue-500"
+            forcePage={activePage}
+            onPageChange={onPageChange}
+            pageCount={Math.ceil(transactions.length / 10)}
+            previousLabel={<UilAngleLeftB />}
+          />
+        )}
       </GridContainer>
     );
 }

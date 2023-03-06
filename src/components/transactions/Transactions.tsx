@@ -69,6 +69,7 @@ const Transactions = () => {
           </div>
         </FiltersWrapper>
         <TransactionsTable />
+        
       </ExploreContainer>
     </TransactionFilterStateProvider>
   );

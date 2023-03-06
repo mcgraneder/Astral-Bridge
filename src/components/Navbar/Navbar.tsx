@@ -75,7 +75,7 @@ const NavLinks = ({ routes }: { routes: string[] }) => {
       {routes.map((route: string, index: number) => {
         return (
           <Link
-            href={`./${ROUTES[index]}`}
+            href={`/${ROUTES[index]}`}
             key={route}
             className="hidden flex-row items-center gap-2 md:flex mx-1"
           >

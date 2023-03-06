@@ -42,6 +42,7 @@
     "react-dom": "18.2.0",
     "react-feather": "^2.0.10",
     "react-i18next": "^12.1.4",
+    "react-paginate": "^8.1.4",
     "react-popper": "^2.3.0",
     "react-qrcode-logo": "^2.8.0",
     "react-toastify": "^9.1.1",
