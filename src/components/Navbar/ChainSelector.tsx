@@ -95,14 +95,14 @@ const TokenSelectDropdown = () => {
 const ChainSelectorButton = ({ setIsMenuOpen, activeChain }: { setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>; activeChain: ChainType | undefined }) => {
     return (
       <div
-        className=" flex items-center rounded-lg bg-black bg-opacity-20 px-2 text-center hover:cursor-pointer hover:border-gray-500 hover:bg-black hover:bg-opacity-40"
+        className="py-1 flex items-center rounded-lg bg-black bg-opacity-20 px-2 text-center hover:cursor-pointer hover:border-gray-500 hover:bg-black hover:bg-opacity-40"
         onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
           e.stopPropagation();
           setIsMenuOpen((o: boolean) => !o);
         }}
       >
         {activeChain && <activeChain.logo />}
-        <span className="my-2 hidden w-full text-center mlg:block">
+        <span className="hidden w-full text-center mlg:block">
           {activeChain ? activeChain.chainName : "Unknown"}
         </span>
         <UilAngleDown className={"h-5 w-5 mlg:h-8 mlg:w-8"} />
@@ -111,7 +111,7 @@ const ChainSelectorButton = ({ setIsMenuOpen, activeChain }: { setIsMenuOpen: Re
 };
 const ChainSelector = ({ chain, currentChain, switchNetwork }: { chain: ChainType; currentChain: number | undefined; switchNetwork: any }) => {
     return (
-        <div className='flex flex-row items-center gap-3 rounded-lg px-2 py-2 hover:cursor-pointer hover:bg-tertiary' onClick={() => switchNetwork(chain.id)}>
+        <div className='flex flex-row items-center gap-3 rounded-lg px-2 hover:cursor-pointer hover:bg-tertiary' onClick={() => switchNetwork(chain.id)}>
             <div className='flex h-full'>
                 <chain.logo className={"h-5 w-5"} />
             </div>

@@ -12,7 +12,7 @@ const SigVerifierBaseUrl = isProduction()
   const OwlOracleBaseUrl = "https://www.etherchain.org/api";
   const CoinGeckoBaseUrl = "https://api.coingecko.com/api/v3";
 
-  const NextBaseUrl = `https://astral-bridge.vercel.app/api`;
+  const NextBaseUrl = `${DOMAIN}/api`
 const API = {
   next: {
     user: `${NextBaseUrl}/user`,

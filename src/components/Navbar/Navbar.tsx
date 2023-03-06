@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import LogoIcon from "../../../public/svgs/assets/RenIconHome.svg";
 import { UilSearch } from "@iconscout/react-unicons";
 import { UilSpinner, UilAngleDown } from "@iconscout/react-unicons";
@@ -17,7 +17,6 @@ import API from "../../constants/Api";
 import { formatTime } from "../../utils/date";
 import { Icon } from "../Icons/AssetLogs/Icon";
 import { get } from "../../services/axios";
-import { Dispatch, SetStateAction } from "react";
 
 export const Wrapper = styled.div`
   display: flex;
@@ -28,7 +27,13 @@ export const Wrapper = styled.div`
   position: fixed;
   top: 0px;
   z-index: 100;
-  /* background: black; */
+  /* background: rgb(12, 18, 43); */
+
+  ${(props: any) =>
+    props.isNavbarDark &&
+    css`
+      background: rgb(12, 18, 43);
+    `}
 `;
 
 export const Nav = styled.nav`
@@ -67,7 +72,7 @@ interface INavbar {
   toggleAccoundDetailsModal: () => void;
 }
 
-const ROUTES: string[] = ["bridge", "wallet", "transactions"];
+const ROUTES: string[] = ["bridge", "wallet", "history", "trade"];
 
 const NavLinks = ({ routes }: { routes: string[] }) => {
   return (
@@ -75,11 +80,11 @@ const NavLinks = ({ routes }: { routes: string[] }) => {
       {routes.map((route: string, index: number) => {
         return (
           <Link
-            href={`/${ROUTES[index]}`}
+            href={`/${route === "history" ? "transactions" : route}`}
             key={route}
-            className="hidden flex-row items-center gap-2 md:flex mx-1"
+            className="mx-1 hidden flex-row items-center gap-2 md:flex"
           >
-            <span className="my-2 w-full rounded-xl bg-black px-4 py-2 text-center text-[18px] hover:cursor-pointer hover:bg-black bg-opacity-20 hover:bg-opacity-40">
+            <span className="my-2 w-full rounded-xl bg-black bg-opacity-20 px-4 py-2 text-center text-[16px] hover:cursor-pointer hover:bg-black hover:bg-opacity-40">
               {route}
             </span>
           </Link>
@@ -254,11 +259,11 @@ const TokenSearchBar = ({
   }, []);
 
   return (
-    <BoxItemContainer allignment={"center"}>
+    <BoxItemContainer allignment={width >= 1000 ? "center" : "end"}>
       <div
         className={`relative  flex h-[45px] w-fit max-w-[95%] items-center justify-center rounded-lg border border-transparent bg-darkBackground bg-opacity-40 px-2 lg:w-full lg:border-gray-500 ${
           dropDownActive && "border-b-0 bg-opacity-100"
-        }`}
+        } ${width <= 1000 && "mr-4"}`}
       >
         <UilSearch className="text-grey-400 mr-2 h-6 w-6" />
         {width >= 1000 && (
@@ -287,6 +292,7 @@ export const Navbar = ({
   toggleWalletModal,
   toggleAccoundDetailsModal,
 }: INavbar) => {
+  const [isNavbarDark, setIsNavbarDark] = useState(false);
   const [provider, setProvider] = useState<any>(undefined);
   const router = useRouter();
   const { account, active } = useWeb3React();
@@ -294,6 +300,22 @@ export const Navbar = ({
   const { pendingTransaction, encryptedId } =
     useGlobalState();
   const activePath = router.pathname;
+
+
+    const changeBackground = () => {
+      
+      if (window.scrollY >= 66) {
+        setIsNavbarDark(true);
+      } else {
+        setIsNavbarDark(false);
+      }
+    };
+
+    useEffect(() => {
+      if (typeof window === "undefined") return
+      changeBackground();
+      window.addEventListener("scroll", changeBackground);
+    });
 
   useEffect(() => {
     if (typeof window == "undefined" || !active) return;
@@ -303,24 +325,23 @@ export const Navbar = ({
 
   const Icon = provider ? walletIcon[provider] : undefined;
   return (
-    <Wrapper>
+    <Wrapper isNavbarDark={isNavbarDark}>
       <Nav>
         <Box>
           <BoxItemContainer allignment={"flex-start"}>
-            <div className="mr-5 flex h-full">
-              <LogoIcon />
-            </div>
+            {width >= 1000 && (
+              <div className="mr-5 flex h-full">
+                <LogoIcon />
+              </div>
+            )}
             {activePath !== "/home" && <NavLinks routes={ROUTES} />}
           </BoxItemContainer>
           {activePath !== "/home" && (
-            <TokenSearchBar
-              width={width}
-              accountId={encryptedId}
-            />
+            <TokenSearchBar width={width} accountId={encryptedId} />
           )}
           <BoxItemContainer allignment={"flex-end"}>
             {activePath !== "/home" && (
-              <div className="mr-5 flex  h-full">
+              <div className="mr-5 flex h-full items-center">
                 <TokenSelectDropdown />
               </div>
             )}

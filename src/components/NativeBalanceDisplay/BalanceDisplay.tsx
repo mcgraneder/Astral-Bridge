@@ -36,6 +36,7 @@ const BalanceDisplayInner = ({
   isNative,
   chain,
 }: ITokenDisplay) => {
+  const NativeCurrency = CHAINS[chainId!]?.currency
   return (
     <div className="my-5 flex flex-col items-center rounded-lg border border-tertiary p-2 text-center">
       {!isNative ? (
@@ -43,7 +44,11 @@ const BalanceDisplayInner = ({
           <span>{asset.shortName}</span> Balance
           <span> on {chain.fullName}</span>
         </span>
-      ) : null}
+      ) : (
+        <span className=" text-[17px] text-gray-400">
+          <span>{NativeCurrency}</span> Balance
+        </span>
+      )}
       {isNative ? (
         <GlowingText loading={fetchingBalances}>
           {balance ? balance : "0.00"}

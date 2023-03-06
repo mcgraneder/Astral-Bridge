@@ -4,9 +4,7 @@ import ActiveTabIndicator from "public/svgs/active-tab-indicator.svg";
 import LogoFull from "public/svgs/logo-full.svg";
 import Logo from "public/svgs/logo-icon.svg";
 import React from "react";
-import ExplorerIcon from "../../../public/svgs/explorer-icon.svg";
 import Seperator from "../../../public/svgs/seperator.svg";
-import { UilSync } from "@iconscout/react-unicons"
 
 export type NavItemProps = { route: string; Icon: any; label: string; };
 
