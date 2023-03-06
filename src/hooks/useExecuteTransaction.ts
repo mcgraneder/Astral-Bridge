@@ -8,6 +8,8 @@ import API from '../constants/Api';
 import { BigNumber } from "bignumber.js";
 import { TxType } from "../pages/api/walletTx";
 import { ResponseData } from '../pages/api/user';
+import { ethers } from "ethers";
+import { gasPriceData } from "./useMarketGasData";
 
 type ExecuteTxType = {
   executeTransaction: (
@@ -54,14 +56,9 @@ const useEcecuteTransaction = (): ExecuteTxType => {
       const formattedAmount = new BigNumber(amount).shiftedBy(-asset.decimals);
       try {
         const tx = await contractFn(...args);
-        setFilteredTransaction(tx.hash)
-        library
-          .getTransaction(
-            tx.hash
-          )
-          .then((tx: any) => {
-            console.log(tx);
-          }); 
+        setFilteredTransaction(tx.hash);
+        const txReceipt = await library.getTransaction(tx.hash);
+
         const transactionResponse = await post<ResponseData>(
           API.next.depositTx,
           {
@@ -73,18 +70,35 @@ const useEcecuteTransaction = (): ExecuteTxType => {
             txHash: tx.hash,
             currency: asset.Icon,
             encryptedId: encryptedId,
+            blockHash: txReceipt.blockHash,
+            blockNumber: txReceipt.blockNumber,
+            chainId: txReceipt.chainId,
+            from: txReceipt.from,
+            gasLimit: Number(txReceipt.gaLimit).toString(),
+            gasPrice: Number(txReceipt.gasPriceData),
+            hash: txReceipt.hash,
+            maxFeePerGas: Number(txReceipt.maxFeePerGas).toString(),
+            maxPriorityFeePerGas: Number(txReceipt.maxPriorityFeePerGas),
+            nonce: txReceipt.nonce,
+            to: txReceipt.to,
+            value: Number(txReceipt.value).toString(),
           }
         );
         if (!transactionResponse) return;
 
         const txId = transactionResponse.txId;
         setTimeout(() => toggleSubmittedModal(), 250);
-        await tx.wait(1);
-
-        await patch(API.next.depositTx, {
-          encryptedId: encryptedId,
-          txId: txId,
+        await tx.wait(1).then(async (txReceipt: any) => {
+          await patch(API.next.depositTx, {
+            encryptedId: encryptedId,
+            txId: txId,
+            blockHash: txReceipt.blockHash,
+            blockNumber: txReceipt.blockNumber,
+            gasPrice: Number(txReceipt.effectiveGasPrice).toString(),
+            gasLimit: Number(txReceipt.gasUsed).toString(),
+          });
         });
+
         setPendingTransaction(false);
 
         HandleNewNotification(
@@ -104,7 +118,8 @@ const useEcecuteTransaction = (): ExecuteTxType => {
       toggleRejectedModal,
       setPendingTransaction,
       HandleNewNotification,
-      encryptedId
+      encryptedId,
+      setFilteredTransaction
     ]
   );
 

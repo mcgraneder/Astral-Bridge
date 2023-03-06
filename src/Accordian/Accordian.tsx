@@ -2,7 +2,7 @@ import { useState } from "react";
 // import { AccordionData } from "../types";
 import AccordionItem from "./AccordianItem";
 
-function Accordion({ items }: { items: any[] }) {
+function Accordion({ transaction }: { transaction: any }) {
   const [currentIdx, setCurrentIdx] = useState<boolean>(false);
   const btnOnClick = () => {
     setCurrentIdx((currentValue) => (!currentValue));
@@ -11,7 +11,7 @@ function Accordion({ items }: { items: any[] }) {
   return (
     <ul className="accordion">
       <AccordionItem
-        data={items}
+        transaction={transaction}
         isOpen={currentIdx}
         btnOnClick={() => setCurrentIdx(!currentIdx)}
       />

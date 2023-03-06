@@ -44,13 +44,13 @@ async function handler(
 
   const userDocRef = userSnapshot.ref;
   if (req.method === "PATCH") {
-    const { txId } = req.body;
-    const dataToUpdate = { status: TxStatus.completed };
+    const { txId, ...rest } = req.body;
+    const dataToUpdate = { status: TxStatus.completed, ...rest };
 
     await userDocRef.collection(Collections.txs).doc(txId).update(dataToUpdate);
     res.status(200).json({ success: true });
   } else if (req.method === "POST") {
-    const { Id, account, chain, amount, txHash, currency, type } = req.body;
+    const { Id, account, chain, amount, txHash, currency, type, ...rest } = req.body;
 
     const renVMTxIdDocSnapshot = await userDocRef
       .collection(Collections.txs)
@@ -71,6 +71,7 @@ async function handler(
       Id: Id,
       amount: amount,
       currency: currency,
+      ...rest
     });
     res.status(200).json({ success: true, txId: txDoc.id });
     return;

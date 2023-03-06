@@ -95,13 +95,14 @@ const ExtraDataContainer = styled.div`
       height: fit-content;
     `}
 `;
-const TransactionBlockInfo = () => {
 
+interface ITransactionBlockInfo {
+  transaction: any;
+}
+const TransactionBlockInfo = ({ transaction }: ITransactionBlockInfo) => {
   return (
     <div className=" flex w-full flex-col items-start justify-center px-4">
-      
-      <Accordion items={[0]} />
-      
+      <Accordion transaction={transaction} />
     </div>
   );
 };

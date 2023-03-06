@@ -85,7 +85,7 @@ interface TransactionTableProps {
 }
 
 export default function TransactionsIdTable() {
-  const { encryptedId: accountId, pendingTransaction } = useGlobalState();
+  const { encryptedId: accountId, pendingTransaction, filteredTransaction } = useGlobalState();
   const [loading, setLoading] = useState<boolean>(true);
   const [transaction, setTransaction] = useState<any[] | undefined>(undefined);
 
@@ -105,8 +105,7 @@ export default function TransactionsIdTable() {
       } | null>(API.next.gettransaction, {
         params: {
           accountId,
-          txHash:
-            "0xfadab842733eaa0c52ebd46c901d941f0ae843dc8daaf3ab657a261b4ba6eebf",
+          txHash: filteredTransaction,
         },
       });
       if (!transactionsResponse) return;
@@ -115,7 +114,7 @@ export default function TransactionsIdTable() {
     } catch (err) {
       //  setError("notifications.somethingWentWrongTryLater");
     }
-  }, [accountId, setTransaction]);
+  }, [accountId, setTransaction, filteredTransaction]);
 
   useEffect(() => {
     fetchTxs();
@@ -181,7 +180,7 @@ export default function TransactionsIdTable() {
           <HeaderRow />
           <div className="w-full border-[0.5px] border-gray-800" />
           <TransactionIdRow {...transaction[0]} />
-          <TransactionBlockInfo/>
+          <TransactionBlockInfo transaction={transaction[0]}/>
         </GridContainer>
       </>
     );
