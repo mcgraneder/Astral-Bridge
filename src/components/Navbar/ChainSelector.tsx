@@ -13,8 +13,8 @@ import { chainsBaseConfig } from '../../utils/chainsConfig';
 
 export const FormWrapper = styled.div`
     position: fixed;
-    left: 73.5%;
-    top: 26%;
+    left: 74%;
+    top: 28%;
     transform: translate(-50%, -50%);
     width: 300px;
     background-color: rgb(15, 25, 55);
@@ -111,7 +111,7 @@ const ChainSelectorButton = ({ setIsMenuOpen, activeChain }: { setIsMenuOpen: Re
 };
 const ChainSelector = ({ chain, currentChain, switchNetwork }: { chain: ChainType; currentChain: number | undefined; switchNetwork: any }) => {
     return (
-        <div className='flex flex-row items-center gap-3 rounded-lg px-2 hover:cursor-pointer hover:bg-tertiary' onClick={() => switchNetwork(chain.id)}>
+        <div className='py-2 flex flex-row items-center gap-3 rounded-lg px-2 hover:cursor-pointer hover:bg-tertiary' onClick={() => switchNetwork(chain.id)}>
             <div className='flex h-full'>
                 <chain.logo className={"h-5 w-5"} />
             </div>
