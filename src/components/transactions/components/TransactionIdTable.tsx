@@ -15,6 +15,7 @@ import { useTxFilterState } from "../TransactionsContext";
 import Link from "next/link";
 import TransactionIdRow from './TransactionIdRow';
 import TransactionBlockInfo from "./TransactionBlockInfo";
+import { useRouter } from 'next/router';
 
 export const MAX_WIDTH_MEDIA_BREAKPOINT = "1200px";
 
@@ -85,7 +86,8 @@ interface TransactionTableProps {
 }
 
 export default function TransactionsIdTable() {
-  const { encryptedId: accountId, pendingTransaction, filteredTransaction } = useGlobalState();
+  const { encryptedId: accountId, pendingTransaction } = useGlobalState();
+  const { query } = useRouter()
   const [loading, setLoading] = useState<boolean>(true);
   const [transaction, setTransaction] = useState<any[] | undefined>(undefined);
 
@@ -97,15 +99,17 @@ export default function TransactionsIdTable() {
     return () => clearTimeout(loaderTimeout);
   }, []);
 
+
   const fetchTxs = useCallback(async () => {
-    if (!accountId) return;
+    console.log(query.transactionId)
+    if (!accountId || !query.transactionId) return;
     try {
       const transactionsResponse = await get<{
         tx: UserTxType[];
       } | null>(API.next.gettransaction, {
         params: {
           accountId,
-          txHash: filteredTransaction,
+          txHash: query.transactionId,
         },
       });
       if (!transactionsResponse) return;
@@ -114,7 +118,7 @@ export default function TransactionsIdTable() {
     } catch (err) {
       //  setError("notifications.somethingWentWrongTryLater");
     }
-  }, [accountId, setTransaction, filteredTransaction]);
+  }, [accountId, setTransaction, query.transactionId]);
 
   useEffect(() => {
     fetchTxs();
