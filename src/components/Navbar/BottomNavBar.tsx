@@ -3,6 +3,10 @@ import styled from "styled-components";
 import { useViewport } from '../../hooks/useViewport';
 import { Breakpoints } from '../../constants/Breakpoints';
 import NetworkWarning from "../NetworkWarning/NetworkWarning";
+import Identicon from "../Identicon/Identicon";
+import Github from "../../../public/svgs/github.svg"
+import LinkedIn from "../../../public/svgs/linkedin.svg";
+import Image from "next/image";
 
 export const Wrapper = styled.div`
     display: flex;
@@ -70,15 +74,43 @@ const NavLinks = ({ routes }: { routes: string[] }) => {
 export const BottomNavBar = () => {
     const { width } = useViewport()
     return (
-        <Wrapper>
-            <Nav >
-                <Box>
-                    <BoxItemContainer allignment={"flex-end"} backgroundColor={width >= 1000 ? "rgb(15,26,58)" : "transparent"}>
-                        <NetworkWarning/>
-                    </BoxItemContainer>
-                </Box>
-            </Nav>
-        </Wrapper>
+      <Wrapper>
+        <Nav>
+          <Box>
+            <BoxItemContainer
+              allignment={"flex-start"}
+              backgroundColor={width >= 1000 ? "rgb(15,26,58)" : "transparent"}
+            >
+              {width >= 800 && (
+                <div className="flex items-center justify-center gap-2 px-4">
+                  <Identicon />
+                  <span className="mr-6 text-gray-500">
+                    Created by Evan McGrane
+                  </span>
+                  <div className="flex items-center gap-2 hover:cursor-pointer">
+                    <Github className={"text-white"} />
+
+                    <a
+                      className=" text-gray-500 no-underline hover:text-gray-400"
+                      rel="noopener noreferrer"
+                      href="https://github.com/mcgraneder"
+                      target={"_blank"}
+                    >
+                      Github
+                    </a>
+                  </div>
+                </div>
+              )}
+            </BoxItemContainer>
+            <BoxItemContainer
+              allignment={"flex-end"}
+              backgroundColor={width >= 1000 ? "rgb(15,26,58)" : "transparent"}
+            >
+              <NetworkWarning />
+            </BoxItemContainer>
+          </Box>
+        </Nav>
+      </Wrapper>
     );
 };
 
