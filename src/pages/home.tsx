@@ -24,6 +24,7 @@ const HomePage: NextPage = () => {
     <>
       {!loading && (
         <UserInfoModal
+          isHomePageWarning={true}
           open={showWarning}
           close={closeWarning}
           message={

@@ -60,6 +60,7 @@ const WalletPage: NextPage = () => {
         <UserInfoModal
           open={showWarning}
           close={closeWarning}
+          isHomePageWarning={false}
           message={
             <span>
               As the Ren protocol is currently under maintenence and has been

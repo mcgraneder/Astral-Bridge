@@ -3,6 +3,9 @@ import styled from "styled-components";
 import TransactionsTable from "./components/TransactionTable";
 import TransactionFilterButtons from './components/TransactionFilterButton';
 import { TransactionFilterStateProvider } from "./TransactionsContext";
+import UserInfoModal from "../UserInformationModal/UserInformationModal";
+import { EVMNetworkConfig } from "@renproject/chains-ethereum";
+import { useGlobalState } from "../../context/useGlobalState";
 
 export const MAX_WIDTH_MEDIA_BREAKPOINT = "1200px";
 export const XLARGE_MEDIA_BREAKPOINT = "960px";
@@ -57,21 +60,54 @@ const FiltersWrapper = styled.div`
 `;
 
 const Transactions = () => {
+  const [showWarning, setShowWarning] = useState<boolean>(false);
+  const { loading } = useGlobalState();
+  
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const warning = localStorage.getItem("historyPageWarning");
+    if (warning !== "true") setShowWarning(true);
+  }, []);
+
+  const closeWarning = useCallback(() => {
+    setShowWarning(false);
+    localStorage.setItem("walletPageWarning", "true");
+  }, []);
+
   return (
-    <TransactionFilterStateProvider>
-      <ExploreContainer>
-        <TitleContainer>
-          <span className="text-3xl">Transactions</span>
-        </TitleContainer>
-        <FiltersWrapper>
-          <div className="flex gap-2">
-            <TransactionFilterButtons />
-          </div>
-        </FiltersWrapper>
-        <TransactionsTable />
-        
-      </ExploreContainer>
-    </TransactionFilterStateProvider>
+    <>
+      {!loading && (
+        <UserInfoModal
+          open={showWarning}
+          close={closeWarning}
+          isHomePageWarning={false}
+          message={
+            <span>
+              I have only made this page as of the 4th of march. As a result i
+              have not Even started to work on mobile styles.
+              <br />
+              <br />
+              So if you decide to change to mobile view please ignore this. The
+              other pages also need some slight work on mobile but i have not
+              done my first refactor yet so responsiveness is on the to do list.
+            </span>
+          }
+        />
+      )}
+      <TransactionFilterStateProvider>
+        <ExploreContainer>
+          <TitleContainer>
+            <span className="text-3xl">Transactions</span>
+          </TitleContainer>
+          <FiltersWrapper>
+            <div className="flex gap-2">
+              <TransactionFilterButtons />
+            </div>
+          </FiltersWrapper>
+          <TransactionsTable />
+        </ExploreContainer>
+      </TransactionFilterStateProvider>
+    </>
   );
 };
 

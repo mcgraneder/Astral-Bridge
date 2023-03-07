@@ -26,6 +26,7 @@ const TradePage: NextPage = () => {
     <>
       {!loading && (
         <UserInfoModal
+        isHomePageWarning={false}
           open={showWarning}
           close={closeWarning}
           message={

@@ -52,6 +52,7 @@ const BridgePage: NextPage = () => {
         <UserInfoModal
           open={showWarning}
           close={closeWarning}
+          isHomePageWarning={false}
           message={
             <span>
               This page is used to bridge native assets between blockchains in

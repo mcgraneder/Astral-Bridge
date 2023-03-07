@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import { UilExclamationTriangle } from "@iconscout/react-unicons";
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 import styled, { css } from "styled-components";
@@ -45,14 +45,71 @@ export const FormWrapper = styled.div`
 interface PendingTransactionModalProps {
   close: () => void;
   open: boolean;
-  message: JSX.Element
+  message: JSX.Element;
+  isHomePageWarning: boolean;
 }
 
 interface IconProps {
   active: boolean;
 }
 
-const UserInfoModalInner = ({ close, message }: { close: () => void, message: JSX.Element }) => {
+const SecondStep = ({ close }: { close: () => void }) => {
+  return (
+    <>
+      <TopRowNavigation
+        isRightDisplay={true}
+        isLeftDisplay={true}
+        close={close}
+        title={"App Demo"}
+      />
+
+      <div className="my-4 flex flex-col items-center justify-center gap-2">
+        <span className=" px-2 text-center text-[15px] text-gray-400">
+          Since this App is in early stages of development i made a Demo &
+          explanation video to show how to use the current available features
+        </span>
+      </div>
+      <div className="aspect-w-16 aspect-h-9 mx-10 flex items-center justify-center p-2">
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube.com/embed/KMsViMkca4Q"
+          title="YouTube video player"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        ></iframe>
+      </div>
+      <div className="my-4 flex flex-col items-center justify-center gap-2">
+        <span className=" px-2 text-center text-[15px] text-gray-400">
+          In the video i give an explanation of how my app works/will work
+          architecturally from the backend smart contract design as well as the
+          server and API design
+        </span>
+      </div>
+      <div className="mt-8 mb-2 flex items-center justify-center">
+        <PrimaryButton
+          className={
+            "w-full justify-center rounded-2xl bg-blue-500 py-[15.5px] text-center text-[17px] font-semibold"
+          }
+          onClick={close}
+        >
+          {"Close"}
+        </PrimaryButton>
+      </div>
+    </>
+  );
+};
+
+const UserInfoModalInner = ({
+  close,
+  message,
+  buttonTitle,
+}: {
+  close: () => void;
+  message: JSX.Element;
+  buttonTitle: string;
+}) => {
   return (
     <>
       <TopRowNavigation
@@ -76,20 +133,37 @@ const UserInfoModalInner = ({ close, message }: { close: () => void, message: JS
           }
           onClick={close}
         >
-          Close
+          {buttonTitle}
         </PrimaryButton>
       </div>
     </>
   );
 };
 
-function UserInfoModal({ close, open, message }: PendingTransactionModalProps) {
-
+function UserInfoModal({
+  close,
+  open,
+  message,
+  isHomePageWarning,
+}: PendingTransactionModalProps) {
+  const [isFirstStep, setIsFirstStep] = useState<boolean>(!isHomePageWarning);
+  const handleSecondStep = useCallback(
+    () => setIsFirstStep((s: boolean) => !s),
+    [setIsFirstStep]
+  );
   return (
     <>
       <Backdrop visible={open}>
         <FormWrapper>
-          <UserInfoModalInner close={close} message={message} />
+          {isFirstStep ? (
+            <UserInfoModalInner
+              close={!isHomePageWarning ? close : handleSecondStep}
+              message={message}
+              buttonTitle={!isHomePageWarning ? "Close" : "Next"}
+            />
+          ) : (
+            <SecondStep close={close} />
+          )}
         </FormWrapper>
       </Backdrop>
     </>

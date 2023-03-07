@@ -71,6 +71,7 @@ const Home = () => {
               Buy, sell, and explore your favourite assets
             </span>
           </StyledSubTitle>
+          
           <div className="mt-8 mb-2 flex items-center justify-center">
             <Link
               href={"/about"}
