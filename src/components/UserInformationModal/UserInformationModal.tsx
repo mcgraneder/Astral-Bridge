@@ -146,7 +146,7 @@ function UserInfoModal({
   message,
   isHomePageWarning,
 }: PendingTransactionModalProps) {
-  const [isFirstStep, setIsFirstStep] = useState<boolean>(!isHomePageWarning);
+  const [isFirstStep, setIsFirstStep] = useState<boolean>(true);
   const handleSecondStep = useCallback(
     () => setIsFirstStep((s: boolean) => !s),
     [setIsFirstStep]
