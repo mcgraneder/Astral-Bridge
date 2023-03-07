@@ -30,7 +30,7 @@ export type ChainNetworksConfig = {
   networks?: NetworksConfig;
 };
 
-type ChainBaseConfig = ChainIconsConfig &
+export type ChainBaseConfig = ChainIconsConfig &
   ChainLabelsConfig &
   ChainNetworksConfig & {};
 

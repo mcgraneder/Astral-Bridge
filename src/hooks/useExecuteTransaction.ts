@@ -6,10 +6,9 @@ import { useNotification } from "../context/useNotificationState";
 import { patch, post } from "../services/axios";
 import API from '../constants/Api';
 import { BigNumber } from "bignumber.js";
-import { TxType } from "../pages/api/walletTx";
-import { ResponseData } from '../pages/api/user';
+import { ResponseData } from "../pages/api/user";
 import { ethers } from "ethers";
-import { gasPriceData } from "./useMarketGasData";
+import { MESSAGES } from "../components/Notification/NotificationMessages";
 
 type ExecuteTxType = {
   executeTransaction: (
@@ -28,6 +27,8 @@ const useEcecuteTransaction = (): ExecuteTxType => {
   const { togglePendingModal, toggleSubmittedModal, toggleRejectedModal } =
     useTransactionFlow();
   const dispatch = useNotification();
+
+  const provider: ethers.providers.Web3Provider | undefined = library;
 
   const HandleNewNotification = useCallback(
     (title: string, message: string): void => {
@@ -51,76 +52,103 @@ const useEcecuteTransaction = (): ExecuteTxType => {
       transactionType: string,
       contractFn: any
     ): Promise<void> => {
-      if (!library || !account) return;
+      if (!provider || !account) return;
       togglePendingModal();
       const formattedAmount =
         transactionType === "Approval"
           ? amount
           : new BigNumber(amount).shiftedBy(-asset.decimals);
-          
+
       try {
         const tx = await contractFn(...args);
         setFilteredTransaction(tx.hash);
-        const txReceipt = await library.getTransaction(tx.hash);
+        const txReceipt = (await provider.getTransaction(
+          tx.hash
+        )) as ethers.providers.TransactionResponse;
+
+        const {
+          gasLimit,
+          gasPrice,
+          maxFeePerGas,
+          maxPriorityFeePerGas,
+          ...rest
+        } = txReceipt;
+
+        const type =
+          transactionType === "Deposit"
+            ? "deposit"
+            : transactionType === "Approval"
+            ? "approve"
+            : "withdraw";
 
         const transactionResponse = await post<ResponseData>(
           API.next.depositTx,
           {
-            Id: "2",
-            account: account,
-            type:
-              transactionType === "Deposit"
-                ? "deposit"
-                : transactionType === "Approval"
-                ? "approve"
-                : "withdraw",
+            account,
+            encryptedId,
+            type,
             chain: chain.fullName,
             amount: formattedAmount,
             txHash: tx.hash,
             currency: asset.Icon,
-            encryptedId: encryptedId,
-            blockHash: txReceipt.blockHash,
-            blockNumber: txReceipt.blockNumber,
-            chainId: txReceipt.chainId,
-            from: txReceipt.from,
-            gasLimit: Number(txReceipt.gaLimit).toString(),
-            gasPrice: Number(txReceipt.gasPriceData),
-            hash: txReceipt.hash,
-            maxFeePerGas: Number(txReceipt.maxFeePerGas).toString(),
+            gasLimit: Number(txReceipt.gasLimit),
+            gasPrice: Number(txReceipt.gasPrice),
+            maxFeePerGas: Number(txReceipt.maxFeePerGas),
             maxPriorityFeePerGas: Number(txReceipt.maxPriorityFeePerGas),
-            nonce: txReceipt.nonce,
-            to: txReceipt.to,
-            value: Number(txReceipt.value).toString(),
+            ...rest,
           }
         );
         if (!transactionResponse) return;
 
         const txId = transactionResponse.txId;
         setTimeout(() => toggleSubmittedModal(), 250);
-        await tx.wait(1).then(async (txReceipt: any) => {
-          await patch(API.next.depositTx, {
-            encryptedId: encryptedId,
-            txId: txId,
-            blockHash: txReceipt.blockHash,
-            blockNumber: txReceipt.blockNumber,
-            gasPrice: Number(txReceipt.effectiveGasPrice).toString(),
-            gasLimit: Number(txReceipt.gasUsed).toString(),
+
+        await tx
+          .wait(1)
+          .then(async (txReceipt: any) => {
+            await patch(API.next.depositTx, {
+              encryptedId: encryptedId,
+              txId: txId,
+              blockHash: txReceipt.blockHash,
+              blockNumber: txReceipt.blockNumber,
+              gasPrice: Number(txReceipt.effectiveGasPrice).toString(),
+              gasLimit: Number(txReceipt.gasUsed).toString(),
+            });
+          })
+          .catch((error: Error) => {
+            throw new Error("transaction execution failed");
           });
-        });
 
         setPendingTransaction(false);
 
         HandleNewNotification(
           "Transaction Success",
-          `Successfully transacted with asset ${asset.Icon} on ${chain.fullName}`
+          MESSAGES(
+            transactionType,
+            true,
+            formattedAmount.toString(),
+            asset,
+            chain
+          )
         );
       } catch (error) {
-        console.log(error);
         toggleRejectedModal();
+
+        HandleNewNotification(
+          "Transaction Success",
+          MESSAGES(
+            transactionType,
+            false,
+            formattedAmount.toString(),
+            asset,
+            chain
+          )
+        );
+        throw new Error(`transaction execution failed`);
       }
     },
     [
-      library,
+      provider,
       account,
       togglePendingModal,
       toggleSubmittedModal,
@@ -128,7 +156,7 @@ const useEcecuteTransaction = (): ExecuteTxType => {
       setPendingTransaction,
       HandleNewNotification,
       encryptedId,
-      setFilteredTransaction
+      setFilteredTransaction,
     ]
   );
 

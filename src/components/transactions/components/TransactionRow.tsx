@@ -58,7 +58,7 @@ const TransactionRow = (data: UserTxType) => {
       className={"hover:bg-hoverLightground"}
     >
       <div className="">
-        <span>{data.Id}</span>
+        <span>{"#"}</span>
       </div>
       <div className="flex items-center gap-2 text-blue-600">
         <Identicon size={18} />

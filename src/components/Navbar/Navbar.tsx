@@ -195,7 +195,7 @@ const InputDropdown = ({
                 key={index}
                 href={`/transactions/${transaction.txHash}`}
                 passHref
-                className="grid grid-cols-3 items-center   gap-2 overflow-hidden py-4 pr-2 pl-4 hover:bg-backgroundSecondaryLight"
+                className="hover:bg-hoverLightground grid grid-cols-3   items-center gap-2 overflow-hidden py-4 pr-2 pl-4"
               >
                 <div className="flex items-center justify-start gap-2 text-sm">
                   <Icon chainName={transaction.currency} className="h-6 w-6" />

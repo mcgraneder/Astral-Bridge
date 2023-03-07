@@ -30,6 +30,7 @@ export interface RowData {
 const TransactionIdRow = (data: UserTxType) => {
   const date = formatTime(Math.floor(data.date / 1000).toString(), 0);
 
+  console.log(data)
   const getColour = (status: string): string => {
     if (status === "pending") return "text-gray-400";
     else if (status === "completed") return "text-green-500";
@@ -43,12 +44,12 @@ const TransactionIdRow = (data: UserTxType) => {
   };
   const statusColour = getColour(data.status);
   const explorerLink =
-    CHAINS[chainsBaseConfig[data.chain! as Chain]!.testnetChainId!]
+    CHAINS[chainsBaseConfig[data.chain! as Chain]?.testnetChainId!]
       ?.explorerLink;
   return (
     <StyledTokenRow>
       <div className="">
-        <span>{data.Id}</span>
+        <span>{"#"}</span>
       </div>
       <div className="flex items-center gap-2 text-blue-600">
         <Identicon size={18} />
