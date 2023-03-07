@@ -1,28 +1,15 @@
-# Create T3 App
+# Astral Bridge
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+![Capture1](https://user-images.githubusercontent.com/40043037/223294939-bd7d5913-a859-483f-a6b7-4beda97fc7ce.PNG)
 
-## What's next? How do I make an app with this?
+Astral is a cross chain Bridge and DEX which lets users bridge and rade assets across 9 EVM chains aswell as many legacy & non EVM chains such as Bitcoin, Dogecoin, Zcash etc. Users can bridge native assets in return for an Astral synthtic version of that asset (formerly ren asset) on the destination chain. Once bridged, users can then trade in astrals AMM contract (which will be deployed on all chains) with all other synthetic assets supported by astral. Since identical astral assets are minted on all chains and the fact that USDT is used as the AMM's base token on each chain, it can be garanteed that liquidity concentration for each possible token pair is the same amoung all chains. 
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+when a user briges a native asset into a synthetic asset and preforms a swap on the destination chain, that asset can be bridged back and swapped for the original native asset at face value.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+# Other repos used for Astral
+## Astral Signature Verifier  --->   https://github.com/mcgraneder/Astral-Signature-Verifier
+## Astral Smart Contracts     --->   https://github.com/mcgraneder/astral-sol/tree/main/contracts
+## Astral Backend          ------>   https://github.com/mcgraneder/astral-sol
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
 
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+##Astral and this readme is a work in progress
