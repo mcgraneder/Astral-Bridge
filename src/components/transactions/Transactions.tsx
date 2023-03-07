@@ -62,7 +62,7 @@ const FiltersWrapper = styled.div`
 const Transactions = () => {
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const { loading } = useGlobalState();
-  
+
   useEffect(() => {
     if (typeof window === "undefined") return;
     const warning = localStorage.getItem("historyPageWarning");
@@ -71,7 +71,7 @@ const Transactions = () => {
 
   const closeWarning = useCallback(() => {
     setShowWarning(false);
-    localStorage.setItem("walletPageWarning", "true");
+    localStorage.setItem("historyPageWarning", "true");
   }, []);
 
   return (
