@@ -117,7 +117,7 @@ const TransactionFilterButtons = () => {
       {width > 0 && width >= Breakpoints.sm1 ? (
         <>
           {isChainMenuOpen && (
-            <FormWrapper top={"49%"}>
+            <FormWrapper top={"47%"}>
               {TRANSACTION_CHAINS.map((chain: string, index: number) => {
                 return (
                   <ChainSelector
@@ -130,7 +130,7 @@ const TransactionFilterButtons = () => {
             </FormWrapper>
           )}
           {isTypeMenuOpen && (
-            <FormWrapper top={"38%"}>
+            <FormWrapper top={"33.5%"}>
               {TRANSACTION_TYPES.map((txType: string, index: number) => {
                 return (
                   <TxTypeSelector
@@ -143,7 +143,7 @@ const TransactionFilterButtons = () => {
             </FormWrapper>
           )}
           {isStatusMenuOpen && (
-            <FormWrapper top={"38%"}>
+            <FormWrapper top={"33.5%"}>
               {TRANSACTION_STATUSES.map((status: string, index: number) => {
                 return (
                   <TxStatusSelector
