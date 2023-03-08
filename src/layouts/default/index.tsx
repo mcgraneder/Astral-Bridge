@@ -84,11 +84,13 @@ interface DefaultLayoutProps {
 }
 
 function DefaultLayout({ children }: DefaultLayoutProps) {
-  const [showAccount, setShowAccount] = useState<boolean>(false);
-  const [chainColour, setChainColour] = useState<string | null>(null);
-  const { toggleWalletModal } = useAuth();
   const { loading } = useGlobalState();
   const { chainId } = useWeb3React();
+  const [showAccount, setShowAccount] = useState<boolean>(false);
+  const [chainColour, setChainColour] = useState<string | null>(
+    chainId ? chainsColors[ChainIdToRenChain[chainId]!].primary : null
+  );
+  const { toggleWalletModal } = useAuth();
   const { pathname } = useRouter();
   const toggleAccoundDetailsModal = (): void => setShowAccount(!showAccount);
 

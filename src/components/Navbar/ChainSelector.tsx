@@ -33,11 +33,10 @@ const getChainOptions = () => {
 };
 
 const TokenSelectDropdown = () => {
+    const { setDestinationChain, width } = useGlobalState();
+    const { chainId } = useWeb3React()
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-    const [activeChain, setActiveChain] = useState<ChainType | undefined>(undefined);
-    const { chainId } = useWeb3React();
-    const { width } = useViewport();
-    const { setDestinationChain } = useGlobalState()
+    const [activeChain, setActiveChain] = useState<ChainType | undefined>(chainId ? CHAINS[chainId!] : undefined);
 
     const { needToSwitchChain, switchNetwork } = useAuth();
     const ref = useRef<HTMLDivElement>(null);

@@ -38,7 +38,7 @@ const BalanceDisplayInner = ({
 }: ITokenDisplay) => {
   const NativeCurrency = CHAINS[chainId!]?.currency
   return (
-    <div className="my-5 flex flex-col items-center rounded-lg border border-tertiary p-2 text-center">
+    <div className={`my-5 flex flex-col items-center rounded-lg border border-tertiary p-2 text-center ${assetPrice ? "min-h-[110px]" : "min-h-[96px]"}`}>
       {!isNative ? (
         <span className=" text-[17px]">
           <span>{asset.shortName}</span> Balance

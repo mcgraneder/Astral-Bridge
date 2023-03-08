@@ -22,7 +22,6 @@ export const Wrapper = styled.div`
   display: flex;
   flex-flow: row nowrap;
   width: 100%;
-  -webkit-box-pack: justify;
   justify-content: space-between;
   position: fixed;
   top: 0px;
@@ -295,9 +294,8 @@ export const Navbar = ({
   const [isNavbarDark, setIsNavbarDark] = useState(false);
   const [provider, setProvider] = useState<any>(undefined);
   const router = useRouter();
-  const { account, active } = useWeb3React();
-  const { width } = useViewport();
-  const { pendingTransaction, encryptedId } =
+  const { account, active } = useWeb3React()
+  const { pendingTransaction, encryptedId, width } =
     useGlobalState();
   const activePath = router.pathname;
 

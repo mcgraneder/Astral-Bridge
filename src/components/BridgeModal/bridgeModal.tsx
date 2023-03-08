@@ -169,7 +169,7 @@ const BridgeModal = ({
     (async () => {
       setIsSufficientBalance(true); // reset on component mount to override previous tokens' value
       const walletBalance = new BigNumber(
-        assetBalances[asset.Icon]?.walletBalance!
+        assetBalances[asset.Icon]?.bridgeBalance!
       ).shiftedBy(-asset.decimals);
 
       setWalletBalance(Number(walletBalance));
@@ -179,12 +179,12 @@ const BridgeModal = ({
 
 
   const execute = useCallback(async() => {
-    if (gateway == null) return
+    // if (gateway == null) return
     if (WhiteListedLegacyAssets.includes(asset.Icon as Asset)) {
       setGatewayStep(true)
     }
 
-  }, [gateway, asset]);
+  }, [asset]);
 
   if (gatewayStep) {
     return (

@@ -19,6 +19,7 @@ import ErrorCodes from "../constants/errorCodes";
 import { ResponseData } from '../pages/api/user';
 import useAuth from '../hooks/useAuth';
 import { UserTxType } from '../components/transactions/components/TransactionTable';
+import { useViewport } from '../hooks/useViewport';
 
 interface GlobalStateProviderProps {
   children: React.ReactNode;
@@ -45,6 +46,7 @@ type GlobalContextType = {
   setTransactions: any;
   filteredTransaction: string | null;
   setFilteredTransaction: Dispatch<SetStateAction<string | null>>;
+  width: number;
 };
 
 export type MulticallReturn = {
@@ -74,6 +76,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
   const [destinationChain, setDestinationChain] = useState<any>(
     chainsBaseConfig.Ethereum
   );
+  const { width } = useViewport();
   const [chainType, setChainType] = useState<string>("from");
   const [transactions, setTransactions] = useState<any[] | undefined>(undefined);
   const [filteredTransaction, setFilteredTransaction] = useState<string | null>(null)
@@ -160,6 +163,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
       setTransactions,
       filteredTransaction,
       setFilteredTransaction,
+      width,
     }),
     [
       memoizedFetchBalances,
@@ -181,6 +185,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
       setTransactions,
       filteredTransaction,
       setFilteredTransaction,
+      width,
     ]
   );
   return (
