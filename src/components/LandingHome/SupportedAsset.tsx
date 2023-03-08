@@ -1,6 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 import AssetItem from "./AssetItem";
+import { motion } from 'framer-motion';
+import { fadeIn } from '../../utils/fadeIn.';
 
 export const SupportedAssetsContainer = styled.div`
   max-width: ${(props: any) => props.maxWidth};
@@ -70,29 +72,53 @@ export const CurrenciesList = styled.ul`
 const SupportedAssets = ({ type }: any) => {
   if (type === "LEGACY") {
     return (
-      <SupportedAssetsContainer maxWidth={"1050px"}>
-        <SupportedAssetsWrapper>
-          <CurrencysContainer paddingR={"0px"} paddingL={"0px"} border={false}>
-            <CurrenciesHeader>Supported Chains</CurrenciesHeader>
-            <CurrenciesList>
-              <AssetItem assetType={"chain"} type={type} />
-            </CurrenciesList>
-          </CurrencysContainer>
-        </SupportedAssetsWrapper>
-      </SupportedAssetsContainer>
+        <motion.div
+            variants={fadeIn('left', 0.1)}
+            initial="hidden"
+            whileInView={'show'}
+            viewport={{ once: true, amount: 0 }}
+            // className="mt-8 mb-2 flex items-center justify-center"
+        >
+            <SupportedAssetsContainer maxWidth={'1050px'}>
+                <SupportedAssetsWrapper>
+                    <CurrencysContainer
+                        paddingR={'0px'}
+                        paddingL={'0px'}
+                        border={false}
+                        className={"overflow-y-hidden"}
+                    >
+                        <CurrenciesHeader>Supported Chains</CurrenciesHeader>
+                        <CurrenciesList>
+                            <AssetItem assetType={'chain'} type={type} />
+                        </CurrenciesList>
+                    </CurrencysContainer>
+                </SupportedAssetsWrapper>
+            </SupportedAssetsContainer>
+        </motion.div>
     );
   } else
     return (
-      <SupportedAssetsContainer maxWidth={"1200px"}>
-        <SupportedAssetsWrapper>
-          <CurrencysContainer paddingR={"0px"} paddingL={"0px"}>
-            <CurrenciesHeader>Supported Currencies</CurrenciesHeader>
-            <CurrenciesList>
-              <AssetItem assetType={"currency"} type={type} />
-            </CurrenciesList>
-          </CurrencysContainer>
-        </SupportedAssetsWrapper>
-      </SupportedAssetsContainer>
+        <motion.div
+            variants={fadeIn('right', 0.1)}
+            initial="hidden"
+            whileInView={'show'}
+            viewport={{ once: true, amount: 0.3 }}
+            className={"overflow-y-hidden"}
+            // className="mt-8 mb-2 flex items-center justify-center"
+        >
+            <SupportedAssetsContainer maxWidth={'1200px'}>
+                <SupportedAssetsWrapper>
+                    <CurrencysContainer paddingR={'0px'} paddingL={'0px'}>
+                        <CurrenciesHeader>
+                            Supported Currencies
+                        </CurrenciesHeader>
+                        <CurrenciesList>
+                            <AssetItem assetType={'currency'} type={type} />
+                        </CurrenciesList>
+                    </CurrencysContainer>
+                </SupportedAssetsWrapper>
+            </SupportedAssetsContainer>
+        </motion.div>
     );
 };
 
