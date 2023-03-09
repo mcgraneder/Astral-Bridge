@@ -148,6 +148,7 @@ const BridgeModal = ({
     assetBalances,
     fromChain,
     setChainType,
+    setFromChain
   } = useGlobalState();
 
   const toggleGatewayStep = useCallback((w: any) => setGatewayStep(!w), []);
@@ -203,6 +204,7 @@ const BridgeModal = ({
             tabs={BRIDGE_TABS}
             setActiveButton={setBridgeState}
             setAsset={setAsset}
+            setFromChain={setFromChain}
           />
           <div className="px-[18px] pb-[12px]">
             <DropdownWrapper
