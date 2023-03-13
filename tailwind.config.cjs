@@ -63,7 +63,9 @@ module.exports = {
             screens: {
                 sm2: '600px',
                 md2: '760px',
+                md: "900px",
                 xs: '400px',
+                mlg1: "1170px",
                 mlg: '1250px'
             },
             borderRadius: {

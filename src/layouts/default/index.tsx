@@ -34,9 +34,13 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
     isDarkMode
       ? "linear-gradient(rgba(7, 8, 22, 0) 0%, rgb(7 8 22 / 100%) 45%)"
       : "linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%)"};
-  z-index: 10;
+  z-index: -100000000000;
   pointer-events: none;
-  height: 2850px;
+  height: 100%;
+`;
+
+export const G = styled.div`
+    background: linear-gradient(rgba(7, 8, 22, 0) 0%, rgb(7 8 22 / 100%) 45%);
 `;
 
 export const GlowContainer = styled.div`
@@ -101,41 +105,45 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
   }, [chainId]);
 
   return (
-    <>
-      {loading ? (
-        <AppLoader />
-      ) : (
-        <div className="flex h-screen flex-col items-center text-white  lg:h-auto lg:min-h-screen">
-          {pathname === "/home" && (
-            <>
-              <Gradient isDarkMode={true} />
-              <GlowContainer>
-                <Glow />
-              </GlowContainer>
-            </>
-          )}
-          <ChainGlow colour={chainColour ? chainColour : "transparent"} />
-          <AccountVerificationModal />
-          <AccountDetailsModal
-            toggleAccoundDetailsModal={toggleAccoundDetailsModal}
-            showAccount={showAccount}
-          />
-          <Navbar
-            toggleWalletModal={toggleWalletModal}
-            toggleAccoundDetailsModal={toggleAccoundDetailsModal}
-          />
-          <BottomNavBar />
-          <WalletConnect toggleWalletModal={toggleWalletModal} />
+      <>
+          {loading ? (
+              <AppLoader />
+          ) : (
+              <G>
+                  <div className="flex h-screen flex-col items-center text-white  lg:h-auto lg:min-h-screen">
+                      {pathname === '/home' && (
+                          <>
+                              {/* <Gradient isDarkMode={true} /> */}
+                              <GlowContainer>
+                                  <Glow />
+                              </GlowContainer>
+                          </>
+                      )}
+                      <ChainGlow
+                          colour={chainColour ? chainColour : 'transparent'}
+                      />
+                      <AccountVerificationModal />
+                      <AccountDetailsModal
+                          toggleAccoundDetailsModal={toggleAccoundDetailsModal}
+                          showAccount={showAccount}
+                      />
+                      <Navbar
+                          toggleWalletModal={toggleWalletModal}
+                          toggleAccoundDetailsModal={toggleAccoundDetailsModal}
+                      />
+                      <BottomNavBar />
+                      <WalletConnect toggleWalletModal={toggleWalletModal} />
 
-          <div
-            id="layout"
-            className={`bg-black-900 coingrid-scrollbar relative z-50 w-full flex-1 items-center overflow-x-hidden overflow-y-scroll rounded-t-[40px]  pb-2 pt-6 sm:p-8   md:rounded-[40px] md:p-10 lg:mb-6 lg:overflow-y-auto`}
-          >
-            {children}
-          </div>
-        </div>
-      )}
-    </>
+                      <div
+                          id="layout"
+                          className={`bg-black-900 coingrid-scrollbar relative z-50 w-full flex-1 items-center overflow-x-hidden overflow-y-scroll rounded-t-[40px]  pb-2 pt-6 sm:p-8   md:rounded-[40px] md:p-10 lg:mb-6 lg:overflow-y-auto`}
+                      >
+                          {children}
+                      </div>
+                  </div>
+              </G>
+          )}
+      </>
   );
 }
 

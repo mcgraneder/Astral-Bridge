@@ -78,70 +78,77 @@ const Home = () => {
 
     }
     return (
-        <div className="text-bold mt-10 overflow-y-hidden px-10 text-white backdrop-blur-lg">
-            <motion.div
-                variants={fadeIn('down', 0.01)}
-                initial="hidden"
-                whileInView={'show'}
-                viewport={{ once: true, amount: 0.3 }}
-                // transition={{ duration: 0.2}}
-                className="my-0 mx-auto mb-8 flex flex-col items-center justify-center gap-12"
-            >
-                <StyledSubTitle
-                    size={28}
-                    weight={700}
-                    color={'rgb(157, 157, 247)'}
-                >
-                    Welocme To Astral Bridge
-                </StyledSubTitle>
-                <AssetRotator />
-            </motion.div>
-            <div>
+        <div className="text-bold overflow-y-hidden px-0 text-white backdrop-blur-lg md:px-10 ">
+            <div className="my-auto mx-0 flex min-h-screen flex-col  items-center justify-center">
                 <motion.div
-                    variants={fadeIn('up', 0.01)}
+                    variants={fadeIn('down', 0.01)}
                     initial="hidden"
                     whileInView={'show'}
-                    viewport={{ once: true, amount: 0.9 }}
+                    viewport={{ once: true, amount: 0.3 }}
+                    // transition={{ duration: 0.2}}
+                    className="my-0 mx-auto mb-8 flex flex-col items-center justify-center gap-12"
+                >
+                    <AssetRotator />
+                </motion.div>
+                <div>
+                    <motion.div
+                        variants={fadeIn('up', 0.01)}
+                        initial="hidden"
+                        whileInView={'show'}
+                        viewport={{ once: true, amount: 0.9 }}
+                        // transition={{ duration: 0.2}}
+                        className="my-0 mx-auto mb-8 mt-4 flex flex-col items-center justify-center"
+                    >
+                        <StyledTitle
+                            size={55}
+                            margin={0}
+                            weight={800}
+                            align={'center'}
+                        >
+                            Trade and Bridge crypto assets seamlessly.
+                        </StyledTitle>
+
+                        <StyledSubTitle size={20}>
+                            <span className="text-gray-400">
+                                Buy, sell, and explore your favourite assets
+                            </span>
+                        </StyledSubTitle>
+
+                        <div className="mt-4 flex flex-col gap-2">
+                            <Link
+                                href={'/about'}
+                                passHref
+                                className="focus-visible:ring-primary my-4 flex w-[260px] items-center justify-center rounded-2xl bg-blue-500 py-[14px] px-4 text-white hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                            >
+                                <span>Learn More</span>
+                            </Link>
+                        </div>
+                        <LearnMoreArrow onClick={scrollPosition} />
+                    </motion.div>
+                </div>
+            </div>
+
+            <Section2 />
+            <div className=" mb-8 mt-20 flex flex-col gap-6">
+                <motion.div
+                    variants={fadeIn('left', 0.01)}
+                    initial="hidden"
+                    whileInView={'show'}
+                    viewport={{ once: true, amount: 0.35 }}
                     // transition={{ duration: 0.2}}
                     className="my-0 mx-auto mb-8 mt-4 flex flex-col items-center justify-center"
                 >
                     <StyledTitle
-                        size={55}
+                        size={50}
                         margin={0}
                         weight={800}
                         align={'center'}
                     >
-                        Trade and Bridge crypto assets seamlessly.
+                        We Support Many Assets Across Many Chains
                     </StyledTitle>
-
-                    <StyledSubTitle size={20}>
-                        <span className="text-gray-400">
-                            Buy, sell, and explore your favourite assets
-                        </span>
-                    </StyledSubTitle>
-
-                    <div className="mt-4 flex flex-col gap-2">
-                        <Link
-                            href={'/about'}
-                            passHref
-                            className="focus-visible:ring-primary my-4 flex w-[260px] items-center justify-center rounded-2xl bg-blue-500 py-[14px] px-4 text-white hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-                        >
-                            <span>Learn More</span>
-                        </Link>
-                    </div>
-                    <LearnMoreArrow onClick={scrollPosition} />
                 </motion.div>
-            </div>
-            <div className="flex h-14"></div>
-            <Section2 />
-            <div className=" mb-8 mt-20 flex flex-col gap-6">
-                <StyledTitle size={50} margin={0} weight={800} align={'center'}>
-                    We Support Many Assets Across Many Chains
-                </StyledTitle>
-                {/* <ProtocolBanner/> */}
-                {/* <div className="bg-darkBackground w-[1200px] h-full absolute"/> */}
+
                 <SupportedAssets type={'LEGACY'} />
-                {/* <SupportedAssets type={'EVM'} /> */}
             </div>
         </div>
     );

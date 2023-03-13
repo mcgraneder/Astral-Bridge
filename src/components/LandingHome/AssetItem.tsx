@@ -108,8 +108,7 @@ return (
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.0 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
-                                viewport={{ once: true, amount: 0.8 }}
-                            
+                                viewport={{ once: true, amount: 1 }}
                                 transition={{
                                     duration: 0.4,
                                     delay: 0 + index / 20,
@@ -127,9 +126,8 @@ return (
                                     chainName={option.Icon}
                                     className="h-16 w-16"
                                 />
+                                 <span>{option.shortName}</span>
                             </motion.div>
-
-                            {/* // <span>{option.shortName}</span> */}
                         </div>
                     </>
                 );

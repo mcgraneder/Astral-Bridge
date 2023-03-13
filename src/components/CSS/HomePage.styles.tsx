@@ -29,13 +29,13 @@ export const StyledTitle = styled.div`
     -webkit-background-clip: text;
     color: transparent;
 
-    @media screen and (max-width: ${BREAKPOINTS.lg}px) {
+    @media screen and (max-width: ${BREAKPOINTS.md}px) {
         font-size: 45px;
         max-width: 600px;
     }
 
     @media screen and (max-width: ${BREAKPOINTS.sm}px) {
-        font-size: 30px;
+        font-size: 28px;
         max-width: 600px;
     }
 `;
@@ -49,13 +49,13 @@ export const StyledSubTitle = styled.div`
     background-color: transparent;
     margin: 0 auto;
 
-    @media screen and (max-width: ${BREAKPOINTS.lg}px) {
+    @media screen and (max-width: ${BREAKPOINTS.md}px) {
         font-size: 19px;
     }
 
     @media screen and (max-width: ${BREAKPOINTS.sm}px) {
         font-size: 16px;
-        max-width: 200px;
+        max-width: 300px;
     }
 `;
 export const Wrapper = styled.div`
