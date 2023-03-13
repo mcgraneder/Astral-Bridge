@@ -63,10 +63,12 @@ const ProtocolBanner = () => {
             />
             <div className="flex max-w-[100%] flex-col gap-2 px-4 lg:max-w-[75%]">
                 <div className="items-left my-1 flex pt-1 text-2xl lg:text-3xl">
-                    <span>Powered By the Astral Protocol</span>
+                    <span className="text-[rgb(216,222,255)]">
+                        Powered By the Astral Protocol
+                    </span>
                 </div>
                 <div className="items-left mt-1 flex">
-                    <span className="text-sm lg:text-base">
+                    <span className="text-sm text-gray-300 lg:text-base">
                         Astral Bridge is powered by the core solidity smart
                         contracts that enable the secure and verified transfer
                         of crypto assets between EVM chains through ECDSA
@@ -170,7 +172,7 @@ function Section2() {
             whileInView={'show'}
             viewport={{ once: true, amount: 0.15 }}
             id="features"
-            className="z-50 flex flex-col items-center px-0 lg:px-12 max-w-screen"
+            className="max-w-screen z-50 flex flex-col items-center px-0 lg:px-12"
         >
             <StyledTitle size={50} margin={0} weight={800} align={'center'}>
                 Why Use Astral
@@ -189,7 +191,7 @@ function Section2() {
                         />
                         {/* <Image alt="" src={SwapImg} className="absolute"/> */}
                         <div className=" mt-6 ml-8 flex flex-col items-start justify-between mlg:mt-10 mlg:ml-16">
-                            <Title className="text-left text-2xl  mlg:text-3xl">
+                            <Title className="text-left text-2xl text-[rgb(216,222,255)]  mlg:text-3xl">
                                 Bridge Crypto Assets
                             </Title>
                             <LearnMoreButton
@@ -216,7 +218,7 @@ function Section2() {
                             className="absolute right-0 -z-50 "
                         />
                         <div className="ml-16 flex flex-col items-start gap-4">
-                            <Title className="w-full text-center text-2xl lg:text-left">
+                            <Title className="w-full text-center text-2xl text-[rgb(216,222,255)] lg:text-left">
                                 Bridging Assets With Astral
                             </Title>
                             <Description className="my-2 max-w-[80%] text-left text-[14px] text-gray-300">
@@ -240,7 +242,7 @@ function Section2() {
                     <Container className="bg-bg-[rgb(15,18,44)] relative h-[250px] w-full border border-tertiary bg-[rgb(15,18,44)] ">
                         <div className="absolute -z-50 h-full w-full translate-y-4 bg-[url('/svgs/coins.svg')] bg-contain bg-bottom bg-no-repeat lg:translate-x-9 lg:bg-right" />
                         <div className=" mt-6 ml-8 flex flex-col items-start  justify-between mlg:mt-10 mlg:ml-16">
-                            <Title className="text-center text-2xl lg:text-left  mlg:text-3xl">
+                            <Title className="text-center text-2xl text-[rgb(216,222,255)] lg:text-left  mlg:text-3xl">
                                 Trade Tokens
                             </Title>
                             <LearnMoreButton
@@ -267,7 +269,7 @@ function Section2() {
                         /> */}
 
                         <div className="flex flex-col items-start gap-4">
-                            <Title className="w-full text-center text-2xl lg:text-left">
+                            <Title className="w-full text-center text-2xl text-[rgb(216,222,255)] lg:text-left">
                                 Trading With Astral
                             </Title>
                             <Description className="my-2 max-w-[80%] text-center  text-gray-300 lg:text-left">
@@ -289,7 +291,7 @@ function Section2() {
                 <Container className="bg-bg-[rgb(15,18,44)] relative h-[250px] w-full min-w-[25%] border border-tertiary bg-[rgb(15,18,44)]">
                     <div className="mgl1:mx-12 mx-6 mt-5 flex flex-col mlg1:mt-3">
                         <div className="flex flex-row items-center justify-between">
-                            <Title className="items-center text-center text-2xl lg:w-80 lg:text-left mlg:text-3xl">
+                            <Title className="items-center text-center text-2xl text-[rgb(216,222,255)] lg:w-80 lg:text-left mlg:text-3xl">
                                 Fast Trades
                             </Title>
                             <UilBoltAlt className="h-12 w-12 font-semibold" />
@@ -310,7 +312,7 @@ function Section2() {
                 <Container className="bg-bg-[rgb(15,18,44)] relative h-[250px] w-full min-w-[25%] border border-tertiary bg-[rgb(15,18,44)]">
                     <div className="mgl1:mx-12 mx-6 mt-5 flex flex-col mlg1:mt-3">
                         <div className="flex flex-row items-center justify-between">
-                            <Title className="items-center  text-left text-2xl lg:w-80 mlg:text-3xl">
+                            <Title className="items-center text-left  text-2xl text-[rgb(216,222,255)] lg:w-80 mlg:text-3xl">
                                 Ultra Safe
                             </Title>
                             <UilShieldCheck className="h-12 w-12 font-semibold" />
@@ -331,7 +333,7 @@ function Section2() {
                 <Container className="bg-bg-[rgb(15,18,44)] relative h-[250px] w-full min-w-[25%] border border-tertiary bg-[rgb(15,18,44)]">
                     <div className="mgl1:mx-12 mx-6 mt-5 flex flex-col mlg1:mt-3">
                         <div className="flex flex-row items-center justify-between">
-                            <Title className="items-center text-center text-2xl lg:w-80 lg:text-left mlg:text-3xl">
+                            <Title className="text-[rgb(216,222,255)] items-center text-center text-2xl lg:w-80 lg:text-left mlg:text-3xl">
                                 Low Fees
                             </Title>
                             <UilDollarSignAlt className="h-12 w-12 font-semibold" />
@@ -363,7 +365,7 @@ function Section2() {
                     <Container className="border border-tertiary relative h-[250px] bg-bg-[rgb(15,18,44)] lg:h-[250px]">
                         <div className="absolute h-full w-full translate-y-4 bg-[url('/svgs/coins.svg')] bg-contain bg-bottom bg-no-repeat lg:translate-x-9 lg:bg-right" />
                         <div className="absolute mt-10 flex flex-col items-center lg:ml-16 lg:items-start">
-                            <Title className="text-center text-4xl lg:w-80 lg:text-left">
+                            <Title className="text-[rgb(216,222,255)] text-center text-4xl lg:w-80 lg:text-left">
                                 Developments in Crosschain Defi
                             </Title>
                             <LearnMoreButton
@@ -376,7 +378,7 @@ function Section2() {
                             onClick={() => flip(Cards.ownMoney, false)}
                         />
                         <div className="flex flex-col items-start gap-4">
-                            <Title className="w-full text-center text-3xl lg:text-left">
+                            <Title className="text-[rgb(216,222,255)] w-full text-center text-3xl lg:text-left">
                                 New Developments in Cross-chain
                             </Title>
                             <Description className="text-center lg:text-left">
@@ -414,7 +416,7 @@ function Section2() {
                     <Container className="border border-tertiary relative h-[250px] lg:h-[250px]">
                         <div className="absolute h-full w-full translate-y-4 bg-[url('/svgs/coins.svg')] bg-contain bg-bottom bg-no-repeat lg:translate-x-9 lg:bg-right" />
                         <div className="absolute mt-10 flex flex-col items-center lg:ml-16 lg:items-start">
-                            <Title className="text-center text-4xl lg:w-80 lg:text-left">
+                            <Title className="text-[rgb(216,222,255)] text-center text-4xl lg:w-80 lg:text-left">
                                 Developments in Crosschain Defi
                             </Title>
                             <LearnMoreButton
@@ -427,7 +429,7 @@ function Section2() {
                             onClick={() => flip(Cards.ownMoney, false)}
                         />
                         <div className="flex flex-col items-start gap-4">
-                            <Title className="w-full text-center text-3xl lg:text-left">
+                            <Title className="text-[rgb(216,222,255)] w-full text-center text-3xl lg:text-left">
                                 New Developments in Cross-chain
                             </Title>
                             <Description className="text-center lg:text-left">

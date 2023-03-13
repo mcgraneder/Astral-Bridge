@@ -13,7 +13,7 @@ export const SupportedAssetsContainer = styled.div`
   margin-right: auto;
   overflow-x: hidden;
 
-  z-index: -1000;
+  z-index: 1000000;
 
   @media (max-width: 950px) {
     max-width: 800px;
@@ -52,24 +52,25 @@ export const CurrencysContainer = styled.div`
 `;
 
 export const CurrenciesHeader = styled.h2`
-  text-align: center;
-  font-weight: bold;
-  color: #adadad;
-  display: block;
-  font-family: SuisseIntl, Helvetica, Arial, sans-serif;
-  color: White;
-  font-size: 25px;
-  z-index: 99999999999;
+    text-align: center;
+    font-weight: bold;
+    color: #adadad;
+    display: block;
+    font-family: SuisseIntl, Helvetica, Arial, sans-serif;
+    color: rgb(216, 222, 255);
+    font-size: 25px;
+    z-index: 99999999999;
 `;
 
 export const CurrenciesList = styled.ul`
-  justify-content: space-between;
-  margin: 40px auto;
-  display: flex;
-  flex-wrap: wrap;
-  // max-width: 40vw;
-  padding: 0;
-  list-style-type: none;
+    justify-content: space-between;
+    margin: 40px auto;
+    display: flex;
+    flex-wrap: wrap;
+    // max-width: 40vw;
+    padding: 0;
+    list-style-type: none;
+  
 `;
 
 export const GlowContainer = styled.div`
@@ -116,7 +117,7 @@ const SupportedAssets = ({ type }: any) => {
                 viewport={{ once: true, amount: 0.8 }}
                 className="z-50"
             > */}
-            <SupportedAssetsContainer maxWidth={'100%'}>
+            <SupportedAssetsContainer maxWidth={'45%'}>
                 <SupportedAssetsWrapper>
                     <CurrencysContainer
                         paddingR={'0px'}
@@ -144,6 +145,7 @@ const SupportedAssets = ({ type }: any) => {
                 initial="hidden"
                 whileInView={'show'}
                 viewport={{ once: true, amount: 0.7 }}
+                className="z-[10000000000]"
             >
                 <div className="my-8 h-[850px] border-l-2 border-gray-500" />
             </motion.div>
@@ -155,7 +157,7 @@ const SupportedAssets = ({ type }: any) => {
                 viewport={{ once: true, amount: 0.8 }}
                 // className="mt-8 mb-2 flex items-center justify-center"
             > */}
-            <SupportedAssetsContainer maxWidth={'100%'}>
+            <SupportedAssetsContainer maxWidth={'45%'}>
                 <SupportedAssetsWrapper>
                     <CurrencysContainer
                         paddingR={'0px'}

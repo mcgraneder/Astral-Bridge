@@ -96,14 +96,14 @@ return (
                     ? LegacyavailabilityFilter
                     : EvmavailabilityFilter
             )
-            .slice(0, 14).map((option: any, index: any) => {
+           .map((option: any, index: any) => {
                 if (option.Icon === 'Terra') return;
                 // if (option.Icon === "ROOK" || option.Icon === "GLMR" || option.Icon === "EURT" || option.icon === "DAI") return
                 return (
                     <>
                         <div
                             key={index}
-                            className="mx-4 flex min-w-[40px] flex-col items-center justify-center gap-2 p-4 hover:cursor-pointer"
+                            className="mx-4 flex min-w-[40px] flex-col items-center justify-center gap-2 p-4 hover:cursor-pointer "
                         >
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.0 }}
@@ -121,6 +121,7 @@ return (
                                     }
                                     //  Layout: { type: "spring"}
                                 }}
+                                className="flex flex-col gap-2 items-center justify-center"
                             >
                                 <Icon
                                     chainName={option.Icon}
