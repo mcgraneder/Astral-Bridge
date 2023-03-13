@@ -1,5 +1,5 @@
 import React from "react";
-import { StyledTitle, StyledSubTitle } from "../CSS/HomePage.styles";
+import { StyledTitle, StyledSubTitle, colours } from '../CSS/HomePage.styles';
 import PrimaryButton from "../PrimaryButton/PrimaryButton";
 
 import AssetRotator from "../AssetRotator/AssetRotator";
@@ -15,6 +15,7 @@ import { motion } from 'framer-motion';
 import { fadeIn } from '../../utils/fadeIn.';
 import { UilAngleDown } from '@iconscout/react-unicons';
 import { ArrowDownCircle } from "react-feather";
+import Section2 from './MiddleSection';
 const LearnMoreArrow = styled(ArrowDownCircle)`
     margin-left: 14px;
     size: 20px;
@@ -71,20 +72,28 @@ const Home = () => {
     const scrollPosition = () => {
         if (typeof window === "undefined") return
         window.scrollTo({
-            top: 900,
+            top: 820,
             behavior: "smooth"
         })
 
     }
     return (
-        <div className="text-bold mt-16 overflow-y-hidden text-white backdrop-blur-lg">
+        <div className="text-bold mt-10 overflow-y-hidden px-10 text-white backdrop-blur-lg">
             <motion.div
                 variants={fadeIn('down', 0.01)}
                 initial="hidden"
                 whileInView={'show'}
                 viewport={{ once: true, amount: 0.3 }}
-                className="my-0 mx-auto mb-8 mt-4 flex items-center justify-center"
+                // transition={{ duration: 0.2}}
+                className="my-0 mx-auto mb-8 flex flex-col items-center justify-center gap-12"
             >
+                <StyledSubTitle
+                    size={28}
+                    weight={700}
+                    color={'rgb(157, 157, 247)'}
+                >
+                    Welocme To Astral Bridge
+                </StyledSubTitle>
                 <AssetRotator />
             </motion.div>
             <div>
@@ -93,10 +102,11 @@ const Home = () => {
                     initial="hidden"
                     whileInView={'show'}
                     viewport={{ once: true, amount: 0.9 }}
+                    // transition={{ duration: 0.2}}
                     className="my-0 mx-auto mb-8 mt-4 flex flex-col items-center justify-center"
                 >
                     <StyledTitle
-                        size={65}
+                        size={55}
                         margin={0}
                         weight={800}
                         align={'center'}
@@ -110,11 +120,11 @@ const Home = () => {
                         </span>
                     </StyledSubTitle>
 
-                    <div className="flex flex-col gap-2 ">
+                    <div className="mt-4 flex flex-col gap-2">
                         <Link
                             href={'/about'}
                             passHref
-                            className="focus-visible:ring-primary my-4 flex w-[290px] items-center justify-center rounded-2xl bg-blue-500 py-4 px-5 text-white hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                            className="focus-visible:ring-primary my-4 flex w-[260px] items-center justify-center rounded-2xl bg-blue-500 py-[14px] px-4 text-white hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                         >
                             <span>Learn More</span>
                         </Link>
@@ -122,12 +132,16 @@ const Home = () => {
                     <LearnMoreArrow onClick={scrollPosition} />
                 </motion.div>
             </div>
-            <div className="flex h-48"></div>
-            <div className=" mb-8 mt-12 flex flex-col gap-6">
+            <div className="flex h-14"></div>
+            <Section2 />
+            <div className=" mb-8 mt-20 flex flex-col gap-6">
+                <StyledTitle size={50} margin={0} weight={800} align={'center'}>
+                    We Support Many Assets Across Many Chains
+                </StyledTitle>
                 {/* <ProtocolBanner/> */}
                 {/* <div className="bg-darkBackground w-[1200px] h-full absolute"/> */}
                 <SupportedAssets type={'LEGACY'} />
-                <SupportedAssets type={'EVM'} />
+                {/* <SupportedAssets type={'EVM'} /> */}
             </div>
         </div>
     );

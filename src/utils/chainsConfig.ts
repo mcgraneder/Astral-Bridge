@@ -195,7 +195,7 @@ export const LeacyChains = [
   Chain.Zcash,
   Chain.Terra,
   Chain.Filecoin,
-  Chain.Dogecoin,
+  Chain.Bitcoin,
 ];
 
 

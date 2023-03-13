@@ -24,7 +24,7 @@ export const StyledTitle = styled.div`
     max-width: 800px;
     margin: 0 auto;
     background: rgb(109, 150, 254);
-    background: linear-gradient(5deg, rgba(109, 150, 254, 1) 0%, rgba(210, 223, 255, 1) 44%, rgba(236, 242, 255, 1) 100%);
+    background: linear-gradient(5deg, #7843b9 0%, rgb(130, 116, 242) 44%, rgba(236, 242, 255, 1) 100%);
     /* background-image: linear-gradient(43deg, #4158d0 0%, #c850c0 46%, #ffcc70 100%); */
     -webkit-background-clip: text;
     color: transparent;
@@ -43,6 +43,7 @@ export const StyledSubTitle = styled.div`
     font-size: ${(props: any) => props.size}px;
     text-align: center;
     color: ${(props: any) => (props.color ? props.color : colours.primary)};
+    font-weight: ${(props: any) => props.weight};
     padding: 5px;
     margin-bottom: 20px;
     background-color: transparent;
@@ -54,7 +55,7 @@ export const StyledSubTitle = styled.div`
 
     @media screen and (max-width: ${BREAKPOINTS.sm}px) {
         font-size: 16px;
-        max-width: 200px
+        max-width: 200px;
     }
 `;
 export const Wrapper = styled.div`

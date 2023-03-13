@@ -36,10 +36,10 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
       : "linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%)"};
   z-index: 10;
   pointer-events: none;
-  height: 2000px;
+  height: 2850px;
 `;
 
-const GlowContainer = styled.div`
+export const GlowContainer = styled.div`
   position: absolute;
   display: flex;
   align-items: center;
@@ -51,13 +51,13 @@ const GlowContainer = styled.div`
   height: 100%;
 `;
 
-const Glow = styled.div`
+export const Glow = styled.div`
   position: absolute;
   top: 25px;
   bottom: 0;
   background: radial-gradient(
     72.04% 72.04% at 50% 10.99%,
-    #5392ff 0%,
+    #592e96 0%,
     rgba(166, 151, 255, 0) 100%
   );
   filter: blur(60px);

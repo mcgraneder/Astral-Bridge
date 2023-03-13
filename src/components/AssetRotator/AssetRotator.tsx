@@ -81,7 +81,7 @@ export const AssetRotator: FunctionComponent<ChainAssetRotatorProps> = ({ classN
 
     const asset = supportedAssets[ai];
     return (
-        <div className={className}>
+        <div className={"mb-4"}>
             <Fade visible={show}>
                 { asset && <Icon chainName={asset} className={"h-[200px] w-[200px] hover:h-[200px] hover:w-[200px] hover:cursor-pointer"} onMouseEnter={toggleRotaator} onMouseLeave={toggleRotaator} /> }
             </Fade>

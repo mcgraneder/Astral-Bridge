@@ -1,8 +1,10 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import { supportedAssets, assetsBaseConfig } from '../../utils/assetsConfig';
 import { chainsBaseConfig, EVMChains, LeacyChains } from '../../utils/chainsConfig';
 import { Icon } from "../Icons/AssetLogs/Icon";
+import { delay, motion } from 'framer-motion';
+import { Layout } from 'react-feather';
 
 export const CurrencyItemContainer = styled.div`
   display: flex;
@@ -83,38 +85,68 @@ const AssetItem = ({ assetType, type }: any) => {
     []
   );
 
+  const [showCard, setShowCard] = useState<boolean>(false)
 
 return (
-    
-  <>
-    {getOptions(assetType).filter(
-        type === "LEGACY" ? LegacyavailabilityFilter : EvmavailabilityFilter
-      )
-      .map((option: any, index: any) => {
-        if (option.Icon === "Terra") return
-        // if (option.Icon === "ROOK" || option.Icon === "GLMR" || option.Icon === "EURT" || option.icon === "DAI") return
-        return (
-          <div
-            key={index}
-            className="flex flex-col items-center justify-center gap-2 mx-4 p-4 min-w-[90px]"
-          >
-            <Icon chainName={option.Icon} className="h-16 w-16"/>
-            <span>{option.shortName}</span>
-          </div>
-        );
-      })}
-    {/* <CurrencyItemContainer
+    <>
+        
+        {getOptions(assetType)
+            .filter(
+                type === 'LEGACY'
+                    ? LegacyavailabilityFilter
+                    : EvmavailabilityFilter
+            )
+            .slice(0, 14).map((option: any, index: any) => {
+                if (option.Icon === 'Terra') return;
+                // if (option.Icon === "ROOK" || option.Icon === "GLMR" || option.Icon === "EURT" || option.icon === "DAI") return
+                return (
+                    <>
+                        <div
+                            key={index}
+                            className="mx-4 flex min-w-[40px] flex-col items-center justify-center gap-2 p-4 hover:cursor-pointer"
+                        >
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.0 }}
+                                whileInView={{ opacity: 1, scale: 1 }}
+                                viewport={{ once: true, amount: 0.8 }}
+                            
+                                transition={{
+                                    duration: 0.4,
+                                    delay: 0 + index / 20,
+                                    ease: [0, 0.71, 0.2, 1.01],
+                                    scale: {
+                                        type: 'spring',
+                                        damping: 8,
+                                        stiffness: 120,
+                                        restDelta: 0.001
+                                    }
+                                    //  Layout: { type: "spring"}
+                                }}
+                            >
+                                <Icon
+                                    chainName={option.Icon}
+                                    className="h-16 w-16"
+                                />
+                            </motion.div>
+
+                            {/* // <span>{option.shortName}</span> */}
+                        </div>
+                    </>
+                );
+            })}
+
+        {/* <CurrencyItemContainer
       marginL={type === "EVM" ? "6px" : "0px"}
       marginR={type === "EVM" ? "6px" : "0px"}
     > */}
-      {/* <CurrencyItemWrapper>
+        {/* <CurrencyItemWrapper>
         <CurrencyLogoContainer>
           <CurrencyLogo src={Grey} effect="blur"></CurrencyLogo>
         </CurrencyLogoContainer>
         <CurrencyTitle>+ More soon</CurrencyTitle>
       </CurrencyItemWrapper>
     </CurrencyItemContainer> */}
-  </>
+    </>
 );
 };
 
