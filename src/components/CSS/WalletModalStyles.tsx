@@ -128,12 +128,12 @@ export const FromContainer = styled.form`
     // padding: 3px;
     height: 50px;
     // width: 100%;
-    background: rgb(15, 25, 55);
+    background: rgb(15, 18, 44);
     border: 1px solid rgb(48, 63, 88);
     border-radius: 10px;
     -webkit-appearance: none;
-    input[type="number"]::-webkit-inner-spin-button,
-    input[type="number"]::-webkit-outer-spin-button {
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
         -webkit-appearance: none;
     }
 `;

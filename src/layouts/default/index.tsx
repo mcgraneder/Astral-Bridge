@@ -40,19 +40,24 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
 `;
 
 export const G = styled.div`
-    background: linear-gradient(rgba(7, 8, 22, 0) 0%, rgb(7 8 22 / 100%) 45%);
+    background: ${(props: any) =>
+        props.visible
+            ? 'linear-gradient(rgba(7, 8, 22, 0) 0%, rgb(7 8 22 / 100%) 45%)'
+            : 'linear-gradient(rgba(7, 8, 22, 0) 40%, rgb(7 8 22 / 100%) 80%)'};
 `;
 
 export const GlowContainer = styled.div`
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-  overflow-y: hidden;
-  height: 100%;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    overflow-y: hidden;
+    height: 100%;
+    /* color: rgb(56, 52, 107); */
+    color: rgb(43, 49, 102);
 `;
 
 export const Glow = styled.div`
@@ -109,16 +114,16 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
           {loading ? (
               <AppLoader />
           ) : (
-              <G>
+              <G visible={pathname === '/home'}>
                   <div className="flex h-screen flex-col items-center text-white  lg:h-auto lg:min-h-screen">
-                      {pathname === '/home' && (
+                      {/* {pathname === '/home' && ( */}
                           <>
                               {/* <Gradient isDarkMode={true} /> */}
                               <GlowContainer>
                                   <Glow />
                               </GlowContainer>
                           </>
-                      )}
+                      {/* )} */}
                       <ChainGlow
                           colour={chainColour ? chainColour : 'transparent'}
                       />

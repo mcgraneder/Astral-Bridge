@@ -55,7 +55,7 @@ const TABS: Tab[] = [
 export const BridgeModalContainer = styled.div`
   max-width: 480px;
   color: White;
-  background-color: rgb(15, 25, 55);
+  background-color: rgb(15, 18, 44);
   text-align: right;
   /* padding: 12px 18px; */
   border: 1px solid rgb(57, 62, 82);
@@ -67,19 +67,19 @@ export const BridgeModalContainer = styled.div`
 `;
 
 export const MintFormContainer = styled.div`
-  margin-top: 10px;
-  padding-bottom: 20px;
-  margin-bottom: 10px;
-  background: rgb(34, 53, 83);
-  border: 1px solid rgb(34, 43, 68);
-  border-radius: 10px;
+    margin-top: 10px;
+    padding-bottom: 20px;
+    margin-bottom: 10px;
+    background: rgb(43, 49, 102);
+    border: 1px solid rgb(34, 43, 68);
+    border-radius: 10px;
 `;
 
 export const MinFormToggleButtonContainer = styled.div`
   height: 40px;
   display: flex;
   margin-bottom: 25px;
-  background: rgb(15, 25, 55);
+  background: rgb(15, 18, 44);
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 
@@ -94,7 +94,7 @@ export const InfoContainer = styled.div`
   margin-top: 10px;
   height: ${(props: any) => (props.visible ? "87px" : "0px")};
   transition: height 0.25s ease-in;
-  background: rgb(15, 25, 55);
+  background: rgb(15, 18, 44);
   border-radius: 10px;
 
   ${(props: any) =>

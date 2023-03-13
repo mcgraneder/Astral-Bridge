@@ -12,19 +12,19 @@ export const FormWrapper = styled.div`
 `;
 
 export const BridgeModalContainer = styled.div`
-  position: absolute;
-  top: 16%;
-  width: 440px;
-  // height: 260px;
-  background: rgb(14, 22, 39);
-  text-align: right;
-  padding: 10px 10px;
-  border: 1px solid rgb(57, 62, 82);
-  border-radius: 25px;
-  // -webkit-box-shadow: -2px -1px 15px 7px rgba(255,0,0,0.5);
-  // -moz-box-shadow: -3px -2px 30px 14px rgba(255,0,0,0.425);
-  // box-shadow: -4px -3px 45px 21px rgba(255,0,0,0.35);
-  box-shadow: 0px 10px 150px 5px rgba(75, 135, 220, 0.03);
+    position: absolute;
+    top: 16%;
+    width: 440px;
+    // height: 260px;
+    background: rgb(15, 18, 44);
+    text-align: right;
+    padding: 10px 10px;
+    border: 1px solid rgb(57, 62, 82);
+    border-radius: 25px;
+    // -webkit-box-shadow: -2px -1px 15px 7px rgba(255,0,0,0.5);
+    // -moz-box-shadow: -3px -2px 30px 14px rgba(255,0,0,0.425);
+    // box-shadow: -4px -3px 45px 21px rgba(255,0,0,0.35);
+    box-shadow: 0px 10px 150px 5px rgba(75, 135, 220, 0.03);
 `;
 
 export const StyledContainer = styled.div`

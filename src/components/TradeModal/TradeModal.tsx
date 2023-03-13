@@ -7,18 +7,18 @@ import { Settings, ChevronDown } from "react-feather";
 import { UilAngleDown } from '@iconscout/react-unicons';
 
 export const TokenAmountWrapper = styled.div`
-  // width: 100%;
-  height: ${(props: any) => props.height};
-  background: rgb(34, 53, 83);
-  border: 1.5px solid rgb(27, 32, 52);
-  border-radius: 15px;
-  margin-top: ${(props: any) => props.marginTop};
-  padding-left: 15px;
-  padding-right: 20px;
+    // width: 100%;
+    height: ${(props: any) => props.height};
+    background: rgb(43, 49, 102);
+    border: 1.5px solid rgb(27, 32, 52);
+    border-radius: 15px;
+    margin-top: ${(props: any) => props.marginTop};
+    padding-left: 15px;
+    padding-right: 20px;
 
-  &:hover {
-    border: 1.2px solid rgb(61, 70, 87);
-  }
+    &:hover {
+        border: 1.2px solid rgb(61, 70, 87);
+    }
 `;
 
 export const TokenAmount = styled.div`
@@ -46,8 +46,8 @@ export const ImgWrapper = styled.div`
 
 export const ErrorText = styled.div`
   position: absolute;
-  left: 10.5%;
-  top: 5%;
+  left: 5%;
+  top: 3%;
   color: #adadad;
   font-size: 18px;
 `;
@@ -55,7 +55,7 @@ export const ErrorText = styled.div`
 export const CloseIcon = styled(Settings)`
   position: absolute;
   left: 91%;
-  top: 5%;
+  top: 3%;
   cursor: pointer;
   color: White;
   width: 20px;
@@ -92,27 +92,27 @@ export const ArrowDownContainer = styled.div`
 `;
 
 export const Button = styled.div`
-  height: 55px;
-  width: 100%;
-  background: rgb(34, 53, 83);
-  border-radius: 20px;
-  text-align: center;
-  line-height: 55px;
-  font-size: 18px;
-  color: rgb(67, 92, 112);
-  margin-bottom: 5px;
+    height: 55px;
+    width: 100%;
+    background: rgb(43, 49, 102);
+    border-radius: 20px;
+    text-align: center;
+    line-height: 55px;
+    font-size: 18px;
+    color: rgb(67, 92, 112);
+    margin-bottom: 5px;
 
-  &:hover {
-    cursor: pointer;
-    background: rgb(13, 94, 209);
-    color: white;
-  }
+    &:hover {
+        cursor: pointer;
+        background: rgb(43, 49, 102);
+        color: white;
+    }
 `;
 
 export const ButtonWrapper = styled.div`
   font-family: "Open Sans", sans-serif;
   margin-top: 30px;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   height: 30px;
   // margin: 0 auto;
   display: flex;
@@ -221,17 +221,17 @@ export const ButtonContents = styled.span`
 `;
 
 export const BridgeModalContainer = styled.div`
-  max-width: 480px;
-  color: White;
-  background-color: rgb(15, 25, 55);
-  text-align: right;
-  padding: 12px 12px;
-  border: 1px solid rgb(57, 62, 82);
-  border-radius: 20px;
-  box-shadow: 0px 10px 150px 5px rgba(75, 135, 220, 0.03);
-  margin: 30px auto 0;
-  transition: height 3s ease-out;
-  position: relative;;
+    max-width: 480px;
+    color: White;
+    background-color: rgb(15, 18, 44);
+    text-align: right;
+    padding: 12px 12px;
+    border: 1px solid rgb(57, 62, 82);
+    border-radius: 20px;
+    box-shadow: 0px 10px 150px 5px rgba(75, 135, 220, 0.03);
+    margin: 30px auto 0;
+    transition: height 3s ease-out;
+    position: relative;
 `;
 
 const DexModal = () => {
@@ -254,7 +254,7 @@ const DexModal = () => {
         </ArrowDownContainer>
         <TokenAmountWrapper
           height={swapState === true ? "100px" : "70px"}
-          marginTop={"25px"}
+          marginTop={"35px"}
           marginBottom={"0px"}
           borderTrue={true}
         >

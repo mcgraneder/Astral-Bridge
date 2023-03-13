@@ -10,20 +10,20 @@ import { Icon } from "../../Icons/AssetLogs/Icon";
 import { useTxFilterState } from "../TransactionsContext";
 
 export const FormWrapper = styled.div`
-  position: absolute;
-  left: 20%;
-  top: ${(props: any) => props.top};
-  transform: translate(-50%, -50%);
-  width: 300px;
-  background-color: rgb(15, 25, 55);
-  text-align: right;
-  padding: 10px;
-  padding-bottom: 20px;
-  border: 1.5px solid rgb(48, 63, 88);
-  border-radius: 15px;
-  display: block;
-  z-index: 10000000000;
-  box-shadow: 14px 19px 5px 0px rgba(0, 0, 0, 0.85);
+    position: absolute;
+    left: 20%;
+    top: ${(props: any) => props.top};
+    transform: translate(-50%, -50%);
+    width: 300px;
+    background-color: rgb(15, 18, 44);
+    text-align: right;
+    padding: 10px;
+    padding-bottom: 20px;
+    border: 1.5px solid rgb(48, 63, 88);
+    border-radius: 15px;
+    display: block;
+    z-index: 10000000000;
+    box-shadow: 14px 19px 5px 0px rgba(0, 0, 0, 0.85);
 `;
 
 const TRANSACTION_STATUSES = ["All Statuses", "Completed", "Pending", "Failed"];

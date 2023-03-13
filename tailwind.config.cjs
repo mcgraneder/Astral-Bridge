@@ -30,16 +30,16 @@ module.exports = {
                 width: 'width'
             },
             colors: {
-                tertiary: 'rgb(48, 63, 88)',
-                secondary: 'rgb(34, 53, 83)',
+                tertiary: 'rgb(56, 52, 107)',
+                secondary: 'rgb(43, 49, 102)',
                 lightTertiary: 'rgb(66, 87, 122)',
-                darkBackground: 'rgb(15, 25, 55)',
+                darkBackground: 'rgb(15,18,44)',
                 hoverLightground: 'rgb(20, 32, 65)',
 
                 extraDarkBackground: 'rgb(12,18,43)',
                 secondaryButtonColor: 'rgb(28,44,81)',
                 backgroundSecondaryLight: 'rgb(74, 107, 161)',
-                homeButton: "rgb(105, 95, 215)"
+                homeButton: 'rgb(105, 95, 215)'
             },
             spacing: {
                 '630px': '630px',
@@ -63,9 +63,9 @@ module.exports = {
             screens: {
                 sm2: '600px',
                 md2: '760px',
-                md: "900px",
+                md: '900px',
                 xs: '400px',
-                mlg1: "1170px",
+                mlg1: '1170px',
                 mlg: '1250px'
             },
             borderRadius: {

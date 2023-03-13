@@ -48,7 +48,7 @@ const TABS: Tab[] = [
 export const BridgeModalContainer = styled.div`
     max-width: 480px;
     color: White;
-    background-color: rgb(15, 25, 55);
+    background-color: rgb(15, 18, 44);
     text-align: right;
     padding: 12px 18px;
     border: 1px solid rgb(57, 62, 82);
@@ -63,7 +63,7 @@ export const MintFormContainer = styled.div`
     margin-top: 10px;
     padding-bottom: 20px;
     margin-bottom: 10px;
-    background: rgb(34, 53, 83);
+    background: rgb(36, 41, 86);
     border: 1px solid rgb(34, 43, 68);
     border-radius: 10px;
 `;
@@ -89,12 +89,12 @@ export const MintToggleButton = styled.div`
     border-top-${(props: any) => props.side}-radius: 10px;
     border-right: 1.5px solid rgb(14, 22, 39);
     background: ${(props: any) =>
-        props.active ? 'rgb(15, 25, 55)' : 'rgb(34, 53, 83)'};
+        props.active ? 'rgb(15,18,44)' : 'rgb(36, 41, 86)'};
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px solid ${(props: any) =>
-        props.active ? 'rgb(75,135,220)' : 'rgb(34, 53, 83)'};
+        props.active ? 'rgb(75,135,220)' : 'rgb(36, 41, 86)'};
     color: ${(props: any) => (props.active ? 'rgb(75,135,220)' : 'White')};
     &:hover {
         cursor: pointer;

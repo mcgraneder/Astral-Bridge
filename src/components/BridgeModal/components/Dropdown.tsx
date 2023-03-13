@@ -3,20 +3,21 @@ import { Icon as AssetIcon } from "../../Icons/AssetLogs/Icon";
 import styled from "styled-components"
 
 export const DropDownContainer = styled.div`
-  margin: ${(props: any) => (props.isVisible ? "8px 0px" : "0px")};
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 6px;
-  border: ${(props: any) => (props.isVisible ? "1px solid rgb(75 85 99);" : "none")};
-  background-color: rgb(34 53 83);
-  padding: 0px 12px;
-  height: ${(props: any) => (props.isVisible ? "38px" : "0px")};
-  transition: height 0.2s ease;
+    margin: ${(props: any) => (props.isVisible ? '8px 0px' : '0px')};
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 6px;
+    border: ${(props: any) =>
+        props.isVisible ? '1px solid rgb(75 85 99);' : 'none'};
+    background-color: rgb(43, 49, 102);
+    padding: 0px 12px;
+    height: ${(props: any) => (props.isVisible ? '38px' : '0px')};
+    transition: height 0.2s ease;
 
-  &:hover {
-    cursor: pointer;
-  }
+    &:hover {
+        cursor: pointer;
+    }
 `;
 interface IDropdown {
   text: string;

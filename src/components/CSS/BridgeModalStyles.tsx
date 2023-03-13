@@ -1,29 +1,29 @@
 import styled from "styled-components";
 
 export const FormWrapper = styled.div`
-  position: fixed;
-  top: 20%;
-  width: 420px;
-  height: 530px;
-  background: rgb(14, 22, 39);
-  text-align: right;
-  // padding: 10px 35px;
-  border-radius: 20px;
+    position: fixed;
+    top: 20%;
+    width: 420px;
+    height: 530px;
+    background: rgb(15, 18, 44);
+    text-align: right;
+    // padding: 10px 35px;
+    border-radius: 20px;
 `;
 
 export const BridgeModalContainer = styled.div`
-  max-width: 490px;
-  color: White;
-  background: rgb(14, 22, 39);
-  text-align: right;
-  border: 1px solid rgb(57, 62, 82);
-  border-radius: 20px;
-  box-shadow: 0px 10px 150px 5px rgba(75, 135, 220, 0.03);
-  margin: 30px auto 0;
-  position: relative;
-  margin-top: 30px;
-  // max-width: 400px;
-  transition: height 3s ease-out;
+    max-width: 490px;
+    color: White;
+    background: rgb(15, 18, 44);
+    text-align: right;
+    border: 1px solid rgb(57, 62, 82);
+    border-radius: 20px;
+    box-shadow: 0px 10px 150px 5px rgba(75, 135, 220, 0.03);
+    margin: 30px auto 0;
+    position: relative;
+    margin-top: 30px;
+    // max-width: 400px;
+    transition: height 3s ease-out;
 `;
 export const BridgeModalWrapper = styled.div`
   // width: 100%;

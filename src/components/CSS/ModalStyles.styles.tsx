@@ -26,7 +26,7 @@ export const FormWrapper = styled.div`
     top: 45%;
     transform: translate(-50%, -50%);
     width: 430px;
-    background-color: rgb(15, 25, 55);
+    background-color: rgb(15, 18, 44);
     text-align: right;
     padding: 30px 15px;
     padding-bottom: 20px;
