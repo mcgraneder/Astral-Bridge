@@ -95,7 +95,7 @@ const Home = () => {
                         variants={fadeIn('up', 0.01)}
                         initial="hidden"
                         whileInView={'show'}
-                        viewport={{ once: true, amount: 0.9 }}
+                        viewport={{ once: true, amount: 0.3 }}
                         // transition={{ duration: 0.2}}
                         className="my-0 mx-auto mb-8 mt-4 flex flex-col items-center justify-center"
                     >
@@ -134,7 +134,7 @@ const Home = () => {
                     variants={fadeIn('left', 0.01)}
                     initial="hidden"
                     whileInView={'show'}
-                    viewport={{ once: true, amount: 0.35 }}
+                    viewport={{ once: true, amount: 0.5 }}
                     // transition={{ duration: 0.2}}
                     className="my-0 mx-auto mb-8 mt-4 flex flex-col items-center justify-center"
                 >

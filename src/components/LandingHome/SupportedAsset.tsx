@@ -128,7 +128,7 @@ const SupportedAssets = ({ type }: any) => {
                             variants={fadeIn('right', 0.01)}
                             initial="hidden"
                             whileInView={'show'}
-                            viewport={{ once: true, amount: 0.45 }}
+                            viewport={{ once: true, amount: 0.7 }}
                         >
                             <CurrenciesHeader>Chains</CurrenciesHeader>
                         </motion.div>
@@ -143,7 +143,7 @@ const SupportedAssets = ({ type }: any) => {
                 variants={fadeIn('uo', 0.01)}
                 initial="hidden"
                 whileInView={'show'}
-                viewport={{ once: true, amount: 0.45 }}
+                viewport={{ once: true, amount: 0.7 }}
             >
                 <div className="my-8 h-[850px] border-l-2 border-gray-500" />
             </motion.div>
