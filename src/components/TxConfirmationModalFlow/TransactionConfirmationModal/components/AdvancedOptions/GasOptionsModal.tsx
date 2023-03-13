@@ -49,16 +49,16 @@ export const WalletInput = styled.input`
 `;
 
 export const WalletInputWrapper = styled.div`
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  -webkit-appearance: none;
-  background-color: rgb(34 53 83);
-  border-radius: 10px;
-  font-size: 14px;
-  border: 0.5px solid transparent;
-  border-color: ${(props: any) => (props.error ? "red" : "transparent")};
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    -webkit-appearance: none;
+    background-color: rgb(43, 49, 102);
+    border-radius: 10px;
+    font-size: 14px;
+    border: 0.5px solid transparent;
+    border-color: ${(props: any) => (props.error ? 'red' : 'transparent')};
 `;
 
 interface IAssetModal {

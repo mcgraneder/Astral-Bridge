@@ -89,19 +89,19 @@ export const MinFormToggleButtonContainer = styled.div`
 `;
 
 export const InfoContainer = styled.div`
-  margin-left: 20px;
-  margin-right: 20px;
-  margin-top: 10px;
-  height: ${(props: any) => (props.visible ? "87px" : "0px")};
-  transition: height 0.25s ease-in;
-  background: rgb(15, 18, 44);
-  border-radius: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 10px;
+    height: ${(props: any) => (props.visible ? '87px' : '0px')};
+    transition: height 0.25s ease-in;
+    background: rgb(15, 18, 44);
+    border-radius: 10px;
 
-  ${(props: any) =>
-    props.visible &&
-    css`
-      border: 1px solid rgb(57, 75, 105);
-    `}
+    ${(props: any) =>
+        props.visible &&
+        css`
+            border: 1px solid rgb(57, 75, 105);
+        `}
 `;
 
 export const DropdownWrapper = styled.div`

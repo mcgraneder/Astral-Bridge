@@ -108,7 +108,7 @@ export const InfoContainer = styled.div`
     margin-top: 10px;
     height: ${(props: any) => (props.visible ? '87px' : '0px')};
     transition: height 0.25s ease-in;
-    background: rgb(15, 25, 55);
+    background: rgb(15, 18, 44);
     border-radius: 10px;
 
     ${(props: any) =>
