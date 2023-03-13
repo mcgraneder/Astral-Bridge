@@ -16,12 +16,13 @@ import { fadeIn } from '../../utils/fadeIn.';
 import { UilAngleDown } from '@iconscout/react-unicons';
 import { ArrowDownCircle } from "react-feather";
 import Section2 from './MiddleSection';
+
 const LearnMoreArrow = styled(ArrowDownCircle)`
     margin-left: 14px;
     size: 20px;
-    color: rgb(70, 115, 250);
+    color: rgb(116, 132, 224);
     &:hover {
-        color: rgb(49, 92, 221);
+        color: rgb(95, 111, 201);
         cursor: pointer;
     }
 `;
@@ -79,7 +80,7 @@ const Home = () => {
     }
     return (
         <div className="text-bold overflow-y-hidden px-0 text-white backdrop-blur-lg md:px-10 ">
-            <div className="my-auto mx-0 flex min-h-screen flex-col  items-center justify-center">
+            <div className="my-auto mx-0 flex min-h-screen flex-col  items-center justify-center ">
                 <motion.div
                     variants={fadeIn('down', 0.01)}
                     initial="hidden"
@@ -118,7 +119,7 @@ const Home = () => {
                             <Link
                                 href={'/about'}
                                 passHref
-                                className="focus-visible:ring-primary my-4 flex w-[260px] items-center justify-center rounded-2xl bg-blue-500 py-[14px] px-4 text-white hover:bg-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                                className="focus-visible:ring-primary my-4 flex w-[260px] items-center justify-center rounded-2xl bg-[rgb(116,132,224)] py-[14px] px-4 text-white hover:bg-[rgb(95,111,201)] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                             >
                                 <span>Learn More</span>
                             </Link>
@@ -134,7 +135,7 @@ const Home = () => {
                     variants={fadeIn('left', 0.01)}
                     initial="hidden"
                     whileInView={'show'}
-                    viewport={{ once: true, amount: 0.5 }}
+                    viewport={{ once: true, amount: "all" }}
                     // transition={{ duration: 0.2}}
                     className="my-0 mx-auto mb-8 mt-4 flex flex-col items-center justify-center"
                 >

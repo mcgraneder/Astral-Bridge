@@ -17,6 +17,11 @@ import API from "../../constants/Api";
 import { formatTime } from "../../utils/date";
 import { Icon } from "../Icons/AssetLogs/Icon";
 import { get } from "../../services/axios";
+import Image from "next/image";
+import AstralLogo from "../../../public/images/astralLogo.png"
+import AstralLogoAlt from '../../../public/images/AstralLogoAlt.png';
+import { StyledSubTitle } from '../CSS/HomePage.styles';
+
 
 export const Wrapper = styled.div`
   display: flex;
@@ -323,59 +328,74 @@ export const Navbar = ({
 
   const Icon = provider ? walletIcon[provider] : undefined;
   return (
-    <Wrapper isNavbarDark={isNavbarDark}>
-      <Nav>
-        <Box>
-          <BoxItemContainer allignment={"flex-start"}>
-            {width >= 1000 && (
-              <div className="mr-5 flex h-full">
-                <LogoIcon />
-              </div>
-            )}
-            {activePath !== "/home" && <NavLinks routes={ROUTES} />}
-          </BoxItemContainer>
-          {activePath !== "/home" && (
-            <TokenSearchBar width={width} accountId={encryptedId} />
-          )}
-          <BoxItemContainer allignment={"flex-end"}>
-            {activePath !== "/home" && (
-              <div className="mr-5 flex h-full items-center">
-                <TokenSelectDropdown />
-              </div>
-            )}
-            <div className="mr-5 flex  h-full items-center">
-              <PrimaryButton
-                className="mt-[2px] bg-blue-500 py-[6px] hover:bg-blue-600"
-                onClick={
-                  !active ? toggleWalletModal : toggleAccoundDetailsModal
-                }
-              >
-                {pendingTransaction ? (
-                  <>
-                    <UilSpinner
-                      className={" h-6 w-6 animate-spin text-white"}
-                    />
-                    <span className="mr-2 hidden xs:block">{"1 Pending"}</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="mr-2 hidden xs:block">
-                      {active ? shortenAddress(account) : "Connect"}
-                    </span>
-                    <span className="mr-2 hidden xs:block">|</span>
-                    {active && Icon ? (
-                      <Icon className={"h-5 w-5"} />
-                    ) : (
-                      <UilAngleDown className={"h-5 w-5"} />
-                    )}
-                  </>
-                )}
-              </PrimaryButton>
-            </div>
-          </BoxItemContainer>
-        </Box>
-      </Nav>
-    </Wrapper>
+      <Wrapper isNavbarDark={isNavbarDark}>
+          <Nav>
+              <Box>
+                  <BoxItemContainer allignment={'flex-start'}>
+                      {width >= 1000 && (
+                          <div className="mr-5 flex h-full items-center gap-2 ">
+                              <Image
+                                  alt=""
+                                  src={AstralLogo}
+                                  className="mx-4 h-10 w-10 "
+                              />
+                              
+                          </div>
+                      )}
+                      {activePath !== '/home' && <NavLinks routes={ROUTES} />}
+                  </BoxItemContainer>
+                  {activePath !== '/home' && (
+                      <TokenSearchBar width={width} accountId={encryptedId} />
+                  )}
+                  <BoxItemContainer allignment={'flex-end'}>
+                      {activePath !== '/home' && (
+                          <div className="mr-5 flex h-full items-center">
+                              <TokenSelectDropdown />
+                          </div>
+                      )}
+                      <div className="mr-5 flex  h-full items-center">
+                          <PrimaryButton
+                              className="mt-[2px] bg-blue-500 py-[6px] hover:bg-blue-600"
+                              onClick={
+                                  !active
+                                      ? toggleWalletModal
+                                      : toggleAccoundDetailsModal
+                              }
+                          >
+                              {pendingTransaction ? (
+                                  <>
+                                      <UilSpinner
+                                          className={
+                                              ' h-6 w-6 animate-spin text-white'
+                                          }
+                                      />
+                                      <span className="mr-2 hidden xs:block">
+                                          {'1 Pending'}
+                                      </span>
+                                  </>
+                              ) : (
+                                  <>
+                                      <span className="mr-2 hidden xs:block">
+                                          {active
+                                              ? shortenAddress(account)
+                                              : 'Connect'}
+                                      </span>
+                                      <span className="mr-2 hidden xs:block">
+                                          |
+                                      </span>
+                                      {active && Icon ? (
+                                          <Icon className={'h-5 w-5'} />
+                                      ) : (
+                                          <UilAngleDown className={'h-5 w-5'} />
+                                      )}
+                                  </>
+                              )}
+                          </PrimaryButton>
+                      </div>
+                  </BoxItemContainer>
+              </Box>
+          </Nav>
+      </Wrapper>
   );
 };
 
