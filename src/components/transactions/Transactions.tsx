@@ -76,7 +76,7 @@ const Transactions = () => {
 
   return (
     <>
-      {!loading && (
+      {/* {!loading && (
         <UserInfoModal
           open={showWarning}
           close={closeWarning}
@@ -93,7 +93,7 @@ const Transactions = () => {
             </span>
           }
         />
-      )}
+      )} */}
       <TransactionFilterStateProvider>
         <ExploreContainer>
           <TitleContainer>
