@@ -70,11 +70,9 @@ const BridgeToggleButton = ({
     const tabSelect = (index: number): void => {
         if (index == 1) {
             setAsset(assetsBaseConfig.ASTRAL_USDT);
-            setFromChain(chainsBaseConfig.BinanceSmartChain);
-            setDestinationChain(chainsBaseConfig.Ethereum);
-        } else {
-            setFromChain(chainsBaseConfig.Ethereum);
             setDestinationChain(chainsBaseConfig.BinanceSmartChain);
+        } else {
+            setDestinationChain(chainsBaseConfig.Ethereum);
             setAsset(assetsBaseConfig.USDT_Goerli);
         }
         setActiveButton(tabs[index] as Tab);

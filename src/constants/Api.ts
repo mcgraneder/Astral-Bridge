@@ -14,28 +14,29 @@ const SigVerifierBaseUrl = isProduction()
 
   const NextBaseUrl = `${DOMAIN}/api`;
 const API = {
-  next: {
-    user: `${NextBaseUrl}/user`,
-    depositTx: `${NextBaseUrl}/depositTx`,
-    gettransactions: `${NextBaseUrl}/get-transactions`,
-    gettransaction: `${NextBaseUrl}/get-transaction`,
-  },
-  ren: {
-    verify: `${SigVerifierBaseUrl}/verify`,
-    balancesOf: `https://astral-sol.onrender.com/balancesOf`,
-    bridgeTokens: `https://astral-sol.onrender.com/bridgeTokens`,
-    getTokenApproval: `https://astral-sol.onrender.com/getTokenApproval`,
-    queryRenTx: "https://astral-sol.onrender.com/queryRenTx",
-    submitMintRenTx: "https://astral-sol.onrender.com/submitMintRenTx",
-  },
-  coinGecko: {
-    price: `${CoinGeckoBaseUrl}/simple/price`,
-    markets: `${CoinGeckoBaseUrl}/coins/markets/`,
-  },
-  owlOracle: {
-    gasnow: `${OwlOracleBaseUrl}/gasnow`,
-    gasPrice: `https://api.blocknative.com/gasprices/blockprices`,
-  },
+    next: {
+        user: `${NextBaseUrl}/user`,
+        depositTx: `${NextBaseUrl}/depositTx`,
+        mintTx: `${NextBaseUrl}/mintTx`,
+        gettransactions: `${NextBaseUrl}/get-transactions`,
+        gettransaction: `${NextBaseUrl}/get-transaction`
+    },
+    ren: {
+        verify: `${SigVerifierBaseUrl}/verify`,
+        balancesOf: `https://astral-sol.onrender.com/balancesOf`,
+        bridgeTokens: `https://astral-sol.onrender.com/bridgeTokens`,
+        getTokenApproval: `https://astral-sol.onrender.com/getTokenApproval`,
+        queryRenTx: 'https://astral-sol.onrender.com/queryRenTx',
+        submitMintRenTx: 'https://astral-sol.onrender.com/submitMintRenTx'
+    },
+    coinGecko: {
+        price: `${CoinGeckoBaseUrl}/simple/price`,
+        markets: `${CoinGeckoBaseUrl}/coins/markets/`
+    },
+    owlOracle: {
+        gasnow: `${OwlOracleBaseUrl}/gasnow`,
+        gasPrice: `https://api.blocknative.com/gasprices/blockprices`
+    }
 };
 
 export default API;

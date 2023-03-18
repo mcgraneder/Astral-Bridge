@@ -11,14 +11,22 @@ import { ethers } from "ethers";
 import { MESSAGES } from "../components/Notification/NotificationMessages";
 
 type ExecuteTxType = {
-  executeTransaction: (
-    asset: any,
-    chain: any,
-    args: any[],
-    amount: string,
-    transactionType: string,
-    contractFn: any
-  ) => Promise<void>;
+    executeTransaction: (
+        asset: any,
+        chain: any,
+        args: any[],
+        amount: string,
+        transactionType: string,
+        contractFn: any
+    ) => Promise<void>;
+    executeBridgeTransaction: (
+        asset: any,
+        chain: any,
+        args: any[],
+        amount: string,
+        transactionType: string,
+        contractFn: any
+    ) => Promise<void>;
 };
 const useEcecuteTransaction = (): ExecuteTxType => {
   const { library, account } = useWeb3React();
@@ -160,7 +168,111 @@ const useEcecuteTransaction = (): ExecuteTxType => {
     ]
   );
 
-  return { executeTransaction };
+    const executeBridgeTransaction = useCallback(
+        async (
+            asset: any,
+            chain: any,
+            args: any[],
+            amount: string,
+            transactionType: string,
+            contractFn: any
+        ): Promise<void> => {
+            if (!provider || !account) return;
+            togglePendingModal();
+            const formattedAmount = new BigNumber(amount).shiftedBy(
+                -asset.decimals
+            );
+
+            try {
+                const tx = await contractFn(...args);
+                setFilteredTransaction(tx.hash);
+                const txReceipt = (await provider.getTransaction(
+                    tx.hash
+                )) as ethers.providers.TransactionResponse;
+
+                const {
+                    gasLimit,
+                    gasPrice,
+                    maxFeePerGas,
+                    maxPriorityFeePerGas,
+                    ...rest
+                } = txReceipt;
+
+                const type = 'mint';
+
+                const transactionResponse = await post<ResponseData>(
+                    API.next.mintTx,
+                    {
+                        account,
+                        encryptedId,
+                        type,
+                        chain: chain.fullName,
+                        amount: formattedAmount,
+                        txHash: tx.hash,
+                        currency: asset.Icon,
+                        gasLimit: Number(txReceipt.gasLimit),
+                        gasPrice: Number(txReceipt.gasPrice),
+                        maxFeePerGas: Number(txReceipt.maxFeePerGas),
+                        maxPriorityFeePerGas: Number(
+                            txReceipt.maxPriorityFeePerGas
+                        ),
+                        ...rest
+                    }
+                );
+                if (!transactionResponse) return;
+
+                const txId = transactionResponse.txId;
+                setTimeout(() => toggleSubmittedModal(), 250);
+
+                await tx
+                    .wait(1)
+                    .then(async (txReceipt: any) => {
+                        await patch(API.next.mintTx, {
+                            encryptedId: encryptedId,
+                            status: 'veryifying Signature',
+                            txId: txId,
+                            blockHash: txReceipt.blockHash,
+                            blockNumber: txReceipt.blockNumber,
+                            gasPrice: Number(
+                                txReceipt.effectiveGasPrice
+                            ).toString(),
+                            gasLimit: Number(txReceipt.gasUsed).toString()
+                        });
+                    })
+                    .catch((error: Error) => {
+                        throw new Error('transaction execution failed');
+                    });
+                    setPendingTransaction(false)
+            } catch (error) {
+                toggleRejectedModal();
+
+                HandleNewNotification(
+                    'Transaction Failed',
+                    MESSAGES(
+                        transactionType,
+                        false,
+                        formattedAmount.toString(),
+                        asset,
+                        chain
+                    )
+                );
+                throw new Error(`transaction execution failed`);
+            }
+        },
+        [
+            provider,
+            account,
+            togglePendingModal,
+            toggleSubmittedModal,
+            toggleRejectedModal,
+            HandleNewNotification,
+            encryptedId,
+            setFilteredTransaction,
+            setPendingTransaction
+        ]
+    );
+
+  return { executeTransaction, executeBridgeTransaction };
 };
 
 export default useEcecuteTransaction;

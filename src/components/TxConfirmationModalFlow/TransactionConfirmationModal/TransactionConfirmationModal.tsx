@@ -191,7 +191,7 @@ const TxConfirmationModal = ({
   fetchMarketDataGasPrices,
 }: IAssetModal) => {
   const { account, library } = useWeb3React();
-  const { executeTransaction: exec } = useEcecuteTransaction();
+  const { executeTransaction: exec, executeBridgeTransaction: execBridge } = useEcecuteTransaction();
   const { init } = useApproval();
   const { width } = useViewport();
   const { destinationChain, fromChain } = useGlobalState();
@@ -292,21 +292,21 @@ const TxConfirmationModal = ({
       if (transactionType !== "Approval") toggleConfirmationModal();
       const txAmount = new BigNumber(amount).shiftedBy(asset.decimals);
       const bridgeAddress = BridgeDeployments[destinationChain.fullName];
-      const bridgeAdapterAddress = BridgeFactory[fromChain.fullName];
+      
       const tokenAddress =
         chainAdresses[fromChain.fullName]?.assets[asset.Icon]
           ?.tokenAddress!;
 
       const bridgeContract = init(bridgeAddress!, RenBridgeABI);
-      const bridgeAdapterContract = init(bridgeAdapterAddress!, BridgeAdapterABI);
-      const tokenContract = init(
-          tokenAddress!,
-          ERC20ABI
-      );
+      // const tokenContract = init(
+      //     tokenAddress!,
+      //     ERC20ABI
+      // );
 
      
 
 
+      console.log(fromChain, destinationChain)
 
       const optionalParams =
         customGasPrice &&
@@ -338,13 +338,18 @@ const TxConfirmationModal = ({
       } else if (transactionType === 'Mint') {
         console.log("check")
          console.log(tokenAddress);
-         console.log(bridgeAdapterAddress)
+        //  console.log(bridgeAdapterAddress)
+         const bridgeAdapterAddress = BridgeFactory[fromChain.fullName];
+         const bridgeAdapterContract = init(
+             bridgeAdapterAddress!,
+             BridgeAdapterABI
+         );
         // await tokenContract?.approve(
         //     BridgeFactory[destinationChain.fullName],
         //     txAmount.toString()
         // );
         console.log(Number(txAmount))
-          await exec(
+          await execBridge(
               asset,
               fromChain,
               [

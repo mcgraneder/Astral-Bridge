@@ -60,7 +60,7 @@ function useGatewayProvider(): GatewayContextType {
     const { library, account } = useWeb3React();
     const [renJs, setRenJs] = useState<RenJS | null>(null);
     const [gateway, setGateway] = useState<Gateway | null>(null);
-    const [asset, setAsset] = useState<AssetBaseConfig>(assetsBaseConfig.BTC);
+    const [asset, setAsset] = useState<AssetBaseConfig>(assetsBaseConfig.USDT_Goerli);
     const [transactions, setTransactions] = useState<Array<GatewayTransaction>>(
         []
     );
