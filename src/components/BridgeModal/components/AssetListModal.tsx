@@ -84,12 +84,6 @@ export const DropDownContainer = styled.div`
     &:hover {
         cursor: pointer;
     }
-    ${(props: any) =>
-        props.disabled &&
-        css`
-            pointer-events: none;
-            cursor: not-allowed;
-        `}
 `;
 interface IDropdown {
     text: string;
@@ -115,7 +109,6 @@ const Dropdown = ({
         <DropDownContainer
             isVisible={isVisible}
             onClick={on}
-            disabled={type === 'To' && true}
         >
             <div
                 className={`flex items-center justify-center gap-2 ${
