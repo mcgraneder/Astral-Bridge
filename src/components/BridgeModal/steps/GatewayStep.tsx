@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import styled from "styled-components";
 import { Copy } from "react-feather";
 import { TopRowNavigation } from "../../WalletConnectModal/WalletConnectModal";
@@ -6,6 +6,8 @@ import { Icon } from "../../Icons/AssetLogs/Icon";
 import { assetsBaseConfig } from "../../../utils/assetsConfig";
 import PrimaryButton from "../../PrimaryButton/PrimaryButton";
 import { Gateway } from "@renproject/ren";
+import { useWeb3React } from '@web3-react/core';
+import { useTransactionFlow } from "../../../context/useTransactionFlowState";
 
 export const GatewaySection = styled.div`
   padding-bottom: 10px;
@@ -93,13 +95,21 @@ const ConfirmationStep = ({
   close: (w: any) => void;
   gateway: Gateway<any, any> | null;
 }) => {
+  const { account } = useWeb3React()
+  const { toggleConfirmationModal } = useTransactionFlow();
   const [asset, setAsset] = useState(assetsBaseConfig.BTC);
+
+  const execute = useCallback(() => {
+      toggleConfirmationModal();
+  }, [
+      toggleConfirmationModal,
+  ]);
   return (
     <div className="px-[18px] py-[12px]">
       <TopRowNavigation
         isRightDisplay={true}
         isLeftDisplay={true}
-        title={"Ren Gateway"}
+        title={"Astral Gateway"}
         close={close as any}
       />
       <GatewaySection>
@@ -108,7 +118,7 @@ const ConfirmationStep = ({
             <Icon chainName={asset.Icon as string} className={"h-24 w-24"} />
           </div>
           <div className="flex flex-col items-center justify-center text-[25px]">
-            <span>Send BTC to</span>
+            <span>Mint BTC to</span>
           </div>
           <div className="flex flex-col items-center justify-center text-[15px] leading-none text-gray-500">
             <span>Minimum amount: 0.000128 BTC</span>
@@ -129,7 +139,7 @@ const ConfirmationStep = ({
               <div className="flex items-center justify-center gap-2 overflow-hidden text-[16px] text-gray-500">
                 Recipient Address:
                 <div className="overflow-hidden text-[14px] text-blue-600">
-                  0x2234a...1273530
+                  {`${account?.substring(0, 8)}...${account?.substring(account?.length - 8, account?.length)}`}
                 </div>
               </div>
             </div>
@@ -142,6 +152,7 @@ const ConfirmationStep = ({
       <div className="mt-1 mb-5 flex items-center justify-center px-5">
         <PrimaryButton
           className={`x-50 w-full justify-center rounded-2xl border border-gray-600 bg-gray-500 py-[14px] text-center text-[17px] font-semibold hover:cursor-pointer`}
+          onClick={execute}
         >
           Mint
         </PrimaryButton>

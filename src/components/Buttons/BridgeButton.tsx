@@ -15,6 +15,8 @@ interface IWalletButton {
   text: string;
   error: boolean;
   execute: () => Promise<void>;
+  from: string;
+  to: string
 }
 const BridegButton = ({
   chain,
@@ -25,7 +27,9 @@ const BridegButton = ({
   setGatewayStep,
   text,
   error,
-  execute
+  execute,
+  from,
+  to
 }: IWalletButton) => {
   const { active } = useWeb3React();
   const { pendingTransaction } = useGlobalState();
@@ -35,11 +39,11 @@ const BridegButton = ({
       if (!library) return "Connect Wallet";
       else if (pendingTransaction) return "Transaction pending";
       else if (!needsToSwitchChain)
-        return `Switch to ${chain.fullName} network`;
+        return `Switch to ${buttonState.tabName === "Mint" ? from : to} network`;
       else if (!isSufficentBalance && text !== "") return "Insufficent funds";
       else return `${buttonState.tabName} ${text} ${asset.Icon}`;
     },
-    [isSufficentBalance, needsToSwitchChain, text, pendingTransaction, asset]
+    [isSufficentBalance, needsToSwitchChain, text, pendingTransaction, asset, from, to]
   );
 
   const getButtonColour = useCallback(() => {

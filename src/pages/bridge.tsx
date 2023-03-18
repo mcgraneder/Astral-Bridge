@@ -5,34 +5,44 @@ import AssetListModal from "../components/AssetListModal/AssetListModal";
 import BottomNavBar from "../components/WalletModal/components/BottomNavbar";
 import { useGlobalState } from "../context/useGlobalState";
 import { Tab } from "../components/WalletModal/WalletModal";
-import { WhiteListedLegacyAssets, whiteListedEVMAssets } from '../utils/assetsConfig';
+import { WhiteListedLegacyAssets, whiteListedEVMAssets, whiteListedEVMAssetsALPHA_NATIVE, whiteListedEVMAssetsALPHA_SYNTH, supportedAssets } from '../utils/assetsConfig';
 import BridgeModal from '../components/BridgeModal/bridgeModal';
-import { LeacyChains, EVMChains } from '../utils/chainsConfig';
+import { LeacyChains, EVMChains, alphaCHAINs } from '../utils/chainsConfig';
 import UserInfoModal from "../components/UserInformationModal/UserInformationModal";
 import { useGatewayProvider } from "../hooks/useGatewayProvider";
+import TransactionFlowModals from '../components/TxConfirmationModalFlow/index';
+import useMarketGasData from '../hooks/useMarketGasData';
 
 type AssetType = "chain" | "currency";
 
 const defaultButtonState: Tab = {
-  tabName: "Bridge",
+  tabName: "Mint",
   tabNumber: 0,
   side: "left",
 };
 
 const defaultBridgeState: Tab = {
-  tabName: "Native Bridge",
+  tabName: "Mint",
   tabNumber: 0,
   side: "left",
 };
 const BridgePage: NextPage = () => {
   const [showWarning, setShowWarning] = useState<boolean>(false);
   const [bridgeState, setBridgeState] = useState<Tab>(defaultBridgeState);
-  const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
+  // const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
-  const [walletAssetType, setWalletAssetType] = useState<AssetType>("chain");
+  // const [walletAssetType, setWalletAssetType] = useState<AssetType>("chain");
   const { asset, setAsset, gateway } = useGatewayProvider();
   const [buttonState, setButtonState] = useState<Tab>(defaultButtonState);
   const {loading } = useGlobalState();
+
+   const {
+       defaultGasPrice,
+       customGasPrice,
+       setCustomtGasPrice,
+       networkGasData,
+       fetchMarketDataGasPrices
+   } = useMarketGasData();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -47,61 +57,66 @@ const BridgePage: NextPage = () => {
   }, []);
 
   return (
-    <>
-      {!loading && (
-        <UserInfoModal
-          open={showWarning}
-          close={closeWarning}
-          isHomePageWarning={false}
-          message={
-            <span>
-              This page is used to bridge native assets between blockchains in
-              return for Ren assets so that they can be withdrawn from the wallet page. Since the Ren protocol is
-              under maintenence I have blocked the features and briging services
-              hosted on this page.
-              <br />
-              <br />
-              Again Sorry for the inconvienience as I am paitentily waiting for
-              the Ren protocol to go live again
-            </span>
-          }
-        />
-      )}
-      {!loading && (
-        <AssetListModal
-          setShowTokenModal={setShowTokenModal}
-          visible={showTokenModal}
-          setAsset={setAsset}
-          walletAssetType={walletAssetType}
-          buttonState={defaultButtonState}
-          assetFilter={
-            bridgeState.tabName === "Native Bridge"
-              ? WhiteListedLegacyAssets
-              : whiteListedEVMAssets
-          }
-          chainFilter={
-            bridgeState.tabName !== "Native Bridge" ? EVMChains : LeacyChains
-          }
-        />
-      )}
-
-      <Layout>
-        <BridgeModal
-          setShowTokenModal={setShowTokenModal}
-          setWalletAssetType={setWalletAssetType}
-          asset={asset}
-          text={text}
-          setText={setText}
-          buttonState={buttonState}
-          setButtonState={setButtonState}
-          bridgeState={bridgeState}
-          setBridgeState={setBridgeState}
-          gateway={gateway}
-          setAsset={setAsset}
-        />
-        <BottomNavBar />
-      </Layout>
-    </>
+      <>
+          {!loading && (
+              <UserInfoModal
+                  open={showWarning}
+                  close={closeWarning}
+                  isHomePageWarning={false}
+                  message={
+                      <span>
+                          This page is used to bridge native assets between
+                          blockchains in return for Ren assets so that they can
+                          be withdrawn from the wallet page. Since the Ren
+                          protocol is under maintenence I have blocked the
+                          features and briging services hosted on this page.
+                          <br />
+                          <br />
+                          Again Sorry for the inconvienience as I am paitentily
+                          waiting for the Ren protocol to go live again
+                      </span>
+                  }
+              />
+          )}
+          {/* {!loading && (
+              <AssetListModal
+                  setShowTokenModal={setShowTokenModal}
+                  visible={showTokenModal}
+                  setAsset={setAsset}
+                  walletAssetType={walletAssetType}
+                  buttonState={bridgeState}
+                  assetFilter={supportedAssets}
+                  chainFilter={alphaCHAINs}
+              />
+          )} */}
+          {!loading && (
+              <TransactionFlowModals
+                  text={text}
+                  buttonState={buttonState}
+                  asset={asset}
+                  setText={setText}
+                  defaultGasPrice={defaultGasPrice}
+                  customGasPrice={customGasPrice}
+                  setCustomtGasPrice={setCustomtGasPrice}
+                  networkGasData={networkGasData}
+                  fetchMarketDataGasPrices={fetchMarketDataGasPrices}
+              />
+          )}
+          <Layout>
+              <BridgeModal
+                  asset={asset}
+                  text={text}
+                  setText={setText}
+                  buttonState={buttonState}
+                  setButtonState={setButtonState}
+                  bridgeState={bridgeState}
+                  setBridgeState={setBridgeState}
+                  gateway={gateway}
+                  setAsset={setAsset}
+              />
+              <BottomNavBar />
+          </Layout>
+      </>
   );
 };
 

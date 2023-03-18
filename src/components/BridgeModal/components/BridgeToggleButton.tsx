@@ -3,6 +3,7 @@ import { MintFormText2 } from "../../CSS/WalletModalStyles";
 import styled from "styled-components";
 import { assetsBaseConfig } from '../../../utils/assetsConfig';
 import { chainsBaseConfig } from '../../../utils/chainsConfig';
+import { BinanceSmartChain } from '@renproject/chains';
 
 export const MinFormToggleButtonContainer = styled.div`
   height: 40px;
@@ -44,11 +45,12 @@ interface IToggleButton {
 }
 
 interface IToggleContainer {
-  activeButton: Tab;
-  tabs: Tab[];
-  setActiveButton: React.Dispatch<React.SetStateAction<Tab>>;
-  setAsset: any;
-  setFromChain: any;
+    activeButton: Tab;
+    tabs: Tab[];
+    setActiveButton: React.Dispatch<React.SetStateAction<Tab>>;
+    setAsset: any;
+    setFromChain: any;
+    setDestinationChain: any;
 }
 const ToggleButton = ({ side, text, active, onClick }: IToggleButton) => {
   return (
@@ -58,38 +60,41 @@ const ToggleButton = ({ side, text, active, onClick }: IToggleButton) => {
   );
 };
 const BridgeToggleButton = ({
-  activeButton,
-  tabs,
-  setActiveButton,
-  setAsset,
-  setFromChain
+    activeButton,
+    tabs,
+    setActiveButton,
+    setAsset,
+    setFromChain,
+    setDestinationChain
 }: IToggleContainer) => {
+    const tabSelect = (index: number): void => {
+        if (index == 1) {
+            setAsset(assetsBaseConfig.ASTRAL_USDT);
+            setFromChain(chainsBaseConfig.BinanceSmartChain);
+            setDestinationChain(chainsBaseConfig.Ethereum);
+        } else {
+            setFromChain(chainsBaseConfig.Ethereum);
+            setDestinationChain(chainsBaseConfig.BinanceSmartChain);
+            setAsset(assetsBaseConfig.USDT_Goerli);
+        }
+        setActiveButton(tabs[index] as Tab);
+    };
 
-  const tabSelect = (index: number): void => {
-    if (index == 1) {
-      setAsset(assetsBaseConfig.DAI_Goerli)
-      setFromChain(chainsBaseConfig.BinanceSmartChain)
-     
-    }
-    else setAsset(assetsBaseConfig.BTC)
-    setActiveButton(tabs[index] as Tab);
-  }
-
-  return (
-    <MinFormToggleButtonContainer>
-      {tabs.map((tab: Tab, index: number) => {
-        return (
-          <ToggleButton
-            key={index}
-            side={tab.side}
-            text={tab.tabName}
-            active={activeButton.tabNumber == index}
-            onClick={() => tabSelect(index)}
-          />
-        );
-      })}
-    </MinFormToggleButtonContainer>
-  );
+    return (
+        <MinFormToggleButtonContainer>
+            {tabs.map((tab: Tab, index: number) => {
+                return (
+                    <ToggleButton
+                        key={index}
+                        side={tab.side}
+                        text={tab.tabName}
+                        active={activeButton.tabNumber == index}
+                        onClick={() => tabSelect(index)}
+                    />
+                );
+            })}
+        </MinFormToggleButtonContainer>
+    );
 };
 
 export default BridgeToggleButton;

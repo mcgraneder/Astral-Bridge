@@ -10,12 +10,14 @@ import { useGlobalState } from "../../../context/useGlobalState";
 import { Tab } from "../../WalletModal/WalletModal";
 import BigNumber from "bignumber.js";
 import { toFixed } from "../../../utils/misc";
-import { BridgeDeployments } from "../../../constants/deployments";
+import { BridgeDeployments, BridgeAssets, BridgeFactory, registries } from '../../../constants/deployments';
 import { chainAdresses } from "../../../constants/Addresses";
 import { ethers } from "ethers";
 import useEcecuteTransaction from "../../../hooks/useExecuteTransaction";
 import { useWeb3React } from "@web3-react/core";
 import RenBridgeABI from "../../../constants/ABIs/RenBridgeABI.json";
+import BridgeAdapterABI from '../../../constants/ABIs/BridgeAdapterABI.json';
+
 import { useApproval } from "../../../hooks/useApproval";
 import AssetSummary from "./components/AssetSummary";
 import FeeSummary from "./components/FeeSummary";
@@ -25,6 +27,8 @@ import BottomSheetOptions from "../../BottomSheet/BottomSheet";
 import { Breakpoints } from "../../../constants/Breakpoints";
 import { useViewport } from "../../../hooks/useViewport";
 import { Ethereum } from "../../../bridgeGateway/Ethereum";
+import { Chain } from '@renproject/chains';
+import { ERC20ABI } from '@renproject/chains-ethereum/contracts';
 import useMarketGasData, {
   GP,
   shiftBN,
@@ -288,11 +292,21 @@ const TxConfirmationModal = ({
       if (transactionType !== "Approval") toggleConfirmationModal();
       const txAmount = new BigNumber(amount).shiftedBy(asset.decimals);
       const bridgeAddress = BridgeDeployments[destinationChain.fullName];
+      const bridgeAdapterAddress = BridgeFactory[fromChain.fullName];
       const tokenAddress =
-        chainAdresses[destinationChain.fullName]?.assets[asset.Icon]
+        chainAdresses[fromChain.fullName]?.assets[asset.Icon]
           ?.tokenAddress!;
 
       const bridgeContract = init(bridgeAddress!, RenBridgeABI);
+      const bridgeAdapterContract = init(bridgeAdapterAddress!, BridgeAdapterABI);
+      const tokenContract = init(
+          tokenAddress!,
+          ERC20ABI
+      );
+
+     
+
+
 
       const optionalParams =
         customGasPrice &&
@@ -303,24 +317,56 @@ const TxConfirmationModal = ({
               gasPrice: customGasPrice?.gasPrice!.toString(),
             }
           : {};
-      if (transactionType === "Deposit") {
-        await exec(
-          asset,
-          destinationChain,
-          [txAmount.toString(), tokenAddress, optionalParams],
-          txAmount.toString(),
-          transactionType,
-          bridgeContract?.transferFrom
-        );
-      } else if (transactionType === "Withdraw") {
-        await exec(
-          asset,
-          destinationChain,
-          [account, txAmount.toString(), tokenAddress, optionalParams],
-          txAmount.toString(),
-          transactionType,
-          bridgeContract?.transfer
-        );
+      if (transactionType === 'Deposit') {
+          await exec(
+              asset,
+              destinationChain,
+              [txAmount.toString(), tokenAddress, optionalParams],
+              txAmount.toString(),
+              transactionType,
+              bridgeContract?.transferFrom
+          );
+      } else if (transactionType === 'Withdraw') {
+          await exec(
+              asset,
+              destinationChain,
+              [account, txAmount.toString(), tokenAddress, optionalParams],
+              txAmount.toString(),
+              transactionType,
+              bridgeContract?.transfer
+          );
+      } else if (transactionType === 'Mint') {
+        console.log("check")
+         console.log(tokenAddress);
+         console.log(bridgeAdapterAddress)
+        // await tokenContract?.approve(
+        //     BridgeFactory[destinationChain.fullName],
+        //     txAmount.toString()
+        // );
+        console.log(Number(txAmount))
+          await exec(
+              asset,
+              fromChain,
+              [
+                  registries[Ethereum.chain],
+                  tokenAddress,
+                  txAmount.toString(),
+                  // optionalParams
+              ],
+              txAmount.toString(),
+              transactionType,
+              bridgeAdapterContract?.lock
+          );
+      } else if (transactionType === 'Release') {
+        
+          await exec(
+              asset,
+              destinationChain,
+              [account, txAmount.toString(), tokenAddress, optionalParams],
+              txAmount.toString(),
+              transactionType,
+              bridgeContract?.transfer
+          );
       }
       setText("");
     },

@@ -47,133 +47,138 @@ const unsetChainConfig: ChainBaseConfig = {
 };
 
 export const chainsBaseConfig: Record<Chain, ChainBaseConfig> = {
-  Arbitrum: {
-    Icon: "Arbitrum",
-    fullName: "Arbitrum",
-    shortName: "Arbitrum",
-    networks: createNetworksConfig(42161, 421613),
-    mainnetChainId: 42161,
-    testnetChainId: 421613,
-  },
-  Avalanche: {
-    Icon: "Avalanche",
-    fullName: "Avalanche",
-    shortName: "Avalanche",
-    networks: createNetworksConfig(43114, 43113),
-    mainnetChainId: 43114,
-    testnetChainId: 43113,
-  },
-  BinanceSmartChain: {
-    Icon: "BinanceSmartChain",
-    fullName: "BinanceSmartChain",
-    shortName: "BSC",
-    networks: createNetworksConfig(56, 97),
-    mainnetChainId: 56,
-    testnetChainId: 97
-  },
-  Bitcoin: {
-    Icon: "Bitcoin",
-    fullName: "Bitcoin",
-    shortName: "Bitcoin",
-  },
-  BitcoinCash: {
-    Icon: "BitcoinCash",
-    fullName: "Bitcoin Cash",
-    shortName: "Bitcoin Cash",
-  },
-  Dogecoin: {
-    Icon: "DogeCoin",
-    fullName: "Dogecoin",
-    shortName: "Dogecoin",
-  },
-  Ethereum: {
-    Icon: "Ethereum",
-    fullName: "Ethereum",
-    shortName: "Eth",
-    networks: {
-      ...createNetworkConfig(RenNetwork.Mainnet, 1),
-      ...createNetworkConfig(RenNetwork.Testnet, 5, "Goerli Testnet"),
+    BinanceSmartChain: {
+        Icon: 'BinanceSmartChain',
+        fullName: 'BinanceSmartChain',
+        shortName: 'BSC',
+        networks: createNetworksConfig(56, 97),
+        mainnetChainId: 56,
+        testnetChainId: 97
     },
-    mainnetChainId: 1,
-    testnetChainId: 5
-  },
-  Goerli: {
-    Icon: "Ethereum",
-    fullName: "Goerli Testnet",
-    shortName: "Goerli",
-    networks: createNetworksConfig(1, 5),
-    mainnetChainId: 1,
-    testnetChainId: 1
-  },
-  Fantom: {
-    Icon: "Fantom",
-    fullName: "Fantom",
-    shortName: "Fantom",
-    networks: createNetworksConfig(250, 4002),
-    mainnetChainId: 250,
-    testnetChainId: 4002
-  },
-  Kava: {
-    Icon: "Kava",
-    shortName: "Kava",
-    fullName: "Kava",
-    networks: createNetworksConfig(2222, 2221),
-    mainnetChainId: 2222,
-    testnetChainId: 2221
-  },
-  Moonbeam: {
-    Icon: "Moonbeam",
-    fullName: "Moonbeam",
-    shortName: "Moonbeam",
-    networks: createNetworksConfig(1284, 1287),
-    mainnetChainId: 1284,
-    testnetChainId: 1287
-  },
-  Optimism: {
-    Icon: "Optimism",
-    fullName: "Optimism",
-    shortName: "Optimism",
-    networks: createNetworksConfig(10, 69),
-    mainnetChainId: 10,
-    testnetChainId: 69
-  },
-  Polygon: {
-    Icon: "Polygon",
-    fullName: "Polygon",
-    shortName: "Polygon",
-    networks: createNetworksConfig(137, 80001),
-    mainnetChainId: 137,
-    testnetChainId: 80001
-  },
-  Zcash: {
-    Icon: "Zcash",    
-    fullName: "Zcash",
-    shortName: "Zcash",
-  },
-  DigiByte: {
-    Icon: "DigiByte",
-    fullName: "DigiByte",
-    shortName: "DigiByte",
-  },
-  Filecoin: {
-    Icon: "Filecoin",
-    fullName: "Filecoin",
-    shortName: "Filecoin",
-  },
-  Terra: {
-    Icon: "Terra",    
-    fullName: "Terra",
-    shortName: "Terra",
-  },
-  Solana: {
-    Icon: "Solana",
-    fullName: "Solana",
-    shortName: "Solana",
-    networks: createNetworksConfig(1, 2, RenNetwork.Mainnet, RenNetwork.Testnet),
-    mainnetChainId: 1,
-    testnetChainId: 2
-  },
-  Catalog: unsetChainConfig,
+    Arbitrum: {
+        Icon: 'Arbitrum',
+        fullName: 'Arbitrum',
+        shortName: 'Arbitrum',
+        networks: createNetworksConfig(42161, 421613),
+        mainnetChainId: 42161,
+        testnetChainId: 421613
+    },
+    Avalanche: {
+        Icon: 'Avalanche',
+        fullName: 'Avalanche',
+        shortName: 'Avalanche',
+        networks: createNetworksConfig(43114, 43113),
+        mainnetChainId: 43114,
+        testnetChainId: 43113
+    },
+    Bitcoin: {
+        Icon: 'Bitcoin',
+        fullName: 'Bitcoin',
+        shortName: 'Bitcoin'
+    },
+    BitcoinCash: {
+        Icon: 'BitcoinCash',
+        fullName: 'Bitcoin Cash',
+        shortName: 'Bitcoin Cash'
+    },
+    Dogecoin: {
+        Icon: 'DogeCoin',
+        fullName: 'Dogecoin',
+        shortName: 'Dogecoin'
+    },
+    Ethereum: {
+        Icon: 'Ethereum',
+        fullName: 'Ethereum',
+        shortName: 'Eth',
+        networks: {
+            ...createNetworkConfig(RenNetwork.Mainnet, 1),
+            ...createNetworkConfig(RenNetwork.Testnet, 5, 'Goerli Testnet')
+        },
+        mainnetChainId: 1,
+        testnetChainId: 5
+    },
+    Goerli: {
+        Icon: 'Ethereum',
+        fullName: 'Goerli Testnet',
+        shortName: 'Goerli',
+        networks: createNetworksConfig(1, 5),
+        mainnetChainId: 1,
+        testnetChainId: 1
+    },
+    Fantom: {
+        Icon: 'Fantom',
+        fullName: 'Fantom',
+        shortName: 'Fantom',
+        networks: createNetworksConfig(250, 4002),
+        mainnetChainId: 250,
+        testnetChainId: 4002
+    },
+    Kava: {
+        Icon: 'Kava',
+        shortName: 'Kava',
+        fullName: 'Kava',
+        networks: createNetworksConfig(2222, 2221),
+        mainnetChainId: 2222,
+        testnetChainId: 2221
+    },
+    Moonbeam: {
+        Icon: 'Moonbeam',
+        fullName: 'Moonbeam',
+        shortName: 'Moonbeam',
+        networks: createNetworksConfig(1284, 1287),
+        mainnetChainId: 1284,
+        testnetChainId: 1287
+    },
+    Optimism: {
+        Icon: 'Optimism',
+        fullName: 'Optimism',
+        shortName: 'Optimism',
+        networks: createNetworksConfig(10, 69),
+        mainnetChainId: 10,
+        testnetChainId: 69
+    },
+    Polygon: {
+        Icon: 'Polygon',
+        fullName: 'Polygon',
+        shortName: 'Polygon',
+        networks: createNetworksConfig(137, 80001),
+        mainnetChainId: 137,
+        testnetChainId: 80001
+    },
+    Zcash: {
+        Icon: 'Zcash',
+        fullName: 'Zcash',
+        shortName: 'Zcash'
+    },
+    DigiByte: {
+        Icon: 'DigiByte',
+        fullName: 'DigiByte',
+        shortName: 'DigiByte'
+    },
+    Filecoin: {
+        Icon: 'Filecoin',
+        fullName: 'Filecoin',
+        shortName: 'Filecoin'
+    },
+    Terra: {
+        Icon: 'Terra',
+        fullName: 'Terra',
+        shortName: 'Terra'
+    },
+    Solana: {
+        Icon: 'Solana',
+        fullName: 'Solana',
+        shortName: 'Solana',
+        networks: createNetworksConfig(
+            1,
+            2,
+            RenNetwork.Mainnet,
+            RenNetwork.Testnet
+        ),
+        mainnetChainId: 1,
+        testnetChainId: 2
+    },
+    Catalog: unsetChainConfig
 };
 
 export const EVMChains = [
@@ -198,6 +203,11 @@ export const LeacyChains = [
   Chain.Bitcoin,
 ];
 
+export const alphaCHAINs = [
+    Chain.Ethereum,
+    Chain.BinanceSmartChain,
+
+];
 
 const getChainColorConfig = (chain: Chain) => {
   const color = chainsColors[chain];
@@ -265,6 +275,30 @@ export const supportedEthereumChains: Array<Chain> = [
   Chain.Kava,
   Chain.Moonbeam,
   Chain.Optimism,
+];
+
+export const supportedEthereumChains1: Array<Chain> = [
+    //TODO: hacky till Goerli became default Ethereum testnet in renJS
+    Chain.BinanceSmartChain,
+    Chain.Fantom,
+    Chain.Polygon,
+    Chain.Avalanche,
+    Chain.Arbitrum,
+    Chain.Kava,
+    Chain.Moonbeam,
+    Chain.Optimism
+];
+
+export const supportedEthereumChains2: Array<Chain> = [
+    //TODO: hacky till Goerli became default Ethereum testnet in renJS
+    Chain.Ethereum,
+    Chain.Fantom,
+    Chain.Polygon,
+    Chain.Avalanche,
+    Chain.Arbitrum,
+    Chain.Kava,
+    Chain.Moonbeam,
+    Chain.Optimism
 ];
 
 export const isEthereumBaseChain = (chain: Chain) =>
