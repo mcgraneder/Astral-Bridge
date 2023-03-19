@@ -207,16 +207,16 @@ const ConfirmationStep = ({
                     <FeeDetailsTextContainer>
                         <FeeDetailsTextWrapper>RenVM Fee</FeeDetailsTextWrapper>
                         <FeeDetailsAssetConatiner>
-                            <FeeDetailsAssetText>0.2%</FeeDetailsAssetText>
+                            <FeeDetailsAssetText>3.00%</FeeDetailsAssetText>
                         </FeeDetailsAssetConatiner>
                     </FeeDetailsTextContainer>
                     <FeeDetailsTextContainer>
                         <FeeDetailsTextWrapper>
-                            Bitcoin Miner Fee
+                            EVM Miner Fee
                         </FeeDetailsTextWrapper>
                         <FeeDetailsAssetConatiner>
                             <FeeDetailsAssetText>
-                                0.000064 BTC ($2.86)
+                                0.000064 ETH ($2.86)
                             </FeeDetailsAssetText>
                         </FeeDetailsAssetConatiner>
                     </FeeDetailsTextContainer>
