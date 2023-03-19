@@ -24,11 +24,11 @@ const WalletPage: NextPage = () => {
   const [showTokenModal, setShowTokenModal] = useState<boolean>(false);
   const [text, setText] = useState<string>("");
   const [walletAssetType, setWalletAssetType] = useState<AssetType>("chain");
-  const [asset, setAsset] = useState<any>(assetsBaseConfig.BTC);
+  const [asset, setAsset] = useState<any>(assetsBaseConfig.ASTRAL_USDT);
   const [buttonState, setButtonState] = useState<Tab>({
-    tabName: "Withdraw",
-    tabNumber: 1,
-    side: "right",
+    tabName: "Deposit",
+    tabNumber: 0,
+    side: "left",
   });
 
   const { loading } = useGlobalState();

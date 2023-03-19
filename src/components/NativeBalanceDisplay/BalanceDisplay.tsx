@@ -110,10 +110,10 @@ const BalanceDisplay = ({
   useEffect(() => {
     if (typeof assetBalances == "undefined") return;
     const formattedBalance =
-      buttonState !== "Deposit"
-        ? Number(assetBalances[asset.Icon]?.bridgeBalance) /
+      buttonState === "Deposit" || buttonState === "Mint" || buttonState === "Release"
+        ? Number(assetBalances[asset.Icon]?.walletBalance) /
           10 ** asset.decimals
-        : Number(assetBalances[asset.Icon]?.walletBalance) /
+        : Number(assetBalances[asset.Icon]?.bridgeBalance) /
           10 ** asset.decimals;
 
     setAssetBalance(formattedBalance);

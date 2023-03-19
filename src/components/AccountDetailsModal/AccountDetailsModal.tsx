@@ -229,7 +229,7 @@ const RecentTransactions = ({
                 </div>
                 <div className="break-words px-2 text-left text-[15px] font-semibold">
                   <span className="text-gray-400">
-                    {getTxTypeText(transaction.type)}{" "}
+                    {getTxTypeText(transaction.txType)}{" "}
                   </span>
                   <span>
                     {`${transaction.amount} ${transaction.currency}`}{" "}

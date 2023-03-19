@@ -47,7 +47,7 @@ export type UserTxType = {
     status: string;
     completed: string;
     txHash: string;
-    type: string;
+    txType: string;
     deposit: string;
 };
 
@@ -88,27 +88,11 @@ export default function TransactionsIdTable() {
     const {
         encryptedId: accountId,
         pendingTransaction,
-        setPendingTransaction
     } = useGlobalState();
     const { query } = useRouter();
     const [loading, setLoading] = useState<boolean>(true);
     const [transaction, setTransaction] = useState<any[] | undefined>(
         undefined
-    );
-
-    const dispatch = useNotification();
-
-    const HandleNewNotification = useCallback(
-        (title: string, message: string): void => {
-            dispatch({
-                type: 'info',
-                message: message,
-                title: title,
-                position: 'topR' || 'topR',
-                success: true
-            });
-        },
-        [dispatch]
     );
 
     useEffect(() => {
@@ -134,16 +118,6 @@ export default function TransactionsIdTable() {
             if (!transactionsResponse) return;
             console.log(transactionsResponse);
             setTransaction(transactionsResponse.tx);
-            if (
-                transactionsResponse.tx[0]?.status === 'completed' &&
-                pendingTransaction
-            ) {
-                setPendingTransaction(false);
-                HandleNewNotification(
-                    'Transaction Success',
-                    `Successfylly bridged ${transactionsResponse.tx[0]?.amount} ${transactionsResponse.tx[0]?.currency}`
-                );
-            }
         } catch (err) {
             //  setError("notifications.somethingWentWrongTryLater");
         }
@@ -151,7 +125,6 @@ export default function TransactionsIdTable() {
         accountId,
         setTransaction,
         query.transactionId,
-		pendingTransaction
     ]);
 
     useEffect(() => {

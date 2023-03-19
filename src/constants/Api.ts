@@ -26,6 +26,7 @@ const API = {
         balancesOf: `https://astral-sol.onrender.com/balancesOf`,
         bridgeTokens: `https://astral-sol.onrender.com/bridgeTokens`,
         getTokenApproval: `https://astral-sol.onrender.com/getTokenApproval`,
+        getBridgeApproval: `https://astral-sol.onrender.com/getBridgeApproval`,
         queryRenTx: 'https://astral-sol.onrender.com/queryRenTx',
         submitMintRenTx: 'https://astral-sol.onrender.com/submitMintRenTx'
     },

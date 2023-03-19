@@ -68,7 +68,7 @@ const TransactionIdRow = (data: UserTxType) => {
         <span>{date}</span>
       </div>
       <div className="">
-        <span>{data.type}</span>
+        <span>{data.txType}</span>
       </div>
       <div className="flex items-center gap-2">
         <Icon chainName={data.chain} className="h-5 w-5" />

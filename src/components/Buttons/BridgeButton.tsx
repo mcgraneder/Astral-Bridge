@@ -16,7 +16,8 @@ interface IWalletButton {
   error: boolean;
   execute: () => Promise<void>;
   from: string;
-  to: string
+  to: string;
+isAssetApproved: boolean;
 }
 const BridegButton = ({
   chain,
@@ -29,7 +30,8 @@ const BridegButton = ({
   error,
   execute,
   from,
-  to
+  to,
+  isAssetApproved
 }: IWalletButton) => {
   const { active } = useWeb3React();
   const { pendingTransaction } = useGlobalState();
@@ -39,31 +41,38 @@ const BridegButton = ({
       if (!library) return "Connect Wallet";
       else if (pendingTransaction) return "Transaction pending";
       else if (!needsToSwitchChain)
-        return `Switch to ${buttonState.tabName === "Mint" ? from : to} network`;
-      else if (!isSufficentBalance && text !== "") return "Insufficent funds";
+          return `Switch to ${
+              buttonState.tabName === 'Mint' ? from : to
+          } network`;
+      else if (!isAssetApproved && buttonState.tabName !== 'Withdraw')
+          return `Approve ${asset.Icon} first`;
+      else if (!isSufficentBalance && text !== '') return 'Insufficent funds';
       else return `${buttonState.tabName} ${text} ${asset.Icon}`;
     },
-    [isSufficentBalance, needsToSwitchChain, text, pendingTransaction, asset, from, to]
+    [isSufficentBalance, needsToSwitchChain, text, pendingTransaction, asset, from, to, isAssetApproved]
   );
 
   const getButtonColour = useCallback(() => {
     if (error && active) return "bg-gray-500 hover:bg-gary-600 border border-gray-400 hover:border-gray-500";
     else if (!active)
-      return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
-    else if (!needsToSwitchChain || text === "")
-      return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
-    else if (pendingTransaction || text === "" || Number(text) == 0)
-      return "bg-gray-500 hover:bg-gary-600 border border-gray-400 hover:border-gray-500";
-    else if (!isSufficentBalance && text !== "")
-      return "bg-red-500 hover:bg-red-600 border border-red-400 hover:border-red-500";
+        return 'bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500';
+    else if (!isAssetApproved)
+        return 'bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500';
+    else if (!needsToSwitchChain || text === '')
+        return 'bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500';
+    else if (pendingTransaction || text === '' || Number(text) == 0)
+        return 'bg-gray-500 hover:bg-gary-600 border border-gray-400 hover:border-gray-500';
+    else if (!isSufficentBalance && text !== '')
+        return 'bg-red-500 hover:bg-red-600 border border-red-400 hover:border-red-500';
     else
-      return "bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500";
+        return 'bg-blue-500 hover:bg-blue-600 border border-blue-400 hover:border-blue-500';
   }, [
     isSufficentBalance,
     needsToSwitchChain,
     text,
     pendingTransaction,
     active,
+    isAssetApproved
   ]);
 
   return (

@@ -33,6 +33,13 @@ import { supportedAssets2 } from '../../utils/assetsConfig';
 
 import useAuth from '../../hooks/useAuth';
 import { chainsBaseConfig } from '../../utils/chainsConfig';
+import API from '../../constants/Api';
+import { chainAdresses } from '../../constants/Addresses';
+import { useApproval } from '../../hooks/useApproval';
+import { ERC20ABI } from '@renproject/chains-ethereum/contracts';
+import { ethers } from 'ethers';
+import useEcecuteTransaction from '../../hooks/useExecuteTransaction';
+import { get } from '../../services/axios';
 
 export type Tab = {
     tabName: string;
@@ -147,6 +154,7 @@ const BridgeModal = ({
     gateway,
     setAsset
 }: IWalletModal) => {
+    const [isAssetApproved, setIsAssetApproved] = useState<boolean>(false);
     const [gatewayStep, setGatewayStep] = useState<boolean>(false);
     const [isSufficentBalance, setIsSufficientBalance] =
         useState<boolean>(true);
@@ -157,17 +165,18 @@ const BridgeModal = ({
 
     const [walletAssetType, setWalletAssetType] = useState<AssetType>('chain');
     const [isMax, setIsMax] = useState<boolean>(false);
-    const { chainId } = useWeb3React();
+    const { chainId, account } = useWeb3React();
     const { defaultGasPrice } = useMarketGasData();
     const { switchNetwork } = useAuth();
+    const { executeTransaction: exec } = useEcecuteTransaction();
+    const { init } = useApproval();
     const {
         pendingTransaction,
         destinationChain,
         assetBalances,
-        fromChain,
-        setChainType,
         setFromChain,
-        setDestinationChain
+        setDestinationChain,
+        setPendingTransaction
     } = useGlobalState();
 
     const from =
@@ -186,17 +195,64 @@ const BridgeModal = ({
         : text === '' || Number(text) == 0 || !isSufficentBalance;
     // console.log(error);
 
-    useEffect(
-        () => setText(''),
-        [buttonState, pendingTransaction, destinationChain, setText]
-    );
+    useEffect(() => {
+        setDestinationChain(chainsBaseConfig.Ethereum);
+    }, []);   
+
+    useEffect(() => {
+        if (!asset || !account) return;
+        if (buttonState.tabName === 'Release') {
+            setIsAssetApproved(true);
+            return;
+        }
+        (async () => {
+            const approvalResponse = await get<{
+                result: any;
+            }>(API.ren.getBridgeApproval, {
+                params: {
+                    chainName: 'Ethereum',
+                    assetName: asset.Icon,
+                    account: account
+                }
+            });
+            console.log(Number(approvalResponse?.result.hex));
+            if (!approvalResponse) throw new Error('Multicall Failed');
+            if (
+                Number(approvalResponse.result.hex) >= Number(text) / 10 ** -asset.decimals ||
+                buttonState.tabName === 'Withdraw'
+            )
+                setIsAssetApproved(true);
+            else setIsAssetApproved(false);
+        })();
+    }, [asset, account, buttonState.tabName, text]);
+
+    const handleApprovalRequest = useCallback(() => {
+        setPendingTransaction(true);
+        const bridgeAddress = '0xf3894e0289300a43dD7f0E0e852058011377CD26';
+        const tokenAddress =
+            chainAdresses[destinationChain.fullName]?.assets[asset.Icon]
+                ?.tokenAddress!;
+
+        const tokenContract = init(tokenAddress, ERC20ABI, true);
+        exec(
+            asset,
+            destinationChain,
+            [bridgeAddress, ethers.constants.MaxUint256],
+            new BigNumber(text).shiftedBy(-asset.decimals).toString(),
+            'Approval',
+            tokenContract?.approve
+        ).then(() => {
+            setIsAssetApproved(true);
+            setPendingTransaction(false);
+        });
+    }, [setPendingTransaction, init, exec, destinationChain, asset, text]);
 
     useEffect(() => {
         if (typeof assetBalances === 'undefined') return;
         (async () => {
             setIsSufficientBalance(true); // reset on component mount to override previous tokens' value
             const walletBalance = new BigNumber(
-                assetBalances[asset.Icon]?.bridgeBalance!
+                assetBalances[asset.Icon]?.walletBalance!
             ).shiftedBy(-asset.decimals);
 
             setWalletBalance(Number(walletBalance));
@@ -222,11 +278,14 @@ const BridgeModal = ({
 
     const execute = useCallback(async () => {
         if (!needsToSwitchChain) handleChainSwitchRequest();
-        // if (gateway == null) return
-        // if (WhiteListedLegacyAssets.includes(asset.Icon as Asset)) {
+        else if (!isAssetApproved) handleApprovalRequest();
         else setGatewayStep(true);
-        // }
-    }, [needsToSwitchChain, handleChainSwitchRequest]);
+    }, [
+        needsToSwitchChain,
+        handleChainSwitchRequest,
+        isAssetApproved,
+        handleApprovalRequest
+    ]);
 
     if (gatewayStep) {
         return (
@@ -235,6 +294,7 @@ const BridgeModal = ({
                     <ConfirmationStep
                         close={toggleGatewayStep}
                         gateway={gateway}
+                        transactionType={buttonState.tabName}
                     />
                 </BridgeModalContainer>
             </div>
@@ -362,6 +422,7 @@ const BridgeModal = ({
                                     execute={execute}
                                     from={from}
                                     to={to}
+                                    isAssetApproved={isAssetApproved}
                                 />
                             </div>
                         </MintFormContainer>

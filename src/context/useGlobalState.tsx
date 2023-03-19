@@ -20,6 +20,8 @@ import { ResponseData } from '../pages/api/user';
 import useAuth from '../hooks/useAuth';
 import { UserTxType } from '../components/transactions/components/TransactionTable';
 import { useViewport } from '../hooks/useViewport';
+import { useRouter } from 'next/router';
+import { useNotification } from './useNotificationState';
 
 interface GlobalStateProviderProps {
     children: React.ReactNode;
@@ -47,6 +49,10 @@ type GlobalContextType = {
     filteredTransaction: string | null;
     setFilteredTransaction: Dispatch<SetStateAction<string | null>>;
     width: number;
+    setTransactionId: (value: SetStateAction<string | undefined>) => void;
+    successType: string;
+    isSuccessOpen: boolean;
+    setIsSuccessOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export type MulticallReturn = {
@@ -67,24 +73,29 @@ const GlobalStateContext = createContext({} as GlobalContextType);
 function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     // const defaultChains = getDefaultChains(RenNetwork.Testnet);
     const [loading, setLoading] = useState<boolean>(true);
+    const [isSuccessOpen, setIsSuccessOpen] = useState<boolean>(false);
+
     const { disconnect } = useAuth();
+    const { query } = useRouter();
     const [encryptedId, setEncryptedId] = useState<string | null>(null);
     const [fetchedStoredChain, setFetchStoredChain] = useState<boolean>(false);
     const [pendingTransaction, setPendingTransaction] =
         useState<boolean>(false);
     const [fetchingBalances, setFetchingBalances] = useState<boolean>(false);
-    const [fromChain, setFromChain] = useState<any>(chainsBaseConfig.Bitcoin);
+    const [fromChain, setFromChain] = useState<any>(chainsBaseConfig.Ethereum);
     const [destinationChain, setDestinationChain] = useState<any>(
         chainsBaseConfig.Ethereum
     );
     const { width } = useViewport();
     const [chainType, setChainType] = useState<string>('from');
+    const [successType, setSuccessType] = useState<string>("Mint")
     const [transactions, setTransactions] = useState<any[] | undefined>(
         undefined
     );
     const [filteredTransaction, setFilteredTransaction] = useState<
         string | null
     >(null);
+    const [transactionId, setTransactionId] = useState<string | undefined>(undefined)
 
     const [assetBalances, setAssetBalances] = useState<{
         [x: string]: MulticallReturn | undefined;
@@ -153,6 +164,75 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
         return () => clearTimeout(interval);
     }, []);
 
+        const dispatch = useNotification();
+
+        const HandleNewNotification = useCallback(
+            (title: string, message: string): void => {
+                dispatch({
+                    type: 'info',
+                    message: message,
+                    title: title,
+                    position: 'topR' || 'topR',
+                    success: true
+                });
+            },
+            [dispatch]
+        );
+
+        useEffect(() => {
+            const loaderTimeout: NodeJS.Timeout = setTimeout(() => {
+                setLoading(false);
+            }, 1400);
+
+            return () => clearTimeout(loaderTimeout);
+        }, []);
+
+        const fetchTxs = useCallback(async (accountId: string, txId: string) => { 
+       
+            try {
+                const transactionsResponse = await get<{
+                    tx: UserTxType[];
+                } | null>(API.next.gettransaction, {
+                    params: {
+                        accountId,
+                        txHash: txId
+                    }
+                });
+                if (!transactionsResponse) return;
+                console.log(transactionsResponse)
+                // setTransaction(transactionsResponse.tx);
+                if (
+                    transactionsResponse.tx[0]?.status === 'completed' &&
+                    pendingTransaction
+                ) {
+                    setPendingTransaction(false);
+                    setTransactionId(undefined);
+                    HandleNewNotification(
+                        'Transaction Success',
+                        `Successfylly bridged ${transactionsResponse.tx[0]?.amount} ${transactionsResponse.tx[0]?.currency}`
+                    );
+                    setSuccessType(transactionsResponse.tx[0]?.txType === 'mint' ? "Mint" : "Release");
+                    setIsSuccessOpen(true)
+                   
+                }
+            } catch (err) {
+                //  setError("notifications.somethingWentWrongTryLater");
+            }
+        }, [
+            setTransactionId,
+            pendingTransaction
+        ]);
+
+        useEffect(() => {
+            console.log(transactionId)
+            if (!pendingTransaction || !encryptedId || !transactionId)
+                return;
+            fetchTxs(encryptedId, transactionId);
+            const intervalId: NodeJS.Timer = setInterval(() => fetchTxs(encryptedId, transactionId), 3000);
+            return () => clearInterval(intervalId);
+        }, [fetchTxs, pendingTransaction, encryptedId, transactionId]);
+
+
     const ProvRet = useMemo(
         () => ({
             memoizedFetchBalances,
@@ -174,7 +254,12 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
             setTransactions,
             filteredTransaction,
             setFilteredTransaction,
-            width
+            width,
+       
+            setTransactionId,
+            successType,
+            isSuccessOpen,
+            setIsSuccessOpen
         }),
         [
             memoizedFetchBalances,
@@ -196,7 +281,12 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
             setTransactions,
             filteredTransaction,
             setFilteredTransaction,
-            width
+            width,
+         
+            setTransactionId,
+            successType,
+            isSuccessOpen,
+            setIsSuccessOpen
         ]
     );
     return (

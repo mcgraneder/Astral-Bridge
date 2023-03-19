@@ -30,7 +30,7 @@ type ExecuteTxType = {
 };
 const useEcecuteTransaction = (): ExecuteTxType => {
   const { library, account } = useWeb3React();
-  const { setPendingTransaction, encryptedId, setFilteredTransaction } =
+  const { setPendingTransaction, encryptedId, setFilteredTransaction, setTransactionId } =
     useGlobalState();
   const { togglePendingModal, toggleSubmittedModal, toggleRejectedModal } =
     useTransactionFlow();
@@ -61,7 +61,7 @@ const useEcecuteTransaction = (): ExecuteTxType => {
       contractFn: any
     ): Promise<void> => {
       if (!provider || !account) return;
-      togglePendingModal();
+       if (transactionType !== 'Approval') togglePendingModal();
       const formattedAmount =
         transactionType === "Approval"
           ? amount
@@ -94,7 +94,7 @@ const useEcecuteTransaction = (): ExecuteTxType => {
           {
             account,
             encryptedId,
-            type,
+            txType: type,
             chain: chain.fullName,
             amount: formattedAmount,
             txHash: tx.hash,
@@ -198,14 +198,13 @@ const useEcecuteTransaction = (): ExecuteTxType => {
                     ...rest
                 } = txReceipt;
 
-                const type = 'mint';
-
+               console.log(transactionType)
                 const transactionResponse = await post<ResponseData>(
                     API.next.mintTx,
                     {
                         account,
                         encryptedId,
-                        type,
+                        txType: transactionType,
                         chain: chain.fullName,
                         amount: formattedAmount,
                         txHash: tx.hash,
@@ -223,6 +222,7 @@ const useEcecuteTransaction = (): ExecuteTxType => {
 
                 const txId = transactionResponse.txId;
                 setTimeout(() => toggleSubmittedModal(), 250);
+				setTransactionId(tx.hash)
 
                 await tx
                     .wait(1)

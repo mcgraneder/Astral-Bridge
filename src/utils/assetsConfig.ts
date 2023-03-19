@@ -406,7 +406,7 @@ export const assetsBaseConfig: Record<Asset, AssetBaseConfig> = {
     ASTRAL_USDT: {
         Icon: Asset.ASTRAL_USDT,
 
-        shortName: 'ASTRAL_USDT',
+        shortName: 'aUSDT',
         fullName: 'ASTRAL_USDT',
         rateService: AssetRateService.Coingecko,
         rateSymbol: 'tether',

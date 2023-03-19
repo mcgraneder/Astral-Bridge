@@ -231,160 +231,177 @@ const TxConfirmationModal = ({
   );
 
   const estimateGasLimit = useCallback(async (): Promise<ethers.BigNumber> => {
-    const bridgeAddress = BridgeDeployments[destinationChain.fullName];
-    const tokenAddress =
-      chainAdresses[destinationChain.fullName]?.assets[asset.Icon]
-        ?.tokenAddress!;
+      if (buttonState.tabName === 'Mint' || buttonState.tabName === 'Release')
+          return ethers.BigNumber.from(150000);
+      const bridgeAddress = BridgeDeployments[destinationChain.fullName];
+      const tokenAddress =
+          chainAdresses[destinationChain.fullName]?.assets[asset.Icon]
+              ?.tokenAddress!;
 
-    const bridgeContract = new ethers.Contract(
-      bridgeAddress!,
-      RenBridgeABI,
-      await library.getSigner()
-    );
-    const gasEstimate =
-      buttonState.tabName === "Deposit"
-        ? await bridgeContract.estimateGas.transferFrom?.("1", tokenAddress!)
-        : await bridgeContract.estimateGas.transfer?.(
-            account!,
-            "1",
-            tokenAddress!
-          );
+      const bridgeContract = new ethers.Contract(
+          bridgeAddress!,
+          RenBridgeABI,
+          await library.getSigner()
+      );
+      const gasEstimate =
+          buttonState.tabName === 'Deposit'
+              ? await bridgeContract.estimateGas.transferFrom?.(
+                    '1',
+                    tokenAddress!
+                )
+              : await bridgeContract.estimateGas.transfer?.(
+                    account!,
+                    '1',
+                    tokenAddress!
+                );
 
-    console.log(Number(gasEstimate));
-    return gasEstimate as ethers.BigNumber;
+      console.log(Number(gasEstimate));
+      return gasEstimate as ethers.BigNumber;
   }, [destinationChain, library, account, buttonState, asset]);
 
   useEffect(() => {
-    estimateGasLimit().then((gasLimit: ethers.BigNumber) => {
-      setMinGasLimit(Number(gasLimit).toString());
-      updateGasOverride({ gasLimit: new BigNumber(Number(gasLimit)) }, "Basic");
-      updateGasOverride(
-        { gasLimit: new BigNumber(Number(gasLimit)) },
-        "Advanced"
-      );
-    });
+      estimateGasLimit().then((gasLimit: ethers.BigNumber) => {
+          setMinGasLimit(Number(gasLimit).toString());
+          updateGasOverride(
+              { gasLimit: new BigNumber(Number(gasLimit)) },
+              'Basic'
+          );
+          updateGasOverride(
+              { gasLimit: new BigNumber(Number(gasLimit)) },
+              'Advanced'
+          );
+      });
   }, []);
 
   useEffect(() => {
-    if (!defaultGasPrice) return;
-    const tfee = customGasPrice
-      ? toFixed(shiftBN(customGasPrice.networkFee!, -18), 6)
-      : toFixed(shiftBN(defaultGasPrice?.networkFee!, -18), 6);
-    setFee(tfee);
+      if (!defaultGasPrice) return;
+      const tfee = customGasPrice
+          ? toFixed(shiftBN(customGasPrice.networkFee!, -18), 6)
+          : toFixed(shiftBN(defaultGasPrice?.networkFee!, -18), 6);
+      setFee(tfee);
   }, [defaultGasPrice, customGasPrice, setFee]);
 
   const toggleAdvancedOptions = useCallback((): void => {
-    setAdvancedOptions((w: any) => !w);
+      setAdvancedOptions((w: any) => !w);
   }, [setAdvancedOptions]);
 
   const exit = useCallback(() => {
-    toggleConfirmationModal();
-    setCustomtGasPrice(undefined);
+      toggleConfirmationModal();
+      setCustomtGasPrice(undefined);
   }, [toggleConfirmationModal, setCustomtGasPrice]);
 
   const executeTransaction = useCallback(
-    async (
-      transactionType: string,
-      amount: string,
-      destinationChain: any,
-      asset: any
-    ): Promise<void> => {
-      if (transactionType !== "Approval") toggleConfirmationModal();
-      const txAmount = new BigNumber(amount).shiftedBy(asset.decimals);
-      const bridgeAddress = BridgeDeployments[destinationChain.fullName];
-      
-      const tokenAddress =
-        chainAdresses[fromChain.fullName]?.assets[asset.Icon]
-          ?.tokenAddress!;
+      async (
+          transactionType: string,
+          amount: string,
+          destinationChain: any,
+          asset: any
+      ): Promise<void> => {
+          if (transactionType !== 'Approval') toggleConfirmationModal();
+          const txAmount = new BigNumber(amount).shiftedBy(asset.decimals);
+          const bridgeAddress = BridgeDeployments[destinationChain.fullName];
 
-      const bridgeContract = init(bridgeAddress!, RenBridgeABI);
-      // const tokenContract = init(
-      //     tokenAddress!,
-      //     ERC20ABI
-      // );
+          const tokenAddress =
+              chainAdresses[fromChain.fullName]?.assets[asset.Icon]
+                  ?.tokenAddress!;
 
-     
+          const bridgeContract = init(bridgeAddress!, RenBridgeABI);
+          // const tokenContract = init(
+          //     tokenAddress!,
+          //     ERC20ABI
+          // );
 
+          console.log(fromChain, destinationChain);
 
-      console.log(fromChain, destinationChain)
+          const optionalParams =
+              customGasPrice &&
+              customGasPrice?.overrideType === 'Basic' &&
+              fromChain.Icon === Ethereum.chain
+                  ? {
+                        gasLimit: customGasPrice.gasLimit!.toString(),
+                        gasPrice: customGasPrice?.gasPrice!.toString()
+                    }
+                  : {};
+          if (transactionType === 'Deposit') {
+              await exec(
+                  asset,
+                  destinationChain,
+                  [txAmount.toString(), tokenAddress, optionalParams],
+                  txAmount.toString(),
+                  transactionType,
+                  bridgeContract?.transferFrom
+              );
+          } else if (transactionType === 'Withdraw') {
+              await exec(
+                  asset,
+                  destinationChain,
+                  [account, txAmount.toString(), tokenAddress, optionalParams],
+                  txAmount.toString(),
+                  transactionType,
+                  bridgeContract?.transfer
+              );
+          } else if (transactionType === 'Mint') {
+              console.log('check');
+              console.log(tokenAddress);
+              //  console.log(bridgeAdapterAddress)
+              const bridgeAdapterAddress =
+                  '0xf3894e0289300a43dD7f0E0e852058011377CD26'; //BridgeFactory[fromChain.fullName];
+              const bridgeAdapterContract = init(
+                  bridgeAdapterAddress!,
+                  BridgeAdapterABI
+              );
+              // await tokenContract?.approve(
+              //     BridgeFactory[destinationChain.fullName],
+              //     txAmount.toString()
+              // );
+              console.log(Number(txAmount));
+              await execBridge(
+                  asset,
+                  fromChain,
+                  [
+                      registries[Ethereum.chain],
+                      '0x270203070650134837F3C33Fa7D97DC456eF624e',
+                      txAmount.toString()
+                      // optionalParams
+                  ],
+                  txAmount.toString(),
+                  'mint',
+                  bridgeAdapterContract?.lock
+              );
+          } else if (transactionType === 'Release') {
+              console.log('hellllooooo');
+               const bridgeAdapterAddress =
+                   '0xcB0aB22B59a6A4d30E9cB06AF234Cad3B2Ad9658'; //BridgeFactory[fromChain.fullName];
+               const bridgeAdapterContract = init(
+                   bridgeAdapterAddress!,
+                   BridgeAdapterABI
+               );
 
-      const optionalParams =
-        customGasPrice &&
-        customGasPrice?.overrideType === "Basic" &&
-        fromChain.Icon === Ethereum.chain
-          ? {
-              gasLimit: customGasPrice.gasLimit!.toString(),
-              gasPrice: customGasPrice?.gasPrice!.toString(),
-            }
-          : {};
-      if (transactionType === 'Deposit') {
-          await exec(
-              asset,
-              destinationChain,
-              [txAmount.toString(), tokenAddress, optionalParams],
-              txAmount.toString(),
-              transactionType,
-              bridgeContract?.transferFrom
-          );
-      } else if (transactionType === 'Withdraw') {
-          await exec(
-              asset,
-              destinationChain,
-              [account, txAmount.toString(), tokenAddress, optionalParams],
-              txAmount.toString(),
-              transactionType,
-              bridgeContract?.transfer
-          );
-      } else if (transactionType === 'Mint') {
-        console.log("check")
-         console.log(tokenAddress);
-        //  console.log(bridgeAdapterAddress)
-         const bridgeAdapterAddress =
-             '0xf3894e0289300a43dD7f0E0e852058011377CD26';//BridgeFactory[fromChain.fullName];
-         const bridgeAdapterContract = init(
-             bridgeAdapterAddress!,
-             BridgeAdapterABI
-         );
-        // await tokenContract?.approve(
-        //     BridgeFactory[destinationChain.fullName],
-        //     txAmount.toString()
-        // );
-        console.log(Number(txAmount))
-          await execBridge(
-              asset,
-              fromChain,
-              [
-                  registries[Ethereum.chain],
-                  '0x270203070650134837F3C33Fa7D97DC456eF624e',
-                  txAmount.toString()
-                  // optionalParams
-              ],
-              txAmount.toString(),
-              transactionType,
-              bridgeAdapterContract?.lock
-          );
-      } else if (transactionType === 'Release') {
-        
-          await exec(
-              asset,
-              destinationChain,
-              [account, txAmount.toString(), tokenAddress, optionalParams],
-              txAmount.toString(),
-              transactionType,
-              bridgeContract?.transfer
-          );
-      }
-      setText("");
-    },
-    [
-      account,
-      exec,
-      init,
-      toggleConfirmationModal,
-      customGasPrice,
-      fromChain,
-      setText,
-    ]
+               await execBridge(
+                   asset,
+                   fromChain,
+                   [
+                       '0x270203070650134837F3C33Fa7D97DC456eF624e',
+                       txAmount.toString()
+                       // optionalParams
+                   ],
+                   txAmount.toString(),
+                   "burn",
+                   bridgeAdapterContract?.burn
+               );
+          }
+          setText('');
+      },
+      [
+          account,
+          exec,
+          init,
+          toggleConfirmationModal,
+          customGasPrice,
+          fromChain,
+          setText,
+          execBridge
+      ]
   );
 
   return (

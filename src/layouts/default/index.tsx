@@ -12,6 +12,8 @@ import { useWeb3React } from "@web3-react/core";
 import { ChainIdToRenChain } from "../../connection/chains";
 import AppLoader from "./AppLoader";
 import { useGlobalState } from "../../context/useGlobalState";
+import TransactionSuccessModal from "../../components/TxConfirmationModalFlow/TransactionSuccessModal";
+import { useGatewayProvider } from "../../hooks/useGatewayProvider";
 
 const Background = styled.div`
   background: rgb(27, 50, 105);
@@ -93,7 +95,8 @@ interface DefaultLayoutProps {
 }
 
 function DefaultLayout({ children }: DefaultLayoutProps) {
-  const { loading } = useGlobalState();
+  const { loading, fromChain } = useGlobalState();
+  const { asset } = useGatewayProvider()
   const { chainId } = useWeb3React();
   const [showAccount, setShowAccount] = useState<boolean>(false);
   const [chainColour, setChainColour] = useState<string | null>(
@@ -138,6 +141,7 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
                       />
                       <BottomNavBar />
                       <WalletConnect toggleWalletModal={toggleWalletModal} />
+                      <TransactionSuccessModal close={() => {}} open={true} asset={asset} chain={fromChain} />
 
                       <div
                           id="layout"

@@ -41,7 +41,7 @@ export type UserTxType = {
     status: string;
     completed: string;
     txHash: string;
-    type: string;
+    txType: string;
     deposit: string;
 };
 
@@ -237,9 +237,9 @@ export default function TransactionsTable() {
                                       0,
                                       filteredType.length - 3
                                   );
-                        console.log(transaction.type, filteredStatus);
+                        console.log(transaction.txType, filteredStatus);
                         return (
-                            transaction.type.toLowerCase() ===
+                            transaction.txType.toLowerCase() ===
                             formattedStatus.toLowerCase()
                         );
                     })

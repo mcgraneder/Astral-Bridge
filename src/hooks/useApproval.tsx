@@ -35,7 +35,7 @@ export const useApproval = () => {
 
   const approve = useCallback(
     async (tokenAddress: string, amount: any, addressToApprove: string): Promise<void> => {
-      togglePendingModal()
+      // togglePendingModal()
       const tokenContract = init(tokenAddress, ERC20ABI, true);
       if (tokenContract) {
         try {
@@ -43,7 +43,7 @@ export const useApproval = () => {
             addressToApprove,
             ethers.constants.MaxUint256
           );
-            toggleSubmittedModal()
+            // toggleSubmittedModal()
           await approvalTransaction.wait(1);
           setPendingTransaction(false)
         } catch (err) {
@@ -52,7 +52,7 @@ export const useApproval = () => {
         }
       }
     },
-    [init, setPendingTransaction, togglePendingModal, toggleRejectedModal, toggleSubmittedModal]
+    [init, setPendingTransaction, toggleRejectedModal]
   );
 
   return { approve, init };

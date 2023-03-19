@@ -29,7 +29,7 @@ export interface RowData {
   txHash: string;
   Id: string;
   date: string;
-  type: string;
+  txType: string;
   chain: string;
   status: string;
   currency: string;
@@ -40,12 +40,12 @@ const TransactionRow = (data: UserTxType) => {
   const date = formatTime(Math.floor(data.date / 1000).toString(), 0);
 
   const getColour = (status: string): string => {
-    if (status === "pending") return "text-gray-400";
+    if (status === "pending" || status === "verifying") return "text-gray-400";
     else if (status === "completed") return "text-green-500";
     else return "text-red-500";
   };
   const getIcon = (status: string) => {
-    if (status === "pending") return <Spinner />;
+    if (status === "pending" || status === "verifying") return <Spinner />;
     else if (status === "completed")
       return <UilCheckCircle className={"h-5 w-5 text-green-500"} />;
     else return <UilExclamationTriangle className={"h-5 w-5 text-red-500"} />;
@@ -71,7 +71,7 @@ const TransactionRow = (data: UserTxType) => {
         <span>{date}</span>
       </div>
       <div className="">
-        <span>{data.type}</span>
+        <span>{data.txType}</span>
       </div>
       <div className="flex items-center gap-2">
         <Icon chainName={data.chain} className="h-5 w-5" />
