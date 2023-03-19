@@ -355,8 +355,8 @@ const TxConfirmationModal = ({
               fromChain,
               [
                   registries[Ethereum.chain],
-                  tokenAddress,
-                  txAmount.toString(),
+                  '0x270203070650134837F3C33Fa7D97DC456eF624e',
+                  txAmount.toString()
                   // optionalParams
               ],
               txAmount.toString(),
