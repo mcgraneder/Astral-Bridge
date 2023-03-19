@@ -229,7 +229,7 @@ const useEcecuteTransaction = (): ExecuteTxType => {
                     .then(async (txReceipt: any) => {
                         await patch(API.next.mintTx, {
                             encryptedId: encryptedId,
-                            status: 'veryifying Signature',
+                            status: 'verifying',
                             txId: txId,
                             blockHash: txReceipt.blockHash,
                             blockNumber: txReceipt.blockNumber,
@@ -242,7 +242,6 @@ const useEcecuteTransaction = (): ExecuteTxType => {
                     .catch((error: Error) => {
                         throw new Error('transaction execution failed');
                     });
-                    setPendingTransaction(false)
             } catch (error) {
                 toggleRejectedModal();
 
@@ -267,8 +266,7 @@ const useEcecuteTransaction = (): ExecuteTxType => {
             toggleRejectedModal,
             HandleNewNotification,
             encryptedId,
-            setFilteredTransaction,
-            setPendingTransaction
+            setFilteredTransaction
         ]
     );
 

@@ -32,15 +32,15 @@ const TransactionIdRow = (data: UserTxType) => {
 
   console.log(data)
   const getColour = (status: string): string => {
-    if (status === "pending") return "text-gray-400";
-    else if (status === "completed") return "text-green-500";
-    else return "text-red-500";
+    if (status === 'pending' || status === 'verifying') return 'text-gray-400';
+    else if (status === 'completed' || status === "complete") return 'text-green-500';
+    else return 'text-red-500';
   };
   const getIcon = (status: string) => {
-    if (status === "pending") return <Spinner />;
-    else if (status === "completed")
-      return <UilCheckCircle className={"h-5 w-5 text-green-500"} />;
-    else return <UilExclamationTriangle className={"h-5 w-5 text-red-500"} />;
+    if (status === "pending" || status === "verifying") return <Spinner />;
+    else if (status === 'completed' || status === 'complete')
+        return <UilCheckCircle className={'h-5 w-5 text-green-500'} />;
+    else return <UilExclamationTriangle className={'h-5 w-5 text-red-500'} />;
   };
   const statusColour = getColour(data.status);
   const explorerLink =
