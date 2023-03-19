@@ -60,20 +60,19 @@ const BridgePage: NextPage = () => {
       <>
           {!loading && (
               <UserInfoModal
+                  isHomePageWarning={true}
                   open={showWarning}
                   close={closeWarning}
-                  isHomePageWarning={false}
                   message={
                       <span>
-                          This page is used to bridge native assets between
-                          blockchains in return for Ren assets so that they can
-                          be withdrawn from the wallet page. Since the Ren
-                          protocol is under maintenence I have blocked the
-                          features and briging services hosted on this page.
+                          This application is a current work in progress. I have
+                          only been working on it, sparingly, for 2 months so
+                          most of the features are not finished.
                           <br />
-                          <br />
-                          Again Sorry for the inconvienience as I am paitentily
-                          waiting for the Ren protocol to go live again
+                          <br />I will show popups wherever I have an unfinished
+                          or in-progress feature. The only reason I am showing
+                          this app on my portfolio in its early stages is for
+                          curious employers to see my latest work .
                       </span>
                   }
               />

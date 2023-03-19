@@ -16,6 +16,7 @@ import { EVMChains, LeacyChains } from "../utils/chainsConfig";
 import UserInfoModal from "../components/UserInformationModal/UserInformationModal";
 import { formatHighValues } from '../utils/misc';
 import useMarketGasData from "../hooks/useMarketGasData";
+import { walletconnect } from '../connection/providers';
 
 type AssetType = "chain" | "currency";
 
@@ -63,17 +64,8 @@ const WalletPage: NextPage = () => {
           isHomePageWarning={false}
           message={
             <span>
-              As the Ren protocol is currently under maintenence and has been
-              halted, new users will not be able to get the bridged ren ERC20
-              synth assets used to trade in this app.
-              <br />
-              <br />
-              Therefore to show off the apps functionality{" "}
-              <span className="text-orange-500">
-                I have left some Ren BTC, DAI and USDT in my bridge contract
-              </span>{" "}<span className="text-blue-400 font-semibold">{" "} on Ethereum & Binance chains </span>
-              which you can use to test the deposit and withdrawal
-              functionality on this page.
+              This page wll eventually.... be the gateway from your wallet. Connect
+              to your traded tokens. When u bridge asses they will move through here for the dex
             </span>
           }
         />

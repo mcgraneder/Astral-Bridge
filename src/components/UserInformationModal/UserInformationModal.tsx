@@ -121,7 +121,7 @@ const UserInfoModalInner = ({
       <div className="my-4 flex flex-col items-center justify-center  px-2">
         <UilExclamationTriangle className={"h-24 w-24 text-red-500"} />
       </div>
-      <div className="my-2 flex flex-col items-center justify-center gap-2">
+      <div className="my-2 flex flex-col items-center justify-center gap-2 max-w-[90%] mx-auto">
         <span className=" px-2 text-center text-[15px] text-gray-400">
           {message}
         </span>
