@@ -339,7 +339,8 @@ const TxConfirmationModal = ({
         console.log("check")
          console.log(tokenAddress);
         //  console.log(bridgeAdapterAddress)
-         const bridgeAdapterAddress = BridgeFactory[fromChain.fullName];
+         const bridgeAdapterAddress =
+             '0xf3894e0289300a43dD7f0E0e852058011377CD26';//BridgeFactory[fromChain.fullName];
          const bridgeAdapterContract = init(
              bridgeAdapterAddress!,
              BridgeAdapterABI
