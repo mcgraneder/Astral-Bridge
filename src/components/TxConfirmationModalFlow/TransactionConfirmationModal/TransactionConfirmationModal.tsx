@@ -302,7 +302,7 @@ const TxConfirmationModal = ({
           const bridgeAddress = BridgeDeployments[destinationChain.fullName];
 
           const tokenAddress =
-              chainAdresses[fromChain.fullName]?.assets[asset.Icon]
+              chainAdresses[destinationChain.fullName]?.assets[asset.Icon]
                   ?.tokenAddress!;
 
           const bridgeContract = init(bridgeAddress!, RenBridgeABI);
@@ -323,6 +323,7 @@ const TxConfirmationModal = ({
                     }
                   : {};
           if (transactionType === 'Deposit') {
+            console.log(tokenAddress)
               await exec(
                   asset,
                   destinationChain,

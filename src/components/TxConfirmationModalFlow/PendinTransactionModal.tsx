@@ -42,8 +42,8 @@ const PendingModalInner = ({
         <span className=" text-[18px] font-semibold">
           Waiting For Confirmation
         </span>
-        <span className="text-[17px]">{`${(transactionType).concat("ing")} ${text} ${asset.Icon} on ${chain.fullName}`}</span>
-        <span className="text-[14px] text-gray-500">
+        <span className="text-[17px] text-center">{`${(transactionType).concat("ing")} ${text} ${asset.Icon} on ${chain.fullName}`}</span>
+        <span className="text-[14px] text-gray-500 text-center">
           Confirm this transaction in your wallet
         </span>
       </div>
