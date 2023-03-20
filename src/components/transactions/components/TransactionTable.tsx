@@ -153,11 +153,7 @@ export default function TransactionsTable() {
                     (item: any, index: number) => {
                         return (
                             <StyledTokenRow key={index}>
-                                <div className="mr-4">
-                                    <GlowingText loading={true}>
-                                        <div className=" rounded-lg  p-3" />
-                                    </GlowingText>
-                                </div>
+                               
                                 <div className="flex w-[90%] items-center gap-2 text-blue-600">
                                     <GlowingText loading={true}>
                                         <div className=" h-5 w-5 rounded-full" />

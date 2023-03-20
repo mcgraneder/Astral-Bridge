@@ -10,7 +10,7 @@ export const StyledTokenRow = styled.div`
   background-color: transparent;
   display: grid;
   font-size: 16px;
-  grid-template-columns: 1fr 8fr 5fr 4fr 5fr 5fr 3fr;
+  grid-template-columns: 8fr 5fr 4fr 5fr 5fr 3fr;
   line-height: 24px;
   max-width: 1200px;
   min-width: 390px;
@@ -24,9 +24,6 @@ const HeaderRow = () => {
 
     return (
       <StyledTokenRow>
-        <div className="text-gray-500">
-          <span>ID</span>
-        </div>
         <div className="text-gray-500">
           <span>Account</span>
         </div>

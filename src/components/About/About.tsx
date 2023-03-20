@@ -170,29 +170,22 @@ const About = () => {
                 </>
               </Link>
             </HeaderContainer>
-            <Title>What is The Ren Protocol?</Title>
+            <Title>What is The Astral Protocol?</Title>
             <Text>
-              RenBridge enables the simple wrapping of digital assets on
-              different blockchains. For example, RenBridge allows users to take{" "}
+              AstralBridge enables the simple wrapping of digital assets on
+              different blockchains. For example, AstralBridge allows users to take{" "}
               <span>BTC</span> and put it on <a>Ethereum</a>, as an ERC-20
-              called renBTC.
+              called aBTC.
             </Text>
             <Title>How does it work?</Title>
             <Text>
-              Using RenVM, a universal translator, it converts digital assets to
-              the format needed by its destination chain. For example, RenVM
+              Using the astralAPI, a universal translator, it converts digital assets to
+              the format needed by its destination chain. For example, astralAPI
               takes <span>BTC</span>, holds it, and then converts it to an{" "}
-              <a>ERC-20</a> with a 1:1 ratio to ensure your renBTC is always
+              <a>ERC-20</a> with a 1:1 ratio to ensure your astralBTC is always
               backed by the same amount of BTC. Find out more here ↗.
             </Text>
-            <Title>How Safe is it?</Title>
-            <Text>
-              RenVM holds on to your assets when they are on other blockchains.
-              RenVM is new technology, and <a>security audits ↗</a>{" "}
-              <span>{"don't"}</span>
-              completely eliminate risks. Please <span>{"don't"}</span> supply
-              assets you <span>{"can't"}</span> afford to lose!
-            </Text>
+           
           </AboutPageContentsWrapper>
         </AboutPageContentsConainer>
       </PageContainer>

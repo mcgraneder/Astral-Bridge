@@ -14,7 +14,7 @@ export const StyledTokenRow = styled(Link)`
   background-color: transparent;
   display: grid;
   font-size: 16px;
-  grid-template-columns: 1fr 8fr 5fr 4fr 5fr 5fr 3fr;
+  grid-template-columns: 8fr 5fr 4fr 5fr 5fr 3fr;
   line-height: 24px;
   max-width: 1200px;
   min-width: 390px;
@@ -57,9 +57,7 @@ const TransactionRow = (data: UserTxType) => {
       href={`/transactions/${data.txHash}`}
       className={"hover:bg-hoverLightground"}
     >
-      <div className="">
-        <span>{"#"}</span>
-      </div>
+
       <div className="flex items-center gap-2 text-blue-600">
         <Identicon size={18} />
         <span>{`${data.txHash.substring(0, 12)}...${data.txHash.substring(
