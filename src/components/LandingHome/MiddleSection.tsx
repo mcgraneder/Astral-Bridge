@@ -18,6 +18,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { StyledTitle } from '../CSS/HomePage.styles';
 import { get } from '../../services/axios';
+import useAuth from '../../hooks/useAuth';
 import {
     UilDollarSignAlt,
     UilAngleUp,
@@ -77,7 +78,7 @@ const ProtocolBanner = () => {
                 </div>
             </div>
             <a
-                href={''}
+                href={'https://github.com/mcgraneder/astral-sol'}
                 className={`hover:bg-primary z-50  my-8 mr-4 hidden w-fit items-center rounded-full border-2 border-white px-8 text-white transition duration-200 ease-in-out hover:border-blue-300 hover:text-blue-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 lg:flex `}
             >
                 <span className={`text-base`}>Learn More</span>
@@ -159,6 +160,7 @@ function Section2() {
         [Cards.atomic]: false
     });
 
+    const { toggleWalletModal } = useAuth()
     const flip = (key: string, value: boolean) =>{
         console.log("flipping")
         setFlipped((f) => ({ ...f, [key]: value }));
@@ -301,7 +303,8 @@ function Section2() {
                             always get resolvedin the blink of an eye. No more
                             waiting!
                         </div>
-                        <div className="mt-4 flex gap-1 font-semibold text-blue-600">
+                        <div className="mt-4 flex gap-1 font-semibold text-blue-600 hover:text-blue-500"
+                        onClick={toggleWalletModal}>
                             <span>Trade Now</span>
                             <span>
                                 <UilAngleUp />
@@ -322,7 +325,8 @@ function Section2() {
                             cross-chain transactions are ECDSA verified before
                             execution
                         </div>
-                        <div className="mt-4 flex gap-1 font-semibold text-blue-600">
+                        <div className="mt-4 flex gap-1 font-semibold text-blue-600 hover:text-blue-500"
+                        onClick={toggleWalletModal}>
                             <span>Trade Now</span>
                             <span>
                                 <UilAngleUp />
@@ -342,7 +346,8 @@ function Section2() {
                             Astral bridge has low bridge fees compared to other
                             competitors. Trade more & spend less.
                         </div>
-                        <div className="mt-4 flex gap-1 font-semibold text-blue-600">
+                        <div className="mt-4 flex gap-1 font-semibold text-blue-600 hover:text-blue-500"
+                        onClick={toggleWalletModal}>
                             <span>Trade Now</span>
                             <span>
                                 <UilAngleUp />
