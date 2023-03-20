@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import SwapImg from "../../../public/images/swapCard.png"
+import SwapImg from '../../../public/images/swapCard.png';
 import Button from '../../../public/svgs/button.svg';
 import WaveA from '../../../public/svgs/astronaut-wave-A.svg';
 import WaveB from '../../../public/svgs/astronaut-wave-B.svg';
@@ -18,7 +18,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { StyledTitle } from '../CSS/HomePage.styles';
 import { get } from '../../services/axios';
-import useAuth from '../../hooks/useAuth';
+import { useAuth } from '../../context/useWalletAuth';
 import {
     UilDollarSignAlt,
     UilAngleUp,
@@ -79,6 +79,8 @@ const ProtocolBanner = () => {
             </div>
             <a
                 href={'https://github.com/mcgraneder/astral-sol'}
+                rel="noopener noreferrer"
+                target="_blank"
                 className={`hover:bg-primary z-50  my-8 mr-4 hidden w-fit items-center rounded-full border-2 border-white px-8 text-white transition duration-200 ease-in-out hover:border-blue-300 hover:text-blue-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-300 focus-visible:ring-offset-2 lg:flex `}
             >
                 <span className={`text-base`}>Learn More</span>
@@ -86,7 +88,6 @@ const ProtocolBanner = () => {
         </Banner>
     );
 };
-
 
 interface CrossButtonProps {
     onClick: () => void;
@@ -100,7 +101,7 @@ interface Props {
 export const Container = ({ children, className = '', ...rest }: Props) => {
     return (
         <div
-            className={`relative w-full overflow-hidden rounded-2xl bg-bg-[rgb(15,18,44)] drop-shadow-2xl lg:w-auto ${className}`}
+            className={`bg-bg-[rgb(15,18,44)] relative w-full overflow-hidden rounded-2xl drop-shadow-2xl lg:w-auto ${className}`}
             {...rest}
         >
             {children}
@@ -122,15 +123,11 @@ export const Description = ({
     ...rest
 }: Props & { left?: boolean }) => {
     return (
-        <p
-            className={`font-normal tracking-wide ${className}`}
-            {...rest}
-        >
+        <p className={`font-normal tracking-wide ${className}`} {...rest}>
             {children}
         </p>
     );
 };
-
 
 const CrossButton = ({ onClick }: CrossButtonProps) => {
     return (
@@ -138,7 +135,7 @@ const CrossButton = ({ onClick }: CrossButtonProps) => {
             className="absolute top-3 right-4 cursor-pointer"
             onClick={onClick}
         >
-            <HiOutlineXCircle className="text-blue-500 h-8 w-8" />
+            <HiOutlineXCircle className="h-8 w-8 text-blue-500" />
         </span>
     );
 };
@@ -160,11 +157,11 @@ function Section2() {
         [Cards.atomic]: false
     });
 
-    const { toggleWalletModal } = useAuth()
-    const flip = (key: string, value: boolean) =>{
-        console.log("flipping")
+    const { toggleWalletModal } = useAuth();
+    const flip = (key: string, value: boolean) => {
+        console.log('flipping');
         setFlipped((f) => ({ ...f, [key]: value }));
-    }
+    };
 
     return (
         //  <>
@@ -202,7 +199,7 @@ function Section2() {
 
                             <Description
                                 className={
-                                    'mgl:text-base my-2 max-w-[60%] text-left text-sm text-gray-300'
+                                    'max-w-[60%] text-left text-sm text-gray-300 mlg:text-base'
                                 }
                             >
                                 Bridge your favourite crypto assets across 9 EVM
@@ -278,12 +275,6 @@ function Section2() {
                                 Unlike Uniswap All liquidity pools on astral use
                                 the same base token (USDT). This makes it easier
                                 to concentrate liquidity across multiple pools
-                                <br />
-                                <br />
-                                For cross-chain trades the source asset is
-                                swapped to USDT, USDT is then Bridge to the
-                                destination chain and swapped there for the
-                                desired asset
                             </Description>
                         </div>
                     </Container>
@@ -303,8 +294,10 @@ function Section2() {
                             always get resolvedin the blink of an eye. No more
                             waiting!
                         </div>
-                        <div className="mt-4 flex gap-1 font-semibold text-blue-600 hover:text-blue-500"
-                        onClick={toggleWalletModal}>
+                        <div
+                            className="mt-4 flex gap-1 font-semibold text-blue-600 hover:cursor-pointer hover:text-blue-500"
+                            onClick={toggleWalletModal}
+                        >
                             <span>Trade Now</span>
                             <span>
                                 <UilAngleUp />
@@ -325,8 +318,10 @@ function Section2() {
                             cross-chain transactions are ECDSA verified before
                             execution
                         </div>
-                        <div className="mt-4 flex gap-1 font-semibold text-blue-600 hover:text-blue-500"
-                        onClick={toggleWalletModal}>
+                        <div
+                            className="mt-4 flex gap-1 font-semibold text-blue-600 hover:cursor-pointer hover:text-blue-500"
+                            onClick={toggleWalletModal}
+                        >
                             <span>Trade Now</span>
                             <span>
                                 <UilAngleUp />
@@ -337,7 +332,7 @@ function Section2() {
                 <Container className="bg-bg-[rgb(15,18,44)] relative h-[250px] w-full min-w-[25%] border border-tertiary bg-[rgb(15,18,44)]">
                     <div className="mgl1:mx-12 mx-6 mt-5 flex flex-col mlg1:mt-3">
                         <div className="flex flex-row items-center justify-between">
-                            <Title className="text-[rgb(216,222,255)] items-center text-center text-2xl lg:w-80 lg:text-left mlg:text-3xl">
+                            <Title className="items-center text-center text-2xl text-[rgb(216,222,255)] lg:w-80 lg:text-left mlg:text-3xl">
                                 Low Fees
                             </Title>
                             <UilDollarSignAlt className="h-12 w-12 font-semibold" />
@@ -346,8 +341,10 @@ function Section2() {
                             Astral bridge has low bridge fees compared to other
                             competitors. Trade more & spend less.
                         </div>
-                        <div className="mt-4 flex gap-1 font-semibold text-blue-600 hover:text-blue-500"
-                        onClick={toggleWalletModal}>
+                        <div
+                            className="mt-4 flex gap-1 font-semibold text-blue-600 hover:cursor-pointer hover:text-blue-500"
+                            onClick={toggleWalletModal}
+                        >
                             <span>Trade Now</span>
                             <span>
                                 <UilAngleUp />
@@ -357,117 +354,8 @@ function Section2() {
                 </Container>
             </div>
             <ProtocolBanner />
-            {/* </> */}
-            {/* <div className="my-12 grid w-full items-center justify-center gap-6 md:grid-cols-2 lg:my-16  lg:grid-cols-[308px_300px_300px_300px]"> */}
-            {/* One click, zero gas trades */}
-
-            {/* Own your coins */}
-            {/* <ReactCardFlip
-                    containerClassName="lg:col-span-2 lg:row-span-2 md:row-span-2 md:order-4 lg:order-none "
-                    isFlipped={flipped.ownMoney}
-                    flipDirection="horizontal"
-                >
-                    <Container className="border border-tertiary relative h-[250px] bg-bg-[rgb(15,18,44)] lg:h-[250px]">
-                        <div className="absolute h-full w-full translate-y-4 bg-[url('/svgs/coins.svg')] bg-contain bg-bottom bg-no-repeat lg:translate-x-9 lg:bg-right" />
-                        <div className="absolute mt-10 flex flex-col items-center lg:ml-16 lg:items-start">
-                            <Title className="text-[rgb(216,222,255)] text-center text-4xl lg:w-80 lg:text-left">
-                                Developments in Crosschain Defi
-                            </Title>
-                            <LearnMoreButton
-                                onClick={() => flip(Cards.ownMoney, true)}
-                            />
-                        </div>
-                    </Container>
-                    <Container className="border border-tertiary flex h-[250px] items-center justify-center p-8 lg:h-[250px] lg:p-16">
-                        <CrossButton
-                            onClick={() => flip(Cards.ownMoney, false)}
-                        />
-                        <div className="flex flex-col items-start gap-4">
-                            <Title className="text-[rgb(216,222,255)] w-full text-center text-3xl lg:text-left">
-                                New Developments in Cross-chain
-                            </Title>
-                            <Description className="text-center lg:text-left">
-                                One conecpt I have been exploring is the a
-                                development in crosschain Defi where users can
-                                execute trades or smart contract calls on one
-                                blockchain from an entirely different one
-                                <br />
-                                <br />
-                                This is enabled through the concept of
-                                cryptographic hashing and digital signatures. By
-                                extracting any contract call into its raw
-                                bytecode we can sign this data through the use
-                                of Eliptic curve cryptography. In order to be
-                                able to execute blockchain agnostic trades we
-                                can compare this encode into this signature the
-                                chain it is to be executed on (domain seperator)
-                                Then on the destination chain we verify the
-                                signature by comparing hashes.
-                                <br />
-                                <br />
-                                This revolution allows for example, a user to
-                                execute a smart contract call on Ethereum from
-                                Polygon. See example on my githib here
-                            </Description>
-                        </div>
-                    </Container>
-                </ReactCardFlip>
-
-                <ReactCardFlip
-                    containerClassName="lg:col-span-2 lg:row-span-2 md:row-span-2 md:order-4 lg:order-none"
-                    isFlipped={flipped.ownMoney}
-                    flipDirection="horizontal"
-                >
-                    <Container className="border border-tertiary relative h-[250px] lg:h-[250px]">
-                        <div className="absolute h-full w-full translate-y-4 bg-[url('/svgs/coins.svg')] bg-contain bg-bottom bg-no-repeat lg:translate-x-9 lg:bg-right" />
-                        <div className="absolute mt-10 flex flex-col items-center lg:ml-16 lg:items-start">
-                            <Title className="text-[rgb(216,222,255)] text-center text-4xl lg:w-80 lg:text-left">
-                                Developments in Crosschain Defi
-                            </Title>
-                            <LearnMoreButton
-                                onClick={() => flip(Cards.ownMoney, true)}
-                            />
-                        </div>
-                    </Container>
-                    <Container className="border border-tertiary flex h-[250px] items-center justify-center p-8 lg:h-[250px] lg:p-16">
-                        <CrossButton
-                            onClick={() => flip(Cards.ownMoney, false)}
-                        />
-                        <div className="flex flex-col items-start gap-4">
-                            <Title className="text-[rgb(216,222,255)] w-full text-center text-3xl lg:text-left">
-                                New Developments in Cross-chain
-                            </Title>
-                            <Description className="text-center lg:text-left">
-                                One conecpt I have been exploring is the a
-                                development in crosschain Defi where users can
-                                execute trades or smart contract calls on one
-                                blockchain from an entirely different one
-                                <br />
-                                <br />
-                                This is enabled through the concept of
-                                cryptographic hashing and digital signatures. By
-                                extracting any contract call into its raw
-                                bytecode we can sign this data through the use
-                                of Eliptic curve cryptography. In order to be
-                                able to execute blockchain agnostic trades we
-                                can compare this encode into this signature the
-                                chain it is to be executed on (domain seperator)
-                                Then on the destination chain we verify the
-                                signature by comparing hashes.
-                                <br />
-                                <br />
-                                This revolution allows for example, a user to
-                                execute a smart contract call on Ethereum from
-                                Polygon. See example on my githib here
-                            </Description>
-                        </div>
-                    </Container>
-                </ReactCardFlip> */}
-
-            {/* </div> */}
         </motion.div>
     );
 }
 
-// export default AppWrap(MotionWrap(Section2), 'research', 'bg-secondary');
-export default Section2
+export default Section2;

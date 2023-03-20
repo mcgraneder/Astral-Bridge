@@ -1,20 +1,20 @@
-import React from "react";
+import React from 'react';
 import { StyledTitle, StyledSubTitle, colours } from '../CSS/HomePage.styles';
-import PrimaryButton from "../PrimaryButton/PrimaryButton";
+import PrimaryButton from '../PrimaryButton/PrimaryButton';
 
-import AssetRotator from "../AssetRotator/AssetRotator";
+import AssetRotator from '../AssetRotator/AssetRotator';
 
-import styled from "styled-components";
-import { BREAKPOINTS } from "../theme";
-import meshSrc from "../../../public/images/Mesh.png";
-import Image from "next/image";
-import GreenDot from "../Icons/GreenDot";
-import SupportedAssets from "./SupportedAsset";
-import Link from "next/link";
+import styled from 'styled-components';
+import { BREAKPOINTS } from '../theme';
+import meshSrc from '../../../public/images/Mesh.png';
+import Image from 'next/image';
+import GreenDot from '../Icons/GreenDot';
+import SupportedAssets from './SupportedAsset';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../utils/fadeIn.';
 import { UilAngleDown } from '@iconscout/react-unicons';
-import { ArrowDownCircle } from "react-feather";
+import { ArrowDownCircle } from 'react-feather';
 import Section2 from './MiddleSection';
 
 const LearnMoreArrow = styled(ArrowDownCircle)`
@@ -71,13 +71,12 @@ const ProtocolBanner = () => {
 
 const Home = () => {
     const scrollPosition = () => {
-        if (typeof window === "undefined") return
+        if (typeof window === 'undefined') return;
         window.scrollTo({
             top: 820,
-            behavior: "smooth"
-        })
-
-    }
+            behavior: 'smooth'
+        });
+    };
     return (
         <div className="text-bold overflow-y-hidden px-0 text-white backdrop-blur-lg md:px-10 ">
             <div className="my-auto mx-0 flex min-h-screen flex-col  items-center justify-center ">
@@ -135,7 +134,7 @@ const Home = () => {
                     variants={fadeIn('left', 0.01)}
                     initial="hidden"
                     whileInView={'show'}
-                    viewport={{ once: true, amount: "all" }}
+                    viewport={{ once: true, amount: 'all' }}
                     // transition={{ duration: 0.2}}
                     className="my-0 mx-auto mb-8 mt-4 flex flex-col items-center justify-center"
                 >
