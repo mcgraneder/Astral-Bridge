@@ -1,12 +1,4 @@
 # Astral Bridge
-
-![Capture1](https://user-images.githubusercontent.com/40043037/223294939-bd7d5913-a859-483f-a6b7-4beda97fc7ce.PNG)
-
-Astral is a cross chain Bridge and DEX which lets users bridge and rade assets across 9 EVM chains aswell as many legacy & non EVM chains such as Bitcoin, Dogecoin, Zcash etc. Users can bridge native assets in return for an Astral synthtic version of that asset (formerly ren asset) on the destination chain. Once bridged, users can then trade in astrals AMM contract (which will be deployed on all chains) with all other synthetic assets supported by astral. Since identical astral assets are minted on all chains and the fact that USDT is used as the AMM's base token on each chain, it can be garanteed that liquidity concentration for each possible token pair is the same amoung all chains. 
-
-when a user briges a native asset into a synthetic asset and preforms a swap on the destination chain, that asset can be bridged back and swapped for the original native asset at face value.
-
-# Astral Bridge
 the ideas seen in the Astral contracts are inspired from the bridge flow hat the Ren protocol uses. That is when a user wants to move asset A from blockchain X to blockchain Y, the orgignal Asset A is locked up in a vault. then once a few security paraeteres have been met (explained below) we can mint a ERC-20 synthetic version of the original token on the destination chain with a 1:1 peg. Since i am building this solo and for hobby astral assets do no refleect ther counterpart. but in such a scenario luiquidty would be provided to make sure that the synth assets has a peg to th real ones
 
 # astral bridge breakdown
@@ -34,6 +26,14 @@ A logical next step is to change the system so that we mitigate the point of fai
 But can do better: a multi-signature system with aggregated signatures. Signature schemes like BLS allow you to compress the n signatures in a single signature
 
 Right now the astral bridge just uses the admin private key to use the ECDSA standard for verifying a mint or release transaction. However using the above shcheme we can implementd a more trustless model. Aso of now i have started working on an SMPC implementation in typescript that i will need to take time to develop as i am learning a lot of these concepts as i go. For now i will continue to update this repo as the smart contracts themselves develop, but until i develop a SMPC verification model this Bridge implementation will remain centralised.
+
+# Astral Bridge
+
+![Capture1](https://user-images.githubusercontent.com/40043037/223294939-bd7d5913-a859-483f-a6b7-4beda97fc7ce.PNG)
+
+Astral is a cross chain Bridge and DEX which lets users bridge and rade assets across 9 EVM chains aswell as many legacy & non EVM chains such as Bitcoin, Dogecoin, Zcash etc. Users can bridge native assets in return for an Astral synthtic version of that asset (formerly ren asset) on the destination chain. Once bridged, users can then trade in astrals AMM contract (which will be deployed on all chains) with all other synthetic assets supported by astral. Since identical astral assets are minted on all chains and the fact that USDT is used as the AMM's base token on each chain, it can be garanteed that liquidity concentration for each possible token pair is the same amoung all chains. 
+
+when a user briges a native asset into a synthetic asset and preforms a swap on the destination chain, that asset can be bridged back and swapped for the original native asset at face value.
 
 ## to view frontend
 https://github.com/mcgraneder/astral-bridge
