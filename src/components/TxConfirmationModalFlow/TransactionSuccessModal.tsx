@@ -41,8 +41,7 @@ const TxSubmittedInner = ({
     symbol: string
 }) => {
     const IconM = WALLETS[PROVIDERS.INJECTED!]!.icon as any;
-    const { filteredTransaction } = useGlobalState();
-
+    const { filteredTransaction } = useGlobalState()
     return (
         <>
             <TopRowNavigation isRightDisplay={true} close={close} />

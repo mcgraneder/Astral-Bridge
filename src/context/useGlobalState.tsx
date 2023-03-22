@@ -213,6 +213,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
                     transactionsResponse.tx[0]?.status === 'completed' &&
                     pendingTransaction
                 ) {
+                    memoizedFetchBalances()
                     setPendingTransaction(false);
                     setTransactionId(undefined);
                     HandleNewNotification(
