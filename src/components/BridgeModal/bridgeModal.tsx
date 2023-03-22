@@ -228,7 +228,7 @@ const BridgeModal = ({
 
     const handleApprovalRequest = useCallback(() => {
         setPendingTransaction(true);
-        const bridgeAddress = '0xf3894e0289300a43dD7f0E0e852058011377CD26';
+        const bridgeAddress = '0x53de366dA21a6F3cF477C2Fbb238a9a4bbBF0002';
         const tokenAddress =
             chainAdresses[destinationChain.fullName]?.assets[asset.Icon]
                 ?.tokenAddress!;
