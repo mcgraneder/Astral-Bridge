@@ -346,7 +346,7 @@ const TxConfirmationModal = ({
               console.log(tokenAddress);
               //  console.log(bridgeAdapterAddress)
               const bridgeAdapterAddress =
-                  '0xf3894e0289300a43dD7f0E0e852058011377CD26'; //BridgeFactory[fromChain.fullName];
+                  '0x53de366dA21a6F3cF477C2Fbb238a9a4bbBF0002'; //BridgeFactory[fromChain.fullName];
               const bridgeAdapterContract = init(
                   bridgeAdapterAddress!,
                   BridgeAdapterABI
@@ -372,7 +372,7 @@ const TxConfirmationModal = ({
           } else if (transactionType === 'Release') {
               console.log('hellllooooo');
                const bridgeAdapterAddress =
-                   '0xcB0aB22B59a6A4d30E9cB06AF234Cad3B2Ad9658'; //BridgeFactory[fromChain.fullName];
+                   '0x1A4006a7636F2715F8Fc51991708ff201cbd8c4b'; //BridgeFactory[fromChain.fullName];
                const bridgeAdapterContract = init(
                    bridgeAdapterAddress!,
                    BridgeAdapterABI

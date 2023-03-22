@@ -117,3 +117,5 @@ export function formatHighValues(n: number) {
     return toFixed(n / billion, 2) + "b";
   }
 }
+
+
