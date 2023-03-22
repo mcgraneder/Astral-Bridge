@@ -48,9 +48,6 @@ const TransactionIdRow = (data: UserTxType) => {
       ?.explorerLink;
   return (
     <StyledTokenRow>
-      <div className="">
-        <span>{"#"}</span>
-      </div>
       <div className="flex items-center gap-2 text-blue-600">
         <Identicon size={18} />
         <Tooltip content={"View on Explorer"}>
