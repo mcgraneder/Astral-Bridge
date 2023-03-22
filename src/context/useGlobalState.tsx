@@ -3,8 +3,7 @@ import {
     useCallback,
     useContext,
     useEffect,
-    useState,
-    useMemo
+    useState
 } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { ChainIdToRenChain } from '../connection/chains';
@@ -13,14 +12,11 @@ import API from '../constants/Api';
 import { SetStateAction, Dispatch } from 'react';
 import { chainsBaseConfig, ChainConfig } from '../utils/chainsConfig';
 import { get, post } from '../services/axios';
-import { ChainInstanceMap, getDefaultChains } from '../utils/networksConfig';
-import { RenNetwork } from '@renproject/utils';
 import ErrorCodes from '../constants/errorCodes';
 import { ResponseData } from '../pages/api/user';
 import useAuth from '../hooks/useAuth';
 import { UserTxType } from '../components/transactions/components/TransactionTable';
 import { useViewport } from '../hooks/useViewport';
-import { useRouter } from 'next/router';
 import { useNotification } from './useNotificationState';
 
 interface GlobalStateProviderProps {
@@ -71,14 +67,12 @@ export type GP = {
 const GlobalStateContext = createContext({} as GlobalContextType);
 
 function GlobalStateProvider({ children }: GlobalStateProviderProps) {
-    // const defaultChains = getDefaultChains(RenNetwork.Testnet);
+    const { disconnect } = useAuth();
+    const { width } = useViewport();
+    const { account, chainId, active } = useWeb3React();
     const [loading, setLoading] = useState<boolean>(true);
     const [isSuccessOpen, setIsSuccessOpen] = useState<boolean>(false);
-
-    const { disconnect } = useAuth();
-    const { query } = useRouter();
     const [encryptedId, setEncryptedId] = useState<string | null>(null);
-    const [fetchedStoredChain, setFetchStoredChain] = useState<boolean>(false);
     const [pendingTransaction, setPendingTransaction] =
         useState<boolean>(false);
     const [fetchingBalances, setFetchingBalances] = useState<boolean>(false);
@@ -86,7 +80,6 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     const [destinationChain, setDestinationChain] = useState<any>(
         chainsBaseConfig.Ethereum
     );
-    const { width } = useViewport();
     const [chainType, setChainType] = useState<string>('from');
     const [successType, setSuccessType] = useState<string>('Mint');
     const [transactions, setTransactions] = useState<any[] | undefined>(
@@ -98,24 +91,25 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     const [transactionId, setTransactionId] = useState<string | undefined>(
         undefined
     );
- const [allBalances, setAllBalances] = useState<{
-     [chain: string]: { [x: string]: MulticallReturn
- } }>({});
+    const [allBalances, setAllBalances] = useState<{
+        [chain: string]: { [x: string]: MulticallReturn };
+    }>({});
     const [assetBalances, setAssetBalances] = useState<{
         [x: string]: MulticallReturn | undefined;
     }>({});
-    const { account, chainId, active } = useWeb3React();
 
     const memoizedFetchBalances = useCallback(async () => {
         if (!account) return;
         setFetchingBalances(true);
         const tokensResponse = await get<{
             result: {
-                multicall: { [chain: string]: { [x: string]: MulticallReturn } };
+                multicall: {
+                    [chain: string]: { [x: string]: MulticallReturn };
+                };
             };
         }>(API.ren.balancesOf, {
             params: {
-                of: account,
+                of: account
             }
         });
         if (!tokensResponse) {
@@ -123,15 +117,14 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
             throw new Error('Multicall Failed');
         }
 
-        setAllBalances(tokensResponse.result.multicall)
-        setTimeout(() => setFetchingBalances(false), 500);
+        setAllBalances(tokensResponse.result.multicall);
+        setFetchingBalances(false);
     }, [account, setFetchingBalances]);
 
     useEffect(() => {
-        if (!allBalances[destinationChain.Icon])
-            return;
-            setAssetBalances(allBalances[destinationChain.Icon] as any)
-    }, [destinationChain.Icon, allBalances])
+        if (!allBalances[destinationChain.Icon]) return;
+        setAssetBalances(allBalances[destinationChain.Icon] as any);
+    }, [destinationChain.Icon, allBalances]);
 
     useEffect(() => {
         if (!chainId || !account) return;
@@ -147,12 +140,6 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
             setEncryptedId(response.data.accountId);
         })();
     }, [chainId, account, disconnect]);
-
-    useEffect(() => {
-        if (fetchedStoredChain || !chainId) return;
-        setDestinationChain(chainsBaseConfig[ChainIdToRenChain[chainId!]!]);
-        setFetchStoredChain(true);
-    }, [fetchedStoredChain, chainId]);
 
     useEffect(() => {
         if (!active) return;
@@ -213,7 +200,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
                     transactionsResponse.tx[0]?.status === 'completed' &&
                     pendingTransaction
                 ) {
-                    memoizedFetchBalances()
+                    memoizedFetchBalances();
                     setPendingTransaction(false);
                     setTransactionId(undefined);
                     HandleNewNotification(
@@ -245,64 +232,36 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
         return () => clearInterval(intervalId);
     }, [fetchTxs, pendingTransaction, encryptedId, transactionId]);
 
-    const ProvRet = useMemo(
-        () => ({
-            memoizedFetchBalances,
-            assetBalances,
-            fetchingBalances,
-            pendingTransaction,
-            setPendingTransaction,
-            fromChain,
-            setFromChain,
-            destinationChain,
-            setDestinationChain,
-            chainType,
-            setChainType,
-            // defaultChains,
-            loading,
-            encryptedId,
-            setEncryptedId,
-            transactions,
-            setTransactions,
-            filteredTransaction,
-            setFilteredTransaction,
-            width,
-
-            setTransactionId,
-            successType,
-            isSuccessOpen,
-            setIsSuccessOpen
-        }),
-        [
-            memoizedFetchBalances,
-            assetBalances,
-            fetchingBalances,
-            pendingTransaction,
-            setPendingTransaction,
-            fromChain,
-            setFromChain,
-            destinationChain,
-            setDestinationChain,
-            chainType,
-            setChainType,
-
-            loading,
-            encryptedId,
-            setEncryptedId,
-            transactions,
-            setTransactions,
-            filteredTransaction,
-            setFilteredTransaction,
-            width,
-
-            setTransactionId,
-            successType,
-            isSuccessOpen,
-            setIsSuccessOpen
-        ]
-    );
     return (
-        <GlobalStateContext.Provider value={ProvRet}>
+        <GlobalStateContext.Provider
+            value={{
+                memoizedFetchBalances,
+                assetBalances,
+                fetchingBalances,
+                pendingTransaction,
+                setPendingTransaction,
+                fromChain,
+                setFromChain,
+                destinationChain,
+                setDestinationChain,
+                chainType,
+                setChainType,
+                // defaultChains,
+                loading,
+                encryptedId,
+                setEncryptedId,
+                transactions,
+                setTransactions,
+                filteredTransaction,
+                setFilteredTransaction,
+                width,
+
+                setTransactionId,
+                successType,
+                isSuccessOpen,
+                setIsSuccessOpen
+            }}
+        >
             {children}
         </GlobalStateContext.Provider>
     );
