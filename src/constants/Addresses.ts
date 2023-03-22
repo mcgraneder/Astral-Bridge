@@ -484,7 +484,7 @@ export const chainAdresses: { [chain: string]: ChainBaseConfig } = {
                 mintGatewayAddress: '0xda07AD211799496A8473cdeBAA91Df03db156644'
             },
             [Asset.ASTRAL_USDT]: {
-                tokenAddress: '0xD93521D9E6B21D54D5276203848f1397624De87A',
+                tokenAddress: '0x8b4F896F83a52dE9ee19f41eaFa7abe35007Ce47',
                 mintGatewayAddress: '0xda07AD211799496A8473cdeBAA91Df03db156644'
             }
         },
@@ -640,7 +640,7 @@ export const chainAdresses: { [chain: string]: ChainBaseConfig } = {
                 mintGatewayAddress: '0xda07AD211799496A8473cdeBAA91Df03db156644'
             },
             [Asset.ASTRAL_USDT]: {
-                tokenAddress: '0xb7fEB55476D3fC26724Ba23794FB9c723c71b9b0',
+                tokenAddress: '0x11B364AF13f157a790CD5dB2E768e533b4972d63',
                 mintGatewayAddress: '0xda07AD211799496A8473cdeBAA91Df03db156644'
             }
         },
