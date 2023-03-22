@@ -51,224 +51,193 @@ const useEcecuteTransaction = (): ExecuteTxType => {
     [dispatch]
   );
 
-  const executeTransaction = useCallback(
-    async (
+  const executeTransaction = async (
       asset: any,
       chain: any,
       args: any[],
       amount: string,
       transactionType: string,
       contractFn: any
-    ): Promise<void> => {
+  ): Promise<void> => {
       if (!provider || !account) return;
-       if (transactionType !== 'Approval') togglePendingModal();
+      if (transactionType !== 'Approval') togglePendingModal();
       const formattedAmount =
-        transactionType === "Approval"
-          ? amount
-          : new BigNumber(amount).shiftedBy(-asset.decimals);
+          transactionType === 'Approval'
+              ? amount
+              : new BigNumber(amount).shiftedBy(-asset.decimals);
 
       try {
-        const tx = await contractFn(...args);
-        setFilteredTransaction(tx.hash);
-        const txReceipt = (await provider.getTransaction(
-          tx.hash
-        )) as ethers.providers.TransactionResponse;
+          const tx = await contractFn(...args);
+          setFilteredTransaction(tx.hash);
+          const txReceipt = (await provider.getTransaction(
+              tx.hash
+          )) as ethers.providers.TransactionResponse;
 
-        const {
-          gasLimit,
-          gasPrice,
-          maxFeePerGas,
-          maxPriorityFeePerGas,
-          ...rest
-        } = txReceipt;
+          const {
+              gasLimit,
+              gasPrice,
+              maxFeePerGas,
+              maxPriorityFeePerGas,
+              ...rest
+          } = txReceipt;
 
-        const type =
-          transactionType === "Deposit"
-            ? "deposit"
-            : transactionType === "Approval"
-            ? "approve"
-            : "withdraw";
+          const type =
+              transactionType === 'Deposit'
+                  ? 'deposit'
+                  : transactionType === 'Approval'
+                  ? 'approve'
+                  : 'withdraw';
 
-        const transactionResponse = await post<ResponseData>(
-          API.next.depositTx,
-          {
-            account,
-            encryptedId,
-            txType: type,
-            chain: chain.fullName,
-            amount: formattedAmount,
-            txHash: tx.hash,
-            currency: asset.Icon,
-            gasLimit: Number(txReceipt.gasLimit),
-            gasPrice: Number(txReceipt.gasPrice),
-            maxFeePerGas: Number(txReceipt.maxFeePerGas),
-            maxPriorityFeePerGas: Number(txReceipt.maxPriorityFeePerGas),
-            ...rest,
-          }
-        );
-        if (!transactionResponse) return;
+          const transactionResponse = await post<ResponseData>(
+              API.next.depositTx,
+              {
+                  account,
+                  encryptedId,
+                  txType: type,
+                  chain: chain.fullName,
+                  amount: formattedAmount,
+                  txHash: tx.hash,
+                  currency: asset.Icon,
+                  gasLimit: Number(txReceipt.gasLimit),
+                  gasPrice: Number(txReceipt.gasPrice),
+                  maxFeePerGas: Number(txReceipt.maxFeePerGas),
+                  maxPriorityFeePerGas: Number(txReceipt.maxPriorityFeePerGas),
+                  ...rest
+              }
+          );
+          if (!transactionResponse) return;
 
-        const txId = transactionResponse.txId;
-        setTimeout(() => toggleSubmittedModal(), 250);
+          const txId = transactionResponse.txId;
+          setTimeout(() => toggleSubmittedModal(), 250);
 
-        await tx
-          .wait(1)
-          .then(async (txReceipt: any) => {
-            await patch(API.next.depositTx, {
-              encryptedId: encryptedId,
-              txId: txId,
-              blockHash: txReceipt.blockHash,
-              blockNumber: txReceipt.blockNumber,
-              gasPrice: Number(txReceipt.effectiveGasPrice).toString(),
-              gasLimit: Number(txReceipt.gasUsed).toString(),
-            });
-          })
-          .catch((error: Error) => {
-            throw new Error("transaction execution failed");
-          });
+          await tx
+              .wait(1)
+              .then(async (txReceipt: any) => {
+                  await patch(API.next.depositTx, {
+                      encryptedId: encryptedId,
+                      txId: txId,
+                      blockHash: txReceipt.blockHash,
+                      blockNumber: txReceipt.blockNumber,
+                      gasPrice: Number(txReceipt.effectiveGasPrice).toString(),
+                      gasLimit: Number(txReceipt.gasUsed).toString()
+                  });
+              })
+              .catch((error: Error) => {
+                  throw new Error('transaction execution failed');
+              });
 
-        setPendingTransaction(false);
+          setPendingTransaction(false);
 
-        HandleNewNotification(
-          "Transaction Success",
-          MESSAGES(
-            transactionType,
-            true,
-            formattedAmount.toString(),
-            asset,
-            chain
-          )
-        );
+          HandleNewNotification(
+              'Transaction Success',
+              MESSAGES(
+                  transactionType,
+                  true,
+                  formattedAmount.toString(),
+                  asset,
+                  chain
+              )
+          );
       } catch (error) {
-        toggleRejectedModal();
+          toggleRejectedModal();
 
-        HandleNewNotification(
-          "Transaction Success",
-          MESSAGES(
-            transactionType,
-            false,
-            formattedAmount.toString(),
-            asset,
-            chain
-          )
-        );
-        throw new Error(`transaction execution failed`);
+          HandleNewNotification(
+              'Transaction Success',
+              MESSAGES(
+                  transactionType,
+                  false,
+                  formattedAmount.toString(),
+                  asset,
+                  chain
+              )
+          );
+          throw new Error(`transaction execution failed`);
       }
-    },
-    [
-      provider,
-      account,
-      togglePendingModal,
-      toggleSubmittedModal,
-      toggleRejectedModal,
-      setPendingTransaction,
-      HandleNewNotification,
-      encryptedId,
-      setFilteredTransaction,
-    ]
-  );
+  };
 
-    const executeBridgeTransaction = useCallback(
-        async (
-            asset: any,
-            chain: any,
-            args: any[],
-            amount: string,
-            transactionType: string,
-            contractFn: any
-        ): Promise<void> => {
-            if (!provider || !account) return;
-            togglePendingModal();
-            const formattedAmount = new BigNumber(amount).shiftedBy(
-                -asset.decimals
-            );
+  const executeBridgeTransaction = async (
+      asset: any,
+      chain: any,
+      args: any[],
+      amount: string,
+      transactionType: string,
+      contractFn: any
+  ): Promise<void> => {
+      if (!provider || !account) return;
+      togglePendingModal();
+      const formattedAmount = new BigNumber(amount).shiftedBy(-asset.decimals);
 
-            try {
-                const tx = await contractFn(...args);
-                setFilteredTransaction(tx.hash);
-                const txReceipt = (await provider.getTransaction(
-                    tx.hash
-                )) as ethers.providers.TransactionResponse;
+      try {
+          const tx = await contractFn(...args);
+          setFilteredTransaction(tx.hash);
+          const txReceipt = (await provider.getTransaction(
+              tx.hash
+          )) as ethers.providers.TransactionResponse;
 
-                const {
-                    gasLimit,
-                    gasPrice,
-                    maxFeePerGas,
-                    maxPriorityFeePerGas,
-                    ...rest
-                } = txReceipt;
+          const {
+              gasLimit,
+              gasPrice,
+              maxFeePerGas,
+              maxPriorityFeePerGas,
+              ...rest
+          } = txReceipt;
 
-               console.log(transactionType)
-                const transactionResponse = await post<ResponseData>(
-                    API.next.mintTx,
-                    {
-                        account,
-                        encryptedId,
-                        txType: transactionType,
-                        chain: chain.fullName,
-                        amount: formattedAmount,
-                        txHash: tx.hash,
-                        currency: asset.Icon,
-                        gasLimit: Number(txReceipt.gasLimit),
-                        gasPrice: Number(txReceipt.gasPrice),
-                        maxFeePerGas: Number(txReceipt.maxFeePerGas),
-                        maxPriorityFeePerGas: Number(
-                            txReceipt.maxPriorityFeePerGas
-                        ),
-                        ...rest
-                    }
-                );
-                if (!transactionResponse) return;
+          console.log(transactionType);
+          const transactionResponse = await post<ResponseData>(
+              API.next.mintTx,
+              {
+                  account,
+                  encryptedId,
+                  txType: transactionType,
+                  chain: chain.fullName,
+                  amount: formattedAmount,
+                  txHash: tx.hash,
+                  currency: asset.Icon,
+                  gasLimit: Number(txReceipt.gasLimit),
+                  gasPrice: Number(txReceipt.gasPrice),
+                  maxFeePerGas: Number(txReceipt.maxFeePerGas),
+                  maxPriorityFeePerGas: Number(txReceipt.maxPriorityFeePerGas),
+                  ...rest
+              }
+          );
+          if (!transactionResponse) return;
 
-                const txId = transactionResponse.txId;
-                setTimeout(() => toggleSubmittedModal(), 250);
-				setTransactionId(tx.hash)
+          const txId = transactionResponse.txId;
+          setTimeout(() => toggleSubmittedModal(), 250);
+          setTransactionId(tx.hash);
 
-                await tx
-                    .wait(1)
-                    .then(async (txReceipt: any) => {
-                        await patch(API.next.mintTx, {
-                            encryptedId: encryptedId,
-                            status: 'verifying',
-                            txId: txId,
-                            blockHash: txReceipt.blockHash,
-                            blockNumber: txReceipt.blockNumber,
-                            gasPrice: Number(
-                                txReceipt.effectiveGasPrice
-                            ).toString(),
-                            gasLimit: Number(txReceipt.gasUsed).toString()
-                        });
-                    })
-                    .catch((error: Error) => {
-                        throw new Error('transaction execution failed');
-                    });
-            } catch (error) {
-                toggleRejectedModal();
+          await tx
+              .wait(1)
+              .then(async (txReceipt: any) => {
+                  await patch(API.next.mintTx, {
+                      encryptedId: encryptedId,
+                      status: 'verifying',
+                      txId: txId,
+                      blockHash: txReceipt.blockHash,
+                      blockNumber: txReceipt.blockNumber,
+                      gasPrice: Number(txReceipt.effectiveGasPrice).toString(),
+                      gasLimit: Number(txReceipt.gasUsed).toString()
+                  });
+              })
+              .catch((error: Error) => {
+                  throw new Error('transaction execution failed');
+              });
+      } catch (error) {
+          toggleRejectedModal();
 
-                HandleNewNotification(
-                    'Transaction Failed',
-                    MESSAGES(
-                        transactionType,
-                        false,
-                        formattedAmount.toString(),
-                        asset,
-                        chain
-                    )
-                );
-                throw new Error(`transaction execution failed`);
-            }
-        },
-        [
-            provider,
-            account,
-            togglePendingModal,
-            toggleSubmittedModal,
-            toggleRejectedModal,
-            HandleNewNotification,
-            encryptedId,
-            setFilteredTransaction
-        ]
-    );
+          HandleNewNotification(
+              'Transaction Failed',
+              MESSAGES(
+                  transactionType,
+                  false,
+                  formattedAmount.toString(),
+                  asset,
+                  chain
+              )
+          );
+          throw new Error(`transaction execution failed`);
+      }
+  };
 
   return { executeTransaction, executeBridgeTransaction };
 };
