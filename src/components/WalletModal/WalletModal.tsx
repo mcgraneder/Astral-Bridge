@@ -170,8 +170,8 @@ const WalletModal = ({
           pendingTransaction;
 
     useEffect(() => {
-        setDestinationChain(chainsBaseConfig.BinanceSmartChain)
-    }, [])      
+        setDestinationChain(chainsBaseConfig.BinanceSmartChain);
+    }, []);
     useEffect(() => setText(''), [buttonState, destinationChain, setText]);
 
     const setChainT = useCallback(

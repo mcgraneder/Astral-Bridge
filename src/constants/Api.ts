@@ -1,18 +1,17 @@
-import { isProduction } from "../utils/misc";
+import { isProduction } from '../utils/misc';
 
-let DOMAIN = "";
-if (typeof window !== "undefined") {
- DOMAIN = window.location.origin;
-} 
+let DOMAIN = '';
+if (typeof window !== 'undefined') {
+    DOMAIN = window.location.origin;
+}
 const SigVerifierBaseUrl = isProduction()
-  ? "http://localhost:8000/api/auth"
-  : "http://localhost:8000/api/auth"; // "http://loclahost:4000";
+    ? 'http://localhost:8000/api/auth'
+    : 'http://localhost:8000/api/auth'; // "http://loclahost:4000";
 
+const OwlOracleBaseUrl = 'https://www.etherchain.org/api';
+const CoinGeckoBaseUrl = 'https://api.coingecko.com/api/v3';
 
-  const OwlOracleBaseUrl = "https://www.etherchain.org/api";
-  const CoinGeckoBaseUrl = "https://api.coingecko.com/api/v3";
-
-  const NextBaseUrl = `${DOMAIN}/api`;
+const NextBaseUrl = `${DOMAIN}/api`;
 const API = {
     next: {
         user: `${NextBaseUrl}/user`,
@@ -23,7 +22,7 @@ const API = {
     },
     ren: {
         verify: `${SigVerifierBaseUrl}/verify`,
-        balancesOf: `https://astral-sol.onrender.com/balancesOf`,
+        balancesOf: `https://astral-sol.onrender.com/balancesOf1`,
         bridgeTokens: `https://astral-sol.onrender.com/bridgeTokens`,
         getTokenApproval: `https://astral-sol.onrender.com/getTokenApproval`,
         getBridgeApproval: `https://astral-sol.onrender.com/getBridgeApproval`,

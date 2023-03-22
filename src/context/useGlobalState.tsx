@@ -88,42 +88,50 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     );
     const { width } = useViewport();
     const [chainType, setChainType] = useState<string>('from');
-    const [successType, setSuccessType] = useState<string>("Mint")
+    const [successType, setSuccessType] = useState<string>('Mint');
     const [transactions, setTransactions] = useState<any[] | undefined>(
         undefined
     );
     const [filteredTransaction, setFilteredTransaction] = useState<
         string | null
     >(null);
-    const [transactionId, setTransactionId] = useState<string | undefined>(undefined)
-
+    const [transactionId, setTransactionId] = useState<string | undefined>(
+        undefined
+    );
+ const [allBalances, setAllBalances] = useState<{
+     [chain: string]: { [x: string]: MulticallReturn
+ } }>({});
     const [assetBalances, setAssetBalances] = useState<{
         [x: string]: MulticallReturn | undefined;
     }>({});
     const { account, chainId, active } = useWeb3React();
 
     const memoizedFetchBalances = useCallback(async () => {
-        if (!account || !chainId || !destinationChain) return;
+        if (!account) return;
         setFetchingBalances(true);
         const tokensResponse = await get<{
             result: {
-                multicall: { [x: string]: MulticallReturn };
+                multicall: { [chain: string]: { [x: string]: MulticallReturn } };
             };
         }>(API.ren.balancesOf, {
             params: {
                 of: account,
-                chainName: destinationChain.fullName
             }
         });
-
         if (!tokensResponse) {
             setFetchingBalances(false);
             throw new Error('Multicall Failed');
         }
 
-        setAssetBalances(tokensResponse.result.multicall);
+        setAllBalances(tokensResponse.result.multicall)
         setTimeout(() => setFetchingBalances(false), 500);
-    }, [account, chainId, setFetchingBalances, destinationChain]);
+    }, [account, setFetchingBalances]);
+
+    useEffect(() => {
+        if (!allBalances[destinationChain.Icon])
+            return;
+            setAssetBalances(allBalances[destinationChain.Icon] as any)
+    }, [destinationChain.Icon, allBalances])
 
     useEffect(() => {
         if (!chainId || !account) return;
@@ -147,14 +155,14 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     }, [fetchedStoredChain, chainId]);
 
     useEffect(() => {
-        if (!active || !destinationChain) return;
+        if (!active) return;
         memoizedFetchBalances();
         const interval: NodeJS.Timer = setInterval(
             memoizedFetchBalances,
             50000
         );
         return () => clearInterval(interval);
-    }, [memoizedFetchBalances, active, destinationChain]);
+    }, [memoizedFetchBalances, active]);
 
     useEffect(() => {
         const interval: NodeJS.Timeout = setTimeout(
@@ -164,31 +172,31 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
         return () => clearTimeout(interval);
     }, []);
 
-        const dispatch = useNotification();
+    const dispatch = useNotification();
 
-        const HandleNewNotification = useCallback(
-            (title: string, message: string): void => {
-                dispatch({
-                    type: 'info',
-                    message: message,
-                    title: title,
-                    position: 'topR' || 'topR',
-                    success: true
-                });
-            },
-            [dispatch]
-        );
+    const HandleNewNotification = useCallback(
+        (title: string, message: string): void => {
+            dispatch({
+                type: 'info',
+                message: message,
+                title: title,
+                position: 'topR' || 'topR',
+                success: true
+            });
+        },
+        [dispatch]
+    );
 
-        useEffect(() => {
-            const loaderTimeout: NodeJS.Timeout = setTimeout(() => {
-                setLoading(false);
-            }, 1400);
+    useEffect(() => {
+        const loaderTimeout: NodeJS.Timeout = setTimeout(() => {
+            setLoading(false);
+        }, 1400);
 
-            return () => clearTimeout(loaderTimeout);
-        }, []);
+        return () => clearTimeout(loaderTimeout);
+    }, []);
 
-        const fetchTxs = useCallback(async (accountId: string, txId: string) => { 
-       
+    const fetchTxs = useCallback(
+        async (accountId: string, txId: string) => {
             try {
                 const transactionsResponse = await get<{
                     tx: UserTxType[];
@@ -199,7 +207,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
                     }
                 });
                 if (!transactionsResponse) return;
-                console.log(transactionsResponse)
+                console.log(transactionsResponse);
                 // setTransaction(transactionsResponse.tx);
                 if (
                     transactionsResponse.tx[0]?.status === 'completed' &&
@@ -211,27 +219,30 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
                         'Transaction Success',
                         `Successfylly bridged ${transactionsResponse.tx[0]?.amount} ${transactionsResponse.tx[0]?.currency}`
                     );
-                    setSuccessType(transactionsResponse.tx[0]?.txType === 'mint' ? "Mint" : "Release");
-                    setIsSuccessOpen(true)
-                   
+                    setSuccessType(
+                        transactionsResponse.tx[0]?.txType === 'mint'
+                            ? 'Mint'
+                            : 'Release'
+                    );
+                    setIsSuccessOpen(true);
                 }
             } catch (err) {
                 //  setError("notifications.somethingWentWrongTryLater");
             }
-        }, [
-            setTransactionId,
-            pendingTransaction
-        ]);
+        },
+        [setTransactionId, pendingTransaction]
+    );
 
-        useEffect(() => {
-            console.log(transactionId)
-            if (!pendingTransaction || !encryptedId || !transactionId)
-                return;
-            fetchTxs(encryptedId, transactionId);
-            const intervalId: NodeJS.Timer = setInterval(() => fetchTxs(encryptedId, transactionId), 3000);
-            return () => clearInterval(intervalId);
-        }, [fetchTxs, pendingTransaction, encryptedId, transactionId]);
-
+    useEffect(() => {
+        console.log(transactionId);
+        if (!pendingTransaction || !encryptedId || !transactionId) return;
+        fetchTxs(encryptedId, transactionId);
+        const intervalId: NodeJS.Timer = setInterval(
+            () => fetchTxs(encryptedId, transactionId),
+            3000
+        );
+        return () => clearInterval(intervalId);
+    }, [fetchTxs, pendingTransaction, encryptedId, transactionId]);
 
     const ProvRet = useMemo(
         () => ({
@@ -255,7 +266,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
             filteredTransaction,
             setFilteredTransaction,
             width,
-       
+
             setTransactionId,
             successType,
             isSuccessOpen,
@@ -282,7 +293,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
             filteredTransaction,
             setFilteredTransaction,
             width,
-         
+
             setTransactionId,
             successType,
             isSuccessOpen,
