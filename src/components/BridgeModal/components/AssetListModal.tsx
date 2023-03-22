@@ -29,24 +29,24 @@ import { supportedAssets } from '../../AssetRotator/AssetRotator';
 import { Icons } from '../../Icons/AssetLogs/assets';
 
 export const Backdrop = styled.div`
-  position: fixed;
-  height: 100vh;
-  width: 100vw;
-  opacity: 0;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  backdrop-filter: blur(5px);
-  z-index: 1000;
-  pointer-events: none;
-  transition: opacity 0.15s ease-in-out !important;
-  background: rgba(2, 8, 26, 0.45);
-  ${(props: any) =>
-    props.visible &&
-    css`
-      opacity: 1;
-      pointer-events: all;
-    `}
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    pointer-events: none;
+    transition: opacity 0.15s ease-in-out !important;
+    background: rgba(2, 8, 26, 0.45);
+    ${(props: any) =>
+        props.visible &&
+        css`
+            opacity: 1;
+            pointer-events: all;
+        `}
 `;
 
 export const FormWrapper = styled.div`
@@ -106,10 +106,7 @@ const Dropdown = ({
         setShowTokenModal(true);
     };
     return (
-        <DropDownContainer
-            isVisible={isVisible}
-            onClick={on}
-        >
+        <DropDownContainer isVisible={isVisible} onClick={on}>
             <div
                 className={`flex items-center justify-center gap-2 ${
                     !isVisible && 'hidden'
@@ -188,8 +185,7 @@ const AssetListModal = ({
     }, [setSearchTerm, setShowTokenModal]);
 
     const available = useCallback(
-        () =>
-            walletAssetType === 'chain' ? [...assets] : [...assets],
+        () => (walletAssetType === 'chain' ? [...assets] : [...assets]),
         [walletAssetType, assets]
     );
 
@@ -208,23 +204,23 @@ const AssetListModal = ({
     };
 
     const handleSort = (a: any, b: any) => {
-       if (a.fullName === 'Ethereum' || a.fulllName === 'BinanceSmartChain')
-           return -1;
-       if (a.Icon === 'ASTRAL_USDT' || a.Icon === 'USDT') return -1;
-       else if (buttonState.tabName === 'Deposit') {
-           if (
-               Number(assetBalances[a.Icon]?.walletBalance) >
-               Number(assetBalances[b.Icon]?.walletBalance)
-           )
-               return -1;
-       } else {
-           if (
-               Number(assetBalances[a.Icon]?.bridgeBalance) >
-               Number(assetBalances[b.Icon]?.bridgeBalance)
-           )
-               return -1;
-       }
-       return 0;
+        if (a.fullName === 'Ethereum' || a.fulllName === 'BinanceSmartChain')
+            return -1;
+        if (a.Icon === 'ASTRAL_USDT' || a.Icon === 'USDT') return -1;
+        else if (buttonState.tabName === 'Deposit') {
+            if (
+                Number(assetBalances[a.Icon]?.walletBalance) >
+                Number(assetBalances[b.Icon]?.walletBalance)
+            )
+                return -1;
+        } else {
+            if (
+                Number(assetBalances[a.Icon]?.bridgeBalance) >
+                Number(assetBalances[b.Icon]?.bridgeBalance)
+            )
+                return -1;
+        }
+        return 0;
     };
 
     const setSelectedToken = React.useCallback(

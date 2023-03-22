@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useCallback } from "react";
-import styled, { css } from "styled-components";
-import ToggleButtonContainer from "./components/ToggleButton";
+import React, { useState, useEffect, useCallback } from 'react';
+import styled, { css } from 'styled-components';
+import ToggleButtonContainer from './components/ToggleButton';
 import Dropdown from './components/Dropdown';
-import WalletInputForm from "./components/WalletInput";
-import BalanceDisplay from "../NativeBalanceDisplay/BalanceDisplay";
-import { useWeb3React } from "@web3-react/core";
-import { ChainIdToRenChain } from "../../connection/chains";
-import { useGlobalState } from "../../context/useGlobalState";
-import BigNumber from "bignumber.js";
-import FeeData from "./components/FeeData";
+import WalletInputForm from './components/WalletInput';
+import BalanceDisplay from '../NativeBalanceDisplay/BalanceDisplay';
+import { useWeb3React } from '@web3-react/core';
+import { ChainIdToRenChain } from '../../connection/chains';
+import { useGlobalState } from '../../context/useGlobalState';
+import BigNumber from 'bignumber.js';
+import FeeData from './components/FeeData';
 import BridegButton from '../Buttons/BridgeButton';
 import BridgeToggleButton from './components/BridgeToggleButton';
 import { Dispatch, SetStateAction } from 'react';
-import ConfirmationStep from "./steps/GatewayStep";
+import ConfirmationStep from './steps/GatewayStep';
 import { Gateway } from '@renproject/ren';
 import {
     WhiteListedLegacyAssets,
@@ -197,7 +197,7 @@ const BridgeModal = ({
 
     useEffect(() => {
         setDestinationChain(chainsBaseConfig.Ethereum);
-    }, []);   
+    }, []);
 
     useEffect(() => {
         if (!asset || !account) return;
@@ -218,7 +218,8 @@ const BridgeModal = ({
             console.log(Number(approvalResponse?.result.hex));
             if (!approvalResponse) throw new Error('Multicall Failed');
             if (
-                Number(approvalResponse.result.hex) >= Number(text) / 10 ** -asset.decimals ||
+                Number(approvalResponse.result.hex) >=
+                    Number(text) / 10 ** -asset.decimals ||
                 buttonState.tabName === 'Withdraw'
             )
                 setIsAssetApproved(true);
