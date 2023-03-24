@@ -203,7 +203,6 @@ const useEcecuteTransaction = (): ExecuteTxType => {
           if (!transactionResponse) return;
 
           const txId = transactionResponse.txId;
-          setTimeout(() => toggleSubmittedModal(), 250);
           setTransactionId(tx.hash);
 
           await tx
