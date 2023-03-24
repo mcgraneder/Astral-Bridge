@@ -54,11 +54,10 @@ export const FormWrapper = styled.div`
     transform: translate(-50%, -50%);
     width: 390px;
     height: 365px;
-    background-color: rgb(15, 18, 44);
-    text-align: right;
+    background-color: rgb(13, 17, 28);
     padding: 20px 15px;
     padding-bottom: 20px;
-    border: 1.5px solid rgb(48, 63, 88);
+    border: 1.5px solid rgb(60, 65, 80);
     border-radius: 15px;
     display: block;
     z-index: 10000000000;

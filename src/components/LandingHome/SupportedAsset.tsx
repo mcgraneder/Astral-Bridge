@@ -5,29 +5,32 @@ import { motion } from 'framer-motion';
 import { fadeIn } from '../../utils/fadeIn.';
 
 export const SupportedAssetsContainer = styled.div`
-  max-width: ${(props: any) => props.maxWidth};
-  // width: 100%;
-  display: flex;
-  box-sizing: border-box;
-  margin-left: auto;
-  margin-right: auto;
-  overflow-x: hidden;
+    max-width: ${(props: any) => props.maxWidth};
+    // width: 100%;
+    display: flex;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+    overflow-x: hidden;
+    overflow-y: hidden;
 
-  z-index: 1000000;
+    z-index: 1000000;
 
-  @media (max-width: 950px) {
-    max-width: 800px;
-  }
+    @media (max-width: 950px) {
+        max-width: 800px;
+    }
 
-  @media (max-width: 800px) {
-    max-width: 650px;
-  }
+    @media (max-width: 800px) {
+        max-width: 650px;
+    }
 `;
 
 export const SupportedAssetsWrapper = styled.div`
   display: flex;
   // flex-direction: row;
   // justify-content: stretch;
+  overflow-y: hidden;
+  overflow-x: hidden;
   margin-top: 10px;
   z-index: -1000;
 
@@ -106,7 +109,7 @@ export const Glow = styled.div`
 const SupportedAssets = ({ type }: any) => {
  
     return (
-        <div className="relative flex gap-6">
+        <div className="relative flex gap-6 overflow-x-hidden overflow-y-hidden">
             <GlowContainer>
                 <Glow />
             </GlowContainer>
@@ -117,7 +120,7 @@ const SupportedAssets = ({ type }: any) => {
                 viewport={{ once: true, amount: 0.8 }}
                 className="z-50"
             > */}
-            <SupportedAssetsContainer maxWidth={'45%'}>
+            <SupportedAssetsContainer maxWidth={'100%'}>
                 <SupportedAssetsWrapper>
                     <CurrencysContainer
                         paddingR={'0px'}
@@ -131,16 +134,23 @@ const SupportedAssets = ({ type }: any) => {
                             whileInView={'show'}
                             viewport={{ once: true, amount: 0.7 }}
                         >
-                            <CurrenciesHeader>Chains</CurrenciesHeader>
+                            <CurrenciesHeader>
+                                {type === 'LEGACY' ? 'Supported Chains' : 'Supported Assets'}
+                            </CurrenciesHeader>
                         </motion.div>
                         <CurrenciesList>
-                            <AssetItem assetType={'chain'} type={type} />
+                            <AssetItem
+                                assetType={
+                                    type === 'LEGACY' ? 'chain' : 'currency'
+                                }
+                                type={type}
+                            />
                         </CurrenciesList>
                     </CurrencysContainer>
                 </SupportedAssetsWrapper>
             </SupportedAssetsContainer>
             {/* </motion.div> */}
-            <motion.div
+            {/* <motion.div
                 variants={fadeIn('uo', 0.01)}
                 initial="hidden"
                 whileInView={'show'}
@@ -148,7 +158,7 @@ const SupportedAssets = ({ type }: any) => {
                 className="z-[10000000000]"
             >
                 <div className="my-8 h-[850px] border-l-2 border-gray-500" />
-            </motion.div>
+            </motion.div> */}
 
             {/* <motion.div
                 variants={fadeIn('left', 0.1)}
@@ -157,7 +167,7 @@ const SupportedAssets = ({ type }: any) => {
                 viewport={{ once: true, amount: 0.8 }}
                 // className="mt-8 mb-2 flex items-center justify-center"
             > */}
-            <SupportedAssetsContainer maxWidth={'45%'}>
+            {/* <SupportedAssetsContainer maxWidth={'45%'}>
                 <SupportedAssetsWrapper>
                     <CurrencysContainer
                         paddingR={'0px'}
@@ -178,7 +188,7 @@ const SupportedAssets = ({ type }: any) => {
                         </CurrenciesList>
                     </CurrencysContainer>
                 </SupportedAssetsWrapper>
-            </SupportedAssetsContainer>
+            </SupportedAssetsContainer> */}
             {/* </motion.div> */}
         </div>
     );

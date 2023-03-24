@@ -55,11 +55,11 @@ export const FormWrapper = styled.div`
     top: 45%;
     transform: translate(-50%, -50%);
     width: 430px;
-    background-color: rgb(15, 18, 44);
+    background-color: rgb(13, 17, 28);
     text-align: right;
     /* padding: 30px 25px; */
     /* padding-bottom: 20px; */
-    border: 1.5px solid rgb(48, 63, 88);
+    border: 1.5px solid rgb(60, 65, 80);
     border-radius: 15px;
     display: block;
     z-index: 10000000000;
@@ -75,8 +75,10 @@ export const DropDownContainer = styled.div`
     align-items: center;
     border-radius: 6px;
     border: ${(props: any) =>
-        props.isVisible ? '1px solid rgb(75 85 99);' : 'none'};
-    background-color: rgb(43, 49, 102);
+        props.isVisible
+            ? '1px solid rgb(60, 65, 80)'
+            : 'none'}; //rgb(60, 65, 80)
+    background-color: rgb(36, 39, 54);
     padding: 0px 12px;
     height: ${(props: any) => (props.isVisible ? '38px' : '0px')};
     transition: height 0.2s ease;

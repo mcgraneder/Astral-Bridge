@@ -40,6 +40,7 @@ import { ERC20ABI } from '@renproject/chains-ethereum/contracts';
 import { ethers } from 'ethers';
 import useEcecuteTransaction from '../../hooks/useExecuteTransaction';
 import { get } from '../../services/axios';
+import { WarningPopup } from '../NetworkWarning/NetworkWarning';
 
 export type Tab = {
     tabName: string;
@@ -76,10 +77,10 @@ const TABS: Tab[] = [
 export const BridgeModalContainer = styled.div`
     max-width: 480px;
     color: White;
-    background-color: rgb(15, 18, 44);
+    background-color: rgb(13, 17, 28);
     text-align: right;
     /* padding: 12px 18px; */
-    border: 1px solid rgb(57, 62, 82);
+    border: 1px solid rgb(60, 65, 80); //rgb(60, 65, 80)
     border-radius: 20px;
     box-shadow: 0px 10px 150px 5px rgba(75, 135, 220, 0.03);
     margin: 30px auto 0;
@@ -91,7 +92,7 @@ export const MintFormContainer = styled.div`
     margin-top: 10px;
     padding-bottom: 20px;
     margin-bottom: 10px;
-    background: rgb(43, 49, 102);
+    background: rgb(36, 39, 54);
     border: 1px solid rgb(34, 43, 68);
     border-radius: 10px;
 `;
@@ -100,7 +101,7 @@ export const MinFormToggleButtonContainer = styled.div`
     height: 40px;
     display: flex;
     margin-bottom: 25px;
-    background: rgb(15, 18, 44);
+    background: rgb(13, 17, 28);
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 
@@ -115,7 +116,7 @@ export const InfoContainer = styled.div`
     margin-top: 10px;
     height: ${(props: any) => (props.visible ? '87px' : '0px')};
     transition: height 0.25s ease-in;
-    background: rgb(15, 18, 44);
+    background: rgb(13, 17, 28);
     border-radius: 10px;
 
     ${(props: any) =>
@@ -303,6 +304,7 @@ const BridgeModal = ({
     } else
         return (
             <div className="mt-[60px] mb-[40px]">
+                <WarningPopup label={'Dont have USDT on Goerli'} />
                 <BridgeModalContainer>
                     <BridgeToggleButton
                         activeButton={buttonState}

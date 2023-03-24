@@ -74,7 +74,7 @@ export const ChainSelectorIconWrapper = styled.div`
 `;
 
 export const DetailsSection = styled.div`
-    background-color: rgb(43 49 102);
+    background-color: rgb(36, 39, 54);
     border: 1px solid rgb(47, 52, 72);
     padding-left: 15px;
     padding-right: 15px;

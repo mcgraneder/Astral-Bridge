@@ -30,11 +30,11 @@ module.exports = {
                 width: 'width'
             },
             colors: {
-                tertiary: 'rgb(56, 52, 107)',
-                secondary: 'rgb(43, 49, 102)',
+                tertiary: 'rgb(60, 65, 80)',
+                secondary: 'rgb(36,39,54)',
                 lightTertiary: 'rgb(66, 87, 122)',
-                darkBackground: 'rgb(15,18,44)',
-                hoverLightground: 'rgb(20, 32, 65)',
+                darkBackground: 'rgb(13, 17, 28)',
+                hoverLightground: 'rgb(13, 17, 28)',
 
                 extraDarkBackground: 'rgb(12,18,43)',
                 secondaryButtonColor: 'rgb(28,44,81)',

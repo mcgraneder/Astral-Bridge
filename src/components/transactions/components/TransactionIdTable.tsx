@@ -24,7 +24,7 @@ const GridContainer = styled.div`
     display: flex;
     flex-direction: column;
     max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
-    background-color: rgb(15, 18, 44);
+    background-color: rgb(13, 17, 28);
     box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04),
         0px 16px 24px rgba(0, 0, 0, 0.04), 0px 24px 32px rgba(0, 0, 0, 0.01);
     margin-left: auto;
@@ -32,7 +32,7 @@ const GridContainer = styled.div`
     border-radius: 12px;
     /* justify-content: center; */
     align-items: center;
-    border: 1px solid rgb(48, 63, 88);
+    border: 1px solid rgb(60, 65, 80);
 `;
 
 export type UserTxType = {

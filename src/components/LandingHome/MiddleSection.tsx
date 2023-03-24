@@ -101,7 +101,7 @@ interface Props {
 export const Container = ({ children, className = '', ...rest }: Props) => {
     return (
         <div
-            className={`bg-bg-[rgb(15,18,44)] relative w-full overflow-hidden rounded-2xl drop-shadow-2xl lg:w-auto ${className}`}
+            className={`bg-bg-[rgb(13,17,28)] relative w-full overflow-hidden rounded-2xl drop-shadow-2xl lg:w-auto ${className}`}
             {...rest}
         >
             {children}
@@ -182,7 +182,7 @@ function Section2() {
                     isFlipped={flipped.ownMoney}
                     flipDirection="horizontal"
                 >
-                    <Container className=" h-[250px] w-full border border-tertiary bg-[rgb(15,18,44)] ">
+                    <Container className=" h-[250px] w-full border border-tertiary bg-[rgb(13,17,28)] ">
                         <Image
                             alt=""
                             src={SwapImg}
@@ -207,7 +207,7 @@ function Section2() {
                             </Description>
                         </div>
                     </Container>
-                    <Container className="flex h-[250px] items-center justify-center border border-tertiary bg-[rgb(15,18,44)] ">
+                    <Container className="flex h-[250px] items-center justify-center border border-tertiary bg-[rgb(13,17,28)] ">
                         <CrossButton
                             onClick={() => flip(Cards.ownMoney, false)}
                         />
@@ -238,7 +238,7 @@ function Section2() {
                     isFlipped={flipped.freeTransfer}
                     flipDirection="horizontal"
                 >
-                    <Container className="bg-bg-[rgb(15,18,44)] relative h-[250px] w-full border border-tertiary bg-[rgb(15,18,44)] ">
+                    <Container className="bg-bg-[rgb(13,17,28)] relative h-[250px] w-full border border-tertiary bg-[rgb(13,17,28)] ">
                         <div className="absolute -z-50 h-full w-full translate-y-4 bg-[url('/svgs/coins.svg')] bg-contain bg-bottom bg-no-repeat lg:translate-x-9 lg:bg-right" />
                         <div className=" mt-6 ml-8 flex flex-col items-start  justify-between mlg:mt-10 mlg:ml-16">
                             <Title className="text-center text-2xl text-[rgb(216,222,255)] lg:text-left  mlg:text-3xl">
@@ -281,7 +281,7 @@ function Section2() {
                 </ReactCardFlip>
             </div>
             <div className="mt-8 flex w-full flex-col items-center justify-between gap-8 mlg1:flex-row">
-                <Container className="bg-bg-[rgb(15,18,44)] relative h-[250px] w-full min-w-[25%] border border-tertiary bg-[rgb(15,18,44)]">
+                <Container className="bg-bg-[rgb(13,17,28)] relative h-[250px] w-full min-w-[25%] border border-tertiary bg-[rgb(13,17,28)]">
                     <div className="mgl1:mx-12 mx-6 mt-5 flex flex-col mlg1:mt-3">
                         <div className="flex flex-row items-center justify-between">
                             <Title className="items-center text-center text-2xl text-[rgb(216,222,255)] lg:w-80 lg:text-left mlg:text-3xl">
@@ -305,7 +305,7 @@ function Section2() {
                         </div>
                     </div>
                 </Container>
-                <Container className="bg-bg-[rgb(15,18,44)] relative h-[250px] w-full min-w-[25%] border border-tertiary bg-[rgb(15,18,44)]">
+                <Container className="bg-bg-[rgb(13,17,28)] relative h-[250px] w-full min-w-[25%] border border-tertiary bg-[rgb(13,17,28)]">
                     <div className="mgl1:mx-12 mx-6 mt-5 flex flex-col mlg1:mt-3">
                         <div className="flex flex-row items-center justify-between">
                             <Title className="items-center text-left  text-2xl text-[rgb(216,222,255)] lg:w-80 mlg:text-3xl">
@@ -329,7 +329,7 @@ function Section2() {
                         </div>
                     </div>
                 </Container>
-                <Container className="bg-bg-[rgb(15,18,44)] relative h-[250px] w-full min-w-[25%] border border-tertiary bg-[rgb(15,18,44)]">
+                <Container className="bg-bg-[rgb(13,17,28)] relative h-[250px] w-full min-w-[25%] border border-tertiary bg-[rgb(13,17,28)]">
                     <div className="mgl1:mx-12 mx-6 mt-5 flex flex-col mlg1:mt-3">
                         <div className="flex flex-row items-center justify-between">
                             <Title className="items-center text-center text-2xl text-[rgb(216,222,255)] lg:w-80 lg:text-left mlg:text-3xl">

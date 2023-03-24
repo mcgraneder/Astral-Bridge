@@ -20,15 +20,15 @@ export const MintToggleButton = styled.div`
     height: 100%;
     border-top-${(props: any) => props.side}-radius: 10px;
     border-bottom-${(props: any) => props.side}-radius: 10px;
-    border-right: 1.5px solid rgb(14, 22, 39);
+    border-right: 1.5px solid rgb(13, 17, 28);
     background: ${(props: any) =>
-      props.active ? "rgb(59,130,246)" : "rgb(43, 49, 102)"};
+        props.active ? 'rgb(59,130,246)' : 'rgb(36,39,54)'};
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px solid ${(props: any) =>
-      props.active ? "rgb(75,135,220)" : "rgb(43, 49, 102)"};
-    color: ${(props: any) => (props.active ? "White" : "rgb(74, 107, 161)")};
+        props.active ? 'rgb(75,135,220)' : 'rgb(36,39,54)'};
+    color: ${(props: any) => (props.active ? 'White' : 'rgb(74, 107, 161)')};
     &:hover {
         cursor: pointer;
     }

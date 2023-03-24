@@ -88,7 +88,7 @@ const NavLinks = ({ routes }: { routes: string[] }) => {
             key={route}
             className="mx-1 hidden flex-row items-center gap-2 md:flex"
           >
-            <span className="my-2 w-full rounded-xl bg-black bg-opacity-20 px-4 py-2 text-center text-[16px] hover:cursor-pointer hover:bg-black hover:bg-opacity-40">
+            <span className="my-2 w-full rounded-xl bg-black bg-opacity-40 px-4 py-2 text-center text-[16px] hover:cursor-pointer hover:bg-black hover:bg-opacity-60">
               {route}
             </span>
           </Link>
@@ -265,7 +265,7 @@ const TokenSearchBar = ({
   return (
     <BoxItemContainer allignment={width >= 1000 ? "center" : "end"}>
       <div
-        className={`relative  flex h-[45px] w-fit max-w-[95%] items-center justify-center rounded-lg border border-transparent bg-darkBackground bg-opacity-40 px-2 lg:w-full lg:border-gray-500 ${
+        className={`relative  flex h-[45px] w-fit max-w-[95%] items-center justify-center rounded-lg border border-transparent bg-darkBackground bg-opacity-60 px-2 lg:w-full lg:border-gray-500 ${
           dropDownActive && "border-b-0 bg-opacity-100"
         } ${width <= 1000 && "mr-4"}`}
       >

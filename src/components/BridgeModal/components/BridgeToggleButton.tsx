@@ -9,7 +9,7 @@ export const MinFormToggleButtonContainer = styled.div`
   height: 40px;
   display: flex;
   margin-bottom: 25px;
-  background: rgb(15,18,44);
+  background: rgb(13, 17, 28);
   border-top-left-radius: 20px;
   border-top-right-radius: 20px;
 
@@ -25,7 +25,7 @@ export const MintToggleButton = styled.div`
     height: 100%;
     border-top-${(props: any) => props.side}-radius: 20px;
     background: ${(props: any) =>
-        props.active ? 'rgb(15,18,44)' : 'rgb(43, 49, 102)'};
+        props.active ? 'rgb(13, 17, 28)' : 'rgb(36,39,54)'};
     display: flex;
     align-items: center;
     justify-content: center;

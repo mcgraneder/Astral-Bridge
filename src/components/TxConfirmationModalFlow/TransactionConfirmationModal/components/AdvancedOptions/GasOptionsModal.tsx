@@ -54,7 +54,7 @@ export const WalletInputWrapper = styled.div`
     align-items: center;
     justify-content: space-between;
     -webkit-appearance: none;
-    background-color: rgb(43, 49, 102);
+    background-color: rgb(36, 39, 54);
     border-radius: 10px;
     font-size: 14px;
     border: 0.5px solid transparent;

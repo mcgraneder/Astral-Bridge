@@ -64,8 +64,9 @@ const WalletPage: NextPage = () => {
           isHomePageWarning={false}
           message={
             <span>
-              This page wll eventually.... be the gateway from your wallet. Connect
-              to your traded tokens. When u bridge asses they will move through here for the dex
+              This pages functionality is not finished. You can deposit bridged astral USDT
+              and withdraw. but that is it for now. This page will eventually be used to deposit bridged
+              assets from your metamask into the astral contracts so you can do cross-chain trading.
             </span>
           }
         />

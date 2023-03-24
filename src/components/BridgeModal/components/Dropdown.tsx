@@ -9,8 +9,8 @@ export const DropDownContainer = styled.div`
     align-items: center;
     border-radius: 6px;
     border: ${(props: any) =>
-        props.isVisible ? '1px solid rgb(75 85 99);' : 'none'};
-    background-color: rgb(43, 49, 102);
+        props.isVisible ? '1px solid rgb(60, 65, 80);' : 'none'};
+    background-color: rgb(36, 39, 54);
     padding: 0px 12px;
     height: ${(props: any) => (props.isVisible ? '38px' : '0px')};
     transition: height 0.2s ease;

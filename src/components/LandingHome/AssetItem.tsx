@@ -103,7 +103,7 @@ return (
                     <>
                         <div
                             key={index}
-                            className="mx-4 flex min-w-[40px] flex-col items-center justify-center gap-2 p-4 hover:cursor-pointer "
+                            className="mx-4 flex min-w-[160px] flex-col items-center justify-center gap-2 p-4 hover:cursor-pointer "
                         >
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.0 }}
@@ -111,14 +111,14 @@ return (
                                 viewport={{ once: true, amount: 1 }}
                                 transition={{
                                     duration: 0.4,
-                                    delay: 0 + index / 20,
+                                    delay: 0 + index / 15,
                                     ease: [0, 0.71, 0.2, 1.01],
-                                    scale: {
-                                        type: 'spring',
-                                        damping: 8,
-                                        stiffness: 120,
-                                        restDelta: 0.001
-                                    }
+                                    // scale: {
+                                    //     type: 'spring',
+                                    //     damping: 8,
+                                    //     stiffness: 120,
+                                    //     restDelta: 0.001
+                                    // }
                                     //  Layout: { type: "spring"}
                                 }}
                                 className="flex flex-col gap-2 items-center justify-center"

@@ -78,7 +78,7 @@ const Home = () => {
         });
     };
     return (
-        <div className="text-bold overflow-y-hidden px-0 text-white backdrop-blur-lg md:px-10 ">
+        <div className="text-bold overflow-y-hidden px-0 text-white backdrop-blur-lg overflow-x-hidden md:px-10 ">
             <div className="my-auto mx-0 flex min-h-screen flex-col  items-center justify-center ">
                 <motion.div
                     variants={fadeIn('down', 0.01)}
@@ -149,6 +149,7 @@ const Home = () => {
                 </motion.div>
 
                 <SupportedAssets type={'LEGACY'} />
+                <SupportedAssets type={'EVM'} />
             </div>
         </div>
     );

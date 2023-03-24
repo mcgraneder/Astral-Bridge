@@ -17,11 +17,11 @@ export const FormWrapper = styled.div`
     top: 28%;
     transform: translate(-50%, -50%);
     width: 300px;
-    background-color: rgb(15, 18, 44);
+    background-color: rgb(13, 17, 28);
     text-align: right;
     padding: 10px;
     padding-bottom: 20px;
-    border: 1.5px solid rgb(48, 63, 88);
+    border: 1.5px solid rgb(60, 65, 80);
     border-radius: 15px;
     display: block;
     z-index: 10000000000;
@@ -94,7 +94,7 @@ const TokenSelectDropdown = () => {
 const ChainSelectorButton = ({ setIsMenuOpen, activeChain }: { setIsMenuOpen: React.Dispatch<React.SetStateAction<boolean>>; activeChain: ChainType | undefined }) => {
     return (
       <div
-        className="py-1 flex items-center rounded-lg bg-black bg-opacity-20 px-2 text-center hover:cursor-pointer hover:border-gray-500 hover:bg-black hover:bg-opacity-40"
+        className="py-1 flex items-center rounded-lg bg-black bg-opacity-60 px-2 text-center hover:cursor-pointer hover:border-gray-500 hover:bg-black hover:bg-opacity-20"
         onClick={(e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
           e.stopPropagation();
           setIsMenuOpen((o: boolean) => !o);

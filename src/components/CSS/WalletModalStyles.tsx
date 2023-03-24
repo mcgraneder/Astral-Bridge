@@ -72,14 +72,16 @@ export const MintToggleButton = styled.div`
     width: 50%;
     height: 100%;
     border-top-${(props: any) => props.side}-radius: 10px;
-    border-right: 1.5px solid rgb(14, 22, 39);
-    background: ${(props: any) => (props.active ? "rgb(14, 22, 39)" : "rgb(27,32,52)")};
+    border-right: 1.5px solid rgb(13, 17, 28);
+    background: ${(props: any) =>
+        props.active ? 'rgb(13, 17, 28)' : 'rgb(36,39,54)'};
     font-size: 18px;
     font-weight: bold;
     // font-family: 'Open Sans', sans-serif;
-    border: 1px solid ${(props: any) => (props.active ? "rgb(75,135,220)" : "rgb(27,32,52)")};
+    border: 1px solid ${(props: any) =>
+        props.active ? 'rgb(75,135,220)' : 'rgb(36,39,54)'};
     // border-bottom: 1.5px solid rgb(75,135,220);
-    color: ${(props: any) => (props.active ? "rgb(75,135,220)" : "White")};
+    color: ${(props: any) => (props.active ? 'rgb(75,135,220)' : 'White')};
     &:hover {
 
         cursor: pointer
@@ -92,14 +94,16 @@ export const ReleaseToggleButton = styled.div`
     width: 50%;
     height: 100%;
     border-top-${(props: any) => props.side}-radius: 10px;
-    border-right: 1.5px solid rgb(14, 22, 39);
-    background: ${(props: any) => (!props.active ? "rgb(14, 22, 39)" : "rgb(27,32,52)")};
+    border-right: 1.5px solid rgb(13, 17, 28);
+    background: ${(props: any) =>
+        !props.active ? 'rgb(13, 17, 28)' : 'rgb(36,39,54)'};
     font-size: 18px;
     font-weight: bold;
     font-family: 'Open Sans', sans-serif;
-    border: 1px solid ${(props: any) => (!props.active ? "rgb(75,135,220)" : "rgb(27,32,52)")};
+    border: 1px solid ${(props: any) =>
+        !props.active ? 'rgb(75,135,220)' : 'rgb(36,39,54)'};
     // border-bottom: 1.5px solid rgb(75,135,220);
-    color: ${(props: any) => (!props.active ? "rgb(75,135,220)" : "White")};
+    color: ${(props: any) => (!props.active ? 'rgb(75,135,220)' : 'White')};
 
     &:hover {
 
@@ -128,8 +132,8 @@ export const FromContainer = styled.form`
     // padding: 3px;
     height: 50px;
     // width: 100%;
-    background: rgb(15, 18, 44);
-    border: 1px solid rgb(48, 63, 88);
+    background: rgb(13, 17, 28);
+    border: 1px solid rgb(60, 65, 80);
     border-radius: 10px;
     -webkit-appearance: none;
     input[type='number']::-webkit-inner-spin-button,
@@ -187,7 +191,7 @@ export const Dropdown = styled.div`
     left: 4%;
     border-radius: 10px;
     width: 455px;
-    background: rgb(14, 22, 39);
+    background: rgb(13, 17, 28);
     border: 1px solid rgb(75, 135, 220);
 `;
 
@@ -201,7 +205,7 @@ export const SpinnerWrapper = styled.div`
     // padding: 3px;
     // height: 50px;
     // width: 100%;
-    background: rgb(14, 22, 39);
+    background: rgb(13, 17, 28);
     border: 3px solid rgb(34, 43, 68);
     border-radius: 10px;
     // padding: 15px;

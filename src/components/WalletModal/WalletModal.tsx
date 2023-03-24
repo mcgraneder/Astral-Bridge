@@ -48,10 +48,10 @@ const TABS: Tab[] = [
 export const BridgeModalContainer = styled.div`
     max-width: 480px;
     color: White;
-    background-color: rgb(15, 18, 44);
+    background-color: rgb(13, 17, 28);
     text-align: right;
     padding: 12px 18px;
-    border: 1px solid rgb(57, 62, 82);
+    border: 1px solid rgb(60, 65, 80);
     border-radius: 20px;
     box-shadow: 0px 10px 150px 5px rgba(75, 135, 220, 0.03);
     margin: 30px auto 0;
@@ -63,7 +63,7 @@ export const MintFormContainer = styled.div`
     margin-top: 10px;
     padding-bottom: 20px;
     margin-bottom: 10px;
-    background: rgb(36, 41, 86);
+    background: rgb(36, 39, 54);
     border: 1px solid rgb(34, 43, 68);
     border-radius: 10px;
 `;
@@ -72,7 +72,7 @@ export const MinFormToggleButtonContainer = styled.div`
     height: 40px;
     display: flex;
     margin-bottom: 25px;
-    background: rgb(15, 25, 55);
+    background: rgb(36, 39, 54);
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 
@@ -87,14 +87,14 @@ export const MintToggleButton = styled.div`
     width: 50%;
     height: 100%;
     border-top-${(props: any) => props.side}-radius: 10px;
-    border-right: 1.5px solid rgb(14, 22, 39);
+    border-right: 1.5px solid rgb(13, 17, 28);
     background: ${(props: any) =>
-        props.active ? 'rgb(15,18,44)' : 'rgb(36, 41, 86)'};
+        props.active ? 'rgb(13, 17, 28)' : 'rgb(36,39,54)'};
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px solid ${(props: any) =>
-        props.active ? 'rgb(75,135,220)' : 'rgb(36, 41, 86)'};
+        props.active ? 'rgb(75,135,220)' : 'rgb(36,39,54)'};
     color: ${(props: any) => (props.active ? 'rgb(75,135,220)' : 'White')};
     &:hover {
         cursor: pointer;
@@ -108,7 +108,7 @@ export const InfoContainer = styled.div`
     margin-top: 10px;
     height: ${(props: any) => (props.visible ? '87px' : '0px')};
     transition: height 0.25s ease-in;
-    background: rgb(15, 18, 44);
+    background: rgb(13, 17, 28);
     border-radius: 10px;
 
     ${(props: any) =>

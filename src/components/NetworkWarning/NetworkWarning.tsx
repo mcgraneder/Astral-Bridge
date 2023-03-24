@@ -12,14 +12,24 @@ const NETWORK_HEALTH_CHECK_MS = 10000;
 
 interface WarningPopupProps {
     label: string;
-    subLabel: string;
 }
 
-const WarningPopup = ({ label, subLabel }: WarningPopupProps) => {
+export const WarningPopup = ({ label }: WarningPopupProps) => {
     return (
-        <div className='absolute bottom-10 right-2 z-50 w-96 rounded-2xl bg-yellow-500 p-4'>
-            <div className='flex text-lg font-semibold text-black'>{label}</div>
-            <div className='text-black'>{subLabel}</div>
+        <div className="absolute bottom-16 right-6 w-96 rounded-2xl bg-yellow-500 p-4">
+            <div className="flex text-lg font-semibold text-black">{label}</div>
+            <span className="z-[1000000000] text-black">
+                No worries. I made a faucet so that you can get some to try a
+                mint & release bridge yourself. Get some at this faucet{' '}
+            </span>
+            <a
+                href="https://simplefaucet.vercel.app/"
+                rel="noreferrer noopener"
+                target={'_blank'}
+                className="font-semibold text-blue-600 no-underline hover:cursor-pointer"
+            >
+                here
+            </a>
         </div>
     );
 };

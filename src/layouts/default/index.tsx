@@ -44,8 +44,8 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
 export const G = styled.div`
     background: ${(props: any) =>
         props.visible
-            ? 'linear-gradient(rgba(7, 8, 22, 0) 0%, rgb(7 8 22 / 100%) 45%)'
-            : 'linear-gradient(rgba(7, 8, 22, 0) 40%, rgb(7 8 22 / 100%) 80%)'};
+            ? 'linear-gradient(rgb(7,8,22) 0%, rgb(19,22,38) 45%)'
+            : 'linear-gradient(rgb(19,22,38) 40%, rgb(7,8,22) 80%)'};
 `;
 
 export const GlowContainer = styled.div`
@@ -59,36 +59,47 @@ export const GlowContainer = styled.div`
     overflow-y: hidden;
     height: 100%;
     /* color: rgb(56, 52, 107); */
-    color: rgb(43, 49, 102);
+    color: rgb(36, 39, 54);
 `;
 
 export const Glow = styled.div`
-  position: absolute;
-  top: 25px;
-  bottom: 0;
-  background: radial-gradient(
-    72.04% 72.04% at 50% 10.99%,
-    #592e96 0%,
-    rgba(166, 151, 255, 0) 100%
-  );
-  filter: blur(60px);
+    position: absolute;
+    top: -500px;
+    bottom: 0;
+    background: ${(props: any) =>
+        `radial-gradient(92.04% 92.04% at 50% 0%, ${props.colour} 0%, rgba(166, 151, 255, 0) 100%)`};
+    filter: blur(80px);
 
-  max-width: 420px;
-  width: 100%;
-  height: 100%;
+    max-width: 750px;
+    width: 100%;
+    height: 100%;
 `;
+export const GlowSecondary = styled.div`
+    position: absolute;
+    top: 25px;
+    bottom: 0;
+    background: radial-gradient(
+        72.04% 72.04% at 50% 10.99%,
+        #592e96 0%,
+        rgba(166, 151, 255, 0) 100%
+    );
+    filter: blur(90px);
 
+    max-width: 450px;
+    width: 100%;
+    height: 100%;
+`;
 const ChainGlow = styled.div`
   position: absolute;
   top: -400px;
   bottom: 0;
   background: ${(props: any) =>
-    `radial-gradient(92.04% 92.04% at 50% 0%, ${props.colour} 0%, rgba(166, 151, 255, 0) 100%)`};
+    `radial-gradient(92.04% 92.04% at 50% 0%, ${props.colour} 0%, rgba(166, 151, 255, 0) 30%)`};
   filter: blur(70px);
-  opacity: 0.95;
-  max-width: 1250px;
+  opacity: 0.75;
+  max-width: 850px;
   width: 100%;
-  height: 100%;
+  height: 30%;
 `;
 interface DefaultLayoutProps {
   children: React.ReactNode;
@@ -122,9 +133,9 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
                       {/* {pathname === '/home' && ( */}
                           <>
                               {/* <Gradient isDarkMode={true} /> */}
-                              <GlowContainer>
-                                  <Glow />
-                              </GlowContainer>
+                              {/* <GlowContainer> */}
+                                  { chainColour ? <Glow colour={chainColour}/> : <GlowSecondary/>}
+                              {/* </GlowContainer> */}
                           </>
                       {/* )} */}
                       <ChainGlow

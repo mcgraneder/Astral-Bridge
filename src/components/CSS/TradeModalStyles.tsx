@@ -1,14 +1,14 @@
 import styled from "styled-components";
 
 export const FormWrapper = styled.div`
-  position: fixed;
-  top: 20%;
-  width: 420px;
-  height: 530px;
-  background: rgb(14, 22, 39);
-  text-align: right;
-  // padding: 10px 35px;
-  border-radius: 20px;
+    position: fixed;
+    top: 20%;
+    width: 420px;
+    height: 530px;
+    background: rgb(13, 17, 28);
+    text-align: right;
+    // padding: 10px 35px;
+    border-radius: 20px;
 `;
 
 export const BridgeModalContainer = styled.div`
@@ -16,10 +16,10 @@ export const BridgeModalContainer = styled.div`
     top: 16%;
     width: 440px;
     // height: 260px;
-    background: rgb(15, 18, 44);
+    background: rgb(13, 17, 28);
     text-align: right;
     padding: 10px 10px;
-    border: 1px solid rgb(57, 62, 82);
+    border: 1px solid rgb(60, 65, 80);
     border-radius: 25px;
     // -webkit-box-shadow: -2px -1px 15px 7px rgba(255,0,0,0.5);
     // -moz-box-shadow: -3px -2px 30px 14px rgba(255,0,0,0.425);

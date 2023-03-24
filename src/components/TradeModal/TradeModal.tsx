@@ -9,8 +9,8 @@ import { UilAngleDown } from '@iconscout/react-unicons';
 export const TokenAmountWrapper = styled.div`
     // width: 100%;
     height: ${(props: any) => props.height};
-    background: rgb(43, 49, 102);
-    border: 1.5px solid rgb(27, 32, 52);
+    background: rgb(36,39,54);
+    border: 1.5px solid rgb(27, rgb(36,39,54), 52);
     border-radius: 15px;
     margin-top: ${(props: any) => props.marginTop};
     padding-left: 15px;
@@ -78,7 +78,7 @@ export const ArrowDownContainer = styled.div`
   left: 45%;
   // color: White;
   background: White;
-  background-color: rgb(27, 32, 52);
+  background-color: rgb(27, rgb(36,39,54), 52);
   border: 5px solid rgb(34, 53, 83);
   border-radius: 10px;
 
@@ -94,7 +94,7 @@ export const ArrowDownContainer = styled.div`
 export const Button = styled.div`
     height: 55px;
     width: 100%;
-    background: rgb(43, 49, 102);
+    background: rgb(36,39,54);
     border-radius: 20px;
     text-align: center;
     line-height: 55px;
@@ -104,7 +104,7 @@ export const Button = styled.div`
 
     &:hover {
         cursor: pointer;
-        background: rgb(43, 49, 102);
+        background: rgb(36,39,54);
         color: white;
     }
 `;
@@ -223,10 +223,10 @@ export const ButtonContents = styled.span`
 export const BridgeModalContainer = styled.div`
     max-width: 480px;
     color: White;
-    background-color: rgb(15, 18, 44);
+    background-color: rgb(13, 17, 28);
     text-align: right;
     padding: 12px 12px;
-    border: 1px solid rgb(57, 62, 82);
+    border: 1px solid rgb(60, 65, 80);
     border-radius: 20px;
     box-shadow: 0px 10px 150px 5px rgba(75, 135, 220, 0.03);
     margin: 30px auto 0;
@@ -261,7 +261,7 @@ const DexModal = () => {
           <InfoWrapper>
             <TokenInput placeholder={"0.0"}></TokenInput>
             <TokenSelectButton
-              color={swapState === true ? "rgb(57,62,82)" : "rgb(13,94,209)"}
+              color={swapState === true ? "rgb(60, 65, 80)" : "rgb(13,94,209)"}
               onClick={close}
             >
               <ButtonContents>
@@ -293,7 +293,7 @@ const DexModal = () => {
           <InfoWrapper>
             <TokenInput placeholder={"0.0"}></TokenInput>
             <TokenSelectButton
-              color={swapState === false ? "rgb(57,62,82)" : "rgb(13,94,209)"}
+              color={swapState === false ? "rgb(60, 65, 80)" : "rgb(13,94,209)"}
               onClick={close}
             >
               <ButtonContents>

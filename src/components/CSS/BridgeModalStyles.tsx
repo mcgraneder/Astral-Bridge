@@ -5,7 +5,7 @@ export const FormWrapper = styled.div`
     top: 20%;
     width: 420px;
     height: 530px;
-    background: rgb(15, 18, 44);
+    background: rgb(13, 17, 28);
     text-align: right;
     // padding: 10px 35px;
     border-radius: 20px;
@@ -14,9 +14,9 @@ export const FormWrapper = styled.div`
 export const BridgeModalContainer = styled.div`
     max-width: 490px;
     color: White;
-    background: rgb(15, 18, 44);
+    background: rgb(13, 17, 28);
     text-align: right;
-    border: 1px solid rgb(57, 62, 82);
+    border: 1px solid rgb(60, 65, 80);
     border-radius: 20px;
     box-shadow: 0px 10px 150px 5px rgba(75, 135, 220, 0.03);
     margin: 30px auto 0;
@@ -42,7 +42,7 @@ export const ChainSelector = styled.div`
   // padding: 3px;
   height: 40px;
   // width: 100%;
-  background: rgb(27, 32, 52);
+  background: rgb(36,39,54);
   border: 2px solid rgb(34, 43, 68);
   border-radius: 10px;
 
@@ -142,7 +142,7 @@ export const MintFormContainer = styled.div`
   // padding: 3px;
   height: 100%;
   // width: 100%;
-  background: rgb(27, 32, 52);
+  background: rgb(36,39,54);
   border: 1px solid rgb(34, 43, 68);
   border-radius: 10px;
 `;
@@ -226,7 +226,7 @@ export const MinFormToggleButtonContainer = styled.div`
   // width: 100%;
   display: flex;
   margin-bottom: ${(props: any) => props.marginB};
-  background: rgb(27, 32, 52);
+  background: rgb(36,39,54);
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 
@@ -241,14 +241,14 @@ export const MintToggleButton = styled.div`
     width: 50%;
     height: 100%;
     border-top-${(props: any) => props.side}-radius: 10px;
-    border-right: 1.5px solid rgb(14, 22, 39);
+    border-right: 1.5px solid rgb(13, 17, 28);
     background: ${(props: any) =>
-      props.active ? "rgb(14, 22, 39)" : "rgb(27,32,52)"};
+      props.active ? "rgb(13, 17, 28)" : "rgb(36,39,54)"};
     font-size: 18px;
     font-weight: bold;
     // font-family: 'Open Sans', sans-serif;
     border: 1px solid ${(props: any) =>
-      props.active ? "rgb(75,135,220)" : "rgb(27,32,52)"};
+      props.active ? "rgb(75,135,220)" : "rgb(36,39,54)"};
     // border-bottom: 1.5px solid rgb(75,135,220);
     color: ${(props: any) => (props.active ? "rgb(75,135,220)" : "rgb(77,82,102)")};
     &:hover {
@@ -263,14 +263,14 @@ export const ReleaseToggleButton = styled.div`
     width: 50%;
     height: 100%;
     border-top-${(props: any) => props.side}-radius: 10px;
-    border-right: 1.5px solid rgb(14, 22, 39);
+    border-right: 1.5px solid rgb(13, 17, 28);
     background: ${(props: any) =>
-      !props.active ? "rgb(14, 22, 39)" : "rgb(27,32,52)"};
+      !props.active ? "rgb(13, 17, 28)" : "rgb(36,39,54)"};
     font-size: 18px;
     font-weight: bold;
     font-family: 'Open Sans', sans-serif;
     border: 1px solid ${(props: any) =>
-      !props.active ? "rgb(75,135,220)" : "rgb(27,32,52)"};
+      !props.active ? "rgb(75,135,220)" : "rgb(36,39,54)"};
     // border-bottom: 1.5px solid rgb(75,135,220);
     color: ${(props: any) => (!props.active ? "rgb(75,135,220)" : "rgb(77,82,102)")};
 
@@ -313,7 +313,7 @@ export const ArrowLogoContainer = styled.div`
   height: 100%;
   // padding: 5px;
   margin: 0 auto;
-  background: rgb(27, 32, 52);
+  background: rgb(36,39,54);
   border-radius: 10px;
   line-height: 15px;
   // border: 0.2px solid rgb(75,135,220);
@@ -344,7 +344,7 @@ export const ArrowContainer12 = styled.div`
 export const ArrowLogoContainer12 = styled.div`
   width: 25px;
   margin: 0 auto;
-  background: rgb(27, 32, 52);
+  background: rgb(36,39,54);
   border-radius: 10px;
   border-left: 2px solid rgb(34, 43, 68);
   border-right: 2px solid rgb(34, 43, 68);

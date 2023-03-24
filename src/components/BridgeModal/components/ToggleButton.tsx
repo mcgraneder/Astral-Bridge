@@ -7,7 +7,7 @@ export const MinFormToggleButtonContainer = styled.div`
   transition: height 0.2s ease;
   display: flex;
   margin-bottom: 25px;
-  background: rgb(15,18,44);
+  background: rgb(13, 17, 28);
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 
@@ -22,14 +22,14 @@ export const MintToggleButton = styled.div`
     width: 50%;
     height: 100%;
     border-top-${(props: any) => props.side}-radius: 10px;
-    border-right: 1.5px solid rgb(14, 22, 39);
+    border-right: 1.5px solid rgb(13, 17, 28);
     background: ${(props: any) =>
-        props.active ? 'rgb(15,18,44)' : 'rgb(43, 49, 102)'};
+        props.active ? 'rgb(13, 17, 28)' : 'rgb(36,39,54)'};
     display: flex;
     align-items: center;
     justify-content: center;
     border: 1px solid ${(props: any) =>
-        props.active ? 'rgb(75,135,220)' : 'rgb(43, 49, 102)'};
+        props.active ? 'rgb(75,135,220)' : 'rgb(36,39,54)'};
     color: ${(props: any) => (props.active ? 'rgb(75,135,220)' : 'White')};
     &:hover {
         cursor: pointer;

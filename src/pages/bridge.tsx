@@ -12,6 +12,8 @@ import UserInfoModal from "../components/UserInformationModal/UserInformationMod
 import { useGatewayProvider } from "../hooks/useGatewayProvider";
 import TransactionFlowModals from '../components/TxConfirmationModalFlow/index';
 import useMarketGasData from '../hooks/useMarketGasData';
+import { WarningPopup } from "../components/NetworkWarning/NetworkWarning";
+import { LeftIconContainer } from '../components/About/About';
 
 type AssetType = "chain" | "currency";
 
@@ -69,14 +71,17 @@ const BridgePage: NextPage = () => {
                           only been working on it, sparingly, for 2 months so
                           most of the features are not finished.
                           <br />
-                          <br />I will show popups wherever I have an unfinished
-                          or in-progress feature. The only reason I am showing
-                          this app on my portfolio in its early stages is for
-                          curious employers to see my latest work .
+                          <br />
+                          To use this apps bridge you will Need USDT on Goerli testnet. I have created a
+                          faucet where you can get some. You will see the link to the faucet when you close this popup
                       </span>
                   }
               />
           )}
+          {/* <WarningPopup
+              label={'Dont have USDT on Goerli'}
+              
+          /> */}
           {/* {!loading && (
               <AssetListModal
                   setShowTokenModal={setShowTokenModal}
