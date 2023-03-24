@@ -17,6 +17,8 @@ import { chainAdresses } from '../../constants/Addresses';
 import { useGlobalState } from '../../context/useGlobalState';
 import { Icon } from "../Icons/AssetLogs/Icon"
 import { BalanceContainer } from '../CSS/BridgeModalStyles';
+import useAuth from '../../hooks/useAuth';
+import { CHAINS } from '../../connection/chains';
 
 interface TxSuccessProps {
     close: () => void;
@@ -33,15 +35,25 @@ const TxSubmittedInner = ({
     active,
     close,
     addAsset,
+    onCorrectChain,
+    switchNetwork,
     symbol
 }: {
     active: boolean;
     close: () => void;
     addAsset: () => Promise<void>;
-    symbol: string
+    onCorrectChain: boolean;
+    switchNetwork: (id: number) => Promise<
+        | {
+              switched: boolean;
+              errorCode: any;
+          }
+        | undefined
+    >;
+    symbol: string;
 }) => {
     const IconM = WALLETS[PROVIDERS.INJECTED!]!.icon as any;
-    const { filteredTransaction } = useGlobalState()
+    const { filteredTransaction } = useGlobalState();
     return (
         <>
             <TopRowNavigation isRightDisplay={true} close={close} />
@@ -53,13 +65,21 @@ const TxSubmittedInner = ({
                     Congratulations!
                 </span>
                 <div className="flex flex-col">
-                    {/* <div
+                    { !onCorrectChain ? (<div
+                        className="mx-auto my-0 mb-4 flex w-fit items-center justify-center gap-3 rounded-full bg-secondary px-4 py-2 text-gray-400 hover:cursor-pointer hover:bg-lightTertiary"
+                        onClick={() => switchNetwork(symbol === "aUSDT" ? 97 : 5)}
+                    >
+                        <span>Switch Chain to add Token to Wallet</span>
+                        <IconM className={'h-5 w-5'} />
+                    </div>)
+                    :
+                    (<div
                         className="mx-auto my-0 mb-4 flex w-fit items-center justify-center gap-3 rounded-full bg-secondary px-4 py-2 text-gray-400 hover:cursor-pointer hover:bg-lightTertiary"
                         onClick={addAsset}
                     >
                         <span>Add Token to Metamask</span>
-                        <IconM className={"h-5 w-5"} />
-                    </div> */}
+                        <IconM className={'h-5 w-5'} />
+                    </div>)}
                     <span className=" text-[16px] text-gray-400">
                         {`You just recieved your ${symbol}. You can now view your
                         Balance in the wallet section.`}
@@ -85,15 +105,20 @@ const TxSubmittedInner = ({
 
 function TransactionSuccessModal({
 }: TxSuccessProps) {
-    const { active } = useWeb3React();
+    const { active, chainId } = useWeb3React();
     const { width } = useViewport();
     const { successType, isSuccessOpen, setIsSuccessOpen } = useGlobalState();
 
     const symbol = successType === 'Mint' ? 'aUSDT' : 'USDT';
+    const onCorrectChain =
+        successType === 'Mint' && chainId == 97
+            ? true
+            : successType === 'Release' && chainId == 5;
+
     const AddAsset = useCallback(async (): Promise<void> => {
         const tokenAddress =
             successType === 'Mint'
-                ? '0xD93521D9E6B21D54D5276203848f1397624De87A'
+                ? '0x11B364AF13f157a790CD5dB2E768e533b4972d63'
                 : '0x270203070650134837F3C33Fa7D97DC456eF624e';
 
         const symbol = successType === 'Mint' ? 'aUSDT' : 'USDT';
@@ -116,6 +141,52 @@ function TransactionSuccessModal({
         }
     }, [successType]);
 
+      const switchNetwork = useCallback(
+          async (network: number) => {
+              //@ts-ignore
+              const { ethereum } = window;
+              const hexChainId = `0x${network.toString(16)}`;
+              const chainInfo = CHAINS[network];
+
+              try {
+                  await ethereum?.request({
+                      method: 'wallet_switchEthereumChain',
+                      params: [{ chainId: hexChainId }]
+                  });
+              } catch (error: any) {
+                console.log(error)
+                  if (error.code === 4902) {
+                      // TODO: get new chain params
+                      try {
+                          await ethereum?.request({
+                              method: 'wallet_addEthereumChain',
+                              params: [
+                                  {
+                                      chainId: hexChainId,
+                                      chainName: chainInfo?.chainName,
+                                      rpcUrls: chainInfo?.rpcUrls,
+                                      nativeCurrency: {
+                                          name: chainInfo?.currency,
+                                          symbol: chainInfo?.symbol,
+                                          decimals: 18
+                                      },
+                                      blockExplorerUrls: [
+                                          chainInfo?.explorerLink
+                                      ]
+                                  }
+                              ]
+                          });
+                      } catch (addError: any) {
+                          return { switched: false, errorCode: addError.code };
+                      }
+                  }
+
+                  return { switched: false, errorCode: error.code };
+              }
+          },
+          []
+      );
+
     return (
         <>
             {width > 0 && width >= Breakpoints.sm1 ? (
@@ -125,6 +196,8 @@ function TransactionSuccessModal({
                             active={isSuccessOpen}
                             close={() => setIsSuccessOpen(false)}
                             addAsset={AddAsset}
+                            onCorrectChain={onCorrectChain}
+                            switchNetwork={switchNetwork}
                             symbol={symbol}
                         />
                     </FormWrapper>
@@ -140,6 +213,8 @@ function TransactionSuccessModal({
                         active={active}
                         close={() => setIsSuccessOpen(false)}
                         addAsset={AddAsset}
+                        onCorrectChain={onCorrectChain}
+                        switchNetwork={switchNetwork}
                         symbol={symbol}
                     />
                 </BottomSheetOptions>
