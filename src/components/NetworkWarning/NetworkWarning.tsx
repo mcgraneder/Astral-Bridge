@@ -29,6 +29,42 @@ export const WarningPopup = ({ label }: WarningPopupProps) => {
                 className="font-semibold text-blue-600 no-underline hover:cursor-pointer"
             >
                 here
+                <br />
+                <br />
+            </a>
+            <span className="z-[1000000000] text-black">
+                You can also get some Goerli Ether{' '}
+            </span>
+            <a
+                href="https://faucet.quicknode.com/ethereum/goerli"
+                rel="noreferrer noopener"
+                target={'_blank'}
+                className="font-semibold text-blue-600 no-underline hover:cursor-pointer"
+            >
+                here
+            </a>
+            <span className="z-[1000000000] text-black"> or</span>
+
+            <a
+                href="https://goerlifaucet.com/"
+                rel="noreferrer noopener"
+                target={'_blank'}
+                className="font-semibold text-blue-600 no-underline hover:cursor-pointer"
+            >
+                here
+            </a>
+            <span className="z-[1000000000] text-black">
+                {' '}
+                and some testBNB{' '}
+            </span>
+
+            <a
+                href="https://testnet.bnbchain.org/faucet-smart"
+                rel="noreferrer noopener"
+                target={'_blank'}
+                className="font-semibold text-blue-600 no-underline hover:cursor-pointer"
+            >
+                here
             </a>
         </div>
     );
