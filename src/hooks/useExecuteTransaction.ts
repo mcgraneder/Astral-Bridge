@@ -108,7 +108,8 @@ const useEcecuteTransaction = (): ExecuteTxType => {
           if (!transactionResponse) return;
 
           const txId = transactionResponse.txId;
-          setTimeout(() => toggleSubmittedModal(), 250);
+          if (transactionType !== 'Approval')
+              setTimeout(() => toggleSubmittedModal(), 250);
 
           await tx
               .wait(1)
@@ -204,6 +205,7 @@ const useEcecuteTransaction = (): ExecuteTxType => {
 
           const txId = transactionResponse.txId;
           setTransactionId(tx.hash);
+          setTimeout(() => toggleSubmittedModal(), 250);
 
           await tx
               .wait(1)
