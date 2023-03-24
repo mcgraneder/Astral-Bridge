@@ -118,7 +118,7 @@ function TransactionSuccessModal({
     const AddAsset = useCallback(async (): Promise<void> => {
         const tokenAddress =
             successType === 'Mint'
-                ? '0x11B364AF13f157a790CD5dB2E768e533b4972d63'
+                ? '0x8b4F896F83a52dE9ee19f41eaFa7abe35007Ce47'
                 : '0x270203070650134837F3C33Fa7D97DC456eF624e';
 
         const symbol = successType === 'Mint' ? 'aUSDT' : 'USDT';

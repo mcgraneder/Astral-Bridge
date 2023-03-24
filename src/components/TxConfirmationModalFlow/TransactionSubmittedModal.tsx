@@ -51,13 +51,13 @@ const TxSubmittedInner = ({
           Transaction Submitted
         </span>
       </div>
-      <div
+      {/* <div
         className="mx-auto my-0 mt-4 flex w-fit items-center justify-center gap-3 rounded-full bg-tertiary px-4 py-2 text-gray-400 hover:cursor-pointer hover:bg-lightTertiary"
         onClick={addAsset}
       >
         <span>Add Token to Metamask</span>
         <Icon />
-      </div>
+      </div> */}
       <div className="mt-6 mb-2 flex items-center justify-center">
         <Link
           href={`/transactions/${filteredTransaction}`}

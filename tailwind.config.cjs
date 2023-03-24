@@ -36,7 +36,7 @@ module.exports = {
                 darkBackground: 'rgb(13, 17, 28)',
                 hoverLightground: 'rgb(13, 17, 28)',
 
-                extraDarkBackground: 'rgb(12,18,43)',
+                extraDarkBackground: 'rgb(20, 24, 35)',
                 secondaryButtonColor: 'rgb(28,44,81)',
                 backgroundSecondaryLight: 'rgb(74, 107, 161)',
                 homeButton: 'rgb(105, 95, 215)'
