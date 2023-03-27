@@ -1,19 +1,13 @@
 import React from 'react';
-import { StyledTitle, StyledSubTitle, colours } from '../CSS/HomePage.styles';
-import PrimaryButton from '../PrimaryButton/PrimaryButton';
-
+import { StyledTitle, StyledSubTitle } from '../CSS/HomePage.styles';
 import AssetRotator from '../AssetRotator/AssetRotator';
-
 import styled from 'styled-components';
 import { BREAKPOINTS } from '../theme';
 import meshSrc from '../../../public/images/Mesh.png';
-import Image from 'next/image';
-import GreenDot from '../Icons/GreenDot';
 import SupportedAssets from './SupportedAsset';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { fadeIn } from '../../utils/fadeIn.';
-import { UilAngleDown } from '@iconscout/react-unicons';
 import { ArrowDownCircle } from 'react-feather';
 import Section2 from './MiddleSection';
 
@@ -53,21 +47,6 @@ const Banner = styled.div<{ isDarkMode: boolean }>`
 		flex-direction: row;
 	} */
 `;
-
-const ProtocolBanner = () => {
-    return (
-        <Banner>
-            <Image alt="" src={meshSrc} />
-            <div className="flex items-center">
-                <span>Gas Setting</span>
-            </div>
-            <div className="flex items-center justify-center gap-2">
-                <GreenDot />
-                <span>Learn More</span>
-            </div>
-        </Banner>
-    );
-};
 
 const Home = () => {
     const scrollPosition = () => {

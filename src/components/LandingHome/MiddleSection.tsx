@@ -1,23 +1,14 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import SwapImg from '../../../public/images/swapCard.png';
-import Button from '../../../public/svgs/button.svg';
-import WaveA from '../../../public/svgs/astronaut-wave-A.svg';
-import WaveB from '../../../public/svgs/astronaut-wave-B.svg';
-import Battery from '../../../public/svgs/battery.svg';
 import LearnMoreButton from '../Buttons/LearnMoreButton';
 import ReactCardFlip from 'react-card-flip';
 import { HiOutlineXCircle } from 'react-icons/hi';
-import { BridgeDeployments } from '../../constants/deployments';
 import styled from 'styled-components';
-import { Breakpoints } from '../../constants/Breakpoints';
 import meshSrc from '../../../public/images/Mesh.png';
-import GreenDot from '../Icons/GreenDot';
 import { fadeIn } from '../../utils/fadeIn.';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { StyledTitle } from '../CSS/HomePage.styles';
-import { get } from '../../services/axios';
 import { useAuth } from '../../context/useWalletAuth';
 import {
     UilDollarSignAlt,

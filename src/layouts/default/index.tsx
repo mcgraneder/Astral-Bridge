@@ -130,14 +130,7 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
           ) : (
               <G visible={pathname === '/home'}>
                   <div className="flex h-screen flex-col items-center text-white  lg:h-auto lg:min-h-screen">
-                      {/* {pathname === '/home' && ( */}
-                          <>
-                              {/* <Gradient isDarkMode={true} /> */}
-                              {/* <GlowContainer> */}
-                                  { chainColour ? <Glow colour={chainColour}/> : <GlowSecondary/>}
-                              {/* </GlowContainer> */}
-                          </>
-                      {/* )} */}
+                        { chainColour ? <Glow colour={chainColour}/> : <GlowSecondary/>}
                       <ChainGlow
                           colour={chainColour ? chainColour : 'transparent'}
                       />

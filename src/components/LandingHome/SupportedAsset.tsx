@@ -113,13 +113,6 @@ const SupportedAssets = ({ type }: any) => {
             <GlowContainer>
                 <Glow />
             </GlowContainer>
-            {/* <motion.div
-                variants={fadeIn('right', 0.1)}
-                initial="hidden"
-                whileInView={'show'}
-                viewport={{ once: true, amount: 0.8 }}
-                className="z-50"
-            > */}
             <SupportedAssetsContainer maxWidth={'100%'}>
                 <SupportedAssetsWrapper>
                     <CurrencysContainer
@@ -149,47 +142,6 @@ const SupportedAssets = ({ type }: any) => {
                     </CurrencysContainer>
                 </SupportedAssetsWrapper>
             </SupportedAssetsContainer>
-            {/* </motion.div> */}
-            {/* <motion.div
-                variants={fadeIn('uo', 0.01)}
-                initial="hidden"
-                whileInView={'show'}
-                viewport={{ once: true, amount: 0.7 }}
-                className="z-[10000000000]"
-            >
-                <div className="my-8 h-[850px] border-l-2 border-gray-500" />
-            </motion.div> */}
-
-            {/* <motion.div
-                variants={fadeIn('left', 0.1)}
-                initial="hidden"
-                whileInView={'show'}
-                viewport={{ once: true, amount: 0.8 }}
-                // className="mt-8 mb-2 flex items-center justify-center"
-            > */}
-            {/* <SupportedAssetsContainer maxWidth={'45%'}>
-                <SupportedAssetsWrapper>
-                    <CurrencysContainer
-                        paddingR={'0px'}
-                        paddingL={'0px'}
-                        border={false}
-                        className={'overflow-y-hidden'}
-                    >
-                        <motion.div
-                            variants={fadeIn('left', 0.01)}
-                            initial="hidden"
-                            whileInView={'show'}
-                            viewport={{ once: true, amount: 0.45 }}
-                        >
-                            <CurrenciesHeader>Assets</CurrenciesHeader>
-                        </motion.div>
-                        <CurrenciesList>
-                            <AssetItem assetType={'currency'} type={'EVM'} />
-                        </CurrenciesList>
-                    </CurrencysContainer>
-                </SupportedAssetsWrapper>
-            </SupportedAssetsContainer> */}
-            {/* </motion.div> */}
         </div>
     );
   

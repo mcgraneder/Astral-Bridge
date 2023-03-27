@@ -1,10 +1,9 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import styled from "styled-components";
 import { supportedAssets, assetsBaseConfig } from '../../utils/assetsConfig';
 import { chainsBaseConfig, EVMChains, LeacyChains } from '../../utils/chainsConfig';
 import { Icon } from "../Icons/AssetLogs/Icon";
-import { delay, motion } from 'framer-motion';
-import { Layout } from 'react-feather';
+import { motion } from 'framer-motion';
 
 export const CurrencyItemContainer = styled.div`
   display: flex;
@@ -85,8 +84,6 @@ const AssetItem = ({ assetType, type }: any) => {
     []
   );
 
-  const [showCard, setShowCard] = useState<boolean>(false)
-
 return (
     <>
         
@@ -133,18 +130,6 @@ return (
                     </>
                 );
             })}
-
-        {/* <CurrencyItemContainer
-      marginL={type === "EVM" ? "6px" : "0px"}
-      marginR={type === "EVM" ? "6px" : "0px"}
-    > */}
-        {/* <CurrencyItemWrapper>
-        <CurrencyLogoContainer>
-          <CurrencyLogo src={Grey} effect="blur"></CurrencyLogo>
-        </CurrencyLogoContainer>
-        <CurrencyTitle>+ More soon</CurrencyTitle>
-      </CurrencyItemWrapper>
-    </CurrencyItemContainer> */}
     </>
 );
 };
