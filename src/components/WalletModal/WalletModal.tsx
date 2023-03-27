@@ -183,7 +183,7 @@ const WalletModal = ({
         (async () => {
             const approvalResponse = await get<{
                 result: any;
-            }>(API.ren.getTokenApproval, {
+            }>(API.next.gettokenapproval, {
                 params: {
                     chainName: destinationChain.fullName,
                     assetName: asset.Icon,

@@ -209,7 +209,7 @@ const BridgeModal = ({
         (async () => {
             const approvalResponse = await get<{
                 result: any;
-            }>(API.ren.getBridgeApproval, {
+            }>(API.next.getbridgeapproval, {
                 params: {
                     chainName: 'Ethereum',
                     assetName: asset.Icon,

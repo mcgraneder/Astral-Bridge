@@ -18,7 +18,10 @@ const API = {
         depositTx: `${NextBaseUrl}/depositTx`,
         mintTx: `${NextBaseUrl}/mintTx`,
         gettransactions: `${NextBaseUrl}/get-transactions`,
-        gettransaction: `${NextBaseUrl}/get-transaction`
+        gettransaction: `${NextBaseUrl}/get-transaction`,
+        balancesof: `${NextBaseUrl}/balances-of`,
+        gettokenapproval: `${NextBaseUrl}/get-token-approval`,
+        getbridgeapproval: `${NextBaseUrl}/get-bridge-approval`
     },
     ren: {
         verify: `${SigVerifierBaseUrl}/verify`,
