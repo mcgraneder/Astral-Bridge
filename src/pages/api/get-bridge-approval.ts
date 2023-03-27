@@ -71,8 +71,6 @@ export const returnContract = <contract extends Contract = Contract>(
     }
 };
 
-export default getContract;
-
 async function handler(req: NextApiRequest, res: NextApiResponse) {
     const chainName = req.query.chainName!.toString();
     const assetName = req.query.assetName!.toString();
@@ -126,3 +124,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         result: allowance
     });
 }
+
+export default handler;
+
