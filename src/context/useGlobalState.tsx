@@ -18,7 +18,7 @@ import useAuth from '../hooks/useAuth';
 import { UserTxType } from '../components/transactions/components/TransactionTable';
 import { useViewport } from '../hooks/useViewport';
 import { useNotification } from './useNotificationState';
-import { get } from "../services/axios"
+import { get } from '../services/axios';
 interface GlobalStateProviderProps {
     children: React.ReactNode;
 }
@@ -109,9 +109,8 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
             params: {
                 of: account
             }
-
-        })
-    }, [])
+        });
+    }, []);
 
     const memoizedFetchBalances = useCallback(async () => {
         if (!account) return;
