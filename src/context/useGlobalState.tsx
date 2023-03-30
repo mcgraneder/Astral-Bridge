@@ -18,7 +18,7 @@ import useAuth from '../hooks/useAuth';
 import { UserTxType } from '../components/transactions/components/TransactionTable';
 import { useViewport } from '../hooks/useViewport';
 import { useNotification } from './useNotificationState';
-import { get } from '../services/axios';
+
 interface GlobalStateProviderProps {
     children: React.ReactNode;
 }
@@ -97,20 +97,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
     const [assetBalances, setAssetBalances] = useState<{
         [x: string]: MulticallReturn | undefined;
     }>({});
-
-    useEffect(() => {
-        get<{
-            result: {
-                multicall: {
-                    [chain: string]: { [x: string]: MulticallReturn };
-                };
-            };
-        }>(API.ren.balancesOf, {
-            params: {
-                of: account
-            }
-        });
-    }, []);
+    
 
     const memoizedFetchBalances = useCallback(async () => {
         if (!account) return;
