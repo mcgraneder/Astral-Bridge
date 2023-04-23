@@ -108,7 +108,7 @@ function GlobalStateProvider({ children }: GlobalStateProviderProps) {
                     [chain: string]: { [x: string]: MulticallReturn };
                 };
             };
-        }>(API.next.balancesof, {
+        }>(API.ren.balancesOf, {
             params: {
                 of: account
             }
