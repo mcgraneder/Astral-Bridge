@@ -88,14 +88,14 @@ export const EVMChains: Chain[] = [
     //   Chain.Avalanche,  //multicall not supported for now
     Chain.Polygon,
     //   Chain.Optimism,  //multicall not supported for now
-    Chain.Kava,
+    // Chain.Kava,
     Chain.Moonbeam,
     Chain.BinanceSmartChain,
     Chain.Fantom
 ];
 
 export type MulticallConfig = {
-    chain: Chain;
+    chain: string;
     multicallService: MultiCallService;
     multicallProvider: Web3ProviderConnector;
     assets: Asset[];
@@ -114,7 +114,7 @@ type Asset = {
     mintGatewayAddress: string;
 };
 
-const getMulticallConfig = (chain: Chain): MulticallConfig => {
+const getMulticallConfig = (chain: string): MulticallConfig => {
     const chainProvider = new Web3(
         new Web3.providers.HttpProvider(PorividerConfig[chain]!.url)
     ) as any;
@@ -135,7 +135,7 @@ const getMulticallConfig = (chain: Chain): MulticallConfig => {
 };
 export const setupMulticallConfig = (): MulticallSetupConfig => {
     let multicallConfigMap = {} as { [chain: string]: MulticallConfig };
-    const combinedConfigs = EVMChains.map((chain: Chain) => {
+    const combinedConfigs = EVMChains.map((chain: string) => {
         multicallConfigMap[chain] = getMulticallConfig(chain);
         return multicallConfigMap[chain];
     }) as MulticallConfig[];
